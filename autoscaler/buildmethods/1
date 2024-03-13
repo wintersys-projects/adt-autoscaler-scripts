@@ -1,0 +1,12 @@
+/usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -qq -y git
+/usr/sbin/useradd XXXXXSERVERUSERXXXX 
+bin/echo XXXXXSERVERUSERXXXX:XXXXXSERVERUSERPASSWORDXXXX | /usr/bin/sudo -S -E /usr/sbin/chpasswd 
+/usr/bin/gpasswd -a XXXXXSERVERUSERXXXX sudo"
+/bin/sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config 
+/usr/sbin/service ssh restart
+/bin/chmod 400 /home/XXXXXSERVERUSERXXXX/.ssh/id_*
+cd /home/XXXXXSERVERUSERXXXX
+/usr/bin/git clone https://github.com/XXXXINFRASTRUCTUREREPOSITORYOWNERXXXX/adt-webserver-scripts.git
+/bin/cp -r ./adt-webserver-scripts .
+/bin/rm -r ./adt-webserver-scripts
+
