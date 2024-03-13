@@ -39,6 +39,11 @@ then
     exit
 fi
 
+if ( [ -f ${HOME}/runtime/FIREWALL-ACTIVE ] && [ "`/usr/bin/ufw status | /bin/grep 'inactive'`" = "" ] )
+then
+    exit
+fi
+
 /usr/sbin/ufw logging off
 
 SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSHPORT'`"
