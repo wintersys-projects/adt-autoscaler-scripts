@@ -113,3 +113,8 @@ then
     /bin/sleep 5
     /usr/sbin/service networking restart
 fi
+
+if ( [ "`/usr/bin/ufw status | /bin/grep 'inactive'`" = "" ] )
+then
+    /bin/touch ${HOME}/runtime/FIREWALL-ACTIVE
+fi
