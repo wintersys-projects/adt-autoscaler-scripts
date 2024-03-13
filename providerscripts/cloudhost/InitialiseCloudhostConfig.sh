@@ -136,7 +136,7 @@ then
 
     CLOUDHOST_ACCOUNT_ID="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOSTACCOUNTID'`"
     TOKEN="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'TOKEN'`"
-    REGION_ID="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
+    REGION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
 
     if ( [ -f ${HOME}/.config/linode-cli ] )
     then
@@ -168,9 +168,9 @@ then
         exit
     fi
 
-    if ( [ "${REGION_ID}" != "" ] )
+    if ( [ "${REGION}" != "" ] )
     then
-        /bin/sed -i "s/XXXXREGIONXXXX/${REGION_ID}/" ${HOME}/.config/linode-cli
+        /bin/sed -i "s/XXXXREGIONXXXX/${REGION}/" ${HOME}/.config/linode-cli
     else 
         /bin/echo "${0} Couldn't find your region id in your template, will have to exit" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
         exit
