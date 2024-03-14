@@ -24,213 +24,216 @@
 
 BUILDOS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOS'`"
 
-if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh INSTALLMONITORINGGEAR:1`" = "1" ] )
+if ( [ "`${HOME}/providerscripts/utilities/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt" ] )
 then
-    CLOUDHOST="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOST'`"
+    if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh INSTALLMONITORINGGEAR:1`" = "1" ] )
+    then
+        CLOUDHOST="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOST'`"
 
-    if ( [ "${CLOUDHOST}" = "digitalocean" ] )
-    then
-         if ( [ "${BUILDOS}" = "ubuntu" ] )
-         then
-            if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "glances" ] )
+        if ( [ "${CLOUDHOST}" = "digitalocean" ] )
+        then
+            if ( [ "${BUILDOS}" = "ubuntu" ] )
             then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install glances 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "nmon" ] )
-             then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install nmon 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "atop" ] )
-             then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install atop 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "native" ] )
-             then
-                 /usr/bin/curl -sSL https://repos.insights.digitalocean.com/install.sh | /usr/bin/sudo bash    
-             fi
-         fi
-         if ( [ "${BUILDOS}" = "debian" ] )
-         then
-            if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "glances" ] )
+                if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "glances" ] )
+                then
+                    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install glances 
+                fi
+                if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "nmon" ] )
+                then
+                    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install nmon 
+                fi
+                if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "atop" ] )
+                then
+                    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install atop 
+                fi
+                if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "native" ] )
+                then
+                    /usr/bin/curl -sSL https://repos.insights.digitalocean.com/install.sh | /usr/bin/sudo bash    
+                fi
+            fi
+            if ( [ "${BUILDOS}" = "debian" ] )
             then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install glances 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "nmon" ] )
-             then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install nmon 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "atop" ] )
-             then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install atop 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "native" ] )
-             then
-                 /usr/bin/curl -sSL https://repos.insights.digitalocean.com/install.sh | /usr/bin/sudo bash    
-             fi
-         fi
-    fi
-    if ( [ "${CLOUDHOST}" = "linode" ] )
-    then
-         if ( [ "${BUILDOS}" = "ubuntu" ] )
-         then
-           if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "glances" ] )
-            then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install glances 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "nmon" ] )
-             then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install nmon 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "atop" ] )
-             then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install atop 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "native" ] )
-             then
-                 :
-             fi
-         fi
-         if ( [ "${BUILDOS}" = "debian" ] )
-         then
-            if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "glances" ] )
-            then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install glances 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "nmon" ] )
-             then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install nmon 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "atop" ] )
-             then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install atop 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "native" ] )
-             then
-                 :
-             fi         
-        fi    
-    fi
-    if ( [ "${CLOUDHOST}" = "exoscale" ] )
-    then
-         if ( [ "${BUILDOS}" = "ubuntu" ] )
-         then
-           if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "glances" ] )
-            then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install glances 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "nmon" ] )
-             then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install nmon 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "atop" ] )
-             then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install atop 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "native" ] )
-             then
-                 :
-             fi
-         fi
-         if ( [ "${BUILDOS}" = "debian" ] )
-         then
-            if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "glances" ] )
-            then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install glances 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "nmon" ] )
-             then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install nmon 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "atop" ] )
-             then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install atop 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "native" ] )
-             then
-                 :
-             fi         
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "glances" ] )
+                 then
+                     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install glances 
+                 fi
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "nmon" ] )
+                 then
+                     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install nmon 
+                 fi
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "atop" ] )
+                 then
+                      DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install atop 
+                 fi
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "native" ] )
+                 then
+                     /usr/bin/curl -sSL https://repos.insights.digitalocean.com/install.sh | /usr/bin/sudo bash    
+                 fi
+            fi
         fi
-    fi
-    if ( [ "${CLOUDHOST}" = "vultr" ] )
-    then
-         if ( [ "${BUILDOS}" = "ubuntu" ] )
-         then
-           if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "glances" ] )
+        if ( [ "${CLOUDHOST}" = "linode" ] )
+        then
+            if ( [ "${BUILDOS}" = "ubuntu" ] )
             then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install glances 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "nmon" ] )
-             then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install nmon 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "atop" ] )
-             then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install atop 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "native" ] )
-             then
-                 :
-             fi         
-         fi
-         if ( [ "${BUILDOS}" = "debian" ] )
-         then
-            if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "glances" ] )
+                if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "glances" ] )
+                then
+                    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install glances 
+                fi
+                if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "nmon" ] )
+                then
+                    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install nmon 
+                fi
+                if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "atop" ] )
+                then
+                    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install atop 
+                fi
+                if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "native" ] )
+                then
+                    :
+                fi
+            fi
+            if ( [ "${BUILDOS}" = "debian" ] )
             then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install glances 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "nmon" ] )
+                if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "glances" ] )
+                then
+                     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install glances 
+                fi
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "nmon" ] )
+                 then
+                     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install nmon 
+                 fi
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "atop" ] )
+                 then
+                     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install atop 
+                 fi
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "native" ] )
+                 then
+                      :
+                 fi         
+            fi    
+        fi
+        if ( [ "${CLOUDHOST}" = "exoscale" ] )
+        then
+             if ( [ "${BUILDOS}" = "ubuntu" ] )
              then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install nmon 
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "glances" ] )
+                 then
+                     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install glances 
+                 fi
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "nmon" ] )
+                 then
+                     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install nmon 
+                 fi
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "atop" ] )
+                 then
+                     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install atop 
+                 fi
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "native" ] )
+                 then
+                     :
+                 fi
              fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "atop" ] )
+             if ( [ "${BUILDOS}" = "debian" ] )
              then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install atop 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "native" ] )
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "glances" ] )
+                 then
+                     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install glances 
+                 fi
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "nmon" ] )
+                 then
+                     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install nmon 
+                 fi
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "atop" ] )
+                 then
+                     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install atop 
+                 fi
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "native" ] )
+                 then
+                     :
+                 fi         
+            fi
+        fi
+        if ( [ "${CLOUDHOST}" = "vultr" ] )
+        then
+             if ( [ "${BUILDOS}" = "ubuntu" ] )
              then
-                 :
-             fi        
-         fi   
-     fi
-     if ( [ "${CLOUDHOST}" = "aws" ] )
-    then
-         if ( [ "${BUILDOS}" = "ubuntu" ] )
-         then
-            if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "glances" ] )
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "glances" ] )
+                 then
+                     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install glances 
+                 fi
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "nmon" ] )
+                 then
+                     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install nmon 
+                 fi
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "atop" ] )
+                 then
+                     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install atop 
+                 fi
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "native" ] )
+                 then
+                     :
+                 fi         
+            fi
+            if ( [ "${BUILDOS}" = "debian" ] )
             then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install glances 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "nmon" ] )
+                if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "glances" ] )
+                then
+                     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install glances 
+                fi
+                if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "nmon" ] )
+                then
+                     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install nmon 
+                fi
+                if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "atop" ] )
+                then
+                     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install atop 
+                fi
+                if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "native" ] )
+                then
+                     :
+                fi        
+            fi   
+        fi
+        if ( [ "${CLOUDHOST}" = "aws" ] )
+        then
+             if ( [ "${BUILDOS}" = "ubuntu" ] )
              then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install nmon 
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "glances" ] )
+                 then
+                     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install glances 
+                 fi
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "nmon" ] )
+                 then
+                     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install nmon 
+                 fi
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "atop" ] )
+                 then
+                     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install atop 
+                 fi
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "native" ] )
+                 then
+                      :
+                 fi         
              fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "atop" ] )
+             if ( [ "${BUILDOS}" = "debian" ] )
              then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install atop 
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "glances" ] )
+                 then
+                     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install glances 
+                 fi
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "nmon" ] )
+                 then
+                     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install nmon 
+                 fi
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "atop" ] )
+                 then
+                     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install atop 
+                 fi
+                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "native" ] )
+                 then
+                     :
+                 fi
              fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "native" ] )
-             then
-                 :
-             fi         
-         fi
-         if ( [ "${BUILDOS}" = "debian" ] )
-         then
-            if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "glances" ] )
-            then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install glances 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "nmon" ] )
-             then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install nmon 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "atop" ] )
-             then
-                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install atop 
-             fi
-             if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "native" ] )
-             then
-                 :
-             fi        
          fi   
      fi
 fi
