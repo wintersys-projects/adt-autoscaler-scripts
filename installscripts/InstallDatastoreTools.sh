@@ -22,14 +22,17 @@
 
 BUILDOS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOS'`"
 
-if ( [ "${BUILDOS}" = "ubuntu" ] )
+if ( [ "`${HOME}/providerscripts/utilities/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt" ] )
 then
-   DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y install s3cmd
-fi
+    if ( [ "${BUILDOS}" = "ubuntu" ] )
+    then
+        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y install s3cmd
+    fi
 
-if ( [ "${BUILDOS}" = "debian" ] )
-then
-   DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y install s3cmd
+    if ( [ "${BUILDOS}" = "debian" ] )
+    then
+        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y install s3cmd
+    fi
 fi
    
 if ( [ -f ${HOME}/.s3cfg ] )
