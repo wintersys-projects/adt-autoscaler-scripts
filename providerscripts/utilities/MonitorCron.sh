@@ -22,7 +22,7 @@
 
 /usr/bin/crontab -l >/dev/null
 if ( [ "$?" != "0" ] )
-them
+then
     ${HOME}/providerscripts/email/SendEmail.sh "CRON COULD NOT BE LOADED" "Something must br wrong, cron is not loading which is a big problem I will reboot" "ERROR"
     ${HOME}/providerscripts/utilities/ShutdownThisAutoscaler.sh "reboot"
  fi
