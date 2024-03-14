@@ -25,17 +25,20 @@ then
     buildos="${1}"
 fi
 
-if ( [ "${buildos}" = "ubuntu" ] )
+if ( [ "`${HOME}/providerscripts/utilities/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt" ] )
 then
-    /usr/bin/yes | /usr/bin/dpkg --configure -a
-    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get install  -o DPkg::Lock::Timeout=-1 -y -qq apt-utils 2&1>/dev/null
-    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages
-fi
+    if ( [ "${buildos}" = "ubuntu" ] )
+    then
+        /usr/bin/yes | /usr/bin/dpkg --configure -a
+        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get install  -o DPkg::Lock::Timeout=-1 -y -qq apt-utils 2&1>/dev/null
+        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages
+    fi
 
-if ( [ "${buildos}" = "debian" ] )
-then
-    /usr/bin/yes | /usr/bin/dpkg --configure -a
-    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get install -o DPkg::Lock::Timeout=-1 -y -qq apt-utils 2&1>/dev/null
-    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages
+    if ( [ "${buildos}" = "debian" ] )
+    then
+        /usr/bin/yes | /usr/bin/dpkg --configure -a
+        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get install -o DPkg::Lock::Timeout=-1 -y -qq apt-utils 2&1>/dev/null
+        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages
+    fi
 fi
 
