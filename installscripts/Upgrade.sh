@@ -25,12 +25,15 @@ then
     buildos="${1}"
 fi
 
-if ( [ "${buildos}" = "ubuntu" ] )
+if ( [ "`${HOME}/providerscripts/utilities/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt" ] )
 then
-    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq upgrade  -o DPkg::Lock::Timeout=-1 -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef -y --allow-downgrades --allow-remove-essential --allow-change-held-packages
-fi
+    if ( [ "${buildos}" = "ubuntu" ] )
+    then
+        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq upgrade  -o DPkg::Lock::Timeout=-1 -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef -y --allow-downgrades --allow-remove-essential --allow-change-held-packages
+    fi
 
-if ( [ "${buildos}" = "debian" ] )
-then
-    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq upgrade  -o DPkg::Lock::Timeout=-1 -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef -y --allow-downgrades --allow-remove-essential --allow-change-held-packages
+    if ( [ "${buildos}" = "debian" ] )
+    then
+        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -qq upgrade  -o DPkg::Lock::Timeout=-1 -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef -y --allow-downgrades --allow-remove-essential --allow-change-held-packages  
+    fi
 fi
