@@ -1,9 +1,9 @@
 #!/bin/sh
-###################################################################################
-# Description: This  will perform a software update
-# Date: 18/11/2016
-# Author : Peter Winter
-###################################################################################
+######################################################################################################
+# Description: This script will perform a software update
+# Author: Peter Winter
+# Date: 17/01/2017
+#######################################################################################################
 # License Agreement:
 # This file is part of The Agile Deployment Toolkit.
 # The Agile Deployment Toolkit is free software: you can redistribute it and/or modify
@@ -16,8 +16,8 @@
 # GNU General Public License for more details.
 # You should have received a copy of the GNU General Public License
 # along with The Agile Deployment Toolkit.  If not, see <http://www.gnu.org/licenses/>.
-####################################################################################
-####################################################################################
+#######################################################################################################
+#######################################################################################################
 #set -x
 
 if ( [ "${1}" != "" ] )
@@ -30,15 +30,46 @@ then
     if ( [ "${buildos}" = "ubuntu" ] )
     then
         /usr/bin/yes | /usr/bin/dpkg --configure -a
-        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get install  -o DPkg::Lock::Timeout=-1 -y -qq apt-utils 2&1>/dev/null
-        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages
+        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -y -qq apt-utils 2&1>/dev/null
+        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages    
     fi
 
     if ( [ "${buildos}" = "debian" ] )
     then
         /usr/bin/yes | /usr/bin/dpkg --configure -a
-        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get install -o DPkg::Lock::Timeout=-1 -y -qq apt-utils 2&1>/dev/null
-        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages
+        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -y -qq apt-utils 2&1>/dev/null
+        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages    
     fi
+fi
+
+if ( [ "`${HOME}/providerscripts/utilities/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt-fast" ] )
+then
+    if ( [ "${buildos}" = "ubuntu" ] )
+    then
+        /usr/bin/yes | /usr/bin/dpkg --configure -a
+        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -y -qq apt-utils 2&1>/dev/null
+        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages  
+        /usr/bin/git clone https://github.com/ilikenwf/apt-fast.git
+        /bin/cp apt-fast/apt-fast /usr/sbin/
+        /bin/chmod +x /usr/sbin/apt-fast
+        /bin/cp apt-fast/apt-fast.conf /etc
+        /bin/chown root:root /etc/apt-fast.conf
+        /bin/chown root:root /usr/sbin/apt-fast
+        /usr/bin/apt-get -y -qq install aria2
+    fi
+    
+    if ( [ "${buildos}" = "debian" ] )
+    then
+        /usr/bin/yes | /usr/bin/dpkg --configure -a
+        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -y -qq apt-utils 2&1>/dev/null
+        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages  
+        /usr/bin/git clone https://github.com/ilikenwf/apt-fast.git
+        /bin/cp apt-fast/apt-fast /usr/sbin/
+        /bin/chmod +x /usr/sbin/apt-fast
+        /bin/cp apt-fast/apt-fast.conf /etc
+        /bin/chown root:root /etc/apt-fast.conf
+        /bin/chown root:root /usr/sbin/apt-fast
+        /usr/bin/apt-get -y -qq install aria2
+    fi   
 fi
 
