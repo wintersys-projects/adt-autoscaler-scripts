@@ -56,6 +56,7 @@ then
         /bin/chown root:root /etc/apt-fast.conf
         /bin/chown root:root /usr/sbin/apt-fast
         /usr/bin/apt-get -y -qq install aria2
+        /bin/rm -r ./apt-fast
     fi
     
     if ( [ "${buildos}" = "debian" ] )
@@ -70,6 +71,7 @@ then
         /bin/chown root:root /etc/apt-fast.conf
         /bin/chown root:root /usr/sbin/apt-fast
         /usr/bin/apt-get -y -qq install aria2
+        /bin/rm -r ./apt-fast
     fi   
 fi
 
