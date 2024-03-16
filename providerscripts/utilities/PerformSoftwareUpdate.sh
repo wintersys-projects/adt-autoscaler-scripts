@@ -24,11 +24,6 @@ if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh BUILDOS:ubuntu`" 
 then
      ${HOME}/installscripts/UpdateAndUpgrade.sh ${BUILDOS}   
      
-     if ( [ -f ${HOME}/EC2 ] )
-     then
-         ${HOME}/installscripts/InstallAWSCLI.sh  ${BUILDOS} #This will update the AWS CLI if we are on Amazon
-     fi
-     
      if ( [ -f ${HOME}/DROPLET ] )
      then
          ${HOME}/installscripts/InstallDoctl.sh ${BUILDOS} #This will update the Doctl tool if we are on Digital Ocean
