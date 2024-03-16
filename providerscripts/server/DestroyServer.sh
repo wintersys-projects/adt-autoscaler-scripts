@@ -143,9 +143,6 @@ then
         ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beenonline/${server_ip}" 
         ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beingbuiltips/${private_server_ip}"
 
-      #  ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${server_ip}
-      #  ${HOME}/providerscripts/security/firewall/DeleteFromNativeFirewall.sh ${private_server_ip}
-      #  ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beenonline/${server_ip}" 
 
         if ( [ -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_server_ip} ] )
         then
@@ -154,27 +151,3 @@ then
     fi
 fi
 
-if ( [ -f ${HOME}/EC2 ] || [ "${cloudhost}" = "aws" ] )
-then
-    if ( [ "${server_ip}" != "" ] )
-    then
-        #Instance initiated shutdown is set to "terminate" so the machine might already be gone if it has done a shutdown, but, if not, make sure
-        instance_id="`/usr/bin/aws ec2 describe-instances | /usr/bin/jq '.Reservations[].Instances[] | .InstanceId + " " + .PublicIpAddress' | /bin/sed 's/\"//g' | /bin/grep ${server_ip} | /usr/bin/awk '{print $1}'`"
-        if ( [ "${instance_id}" != "" ] )
-        then
-            /usr/bin/aws ec2 stop-instances --instance-ids ${instance_id}
-            /usr/bin/aws ec2 terminate-instances --instance-ids ${instance_id}
-        fi
-        /bin/echo "${0} `/bin/date`: Destroyed a server with id ${instance_id}" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
-        
-        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverips/${private_server_ip}"
-        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverpublicips/${server_ip}"
-        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beenonline/${server_ip}" 
-        ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beingbuiltips/${private_server_ip}"
-
-        if ( [ -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_server_ip} ] )
-        then
-           /bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_server_ip}
-        fi
-    fi
-fi
