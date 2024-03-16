@@ -58,9 +58,4 @@ then
    /usr/bin/vultr instance get ${id} | /bin/grep "INTERNAL IP" | /usr/bin/awk '{print $NF}'
 fi
 
-if ( [ -f ${HOME}/EC2 ] || [ "${cloudhost}" = "aws" ] )
-then
-    /usr/bin/aws ec2 describe-instances --filter "Name=instance-state-name,Values=running" | /usr/bin/jq '.Reservations[].Instances[] | .PublicIpAddress + " " +.PrivateIpAddress' | /bin/sed 's/\"//g' | /bin/grep ${ip} | /usr/bin/awk '{print $2}' 
-fi
-
 
