@@ -287,24 +287,6 @@ then
     /bin/touch ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip}
 fi
 
-DBaaS_DBSECURITYGROUP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBaaSDBSECURITYGROUP'`"
-
-if ( [ "${DBaaS_DBSECURITYGROUP}" != "" ] )
-then
-    ip_to_allow="${ip}"
-    . ${HOME}/providerscripts/server/AllowDBAccess.sh
-fi
-
-INMEMORYCACHING_SECURITY_GROUP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INMEMORYCACHINGSECURITYGROUP'`"
-INMEMORYCACHING_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INMEMORYCACHINGPORT'`"
-INMEMORYCACHING_HOST="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INMEMORYCACHINGHOST'`"
-
-if ( [ "${INMEMORYCACHING_SECURITY_GROUP}" != "" ] )
-then
-    ip_to_allow="${ip}"
-    . ${HOME}/providerscripts/server/AllowCachingAccess.sh
-fi
-
 #We add our IP address to a list of machines in the 'being built' stage. We can check this flag elsewhere when we want to
 #distinguish between ip address of webservers which have been built and are still being built.
 #The autoscaler monitors for this when it is looking for slow builds. The being built part of things is cleared out when
