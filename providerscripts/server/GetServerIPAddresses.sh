@@ -58,9 +58,5 @@ then
     /usr/bin/vultr instance list | /bin/grep ".*${server_type}" | /usr/bin/awk '{print $2}' 
 fi
 
-if ( [ -f ${HOME}/EC2 ] || [ "${cloudhost}" = "aws" ] )
-then
-    /usr/bin/aws ec2 describe-instances --filter "Name=tag:descriptiveName,Values=*${server_type}*" "Name=instance-state-name,Values=running" | /usr/bin/jq '.Reservations[].Instances[].PublicIpAddress' | /bin/sed 's/\"//g'
-fi
 
 
