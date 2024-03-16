@@ -55,10 +55,5 @@ then
 fi
 
 
-if ( [ -f ${HOME}/EC2 ] || [ "${cloudhost}" = "aws" ] )
-then
-    /usr/bin/aws ec2 describe-instances | /usr/bin/jq '.Reservations[].Instances[] | .PublicIpAddress + " " + .Tags[].Key + " " + .Tags[].Value' | /bin/sed 's/\"//g' | /bin/grep -w "${server_ip}" | /usr/bin/awk '{print $NF}'
-fi
-
 
 
