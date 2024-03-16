@@ -203,46 +203,5 @@ then
                 fi        
             fi   
         fi
-        if ( [ "${CLOUDHOST}" = "aws" ] )
-        then
-             if ( [ "${BUILDOS}" = "ubuntu" ] )
-             then
-                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "glances" ] )
-                 then
-                     DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1  -qq -y install glances 
-                 fi
-                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "nmon" ] )
-                 then
-                     DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1  -qq -y install nmon 
-                 fi
-                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "atop" ] )
-                 then
-                     DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1  -qq -y install atop 
-                 fi
-                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "native" ] )
-                 then
-                      :
-                 fi         
-             fi
-             if ( [ "${BUILDOS}" = "debian" ] )
-             then
-                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "glances" ] )
-                 then
-                     DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1  -qq -y install glances 
-                 fi
-                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "nmon" ] )
-                 then
-                     DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1  -qq -y install nmon 
-                 fi
-                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "atop" ] )
-                 then
-                     DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1  -qq -y install atop 
-                 fi
-                 if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INSTALLMONITORINGGEAR' | /usr/bin/awk -F'|' '{print $NF}'`" = "native" ] )
-                 then
-                     :
-                 fi
-             fi
-         fi   
-     fi
+    fi
 fi
