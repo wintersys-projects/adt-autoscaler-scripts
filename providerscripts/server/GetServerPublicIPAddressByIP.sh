@@ -60,7 +60,3 @@ then
     /usr/bin/vultr instance list ${machine_id} | /bin/grep ${machine_id} | /usr/bin/awk '{print $2}'
 fi
 
-if ( [ -f ${HOME}/EC2 ] || [ "${cloudhost}" = "aws" ] )
-then
-:
-fi
