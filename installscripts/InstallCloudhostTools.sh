@@ -61,12 +61,3 @@ then
     ${HOME}/installscripts/InstallVultr.sh ${BUILDOS}
     /usr/bin/touch ${HOME}/VULTR
 fi
-
-if ( [ "${CLOUDHOST}" = "aws" ] )
-then
-    /bin/echo "${0} `/bin/date`: Building for the AWS provider" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
-    ${HOME}/installscripts/InstallJQ.sh ${BUILDOS}
-    ${HOME}/installscripts/InstallAWSCLI.sh ${BUILDOS}
-    ${HOME}/installscripts/InstallAWSCLI53.sh ${BUILDOS}
-    /usr/bin/touch ${HOME}/EC2
-fi
