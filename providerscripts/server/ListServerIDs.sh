@@ -48,10 +48,6 @@ then
     /usr/bin/vultr instance list | /bin/grep ${instance_type} | /usr/bin/awk '{print $1}' | /bin/grep ".*-.*-.*-"
 fi
 
-if ( [ -f ${HOME}/EC2 ] || [ "${cloudhost}" = "aws" ] )
-then
-    /usr/bin/aws ec2 describe-instances --filter "Name=tag:descriptiveName,Values=*${instance_type}*" "Name=instance-state-name,Values=running" | /usr/bin/jq ".Reservations[].Instances[].InstanceId" | /bin/sed 's/\"//g'
-fi
 
 
 
