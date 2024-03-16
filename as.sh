@@ -170,13 +170,6 @@ ${HOME}/installscripts/InstallSysStat.sh ${BUILDOS}
 ${HOME}/installscripts/InstallRsync.sh ${BUILDOS}
 >&2 /bin/echo "${0} InstallCron.sh"
 ${HOME}/installscripts/InstallCron.sh ${BUILDOS}
-
-if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh ENABLEEFS:1`" = "1" ] )
-then
-    >&2 /bin/echo "${0} InstallNFS.sh"
-    ${HOME}/installscripts/InstallNFS.sh ${BUILDOS}
-fi
-
 >&2 /bin/echo "${0} Install Monitoring Gear"
 ${HOME}/installscripts/InstallMonitoringGear.sh
 
