@@ -450,22 +450,6 @@ then
     
     ${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
     
-    DBaaS_DBSECURITYGROUP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBaaSDBSECURITYGROUP'`"
-
-    if ( [ "${DBaaS_DBSECURITYGROUP}" != "" ] )
-    then
-        ip_to_deny="${ip}"
-        . ${HOME}/providerscripts/server/DenyDBAccess.sh
-    fi
-    
-    INMEMORYCACHING_SECURITY_GROUP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INMEMORYCACHINGSECURITYGROUP'`"
-    INMEMORYCACHING_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INMEMORYCACHINGPORT'`"
-
-    if ( [ "${INMEMORYCACHING_SECURITY_GROUP}" != "" ] )
-    then
-        ip_to_deny="${ip}"
-        . ${HOME}/providerscripts/server/DenyCachingAccess.sh
-    fi
     /bin/echo "${0} `/bin/date`: The webserver ${ip} being built in response to a scaling event has failed to build and has had its resources released" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
     ${HOME}/providerscripts/email/SendEmail.sh "A WEBSERVER HAS FAILED TO COME ONLINE" "For some reason, autoscaler provisioned webserver with ip ${ip} failed to provision. You will need to check your logs..." "ERROR"
     /usr/bin/kill -TERM $$
