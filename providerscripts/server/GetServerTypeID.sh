@@ -49,7 +49,3 @@ then
     /usr/bin/vultr plans list | /bin/grep ${REGION} | /bin/grep vc2 | /usr/bin/tr '\t' 'X' | /bin/grep "${server_size}X" | /usr/bin/awk -F'X' '{print $1}'
 fi
 
-if ( [ -f ${HOME}/EC2 ] ||  [ "${cloudhost}" = "aws" ] )
-then
-    /bin/echo ${server_size}
-fi
