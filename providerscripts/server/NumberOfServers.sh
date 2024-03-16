@@ -49,10 +49,6 @@ then
     /usr/bin/vultr instance list | /bin/grep ${server_type} | /usr/bin/awk '{print $2}' | /usr/bin/wc -l
 fi
 
-if ( [ -f ${HOME}/EC2 ] || [ "${cloudhost}" = "aws" ] )
-then
-    /usr/bin/aws ec2 describe-instances --filters "Name=instance-state-code,Values=16" "Name=instance-state-name,Values=running" | /usr/bin/jq ".Reservations[].Instances[].Tags[].Value" | /bin/grep ${server_type} | /usr/bin/wc -l
-fi
 
 
 
