@@ -83,8 +83,3 @@ elif ( [ "${BUILDOS}" = "debian" ] )
         /bin/echo "Debian ${BUILDOSVERSION} x64"
     fi
 fi
-
-if ( [ -f ${HOME}/EC2 ] || [ "${cloudhost}" = "aws" ] )
-then
-    /bin/echo "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'OSTYPE'`"
-fi
