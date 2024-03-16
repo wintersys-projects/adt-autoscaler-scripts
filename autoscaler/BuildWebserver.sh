@@ -153,7 +153,6 @@ SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSHPORT'`"
 DB_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBPORT'`"
 BUILD_CLIENT_IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDCLIENTIP'`"
 PERSIST_ASSETS_TO_CLOUD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'PERSISTASSETSTOCLOUD'`"
-ENABLE_EFS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ENABLEEFS'`"
 DIRECTORIES_TO_MOUNT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DIRECTORIESTOMOUNT'`"
 
 BUILD_KEY="${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER}"
