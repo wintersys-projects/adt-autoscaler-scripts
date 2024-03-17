@@ -129,18 +129,12 @@ distribution="${1}"
 location="${2}"
 server_size="${3}"
 server_name="`/bin/echo ${4} | /usr/bin/cut -c -32`"
-key="${5}"
+key_id="${5}"
 cloudhost="${6}"
 username="${7}"
-password="${8}"
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
 then
-    if ( [ "${password}" = "" ] )
-    then
-        password="156432wdfpdaiI"
-    fi
-
     snapshot_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SNAPSHOTID'`"
 
     if ( [ "${snapshot_id}" = "" ] )
@@ -148,6 +142,13 @@ then
         ${HOME}/providerscripts/utilities/StoreConfigValue.sh 'SNAPAUTOSCALE' '0'
     fi
 
+    key="`/usr/local/bin/linode-cli --text sshkeys view ${key_id} | /usr/bin/awk '{print $3,$4,$5}' | /usr/bin/tail -n-1`"
+    
+    if ( [ -f ${HOME}/.ssh/EMERGENCY_PASSWORD ] )
+    then
+        emergency_password="`/bin/cat ${HOME}/.ssh/EMERGENCY_PASSWORD`"
+    fi
+    
     #Linode supports snapshots, so decide if we are building from a snapshot
     if ( [ "${snapshot_id}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
     then
@@ -155,7 +156,7 @@ then
         #Note 164 is a special os id to say that we are building from a snapshot and not a standard image
         snapshot_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SNAPSHOTID'`"
         /bin/echo "${0} `/bin/date`: Building a new webserver using the snapshot build method" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
-        /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --image "private/${snapshot_id}" --type ${server_size} --label "${server_name}" --no-defaults
+        /usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${location} --image "private/${snapshot_id}" --type ${server_size} --label "${server_name}" --no-defaults
         server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
         /usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
         /bin/echo "SNAPPED"
@@ -164,7 +165,7 @@ then
 
         if ( [ "`/bin/echo ${distribution} | /bin/grep 'Ubuntu 20.04'`" != "" ] )
         then
-            /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --image linode/ubuntu20.04 --type ${server_size} --label "${server_name}" --no-defaults
+            /usr/local/bin/linode-cli linodes create  --authorized_keys "${key}"  --root_pass ${emergency_password} --region ${location} --image linode/ubuntu20.04 --type ${server_size} --label "${server_name}" --no-defaults
             if ( [ "$?" != "0" ] )
             then
                  ${HOME}/providerscripts/email/SendEmail.sh "FAILED TO CREATE LINODE" "I tried to create a droplet called ${server_name} and failed. I don't know why, please investigate" "ERROR"
@@ -173,7 +174,7 @@ then
             /usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
         elif ( [ "`/bin/echo ${distribution} | /bin/grep 'Ubuntu 22.04'`" != "" ] )
         then
-            /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --image linode/ubuntu22.04 --type ${server_size} --label "${server_name}" --no-defaults
+            /usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${location} --image linode/ubuntu22.04 --type ${server_size} --label "${server_name}" --no-defaults
             if ( [ "$?" != "0" ] )
             then
                  ${HOME}/providerscripts/email/SendEmail.sh "FAILED TO CREATE LINODE" "I tried to create a linode called ${server_name} and failed. I don't know why, please investigate" "ERROR"
@@ -182,7 +183,7 @@ then
             /usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
         elif ( [ "`/bin/echo ${distribution} | /bin/grep 'Debian 10'`" != "" ] )
         then
-            /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --image linode/debian10 --type ${server_size} --label "${server_name}" --no-defaults
+            /usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${location} --image linode/debian10 --type ${server_size} --label "${server_name}" --no-defaults
             if ( [ "$?" != "0" ] )
             then
                  ${HOME}/providerscripts/email/SendEmail.sh "FAILED TO CREATE LINODE" "I tried to create a linode called ${server_name} and failed. I don't know why, please investigate" "ERROR"
@@ -191,7 +192,7 @@ then
             /usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
         elif ( [ "`/bin/echo ${distribution} | /bin/grep 'Debian 11'`" != "" ] )
         then
-            /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --image linode/debian11 --type ${server_size} --label "${server_name}" --no-defaults
+            /usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${location} --image linode/debian11 --type ${server_size} --label "${server_name}" --no-defaults
             if ( [ "$?" != "0" ] )
             then
                  ${HOME}/providerscripts/email/SendEmail.sh "FAILED TO CREATE LINODE" "I tried to create a linode called ${server_name} and failed. I don't know why, please investigate" "ERROR"
@@ -200,7 +201,7 @@ then
             /usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
         elif ( [ "`/bin/echo ${distribution} | /bin/grep 'Debian 12'`" != "" ] )
         then
-            /usr/local/bin/linode-cli linodes create --root_pass ${password} --region ${location} --image linode/debian12 --type ${server_size} --label "${server_name}" --no-defaults 
+            /usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${location} --image linode/debian12 --type ${server_size} --label "${server_name}" --no-defaults 
             if ( [ "$?" != "0" ] )
             then
                  ${HOME}/providerscripts/email/SendEmail.sh "FAILED TO CREATE LINODE" "I tried to create a linode called ${server_name} and failed. I don't know why, please investigate" "ERROR"
