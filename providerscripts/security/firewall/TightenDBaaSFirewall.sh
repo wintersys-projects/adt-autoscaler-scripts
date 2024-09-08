@@ -26,12 +26,12 @@ then
 	:
    #Because the DBaaS setup is in the same VPC as your machines we don't need to tighten its firewall because its only accessible from within the VPC
 
-  #  dbaas="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
+    dbaas="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
  # 
-  #  cluster_id="`/bin/echo ${dbaas} | /usr/bin/awk '{print $NF}'`"#
+    cluster_id="`/bin/echo ${dbaas} | /usr/bin/awk '{print $NF}'`"#
 
-#    if ( [ "${cluster_id}" != "" ] )
-#    then
+    if ( [ "${cluster_id}" != "" ] )
+    then
 #        autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
 #        webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh webserver ${CLOUDHOST}`"
 #        database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh database ${CLOUDHOST}`"
@@ -52,7 +52,7 @@ then
 
 #        for ipaddress in ${newips}
 #        do
-#            /usr/local/bin/doctl databases firewalls append ${cluster_id} --rule ip_addr:${ipaddress}
+            /usr/local/bin/doctl databases firewalls append ${cluster_id} --rule ip_addr:10.0.0.0/16
 #        done
 #    fi
 fi
@@ -127,9 +127,9 @@ fi
 #This means that you have no need to have trusted IP addresses on an IP address by IP address basis for vultr. I have left the code below commented out in case
 #You do want to have specific IP addresses as trusted IPs but as long as your managed database is in the same VPC as your main machines then you shouldn't need this
 
-#if ( [ "${CLOUDHOST}" = "vultr" ] )
-#then
-  #  export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
+if ( [ "${CLOUDHOST}" = "vultr" ] )
+then
+    export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
 	
   #  autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
   #  webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh webserver ${CLOUDHOST}`"
@@ -142,21 +142,21 @@ fi
   #  ipaddresses="${autoscaler_ips} ${webserver_ips} ${database_ips} ${autoscaler_private_ips} ${webserver_private_ips} ${database_private_ips}"
  #   ipaddresses="`/bin/echo ${ipaddresses} | /bin/sed 's/  / /g;' | /bin/sed 's/ /,/g'`"
 #
- #   databaseids="`/usr/bin/vultr database list | /bin/egrep "^ID" | /usr/bin/awk '{print $NF}'`"
- #   selected_databaseid=""
+    databaseids="`/usr/bin/vultr database list | /bin/egrep "^ID" | /usr/bin/awk '{print $NF}'`"
+    selected_databaseid=""
 
- #   DBaaS_HOSTNAME="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBaaS_HOSTNAME'`"
+    DBaaS_HOSTNAME="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBaaS_HOSTNAME'`"
 
- #   for databaseid in ${databaseids}
- #   do
- #       if ( [ "`/usr/bin/vultr database get ${databaseid} | /bin/grep "${DBaaS_HOSTNAME}"`" != "" ] )
- #       then
- #            selected_databaseid="${databaseid}"
- #       fi
- #   done
+    for databaseid in ${databaseids}
+    do
+        if ( [ "`/usr/bin/vultr database get ${databaseid} | /bin/grep "${DBaaS_HOSTNAME}"`" != "" ] )
+        then
+             selected_databaseid="${databaseid}"
+        fi
+    done
 
- #   if ( [ "${selected_databaseid}" != "" ] )
- #   then
- #       /usr/bin/vultr database update ${selected_databaseid} --trusted-ips="${ipaddresses}"
- #   fi
-#fi
+    if ( [ "${selected_databaseid}" != "" ] )
+    then
+        /usr/bin/vultr database update ${selected_databaseid} --trusted-ips="192.168.0.0/16"
+    fi
+fi
