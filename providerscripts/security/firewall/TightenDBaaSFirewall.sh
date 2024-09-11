@@ -54,7 +54,7 @@ then
 #        do
             /usr/local/bin/doctl databases firewalls append ${cluster_id} --rule ip_addr:10.0.0.0/16
 #        done
-#    fi
+	fi
 fi
 
 if ( [ "${CLOUDHOST}" = "exoscale" ] )
