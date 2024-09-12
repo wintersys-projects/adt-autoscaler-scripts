@@ -52,7 +52,7 @@ then
 
 #        for ipaddress in ${newips}
 #        do
-            /usr/local/bin/doctl databases firewalls append ${cluster_id} --rule ip_addr:10.0.0.0/16
+            /usr/local/bin/doctl databases firewalls append ${cluster_id} --rule ip_addr:10.116.0.0/16
 #        done
 	fi
 fi
