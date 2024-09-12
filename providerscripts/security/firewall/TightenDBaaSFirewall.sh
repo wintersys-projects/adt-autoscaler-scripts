@@ -25,10 +25,11 @@ if ( [ "${CLOUDHOST}" = "digitalocean" ] )
 then
     	dbaas="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
     	cluster_id="`/bin/echo ${dbaas} | /usr/bin/awk '{print $8}'`"
+	ip_addr="`/usr/local/bin/doctl vpcs list | /bin/grep adt-vpc | /bin/grep -Po "10.*" | /usr/bin/awk '{print $1}'`"
 
     	if ( [ "${cluster_id}" != "" ] )
     	then
-		/usr/local/bin/doctl databases firewalls append ${cluster_id} --rule ip_addr:10.0.0.0/8
+		/usr/local/bin/doctl databases firewalls append ${cluster_id} --rule ip_addr:${ip_addr}
 	fi
 fi
 
