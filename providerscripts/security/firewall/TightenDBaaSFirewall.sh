@@ -23,37 +23,12 @@
 
 if ( [ "${CLOUDHOST}" = "digitalocean" ] )
 then
-	:
-   #Because the DBaaS setup is in the same VPC as your machines we don't need to tighten its firewall because its only accessible from within the VPC
+    	dbaas="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
+    	cluster_id="`/bin/echo ${dbaas} | /usr/bin/awk '{print $NF}'`"#
 
-    dbaas="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
- # 
-    cluster_id="`/bin/echo ${dbaas} | /usr/bin/awk '{print $NF}'`"#
-
-    if ( [ "${cluster_id}" != "" ] )
-    then
-#        autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
-#        webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh webserver ${CLOUDHOST}`"
-#        database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh database ${CLOUDHOST}`"
-#    
-#        autoscaler_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh autoscaler ${CLOUDHOST}`"
-#        webserver_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh webserver ${CLOUDHOST}`"
-#        database_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh database ${CLOUDHOST}`"
-#
-#        newips="${autoscaler_ips} ${webserver_ips} ${database_ips} ${autoscaler_private_ips} ${webserver_private_ips} ${database_private_ips}"
-#        newips="`/bin/echo ${newips} | /bin/sed 's/  / /g'`"
-
-#        uuids="`/usr/local/bin/doctl databases firewalls list ${cluster_id} | /usr/bin/tail -n +2 | /usr/bin/awk '{print $1}'`"
-
-#        for uuid in ${uuids}  
-#        do
-#             /usr/local/bin/doctl databases firewalls remove ${cluster_id} --uuid ${uuid}
-#        done
-
-#        for ipaddress in ${newips}
-#        do
-            /usr/local/bin/doctl databases firewalls append ${cluster_id} --rule ip_addr:10.116.0.0/16
-#        done
+    	if ( [ "${cluster_id}" != "" ] )
+    	then
+		/usr/local/bin/doctl databases firewalls append ${cluster_id} --rule ip_addr:10.0.0.0/8
 	fi
 fi
 
