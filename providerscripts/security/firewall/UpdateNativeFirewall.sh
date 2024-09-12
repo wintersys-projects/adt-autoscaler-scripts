@@ -42,7 +42,7 @@ then
 	do
 		if ( [ "`/usr/local/bin/doctl compute firewall  list | /bin/grep "adt-webserver" | /bin/grep ${webserver_id}`" = "" ] )
 		then
-			/usr/local/bin/doctl compute firewall add-droplets ${webserver_firewall_id} --droplet-ids ${webserver_id}
+			/usr/local/bin/doctl compute firewall add-droplets ${firewall_id} --droplet-ids ${webserver_id}
 		fi
 	done
 fi
