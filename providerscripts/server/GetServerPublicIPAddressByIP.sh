@@ -48,7 +48,21 @@ fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
 then
-	/usr/local/bin/linode-cli --text linodes list | /bin/grep "${ip}" | /usr/bin/awk '{print $(NF-1)}'
+#	/usr/local/bin/linode-cli --text linodes list | /bin/grep "${ip}" | /usr/bin/awk '{print $(NF-1)}'
+	linode_ids="`/usr/local/bin/linode-cli --text linodes list | /usr/bin/tail -n +2 | /usr/bin/awk '{print $1}'`"
+	public_ip=""
+	for linode_id in ${linode_ids}
+	do
+        	if ( [ "`/usr/local/bin/linode-cli --text linodes ips-list ${linode_id} | /bin/grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}' | /bin/grep ${ip}`" != "" ] )
+        	then
+                	public_ip="`/usr/local/bin/linode-cli --text linodes ips-list ${linode_id} | /bin/grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}' | /bin/grep -v ${ip}`"
+        	fi
+        	if ( [ "${public_ip}" != "" ] )
+        	then
+                	/bin/echo ${public_ip}
+                	break
+        	fi
+	done
 fi
 
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
