@@ -89,9 +89,9 @@ fi
 
 if ( [ "${CLOUDHOST}" = "linode" ] )
 then
-   if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep "192.168.0.0/16" | /bin/grep ALLOW`" = "" ] )
+   if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep "10.0.1.0/24" | /bin/grep ALLOW`" = "" ] )
    then
-		/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from 192.168.0.0/16 to any port ${SSH_PORT}
+		/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from 10.0.1.0/24 to any port ${SSH_PORT}
 		/bin/sleep 5
 		updated="1"
 	fi
