@@ -156,67 +156,53 @@ then
 		#Note 164 is a special os id to say that we are building from a snapshot and not a standard image
 		snapshot_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SNAPSHOTID'`"
 		/bin/echo "${0} `/bin/date`: Building a new webserver using the snapshot build method" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
-		/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${location} --image "private/${snapshot_id}" --type ${server_size} --label "${server_name}" --no-defaults
-		server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
-		/usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
+		/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${location} --image "private/${snapshot_id}" --type ${server_size} --label "${server_name}" --no-defaults  --interfaces '[ { "primary": true, "purpose": "public"},{ "primary": false, "purpose": "vpc", "subnet_id": '"${subnet_id}"' } ]'
 		/bin/echo "SNAPPED"
 	else
 		/bin/echo "${0} `/bin/date`: Building a new webserver using the standard build method" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
 
 		if ( [ "`/bin/echo ${distribution} | /bin/grep 'Ubuntu 20.04'`" != "" ] )
 		then
-			/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}"  --root_pass ${emergency_password} --region ${location} --image linode/ubuntu20.04 --type ${server_size} --label "${server_name}" --no-defaults
+			/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}"  --root_pass ${emergency_password} --region ${location} --image linode/ubuntu20.04 --type ${server_size} --label "${server_name}" --no-defaults  --interfaces '[ { "primary": true, "purpose": "public"},{ "primary": false, "purpose": "vpc", "subnet_id": '"${subnet_id}"' } ]'
 			if ( [ "$?" != "0" ] )
 			then
 				 ${HOME}/providerscripts/email/SendEmail.sh "FAILED TO CREATE LINODE" "I tried to create a droplet called ${server_name} and failed. I don't know why, please investigate" "ERROR"
 			fi
-			server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
-			/usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
 		elif ( [ "`/bin/echo ${distribution} | /bin/grep 'Ubuntu 22.04'`" != "" ] )
 		then
-			/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${location} --image linode/ubuntu22.04 --type ${server_size} --label "${server_name}" --no-defaults
+			/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${location} --image linode/ubuntu22.04 --type ${server_size} --label "${server_name}" --no-defaults  --interfaces '[ { "primary": true, "purpose": "public"},{ "primary": false, "purpose": "vpc", "subnet_id": '"${subnet_id}"' } ]'
 			if ( [ "$?" != "0" ] )
 			then
 				 ${HOME}/providerscripts/email/SendEmail.sh "FAILED TO CREATE LINODE" "I tried to create a linode called ${server_name} and failed. I don't know why, please investigate" "ERROR"
 			fi
-			server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
-			/usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
 		elif ( [ "`/bin/echo ${distribution} | /bin/grep 'Ubuntu 24.04'`" != "" ] )
 		then
-			/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${location} --image linode/ubuntu24.04 --type ${server_size} --label "${server_name}" --no-defaults
+			/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${location} --image linode/ubuntu24.04 --type ${server_size} --label "${server_name}" --no-defaults  --interfaces '[ { "primary": true, "purpose": "public"},{ "primary": false, "purpose": "vpc", "subnet_id": '"${subnet_id}"' } ]'
 			if ( [ "$?" != "0" ] )
 			then
 				 ${HOME}/providerscripts/email/SendEmail.sh "FAILED TO CREATE LINODE" "I tried to create a linode called ${server_name} and failed. I don't know why, please investigate" "ERROR"
 			fi
-			server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
-			/usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
 		elif ( [ "`/bin/echo ${distribution} | /bin/grep 'Debian 10'`" != "" ] )
 		then
-			/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${location} --image linode/debian10 --type ${server_size} --label "${server_name}" --no-defaults
+			/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${location} --image linode/debian10 --type ${server_size} --label "${server_name}" --no-defaults --interfaces '[ { "primary": true, "purpose": "public"},{ "primary": false, "purpose": "vpc", "subnet_id": '"${subnet_id}"' } ]'
 			if ( [ "$?" != "0" ] )
 			then
 				 ${HOME}/providerscripts/email/SendEmail.sh "FAILED TO CREATE LINODE" "I tried to create a linode called ${server_name} and failed. I don't know why, please investigate" "ERROR"
 			fi
-			server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
-			/usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
 		elif ( [ "`/bin/echo ${distribution} | /bin/grep 'Debian 11'`" != "" ] )
 		then
-			/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${location} --image linode/debian11 --type ${server_size} --label "${server_name}" --no-defaults
+			/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${location} --image linode/debian11 --type ${server_size} --label "${server_name}" --no-defaults  --interfaces '[ { "primary": true, "purpose": "public"},{ "primary": false, "purpose": "vpc", "subnet_id": '"${subnet_id}"' } ]'
 			if ( [ "$?" != "0" ] )
 			then
 				 ${HOME}/providerscripts/email/SendEmail.sh "FAILED TO CREATE LINODE" "I tried to create a linode called ${server_name} and failed. I don't know why, please investigate" "ERROR"
 			fi
-			server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
-			/usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
 		elif ( [ "`/bin/echo ${distribution} | /bin/grep 'Debian 12'`" != "" ] )
 		then
-			/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${location} --image linode/debian12 --type ${server_size} --label "${server_name}" --no-defaults 
+			/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${location} --image linode/debian12 --type ${server_size} --label "${server_name}" --no-defaults  --interfaces '[ { "primary": true, "purpose": "public"},{ "primary": false, "purpose": "vpc", "subnet_id": '"${subnet_id}"' } ]'
 			if ( [ "$?" != "0" ] )
 			then
 				 ${HOME}/providerscripts/email/SendEmail.sh "FAILED TO CREATE LINODE" "I tried to create a linode called ${server_name} and failed. I don't know why, please investigate" "ERROR"
 			fi
-			server_id="`/usr/local/bin/linode-cli linodes list --text --label ${server_name} | /bin/grep -v 'id' | /usr/bin/awk '{print $1}'`"
-			/usr/local/bin/linode-cli linodes ip-add ${server_id} --type ipv4 --public false
 		fi
 	fi
 fi
