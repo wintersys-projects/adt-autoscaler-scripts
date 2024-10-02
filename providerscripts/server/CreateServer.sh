@@ -142,7 +142,7 @@ then
 		${HOME}/providerscripts/utilities/StoreConfigValue.sh 'SNAPAUTOSCALE' '0'
 	fi
 
-	key="`/usr/local/bin/linode-cli --text sshkeys view ${key_id} | /usr/bin/awk '{print $3,$4,$5}' | /usr/bin/tail -n-1`"
+	key="`/usr/local/bin/linode-cli --text sshkeys view ${key_id} | /usr/bin/awk '{print $4,$5,$6}' | /usr/bin/tail -n-1`"
 	
 	if ( [ -f ${HOME}/.ssh/EMERGENCY_PASSWORD ] )
 	then
