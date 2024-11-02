@@ -39,6 +39,7 @@ then
  		/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw default deny incoming
 		/bin/sleep 10
 		/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw default allow outgoing
+  	 	/bin/touch ${HOME}/runtime/KNICKERS_ARE_UP
 	elif ( [ "${firewall}" = "iptables" ] )
  	then
  		/usr/sbin/iptables -A INPUT -j DROP
@@ -46,7 +47,7 @@ then
 		/usr/sbin/iptables -A INPUT -p icmp -J ACCEPT
 		/usr/sbin/iptables -A INPUT -s 127.0.0.1/32 -j ACCEPT
 		/usr/sbin/netfilter-persistent save
+   		/bin/touch ${HOME}/runtime/KNICKERS_ARE_UP
 	fi
- 	/bin/touch ${HOME}/runtime/KNICKERS_ARE_UP
 fi
 
