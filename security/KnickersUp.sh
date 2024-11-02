@@ -25,9 +25,25 @@ SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh '
 
 if ( [ ! -f ${HOME}/runtime/KNICKERS_ARE_UP ] )
 then
-	/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw default deny incoming
-	/bin/sleep 10
-	/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw default allow outgoing
-	/bin/touch ${HOME}/runtime/KNICKERS_ARE_UP
+	firewall=""
+	if ( [ "`${HOME}/providerscripts/utilities/ExtractBuildStyleValues.sh "FIREWALL" | /usr/bin/awk -F':' '{print $NF}'`" = "ufw" ] )
+	then
+		firewall="ufw"
+	elif ( [ "`${HOME}/providerscripts/utilities/ExtractBuildStyleValues.sh "FIREWALL" | /usr/bin/awk -F':' '{print $NF}'`" = "iptables" ] )
+	then
+		firewall="iptables"
+	fi
+
+ 	if ( [ "${firewall}" = "ufw" ] )
+  	then
+ 		/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw default deny incoming
+		/bin/sleep 10
+		/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw default allow outgoing
+	elif ( [ "${firewall}" = "iptables" ] )
+ 	then
+ 		/usr/sbin/iptables -A adt-webserver -j DROP
+		/usr/sbin/netfilter-persistent save
+	fi
+ 	/bin/touch ${HOME}/runtime/KNICKERS_ARE_UP
 fi
 
