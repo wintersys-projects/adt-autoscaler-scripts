@@ -35,8 +35,8 @@ fi
 
 if ( [ "${firewall}" = "ufw" ] )
 then
-
+	${HOME}/installscripts/InstallUFW.sh ${buildos}
 elif ( [ "${firewall}" = "iptables" ] )
 then
-
+	${HOME}/installscripts/InstallIPTables.sh ${buildos}
 fi
