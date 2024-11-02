@@ -52,4 +52,5 @@ fi
 
 /usr/bin/systemctl enable netfilter-persistent
 /usr/sbin/iptables -N adt-autoscaler
+/usr/sbin/iptables -A INPUT -s 127.0.0.1/32 -j ACCEPT
 /usr/sbin/netfilter-persistent save
