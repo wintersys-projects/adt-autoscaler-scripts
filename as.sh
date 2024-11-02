@@ -188,14 +188,6 @@ then
 	export TZ=":${SERVER_TIMEZONE_CONTINENT}/${SERVER_TIMEZONE_CITY}"
 fi
 
-#Redimentary check to make sure all the software we require installed
-if ( [ -f /usr/bin/curl ] && [ -f /usr/sbin/ufw ] && [ -f /usr/bin/sshpass ] && [ -f /usr/bin/bc ] && [ -f /usr/bin/jq ] )
-then
-	/bin/echo "${0} `/bin/date` : It seems like all the required software has been installed correctly" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
-else
-	/bin/echo "${0} `/bin/date` : It seems like the required software hasn't been installed correctly" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
-	exit
-fi
 
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 >&2 /bin/echo "${0} Installing cloudtools"
