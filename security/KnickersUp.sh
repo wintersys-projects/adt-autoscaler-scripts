@@ -41,7 +41,7 @@ then
 		/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw default allow outgoing
 	elif ( [ "${firewall}" = "iptables" ] )
  	then
- 		/usr/sbin/iptables -A adt-webserver -j DROP
+ 		/usr/sbin/iptables -A INPUT -j DROP
 		/usr/sbin/netfilter-persistent save
 	fi
  	/bin/touch ${HOME}/runtime/KNICKERS_ARE_UP
