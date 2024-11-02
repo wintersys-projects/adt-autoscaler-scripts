@@ -148,8 +148,8 @@ kernel.panic=10" >> /etc/sysctl.conf
 
 >&2 /bin/echo "${0} Update.sh"
 ${HOME}/installscripts/Update.sh ${BUILDOS}
->&2 /bin/echo "${0} InstallUFW.sh"
-${HOME}/installscripts/InstallUFW.sh ${BUILDOS}
+>&2 /bin/echo "${0} InstallFirewall.sh"
+${HOME}/installscripts/InstallFirewall.sh ${BUILDOS}
 >&2 /bin/echo "${0} InstallCurl.sh"
 ${HOME}/installscripts/InstallCurl.sh ${BUILDOS}
 >&2 /bin/echo "${0} InstallSSHPass.sh"
