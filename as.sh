@@ -268,6 +268,30 @@ else
 	/bin/echo "PermitRootLogin no" >> /etc/ssh/sshd_config
 fi
 
+if ( [ "`/bin/grep '^#PasswordAuthentication' /etc/ssh/sshd_config`" != "" ] || [ "`/bin/grep '^PasswordAuthentication' /etc/ssh/sshd_config`" != "" ] )
+then
+	/bin/sed -i "s/^PasswordAuthentication.*/PasswordAuthentication no/g" /etc/ssh/sshd_config
+	/bin/sed -i "s/^#PasswordAuthentication.*/PasswordAuthentication no/g" /etc/ssh/sshd_config
+else
+	/bin/echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
+fi
+
+if ( [ "`/bin/grep '^#KbdInteractiveAuthentication' /etc/ssh/sshd_config`" != "" ] || [ "`/bin/grep '^KbdInteractiveAuthentication' /etc/ssh/sshd_config`" != "" ] )
+then
+	/bin/sed -i "s/^KbdInteractiveAuthentication.*/KbdInteractiveAuthentication no/g" /etc/ssh/sshd_config
+	/bin/sed -i "s/^#KbdInteractiveAuthentication.*/KbdInteractiveAuthentication no/g" /etc/ssh/sshd_config
+else
+	/bin/echo "KbdInteractiveAuthentication no" >> /etc/ssh/sshd_config
+fi
+
+if ( [ "`/bin/grep '^#ChallengeResponseAuthentication' /etc/ssh/sshd_config`" != "" ] || [ "`/bin/grep '^ChallengeResponseAuthentication' /etc/ssh/sshd_config`" != "" ] )
+then
+	/bin/sed -i "s/^ChallengeResponseAuthentication.*/ChallengeResponseAuthentication no/g" /etc/ssh/sshd_config
+	/bin/sed -i "s/^#ChallengeResponseAuthentication.*/ChallengeResponseAuthentication no/g" /etc/ssh/sshd_config
+else
+	/bin/echo "ChallengeResponseAuthentication no" >> /etc/ssh/sshd_config
+fi
+
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 >&2 /bin/echo "${0} Ensuring SSH connections are long lasting"
 /bin/echo "${0} `/bin/date`: Ensuring SSH connections are long lasting" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
