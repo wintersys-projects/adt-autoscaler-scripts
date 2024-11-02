@@ -36,7 +36,7 @@ fi
 if ( [ "${firewall}" = "ufw" ] )
 then
 
-elif ( [ "${firewaall}" = "iptables"
+elif ( [ "${firewall}" = "iptables"
 then
 
 fi
