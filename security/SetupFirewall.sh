@@ -43,9 +43,6 @@ firewall=""
 if ( [ "`${HOME}/providerscripts/utilities/ExtractBuildStyleValues.sh "FIREWALL" | /usr/bin/awk -F':' '{print $NF}'`" = "ufw" ] )
 then
 	firewall="ufw"
-elif ( [ "`${HOME}/providerscripts/utilities/ExtractBuildStyleValues.sh "FIREWALL" | /usr/bin/awk -F':' '{print $NF}'`" = "iptables" ] )
-then
-	firewall="iptables"
 fi
 
 if ( [ "${firewall}" = "ufw" ] )
@@ -55,12 +52,6 @@ then
 		exit
 	fi
 	/usr/sbin/ufw logging off
-elif ( [ "${firewall}" = "iptables" ] )
-then
-	if ( [ -f ${HOME}/runtime/FIREWALL-ACTIVE ] )
- 	then
-  		exit
-	fi
 fi
 
 SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSHPORT'`"
@@ -84,13 +75,6 @@ then
 			/bin/sleep 5
 			updated="1"
 		fi
-	elif ( [ "${firewall}" = "iptables" ] )
-	then
-		if ( [ "`/usr/sbin/iptables -L | /bin/grep ACCEPT | /bin/grep ${BUILD_CLIENT_IP} | /bin/grep ${SSH_PORT}`" = "" ] )
- 		then
-			/usr/sbin/iptables -I INPUT --src ${BUILD_CLIENT_IP} -m tcp -p tcp --dport ${SSH_PORT} -j ACCEPT
-			updated="1"
-		fi
 	fi
 fi
 
@@ -102,13 +86,6 @@ then
    		then
 			/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from 10.116.0.0/24 to any port ${SSH_PORT}
 			/bin/sleep 5
-			updated="1"
-		fi
-	elif ( [ "${firewall}" = "iptables" ] )
-	then
-		if ( [ "`/usr/sbin/iptables -L | /bin/grep ACCEPT | /bin/grep 10.116.0.0/24 | /bin/grep ${SSH_PORT}`" = "" ] )
- 		then
-			/usr/sbin/iptables -I INPUT --src 10.116.0.0/24 -m tcp -p tcp --dport ${SSH_PORT} -j ACCEPT
 			updated="1"
 		fi
 	fi
@@ -124,13 +101,6 @@ then
 			/bin/sleep 5
 			updated="1"
 		fi
-	elif ( [ "${firewall}" = "iptables" ] )
-	then
-		if ( [ "`/usr/sbin/iptables -L | /bin/grep ACCEPT | /bin/grep 10.0.0.0/24 | /bin/grep ${SSH_PORT}`" = "" ] )
- 		then
-  			/usr/sbin/iptables -I INPUT --src 10.0.0.0/24 -m tcp -p tcp --dport ${SSH_PORT} -j ACCEPT
-			updated="1"
-		fi
 	fi
 fi
 
@@ -142,13 +112,6 @@ then
    		then
 			/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from 10.0.1.0/24 to any port ${SSH_PORT}
 			/bin/sleep 5
-			updated="1"
-		fi
-	elif ( [ "${firewall}" = "iptables" ] )
-	then
-		if ( [ "`/usr/sbin/iptables -L | /bin/grep ACCEPT | /bin/grep 10.0.1.0/24 | /bin/grep ${SSH_PORT}`" = "" ] )
-		then
-			/usr/sbin/iptables -I INPUT --src 10.0.1.0/24 -m tcp -p tcp --dport ${SSH_PORT} -j ACCEPT
 			updated="1"
 		fi
 	fi
@@ -164,13 +127,6 @@ then
 			/bin/sleep 5
 			updated="1"
 		fi
-	elif ( [ "${firewall}" = "iptables" ] )
- 	then
-		if ( [ "`/usr/sbin/iptables -L | /bin/grep ACCEPT | /bin/grep 192.168.0.0/16 | /bin/grep ${SSH_PORT}`" = "" ] )
-		then
-  			/usr/sbin/iptables -I INPUT --src 192.168.0.0/16 -m tcp -p tcp --dport ${SSH_PORT} -j ACCEPT
-			updated="1"
-		fi
 	fi
 fi
 
@@ -181,21 +137,12 @@ then
 		/usr/sbin/ufw -f enable
 		/bin/sleep 5
 		/usr/sbin/service networking restart
-	elif ( [ "${firewall}" = "iptables" ] )
- 	then
-		/usr/sbin/netfilter-persistent save
 	fi
 fi
 
 if ( [ "${firewall}" = "ufw" ] )
 then
 	if ( [ "`/usr/bin/ufw status | /bin/grep 'inactive'`" = "" ] )
-	then
-		/bin/touch ${HOME}/runtime/FIREWALL-ACTIVE
-	fi
-elif ( [ "${firewall}" = "iptables" ] )
-then
-	if ( [ "`/usr/sbin/service iptables status | /bin/grep netfilter-persistent | /bin/grep enabled | /bin/grep Loaded`" != "" ] )
 	then
 		/bin/touch ${HOME}/runtime/FIREWALL-ACTIVE
 	fi
