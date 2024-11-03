@@ -41,9 +41,6 @@ firewall=""
 if ( [ "`${HOME}/providerscripts/utilities/ExtractBuildStyleValues.sh "FIREWALL" | /usr/bin/awk -F':' '{print $NF}'`" = "ufw" ] )
 then
 	firewall="ufw"
-elif ( [ "`${HOME}/providerscripts/utilities/ExtractBuildStyleValues.sh "FIREWALL" | /usr/bin/awk -F':' '{print $NF}'`" = "iptables" ] )
-then
-	firewall="iptables"
 fi
 
 if ( [ "${firewall}" = "ufw" ] )
@@ -53,11 +50,4 @@ then
 		${HOME}/providerscripts/email/SendEmail.sh "FIREWALL INACTIVE" "Just so you know, your firewall is inactive on machine `${HOME}/providerscripts/utilities/GetPublicIP.sh`. The machine may still be initialsing after a reboot, which can take some minutes, but if these messages continue indefinitely, then you need to look into why the firewall is inactive." "ERROR"
 		/bin/rm ${HOME}/runtime/FIREWALL-ACTIVE
 	fi
-elif ( [ "${firewall}" = "iptables" ] )
-then
-	if ( [ "`/usr/sbin/service iptables status | /bin/grep netfilter-persistent | /bin/grep enabled | /bin/grep Loaded`" = "" ] )
- 	then
-		${HOME}/providerscripts/email/SendEmail.sh "FIREWALL INACTIVE" "Just so you know, your firewall is inactive on machine `${HOME}/providerscripts/utilities/GetPublicIP.sh`. The machine may still be initialsing after a reboot, which can take some minutes, but if these messages continue indefinitely, then you need to look into why the firewall is inactive." "ERROR"
-		/bin/rm ${HOME}/runtime/FIREWALL-ACTIVE
-	fi  
 fi
