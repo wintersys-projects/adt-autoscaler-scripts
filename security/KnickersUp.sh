@@ -42,10 +42,18 @@ then
   	 	/bin/touch ${HOME}/runtime/KNICKERS_ARE_UP
 	elif ( [ "${firewall}" = "iptables" ] )
  	then
- 		/usr/sbin/iptables -A INPUT -j DROP
+
+      		/usr/sbin/iptables -F 
+		/usr/sbin/iptables -P INPUT DROP
+		/usr/sbin/iptables -P OUTPUT DROP
+		/usr/sbin/iptables -P FORWARD DROP
+
+		/usr/sbin/iptables -A INPUT -i lo -j ACCEPT
+		/usr/sbin/iptables -A OUTPUT -o lo -j ACCEPT
+		/usr/sbin/iptables -A INPUT -s 127.0.0.0/8 -j DROP
+  
 		/usr/sbin/iptables -N adt-autoscaler
 		/usr/sbin/iptables -A INPUT -p icmp -J ACCEPT
-		/usr/sbin/iptables -A INPUT -s 127.0.0.1/32 -j ACCEPT
 		/usr/sbin/netfilter-persistent save
    		/bin/touch ${HOME}/runtime/KNICKERS_ARE_UP
 	fi
