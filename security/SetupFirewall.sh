@@ -89,7 +89,7 @@ then
  		then
   			/usr/sbin/iptables -I INPUT --src ${BUILD_CLIENT_IP} -m tcp -p tcp --dport ${SSH_PORT} -j ACCEPT
      			updated="1"
-    		fi
+		fi
 	fi
 fi
 
@@ -109,7 +109,7 @@ then
  		then
   			/usr/sbin/iptables -I INPUT --src 10.116.0.0/24 -m tcp -p tcp --dport ${SSH_PORT} -j ACCEPT
      			updated="1"
-    		fi
+		fi
   	fi
 fi
 
@@ -183,7 +183,7 @@ then
 	elif ( [ "${firewall}" = "iptables" ] )
  	then
   		/usr/sbin/netfilter-persistent save
-    	fi
+	fi
 fi
 
 if ( [ "${firewall}" = "ufw" ] )
