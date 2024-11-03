@@ -30,15 +30,9 @@ firewall=""
 if ( [ "`${HOME}/providerscripts/utilities/ExtractBuildStyleValues.sh "FIREWALL" | /usr/bin/awk -F':' '{print $NF}'`" = "ufw" ] )
 then
 	firewall="ufw"
-elif ( [ "`${HOME}/providerscripts/utilities/ExtractBuildStyleValues.sh "FIREWALL" | /usr/bin/awk -F':' '{print $NF}'`" = "iptables" ] )
-then
-	firewall="iptables"
 fi
 
 if ( [ "${firewall}" = "ufw" ] )
 then
 	${HOME}/installscripts/InstallUFW.sh ${buildos}
-elif ( [ "${firewall}" = "iptables" ] )
-then
-	${HOME}/installscripts/InstallIPTables.sh ${buildos}
 fi
