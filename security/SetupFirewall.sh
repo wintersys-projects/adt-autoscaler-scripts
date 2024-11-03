@@ -60,6 +60,7 @@ then
 	if ( [ -f ${HOME}/runtime/FIREWALL-ACTIVE ] )
  	then
   		exit
+	fi
 fi
 
 SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSHPORT'`"
@@ -83,12 +84,12 @@ then
 			/bin/sleep 5
 			updated="1"
 		fi
-        elif ( [ "${firewall}" = "iptables" ] )
-    	then
+	elif ( [ "${firewall}" = "iptables" ] )
+	then
 		if ( [ "`/usr/sbin/iptables -L | /bin/grep ACCEPT | /bin/grep ${BUILD_CLIENT_IP} | /bin/grep ${SSH_PORT}`" = "" ] )
  		then
-  			/usr/sbin/iptables -I INPUT --src ${BUILD_CLIENT_IP} -m tcp -p tcp --dport ${SSH_PORT} -j ACCEPT
-     			updated="1"
+			/usr/sbin/iptables -I INPUT --src ${BUILD_CLIENT_IP} -m tcp -p tcp --dport ${SSH_PORT} -j ACCEPT
+			updated="1"
 		fi
 	fi
 fi
@@ -102,15 +103,15 @@ then
 			/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from 10.116.0.0/24 to any port ${SSH_PORT}
 			/bin/sleep 5
 			updated="1"
-   		fi
-        elif ( [ "${firewall}" = "iptables" ] )
-    	then
+		fi
+	elif ( [ "${firewall}" = "iptables" ] )
+	then
 		if ( [ "`/usr/sbin/iptables -L | /bin/grep ACCEPT | /bin/grep 10.116.0.0/24 | /bin/grep ${SSH_PORT}`" = "" ] )
  		then
-  			/usr/sbin/iptables -I INPUT --src 10.116.0.0/24 -m tcp -p tcp --dport ${SSH_PORT} -j ACCEPT
-     			updated="1"
+			/usr/sbin/iptables -I INPUT --src 10.116.0.0/24 -m tcp -p tcp --dport ${SSH_PORT} -j ACCEPT
+			updated="1"
 		fi
-  	fi
+	fi
 fi
 
 if ( [ "${CLOUDHOST}" = "exoscale" ] )
@@ -122,13 +123,13 @@ then
 			/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from 10.0.0.0/24 to any port ${SSH_PORT}
 			/bin/sleep 5
 			updated="1"
-   		fi
-      	elif ( [ "${firewall}" = "iptables" ] )
-    	then
-   		if ( [ "`/usr/sbin/iptables -L | /bin/grep ACCEPT | /bin/grep 10.0.0.0/24 | /bin/grep ${SSH_PORT}`" = "" ] )
+		fi
+	elif ( [ "${firewall}" = "iptables" ] )
+	then
+		if ( [ "`/usr/sbin/iptables -L | /bin/grep ACCEPT | /bin/grep 10.0.0.0/24 | /bin/grep ${SSH_PORT}`" = "" ] )
  		then
   			/usr/sbin/iptables -I INPUT --src 10.0.0.0/24 -m tcp -p tcp --dport ${SSH_PORT} -j ACCEPT
-     			updated="1"
+			updated="1"
 		fi
 	fi
 fi
@@ -142,13 +143,13 @@ then
 			/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from 10.0.1.0/24 to any port ${SSH_PORT}
 			/bin/sleep 5
 			updated="1"
-   		fi
-      	elif ( [ "${firewall}" = "iptables" ] )
-    	then
-      		if ( [ "`/usr/sbin/iptables -L | /bin/grep ACCEPT | /bin/grep 10.0.1.0/24 | /bin/grep ${SSH_PORT}`" = "" ] )
- 		then
-  			/usr/sbin/iptables -I INPUT --src 10.0.1.0/24 -m tcp -p tcp --dport ${SSH_PORT} -j ACCEPT
-     			updated="1"
+		fi
+	elif ( [ "${firewall}" = "iptables" ] )
+	then
+		if ( [ "`/usr/sbin/iptables -L | /bin/grep ACCEPT | /bin/grep 10.0.1.0/24 | /bin/grep ${SSH_PORT}`" = "" ] )
+		then
+			/usr/sbin/iptables -I INPUT --src 10.0.1.0/24 -m tcp -p tcp --dport ${SSH_PORT} -j ACCEPT
+			updated="1"
 		fi
 	fi
 fi
@@ -162,13 +163,13 @@ then
 			/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from 192.168.0.0/16 to any port ${SSH_PORT}
 			/bin/sleep 5
 			updated="1"
-   		fi
-   	elif ( [ "${firewall}" = "iptables" ] )
-    	then
-         	if ( [ "`/usr/sbin/iptables -L | /bin/grep ACCEPT | /bin/grep 192.168.0.0/16 | /bin/grep ${SSH_PORT}`" = "" ] )
- 		then
+		fi
+	elif ( [ "${firewall}" = "iptables" ] )
+ 	then
+		if ( [ "`/usr/sbin/iptables -L | /bin/grep ACCEPT | /bin/grep 192.168.0.0/16 | /bin/grep ${SSH_PORT}`" = "" ] )
+		then
   			/usr/sbin/iptables -I INPUT --src 192.168.0.0/16 -m tcp -p tcp --dport ${SSH_PORT} -j ACCEPT
-     			updated="1"
+			updated="1"
 		fi
 	fi
 fi
@@ -182,7 +183,7 @@ then
 		/usr/sbin/service networking restart
 	elif ( [ "${firewall}" = "iptables" ] )
  	then
-  		/usr/sbin/netfilter-persistent save
+		/usr/sbin/netfilter-persistent save
 	fi
 fi
 
