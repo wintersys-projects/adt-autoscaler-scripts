@@ -42,16 +42,31 @@ fi
 firewall=""
 if ( [ "`${HOME}/providerscripts/utilities/ExtractBuildStyleValues.sh "FIREWALL" | /usr/bin/awk -F':' '{print $NF}'`" = "ufw" ] )
 then
-	firewall="ufw"
+        firewall="ufw"
+elif ( [ "`${HOME}/providerscripts/utilities/ExtractBuildStyleValues.sh "FIREWALL" | /usr/bin/awk -F':' '{print $NF}'`" = "iptables" ] )
+then
+        firewall="iptables"
 fi
 
 if ( [ "${firewall}" = "ufw" ] )
 then
-	if ( [ -f ${HOME}/runtime/FIREWALL-ACTIVE ] && [ "`/usr/bin/ufw status | /bin/grep 'inactive'`" = "" ] )
-	then
-		exit
-	fi
-	/usr/sbin/ufw logging off
+        if ( [ -f ${HOME}/runtime/FIREWALL-ACTIVE ] && [ "`/usr/bin/ufw status | /bin/grep 'inactive'`" = "" ] )
+        then
+                exit
+        fi
+        /usr/sbin/ufw logging off
+elif ( [ "${firewall}" = "iptables" ] )
+then
+        if ( [ -f ${HOME}/runtime/FIREWALL-ACTIVE ] )
+        then
+                if ( [ "`/usr/sbin/service netfilter-persistent status | /bin/grep Loaded | /bin/grep enabled`" != "" ] )
+                then
+                        if ( [ "`/usr/sbin/service netfilter-persistent status | /bin/grep active`" != "" ] )
+                        then
+                                exit
+                        fi
+                fi
+        fi
 fi
 
 SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSHPORT'`"
@@ -75,7 +90,15 @@ then
 			/bin/sleep 5
 			updated="1"
 		fi
-	fi
+        elif ( [ "${firewall}" = "iptables" ] )
+        then
+                if ( [ "`/usr/sbin/iptables --list-rules | /bin/grep ACCEPT | /bin/grep ${SSH_PORT} | /bin/grep ${BUILD_CLIENT_IP}`" = "" ] )
+                then
+                        /usr/sbin/iptables -I INPUT -s ${BUILD_CLIENT_IP} -p tcp --dport ${SSH_PORT} -j ACCEPT
+                        /usr/sbin/iptables -I INPUT -s ${BUILD_CLIENT_IP} -p ICMP --icmp-type 8 -j ACCEPT
+                        updated="1"
+                fi
+        fi
 fi
 
 if ( [ "${CLOUDHOST}" = "digitalocean" ] )
@@ -88,7 +111,15 @@ then
 			/bin/sleep 5
 			updated="1"
 		fi
-	fi
+        elif ( [ "${firewall}" = "iptables" ] )
+        then
+                if ( [ "`/usr/sbin/iptables --list-rules | /bin/grep ACCEPT | /bin/grep ${SSH_PORT} | /bin/grep 10.116.0.0`" = "" ] )
+                then
+                        /usr/sbin/iptables -I INPUT -s 10.116.0.0/24 -p tcp --dport ${SSH_PORT} -j ACCEPT
+                        /usr/sbin/iptables -I INPUT -s 10.116.0.0/24 -p ICMP --icmp-type 8 -j ACCEPT
+                        updated="1"
+                fi
+        fi
 fi
 
 if ( [ "${CLOUDHOST}" = "exoscale" ] )
@@ -101,7 +132,15 @@ then
 			/bin/sleep 5
 			updated="1"
 		fi
-	fi
+        elif ( [ "${firewall}" = "iptables" ] )
+        then
+                if ( [ "`/usr/sbin/iptables --list-rules | /bin/grep ACCEPT | /bin/grep ${SSH_PORT} | /bin/grep 10.0.0.0`" = "" ] )
+                then
+                        /usr/sbin/iptables -I INPUT -s 10.0.0.0/24 -p tcp --dport ${SSH_PORT} -j ACCEPT
+                        /usr/sbin/iptables -I INPUT -s 10.0.0.0/24 -p ICMP --icmp-type 8 -j ACCEPT
+                        updated="1"
+                fi
+        fi
 fi
 
 if ( [ "${CLOUDHOST}" = "linode" ] )
@@ -114,7 +153,15 @@ then
 			/bin/sleep 5
 			updated="1"
 		fi
-	fi
+        elif ( [ "${firewall}" = "iptables" ] )
+        then
+                if ( [ "`/usr/sbin/iptables --list-rules | /bin/grep ACCEPT | /bin/grep ${SSH_PORT} | /bin/grep 10.0.1.0`" = "" ] )
+                then
+                        /usr/sbin/iptables -I INPUT -s 10.0.1.0/24 -p tcp --dport ${SSH_PORT} -j ACCEPT
+                        /usr/sbin/iptables -I INPUT -s 10.0.1.0/24 -p ICMP --icmp-type 8 -j ACCEPT
+                        updated="1"
+                fi
+        fi
 fi
 
 if ( [ "${CLOUDHOST}" = "vultr" ] )
@@ -127,23 +174,43 @@ then
 			/bin/sleep 5
 			updated="1"
 		fi
-	fi
+        elif ( [ "${firewall}" = "iptables" ] )
+        then
+                if ( [ "`/usr/sbin/iptables --list-rules | /bin/grep ACCEPT | /bin/grep ${SSH_PORT} | /bin/grep 192.168.0.0`" = "" ] )
+                then
+                        /usr/sbin/iptables -I INPUT -s 192.168.0.0/16 -p tcp --dport ${SSH_PORT} -j ACCEPT
+                        /usr/sbin/iptables -I INPUT -s 192.168.0.0/16 -p ICMP --icmp-type 8 -j ACCEPT
+                        updated="1"
+                fi
+        fi
 fi
 
 if ( [ "${updated}" = "1" ] )
 then
-	if ( [ "${firewall}" = "ufw" ] )
-	then
-		/usr/sbin/ufw -f enable
-		/bin/sleep 5
-		/usr/sbin/service networking restart
-	fi
+        if ( [ "${firewall}" = "ufw" ] )
+        then
+                /usr/sbin/ufw -f enable
+                /usr/sbin/ufw reload
+                /usr/sbin/service networking restart
+        elif ( [ "${firewall}" = "iptables" ] )
+        then
+                /usr/sbin/service netfilter-persistent save
+        fi
 fi
 
 if ( [ "${firewall}" = "ufw" ] )
 then
-	if ( [ "`/usr/bin/ufw status | /bin/grep 'inactive'`" = "" ] )
-	then
-		/bin/touch ${HOME}/runtime/FIREWALL-ACTIVE
-	fi
+        if ( [ "`/usr/bin/ufw status | /bin/grep 'inactive'`" = "" ] )
+        then
+                /bin/touch ${HOME}/runtime/FIREWALL-ACTIVE
+        fi
+elif ( [ "${firewall}" = "iptables" ] )
+then
+        if ( [ "`/usr/sbin/service netfilter-persistent status | /bin/grep Loaded | /bin/grep enabled`" != "" ] )
+        then
+                if ( [ "`/usr/sbin/service netfilter-persistent status | /bin/grep active`" != "" ] )
+                then
+                        /bin/touch ${HOME}/runtime/FIREWALL-ACTIVE
+                fi
+        fi
 fi
