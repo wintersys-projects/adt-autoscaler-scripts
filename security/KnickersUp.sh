@@ -29,6 +29,9 @@ then
 	if ( [ "`${HOME}/providerscripts/utilities/ExtractBuildStyleValues.sh "FIREWALL" | /usr/bin/awk -F':' '{print $NF}'`" = "ufw" ] )
 	then
 		firewall="ufw"
+	elif ( [ "`${HOME}/providerscripts/utilities/ExtractBuildStyleValues.sh "FIREWALL" | /usr/bin/awk -F':' '{print $NF}'`" = "iptables" ] )
+	then
+ 		firewall="iptables"
 	fi
 
  	if ( [ "${firewall}" = "ufw" ] )
@@ -36,7 +39,21 @@ then
  		/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw default deny incoming
 		/bin/sleep 10
 		/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw default allow outgoing
-  	 	/bin/touch ${HOME}/runtime/KNICKERS_ARE_UP
-	fi
+   		/bin/touch ${HOME}/runtime/KNICKERS_ARE_UP
+	elif ( [ "${firewall}" = "iptables" ] )
+ 	then
+		/usr/sbin/iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+		/usr/sbin/iptables -A INPUT -p icmp -m icmp --icmp-type 8 -j DROP
+		/usr/sbin/iptables -A INPUT -i lo -j ACCEPT
+		/usr/sbin/iptables -A OUTPUT -o lo -j ACCEPT
+		/usr/sbin/iptables -P INPUT DROP
+		/usr/sbin/iptables -P FORWARD DROP
+		/usr/sbin/iptables -P OUTPUT ACCEPT
+  		/usr/sbin/ip6tables -P INPUT DROP
+		/usr/sbin/ip6tables -P FORWARD DROP
+		/usr/sbin/ip6tables -P OUTPUT DROP
+		/usr/sbin/service netfilter-persistent save
+   		/bin/touch ${HOME}/runtime/KNICKERS_ARE_UP
+  	fi
 fi
 
