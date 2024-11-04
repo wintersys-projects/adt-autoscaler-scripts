@@ -66,7 +66,7 @@ ${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh "AUTOSCALED" "1"
 /usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} /bin/rm /home/${SERVER_USER}/runtime/APPLICATION_DB_CONFIGURED /home/${SERVER_USER}/runtime/PROCESSED_INITIAL_CONFIG /home/${SERVER_USER}/.ssh/webserver_configuration_settings.dat /home/${SERVER_USER}/.ssh/buildstyles.dat"    
 /usr/bin/scp -i ${BUILD_KEY} ${OPTIONS} -P ${SSH_PORT} ${HOME}/.ssh/webserver_configuration_settings.dat ${SERVER_USER}@${private_ip}:${HOME}/.ssh/
 /usr/bin/scp -i ${BUILD_KEY} ${OPTIONS} -P ${SSH_PORT} ${HOME}/.ssh/buildstyles.dat ${SERVER_USER}@${private_ip}:${HOME}/.ssh/
-/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} /usr/sbin/service sshd restart"
+/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} /usr/sbin/service ssh restart"
 
   
 /usr/bin/scp -i ${BUILD_KEY} ${OPTIONS} -P ${SSH_PORT} ${HOME}/.ssh/webserver_configuration_settings.dat ${SERVER_USER}@${private_ip}:${HOME}/.ssh/
