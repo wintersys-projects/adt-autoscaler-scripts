@@ -297,7 +297,7 @@ ClientAliveInterval 200
 ClientAliveCountMax 10" >> /etc/ssh/sshd_config
 fi
 
-/usr/sbin/service ssh restart
+${HOME}/providerscripts/utilities/RunServiceCommand.sh ssh restart
 
 DEVELOPMENT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DEVELOPMENT'`"
 PRODUCTION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'PRODUCTION'`"
