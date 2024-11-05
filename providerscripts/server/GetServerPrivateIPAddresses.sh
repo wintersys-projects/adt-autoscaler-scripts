@@ -40,8 +40,8 @@ fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
 then
-	
-	linodeids="`/usr/local/bin/linode-cli --json --pretty linodes list | jq '.[] | select (.label | contains("'`/bin/echo ${server_type} | /bin/sed 's/\*//g'`'")).id'`"
+	server_type="`/bin/echo ${server_type} | /bin/sed 's/\*//g'`"
+	linodeids="`/usr/local/bin/linode-cli --json --pretty linodes list | jq '.[] | select (.label | contains("'${server_type}'")).id'`"
 	privateips=""
 	for linodeid in ${linodeids}
 	do
