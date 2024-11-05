@@ -44,7 +44,7 @@ fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
 then
-	/usr/local/bin/linode-cli --text linodes list | /bin/grep -w "${server_ip}" | /bin/grep -v 'id' | /usr/bin/awk '{print $2}'
+	/usr/local/bin/linode-cli --json --pretty linodes list | jq '.[] | select (.ipv4[] == "'${server_ip}'").label' | /bin/sed 's/"//g'
 fi
 
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
