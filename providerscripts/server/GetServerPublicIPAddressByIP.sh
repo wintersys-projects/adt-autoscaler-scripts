@@ -48,21 +48,12 @@ fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
 then
-#	/usr/local/bin/linode-cli --text linodes list | /bin/grep "${ip}" | /usr/bin/awk '{print $(NF-1)}'
-	linode_ids="`/usr/local/bin/linode-cli --text linodes list | /usr/bin/tail -n +2 | /usr/bin/awk '{print $1}'`"
-	public_ip=""
-	for linode_id in ${linode_ids}
-	do
-        	if ( [ "`/usr/local/bin/linode-cli --text linodes ips-list ${linode_id} | /bin/grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}' | /bin/grep ${ip}`" != "" ] )
-        	then
-                	public_ip="`/usr/local/bin/linode-cli --text linodes ips-list ${linode_id} | /bin/grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}' | /bin/grep -v ${ip}`"
-        	fi
-        	if ( [ "${public_ip}" != "" ] )
-        	then
-                	/bin/echo ${public_ip}
-                	break
-        	fi
-	done
+	linodeids="`/usr/local/bin/linode-cli --json --pretty linodes list | jq '.[].id'`"
+        
+	for linodeid in ${linodeids}
+        do
+                /usr/local/bin/linode-cli --json --pretty linodes ips-list ${linodeid} | /usr/bin/jq '.[].ipv4.vpc[] | select (.address == "'${ip}'").nat_1_1' | /bin/sed 's/"//g'
+        done
 fi
 
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
