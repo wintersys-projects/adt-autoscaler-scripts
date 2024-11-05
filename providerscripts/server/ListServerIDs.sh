@@ -38,7 +38,7 @@ fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
 then
-	/usr/local/bin/linode-cli --json --pretty linodes list | jq '.[] | select (.label | contains("'${instance_type}'")).id'
+	/usr/local/bin/linode-cli --json --pretty linodes list | jq '.[] | select (.label | contains("'`/bin/echo ${instance_type} | sed 's/\*//g'`'")).id'
 fi
 
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
