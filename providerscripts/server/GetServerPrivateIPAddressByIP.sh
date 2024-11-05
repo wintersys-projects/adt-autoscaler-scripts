@@ -45,10 +45,7 @@ fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
 then
-	#/usr/local/bin/linode-cli linodes list --text | /bin/grep ${ip} | /bin/grep -o "192.168[^[:space:]]*"
-	linode_id="`/usr/local/bin/linode-cli --text linodes list | /bin/grep ${ip} | /usr/bin/awk '{print $1}'`"
-	# /usr/local/bin/linode-cli --text linodes ips-list ${linode_id} | /bin/grep -A 3 'ipv4.private' | /bin/grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'
-	#/usr/local/bin/linode-cli  --text linodes list | /bin/grep ${linode_id} | /bin/grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}' | /bin/grep  "192.168"
+	linode_id="`/usr/local/bin/linode-cli --json --pretty linodes list | jq '.[] | select (.ipv4[] == "'${ip}'").id'`"
 	/usr/local/bin/linode-cli --text linodes ips-list ${linode_id} | /bin/grep -Po "10.0.1.*" | /usr/bin/awk '{print $1}'		
 fi
 
