@@ -40,14 +40,11 @@ fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
 then
-  # /usr/local/bin/linode-cli linodes list --text | /bin/grep ${server_type} | /bin/grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}' | /bin/grep "192.168"
-	linodeids="`/usr/local/bin/linode-cli --text linodes list | /bin/grep ".*${server_type}" | /usr/bin/awk '{print $1}'`"
+	linodeids="`/usr/local/bin/linode-cli --json --pretty linodes list | jq '.[] | select (.label | contains("'${server_type}'")).id'`"
 	privateips=""
 	for linodeid in ${linodeids}
 	do
-		#privateip="`/usr/local/bin/linode-cli --text linodes ips-list ${linodeid} | /bin/grep -A 3 'ipv4.private' | /bin/grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`"
-		#privateip="`/usr/local/bin/linode-cli  --text linodes list | /bin/grep ${linodeid} | /bin/grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}' | /bin/grep "192.168"`"
-		privateip="`/usr/local/bin/linode-cli --text linodes ips-list ${linodeid} | /bin/grep -Po "10.0.1.*" | /usr/bin/awk '{print $1}'`"		
+  		privateip="`/usr/local/bin/linode-cli --json --pretty linodes ips-list ${linodeid} | /usr/bin/jq '.[].ipv4.vpc[].address'  | /bin/grep -o '[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}'`"		
   		privateips=${privateips}" ${privateip}"
 	done
 	/bin/echo ${privateips}
