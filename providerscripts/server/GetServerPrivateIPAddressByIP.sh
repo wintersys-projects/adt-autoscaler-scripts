@@ -46,7 +46,7 @@ fi
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
 then
 	linode_id="`/usr/local/bin/linode-cli --json --pretty linodes list | jq '.[] | select (.ipv4[] == "'${ip}'").id'`"
-	/usr/local/bin/linode-cli --text linodes ips-list ${linode_id} | /bin/grep -Po "10.0.1.*" | /usr/bin/awk '{print $1}'		
+	/usr/local/bin/linode-cli --json --pretty linodes ips-list ${linode_id} | /usr/bin/jq '.[].ipv4.vpc[].address'  | /bin/grep -o '[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}'		
 fi
 
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
