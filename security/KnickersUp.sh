@@ -52,7 +52,7 @@ then
   		/usr/sbin/ip6tables -P INPUT DROP
 		/usr/sbin/ip6tables -P FORWARD DROP
 		/usr/sbin/ip6tables -P OUTPUT DROP
-		/usr/sbin/service netfilter-persistent save
+    		${HOME}/providerscripts/utilities/RunServiceCommand.sh netfilter-persistent save
    		/bin/touch ${HOME}/runtime/KNICKERS_ARE_UP
   	fi
 fi
