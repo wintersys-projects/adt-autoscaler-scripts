@@ -39,18 +39,7 @@ fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
 then
-	/usr/local/bin/linode-cli --json --pretty linodes list | jq '.[] | select (.label | contains("'${server_type}'")).ipv4' | /bin/grep -o '[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}'
-
-   # /usr/local/bin/linode-cli linodes list --text | /bin/grep ${server_type} | /bin/grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}' | /bin/grep -v "192.168"
-#	linodeids="`/usr/local/bin/linode-cli --text linodes list | /bin/grep ".*${server_type}" | /usr/bin/awk '{print $1}'`"
-	#publicips=""
-	#for linodeid in ${linodeids}
-	#do
-	   # publicip="`/usr/local/bin/linode-cli --text linodes ips-list ${linodeid} | /bin/grep -A 3 'ipv4.public' | /bin/grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`"
-#		publicip="`/usr/local/bin/linode-cli  --text linodes list | /bin/grep ${linodeid} | /bin/grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}' | /bin/grep -v "192.168"`"
-#		publicips=${publicips}" ${publicip}"
-#	done
-#	/bin/echo ${publicips}
+	/usr/local/bin/linode-cli --json --pretty linodes list | jq '.[] | select (.label | contains("'`/bin/echo ${server_type} | /bin/sed 's/\*//g'`'")).ipv4' | /bin/grep -o '[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}'
 fi
 
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
