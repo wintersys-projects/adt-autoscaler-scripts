@@ -33,7 +33,9 @@ fi
 
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
-	/usr/bin/exo compute instance list -O text  | /bin/grep "${server_type}" | /usr/bin/awk '{print $1}'
+	server_type="`/bin/echo ${instance_type} | /bin/sed 's/\*//g'`"
+ 	/usr/bin/exo compute instance list --zone ${zone} -O json | /usr/bin/jq '.[] | select (.name | contains("'${server_type}'")).id' | /bin/sed 's/"//g'
+
 fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
