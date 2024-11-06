@@ -39,7 +39,7 @@ fi
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
 	zone="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
-	/usr/bin/exo compute instance list --zone ${zone} -O text | /bin/grep -w "${server_ip}" | /usr/bin/awk '{print $2}'
+	/usr/bin/exo compute instance list --zone ${zone} -O json | /usr/bin/jq '.[] | select (.ip_address =="'${server_ip}'").name' | /bin/sed 's/"//g'
 fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
