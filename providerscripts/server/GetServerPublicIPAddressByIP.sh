@@ -38,12 +38,8 @@ fi
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
 	zone="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
-	private_network_id="`/usr/bin/exo -O text compute private-network list  | /bin/grep "adt_private_net_${zone}" | /usr/bin/awk '{print $1}'`"
-	server_name="`/usr/bin/exo compute private-network show ${private_network_id} | grep ${ip} |    /bin/grep -o "webserver-.* " | /usr/bin/awk '{print $1}'`"
-	if ( [ "${server_name}" != "" ] )
-	then
-		/usr/bin/exo compute instance list | /bin/grep ${server_name} | /bin/grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'
-	fi
+	server_name="`/usr/bin/exo  compute private-network show adt_private_net_${zone} --zone ${zone} -O json | /usr/bin/jq 'select (.leases[].ip_address | contains("'${ip}'")).leases[].instance' | /bin/sed 's/"//g'`"
+	/usr/bin/exo compute instance list --zone ${zone} -O json | /usr/bin/jq '.[] | select (.name =="'${server_name}'").ip_address' | /bin/sed 's/"//g'
 fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
