@@ -22,31 +22,31 @@
 
 export HOME="`/bin/cat /home/homedir.dat`"
 
-instance_type="${1}"
+server_type="${1}"
 cloudhost="${2}"
 
 if ( [ -f ${HOME}/DROPLET ] || [ "${cloudhost}" = "digitalocean" ] )
 then
-	serverids="`/usr/local/bin/doctl compute droplet list | /bin/grep ${instance_type} | /usr/bin/awk '{print $1}'`"
+	serverids="`/usr/local/bin/doctl compute droplet list | /bin/grep ${server_type} | /usr/bin/awk '{print $1}'`"
 	/bin/echo ${serverids}
 fi
 
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
-	/usr/bin/exo compute instance list -O text  | /bin/grep "${instance_type}" | /usr/bin/awk '{print $1}'
+	/usr/bin/exo compute instance list -O text  | /bin/grep "${server_type}" | /usr/bin/awk '{print $1}'
 fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
 then
-	instance_type="`/bin/echo ${instance_type} | /bin/sed 's/\*//g'`"
-	/usr/local/bin/linode-cli --json --pretty linodes list | jq '.[] | select (.label | contains("'${instance_type}'")).id'
+	server_type="`/bin/echo ${instance_type} | /bin/sed 's/\*//g'`"
+	/usr/local/bin/linode-cli --json --pretty linodes list | jq '.[] | select (.label | contains("'${server_type}'")).id'
 fi
 
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
 	export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
 	/bin/sleep 1
-	/usr/bin/vultr instance list | /bin/grep ${instance_type} | /usr/bin/awk '{print $1}' | /bin/grep ".*-.*-.*-"
+	/usr/bin/vultr instance list | /bin/grep ${server_type} | /usr/bin/awk '{print $1}' | /bin/grep ".*-.*-.*-"
 fi
 
 
