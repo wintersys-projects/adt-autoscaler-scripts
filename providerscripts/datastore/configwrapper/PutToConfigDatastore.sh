@@ -27,28 +27,34 @@ configbucket="${configbucket}-config"
 
 if ( [ "`${HOME}/providerscripts/utilities/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
 then
-        datastore_tool="/usr/bin/s3cmd"
+        datastore_tool="/usr/bin/s3cmd --recursive put "
+	datastore_tool_1="/usr/bin/s3cmd put "
+elif ( [ "`${HOME}/providerscripts/utilities/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ]  )
+then
+        host_base="`/bin/grep host_base /root/.s5cfg | /bin/grep host_base | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
+        datastore_tool="/usr/bin/s5cmd --credentials-file /root/.s5cfg --endpoint-url https://${host_base} cp "
+        datastore_tool_1="/usr/bin/s5cmd --credentials-file /root/.s5cfg --endpoint-url https://${host_base} cp "
 fi
 
 if ( [ "$3" = "recursive" ] )
 then
-	${datastore_tool} --recursive put $1 s3://${configbucket}/$2
+	${datastore_tool_1} $1 s3://${configbucket}/$2
 else
 	if ( [ -f ${1} ] )
 	then
-		${datastore_tool} put $1 s3://${configbucket}/$2
+		${datastore_tool} $1 s3://${configbucket}/$2
 	elif ( [ -f ./${1} ] )
 	then
-		${datastore_tool} put ./$1 s3://${configbucket}/$2
+		${datastore_tool} ./$1 s3://${configbucket}/$2
 		/bin/rm ./$1
 	elif ( [ -f /tmp/${1} ] )
 	then
-		${datastore_tool} put /tmp/$1 s3://${configbucket}/$2
+		${datastore_tool} /tmp/$1 s3://${configbucket}/$2
 	else
 		directory="`/bin/echo ${1} | /usr/bin/awk -F'/' 'NF{NF-=1};1' | /bin/sed 's/ /\//g'`"
 		/bin/mkdir -p /tmp/${directory}
 		/bin/touch /tmp/$1
-		${datastore_tool} put /tmp/$1 s3://${configbucket}/$2
+		${datastore_tool} /tmp/$1 s3://${configbucket}/$2
 		/bin/rm /tmp/$1
 	fi
 fi
