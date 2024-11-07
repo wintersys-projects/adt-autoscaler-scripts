@@ -27,5 +27,7 @@ configbucket="${configbucket}-config"
 
 if ( [ "`${HOME}/providerscripts/utilities/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
 then
-	/usr/bin/s3cmd --force del s3://${configbucket}/$1
+        datastore_tool="/usr/bin/s3cmd"
 fi
+
+${datastore_tool} --force del s3://${configbucket}/$1
