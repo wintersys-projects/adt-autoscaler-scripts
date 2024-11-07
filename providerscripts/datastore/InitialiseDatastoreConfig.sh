@@ -89,16 +89,16 @@ then
 	/bin/rm /root/.s3cfg
 fi
 
-/bin/cp ${HOME}/.s3cfg /root/.s3cfg
 /bin/chown ${SERVER_USER}:${SERVER_USER} ${HOME}/.s3cfg
+/bin/cp ${HOME}/.s3cfg /root/.s3cfg
 
 if ( [ -f /root/.s5cfg ] )
 then
 	/bin/rm /root/.s5cfg
 fi
 
-/bin/cp ${HOME}/.s5cfg /root/.s5cfg
 /bin/chown ${SERVER_USER}:${SERVER_USER} ${HOME}/.s5cfg
+/bin/cp ${HOME}/.s5cfg /root/.s5cfg
 
 ${datastore_tool} mb s3://1$$agile 3>&1 2>/dev/null
 ${datastore_tool} rb s3://1$$agile 3>&1 2>/dev/null
