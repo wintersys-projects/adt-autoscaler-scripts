@@ -172,6 +172,8 @@ ${HOME}/installscripts/InstallRsync.sh ${BUILDOS}
 ${HOME}/installscripts/InstallCron.sh ${BUILDOS}
 >&2 /bin/echo "${0} Install Monitoring Gear"
 ${HOME}/installscripts/InstallMonitoringGear.sh
+>&2 /bin/echo "${0} InstallGo.sh"
+${HOME}/installscripts/InstallGo.sh ${BUILDOS}
 
 #Configure the timezone we are in
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
