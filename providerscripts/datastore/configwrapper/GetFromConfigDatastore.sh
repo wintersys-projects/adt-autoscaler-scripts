@@ -27,18 +27,21 @@ configbucket="${configbucket}-config"
 
 if ( [ "`${HOME}/providerscripts/utilities/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
 then
-	if ( [ "${2}" = "" ] )
-	then
-		/usr/bin/s3cmd --force get s3://${configbucket}/$1 /tmp
-	fi
-
-	if ( [ "$2" != "" ] )
-	then
-		/usr/bin/s3cmd --force get s3://${configbucket}/$1 $2
-	fi
+        datastore_tool="/usr/bin/s3cmd"
 fi
+
+if ( [ "${2}" = "" ] )
+then
+	${datastore_tool} --force get s3://${configbucket}/$1 /tmp
+fi
+
+if ( [ "$2" != "" ] )
+then
+	${datastore_tool} --force get s3://${configbucket}/$1 $2
+fi
+
 
 if ( [ "$3" = "recursive" ] )
 then
-	/usr/bin/s3cmd --force --recursive get s3://${configbucket}/$1 $2 
+	${datastore_tool} --force --recursive get s3://${configbucket}/$1 $2 
 fi
