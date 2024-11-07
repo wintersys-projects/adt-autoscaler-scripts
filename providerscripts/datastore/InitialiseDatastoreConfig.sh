@@ -55,8 +55,8 @@ fi
 if ( [ "${S3_ACCESS_KEY}" != "" ] )
 then
 	/bin/sed -i "s/XXXXACCESSKEYXXXX/${S3_ACCESS_KEY}/" ${HOME}/.s3cfg
-	/bin/echo "[default]" > ${BUILD_HOME}/.s5cfg 
- 	/bin/echo "aws_access_key_id = ${S3_ACCESS_KEY}" >> ${BUILD_HOME}/.s5cfg
+	/bin/echo "[default]" > ${HOME}/.s5cfg 
+ 	/bin/echo "aws_access_key_id = ${S3_ACCESS_KEY}" >> ${HOME}/.s5cfg
 else
 	/bin/echo "${0} Couldn't find the S3_ACCESS_KEY setting" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log    
 fi
@@ -64,7 +64,7 @@ fi
 if ( [ "${S3_SECRET_KEY}" != "" ] )
 then
 	/bin/sed -i "s/XXXXSECRETKEYXXXX/${S3_SECRET_KEY}/" ${HOME}/.s3cfg
-   	/bin/echo "aws_secret_access_key = ${S3_SECRET_KEY}" >> ${BUILD_HOME}/.s5cfg
+   	/bin/echo "aws_secret_access_key = ${S3_SECRET_KEY}" >> ${HOME}/.s5cfg
 else
 	/bin/echo "${0} Couldn't find the S3_SECRET_KEY setting" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log  
 fi
@@ -79,7 +79,7 @@ fi
 if ( [ "${S3_HOST_BASE}" != "" ] )
 then
 	/bin/sed -i "s/XXXXHOSTBASEXXXX/${S3_HOST_BASE}/" ${HOME}/.s3cfg
-   	/bin/echo "host_base = ${S3_HOST_BASE}" >> ${BUILD_HOME}/.s5cfg
+   	/bin/echo "host_base = ${S3_HOST_BASE}" >> ${HOME}/.s5cfg
 else
 	/bin/echo "${0} Couldn't find the S3_HOST_BASE setting" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log  
 fi
