@@ -43,7 +43,7 @@ else
 		/bin/rm ./$1
 	elif ( [ -f /tmp/${1} ] )
 	then
-		/usr/bin/s3cmd put /tmp/$1 s3://${configbucket}/$2
+		${datastore_tool} put /tmp/$1 s3://${configbucket}/$2
 	else
 		directory="`/bin/echo ${1} | /usr/bin/awk -F'/' 'NF{NF-=1};1' | /bin/sed 's/ /\//g'`"
 		/bin/mkdir -p /tmp/${directory}
