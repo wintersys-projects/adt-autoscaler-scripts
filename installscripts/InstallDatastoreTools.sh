@@ -33,15 +33,22 @@ fi
 
 if ( [ "${apt}" != "" ] )
 then
-	if ( [ "${BUILDOS}" = "ubuntu" ] )
-	then
-		DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install s3cmd
-	fi
+	if ( [ "`${HOME}/providerscripts/utilities/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
+ 	then
+		if ( [ "${BUILDOS}" = "ubuntu" ] )
+		then
+			DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install s3cmd
+		fi
 
-	if ( [ "${BUILDOS}" = "debian" ] )
-	then
-		DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install s3cmd
-	fi
+		if ( [ "${BUILDOS}" = "debian" ] )
+		then
+			DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install s3cmd
+		fi
+	elif ( [ "`${HOME}/providerscripts/utilities/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ] )
+ 	then
+  		/usr/bin/go install github.com/peak/s5cmd/v2@latest
+		/bin/cp /root/go/bin/s5cmd /usr/bin/s5cmd
+  	fi
 fi
    
 if ( [ -f ${HOME}/.s3cfg ] )
