@@ -80,7 +80,7 @@ if ( [ "${S3_HOST_BASE}" != "" ] )
 then
 	/bin/sed -i "s/XXXXHOSTBASEXXXX/${S3_HOST_BASE}/" ${HOME}/.s3cfg
    	/bin/echo "host_base = ${S3_HOST_BASE}" >> ${HOME}/.s5cfg
-    	/bin/echo "alias s5cmd=\'/usr/bin/s5cmd --credentials-file /root/.s5cfg --endpoint-url https://${S3_HOST_BASE}\'" >> /root/.bashrc
+    	/bin/echo "alias s5cmd='/usr/bin/s5cmd --credentials-file /root/.s5cfg --endpoint-url https://${S3_HOST_BASE}'" >> /root/.bashrc
 else
 	/bin/echo "${0} Couldn't find the S3_HOST_BASE setting" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log  
 fi
