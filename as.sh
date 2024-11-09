@@ -146,7 +146,7 @@ kernel.panic=10" >> /etc/sysctl.conf
 >&2 /bin/echo "${0} Installing software packages "
 /bin/echo "${0} `/bin/date`: Installing Software packages" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 
-. ${HOME}/installscripts/InstallAll.sh ${BUILDOS}
+. ${HOME}/installscripts/InstallAll.sh
 
 #>&2 /bin/echo "${0} Update.sh"
 #${HOME}/installscripts/Update.sh ${BUILDOS}
