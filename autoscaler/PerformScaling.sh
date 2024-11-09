@@ -54,7 +54,7 @@ if ( [ -f ${HOME}/runtime/INITIALBUILDCOMPLETED ] )
 then
 	if test "`/usr/bin/find ${HOME}/runtime/INITIALBUILDCOMPLETED -mmin -5`"
 	then
-		/bin/echo "${0} `/bin/date`: This autoscaler is still in its initial wait period and is authroised to scale as soon as possible" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+		/bin/echo "${0} `/bin/date`: This autoscaler is still in its initial wait period and will be authorised to scale as soon as possible" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 		/bin/touch ${HOME}/runtime/INITIAL_SCALING_PROCESSED
 		/bin/touch ${HOME}/runtime/AUTHORISED_TO_SCALE  
 		if ( [ -f ${HOME}/runtime/NOT_AUTHORISED_TO_SCALE ] )
