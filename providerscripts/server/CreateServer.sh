@@ -149,9 +149,9 @@ then
 		emergency_password="`/bin/cat ${HOME}/.ssh/EMERGENCY_PASSWORD`"
 	fi
 
-  	vpc_id="`/usr/local/bin/linode-cli --text vpcs list | /bin/grep adt-vpc | /usr/bin/awk '{print $1}'`"
-	subnet_id="`/usr/local/bin/linode-cli --text vpcs subnets-list ${vpc_id} | /bin/grep 10.0.1 | /bin/grep adt-subnet | /usr/bin/awk '{print $1}'`"
-	
+ 	vpc_id="`/usr/local/bin/linode-cli --json --pretty | /usr/bin/jq '.[] | select (.label == "adt-vpc").id'`"
+	subnet_id="`/usr/local/bin/linode-cli --json --pretty vpcs subnets-list ${vpc_id} | /usr/bin/jq  '.[] | select (.label == "adt-subnet").id'`"
+ 
 	#Linode supports snapshots, so decide if we are building from a snapshot
 	if ( [ "${snapshot_id}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
 	then
