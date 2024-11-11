@@ -149,7 +149,7 @@ then
 		emergency_password="`/bin/cat ${HOME}/.ssh/EMERGENCY_PASSWORD`"
 	fi
 
- 	vpc_id="`/usr/local/bin/linode-cli --json --pretty | /usr/bin/jq '.[] | select (.label == "adt-vpc").id'`"
+ 	vpc_id="`/usr/local/bin/linode-cli --json --pretty vpcs list | /usr/bin/jq '.[] | select (.label == "adt-vpc").id'`"
 	subnet_id="`/usr/local/bin/linode-cli --json --pretty vpcs subnets-list ${vpc_id} | /usr/bin/jq  '.[] | select (.label == "adt-subnet").id'`"
  
 	#Linode supports snapshots, so decide if we are building from a snapshot
