@@ -39,15 +39,15 @@ then
 	export HOME="`/bin/cat /home/homedir.dat`"
 	zone_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
 	
-	private_network_id="`/usr/bin/exo -O text compute private-network list | /bin/grep adt_private_net_${zone_id} | /usr/bin/awk '{print $1}'`"
-	
+	private_network_id="`/usr/bin/exo -O json compute private-network list --zone ${zone_id} | /usr/bin/jq '.[] | select (.name =="'adt_private_net_${zone_id}'").id' | /bin/sed 's/"//g'`"
+
 	count="0"
 	while ( [ "${private_network_id}" = "" ] && [ "${count}" -lt "5" ] )
 	do
 		/bin/sleep 10
 		count="`/usr/bin/expr ${count} + 1`"
 		/usr/bin/exo compute private-network create adt_private_net_${zone_id} --zone ${zone_id} --start-ip 10.0.0.20 --end-ip 10.0.0.200 --netmask 255.255.255.0
-		private_network_id="`/usr/bin/exo -O text compute private-network list | /bin/grep adt_private_net_${zone_id} | /usr/bin/awk '{print $1}'`"
+		private_network_id="`/usr/bin/exo -O json compute private-network list --zone ${zone_id} | /usr/bin/jq '.[] | select (.name =="'adt_private_net_${zone_id}'").id' | /bin/sed 's/"//g'`"
 	done
 
 	count="0"
