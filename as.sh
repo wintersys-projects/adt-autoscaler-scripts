@@ -288,6 +288,14 @@ else
 	/bin/echo "ChallengeResponseAuthentication no" >> /etc/ssh/sshd_config
 fi
 
+if ( [ "`/bin/grep '^#AddressFamily' /etc/ssh/sshd_config`" != "" ] || [ "`/bin/grep '^AddressFamily' /etc/ssh/sshd_config`" != "" ] )
+then
+  	/bin/sed -i "s/^AddressFamily.*/AddressFamily inet/g" /etc/ssh/sshd_config
+	/bin/sed -i "s/^#AddressFamily.*/AddressFamily inet/g" /etc/ssh/sshd_config
+else
+	/bin/echo "AddressFamily inet" >> /etc/ssh/sshd_config
+fi
+
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 >&2 /bin/echo "${0} Ensuring SSH connections are long lasting"
 /bin/echo "${0} `/bin/date`: Ensuring SSH connections are long lasting" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
