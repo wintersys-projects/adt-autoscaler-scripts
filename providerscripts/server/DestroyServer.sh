@@ -84,7 +84,7 @@ then
 	if ( [ "${server_ip}" != "" ] )
 	then
 		zone="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
-		server_name="`/usr/bin/exo compute instance list --zone ${zone} -O text | /bin/grep ${server_ip} | /usr/bin/awk '{print $2}'`"
+		server_name="`${HOME}/providerscripts/server/GetServerName.sh ${server_ip} ${cloudhost}`"
 		/bin/echo "Y" | /usr/bin/exo compute instance delete ${server_name} --zone ${zone} 
 
 		/bin/echo "${0} `/bin/date`: Destroyed a server with name ${server_name}" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
