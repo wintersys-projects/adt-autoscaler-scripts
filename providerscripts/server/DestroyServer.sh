@@ -132,8 +132,7 @@ then
 
 	if ( [ "${server_ip}" != "" ] )
 	then
-
-		server_id="`/usr/bin/vultr instance list | /bin/grep ${server_ip} | /usr/bin/awk '{print $1}'`"
+		server_id="`/usr/bin/vultr instance list -o json | /usr/bin/jq '.instances[] | select (.main_ip == "'${server_ip}'").id' | /bin/sed 's/"//g'`"
 		/usr/bin/vultr instance delete ${server_id}
 
 		/bin/echo "${0} `/bin/date`: Destroyed a server with id ${server_id}" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
