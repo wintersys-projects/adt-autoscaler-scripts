@@ -222,7 +222,7 @@ exec 2>>${HOME}/logs/${logdir}/${err_file}
 
 
 #What type of machine are we building - this will determine the size and so on with the cloudhost
-server_type_id="`${HOME}/providerscripts/server/GetServerTypeID.sh ${SIZE} "${server_type}" ${CLOUDHOST}`"
+#server_type_id="`${HOME}/providerscripts/server/GetServerTypeID.sh ${SIZE} "${server_type}" ${CLOUDHOST}`"
 
 #Hell, what operating system are we running
 ostype="`${HOME}/providerscripts/cloudhost/GetOperatingSystemVersion.sh ${SIZE} ${CLOUDHOST}`"
@@ -235,13 +235,13 @@ ostype="`${HOME}/providerscripts/cloudhost/GetOperatingSystemVersion.sh ${SIZE} 
 /bin/echo "${0} `/bin/date`: Spinning up a new webserver with name ${webserver_name}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 
 count="0"
-buildmethod="`${HOME}/providerscripts/server/CreateServer.sh "${ostype}" "${REGION}" "${server_type_id}" "${server_instance_name}" "${KEY_ID}" ${CLOUDHOST} "${DEFAULT_USER}" ${CLOUDHOST_PASSWORD}`"
+buildmethod="`${HOME}/providerscripts/server/CreateServer.sh "${ostype}" "${REGION}" "${SIZE}" "${server_instance_name}" "${KEY_ID}" ${CLOUDHOST} "${DEFAULT_USER}" ${CLOUDHOST_PASSWORD}`"
 
 while ( [ "$?" != "0" ] && [ "${count}" -lt "10" ] )
 do
 	/bin/sleep 5
 	count="`/usr/bin/expr ${count} + 1`"
-	buildmethod="`${HOME}/providerscripts/server/CreateServer.sh "${ostype}" "${REGION}" "${server_type_id}" "${server_instance_name}" "${KEY_ID}" ${CLOUDHOST} "${DEFAULT_USER}" ${CLOUDHOST_PASSWORD}`"
+	buildmethod="`${HOME}/providerscripts/server/CreateServer.sh "${ostype}" "${REGION}" "${SIZE}" "${server_instance_name}" "${KEY_ID}" ${CLOUDHOST} "${DEFAULT_USER}" ${CLOUDHOST_PASSWORD}`"
 done
 
 if ( [ "${count}" = "10" ] )
