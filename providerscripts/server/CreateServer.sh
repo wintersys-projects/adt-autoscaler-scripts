@@ -221,27 +221,19 @@ if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
 	export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
 	snapshot_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SNAPSHOTID'`"
-				
-	firewall_id="`/usr/bin/vultr firewall group list | /usr/bin/tail -n +2 | /bin/grep -w 'adt-webserver' | /usr/bin/awk '{print $1}'`"
-
-	if ( [ "${firewall_id}" = "" ] )
-	then
-		 ${HOME}/providerscripts/email/SendEmail.sh "COULDN'T OBTAIN FIREWALL" "Failed to obtain firewall id when trying to create a new webserver" "ERROR"
-		 /bin/echo "${0} `/bin/date`: Failed to obtain firewall id when creating a new webserver" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
-		 exit
-	fi
 	
 	if ( [ "${snapshot_id}" = "" ] )
 	then
 		${HOME}/providerscripts/utilities/StoreConfigValue.sh 'SNAPAUTOSCALE' '0'
 	fi
 
-	if ( [ "`/usr/bin/vultr vpc2 list | grep adt-vpc`" = "" ] )
+	if ( [ "`/usr/bin/vultr vpc2 list -o json | /usr/bin/jq '.vpcs[] | select (.description == "adt-vpc").id'`" = "" ] )
 	then
 		/usr/bin/vultr vpc2 create --region="${region}" --description="adt-vpc" --ip-type="v4" --ip-block="192.168.0.0" --prefix-length="16"
 	fi
 	
-	vpc_id="`/usr/bin/vultr vpc2 list | grep adt-vpc | /usr/bin/awk '{print $1}'`"
+        vpc_id="`/usr/bin/vultr vpc2 list -o json | /usr/bin/jq '.vpcs[] | select (.description == "adt-vpc").id' | /bin/sed 's/"//g'`"
+
 
 	#Vultr supports snapshots, so decide if we are building from a snapshot
 	if ( [ "${snapshot_id}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
@@ -275,7 +267,7 @@ then
 		#If we are here, then we are doing a regular build
 		/bin/echo "${0} `/bin/date`: Building a new webserver using the standard build method" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
 		/bin/sleep 1
-		os_choice="`/usr/bin/vultr os list | /bin/grep "${os_choice}" | /usr/bin/awk '{print $1}'`"
+  		os_choice="`/usr/bin/vultr os list -o json | /usr/bin/jq '.os[] | select (.name == "'"${os_choice}"'").id'`"
 		/bin/sleep 1
 
 		user_data=`/bin/cat ${HOME}/providerscripts/server/cloud-init/vultr.dat`
@@ -296,11 +288,11 @@ then
 		fi
 	fi
 	
-	machine_id="`/usr/bin/vultr instance list | /bin/grep "${server_name}" | /usr/bin/awk '{print $1}'`"
+ 	machine_id="`/usr/bin/vultr instance list -o json | /usr/bin/jq '.instances[] | select (.label == "'"${server_name}"'").id' | /bin/sed 's/"//g'`"
 	
 	while ( [ "${machine_id}" = "" ] )
 	do
-	   machine_id="`/usr/bin/vultr instance list | /bin/grep "${server_name}" | /usr/bin/awk '{print $1}'`"
+ 		machine_id="`/usr/bin/vultr instance list -o json | /usr/bin/jq '.instances[] | select (.label == "'"${server_name}"'").id' | /bin/sed 's/"//g'`"
 	   /bin/sleep 5
 	done
 	
