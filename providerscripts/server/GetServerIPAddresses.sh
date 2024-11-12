@@ -19,11 +19,10 @@
 #########################################################################################
 #########################################################################################
 #set -x
-
-export HOME="`/bin/cat /home/homedir.dat`"
-
 server_type="$1"
 cloudhost="$2"
+
+export HOME="`/bin/cat /home/homedir.dat`"
 
 if ( [ -f ${HOME}/DROPLET ] || [ "${cloudhost}" = "digitalocean" ] )
 then
@@ -47,8 +46,7 @@ fi
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
 	export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
-	/bin/sleep 1
-	server_type="`/bin/echo ${server_type} | /usr/bin/cut -c -25 | /bin/sed 's/\*//g'`"
+	server_type="`/bin/echo ${server_type} | /usr/bin/cut -c -25`"
         /usr/bin/vultr instance list -o json | /usr/bin/jq '.instances[] | select (.label | contains("'${server_type}'")).main_ip' | /bin/sed 's/"//g'
 fi
 
