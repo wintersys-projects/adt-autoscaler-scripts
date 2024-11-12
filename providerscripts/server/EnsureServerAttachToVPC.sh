@@ -76,11 +76,11 @@ ip="${3}"
 if ( [ "${cloudhost}" = "vultr" ] )
 then
 	export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
-        machine_id="`/usr/bin/vultr instance list -o json | /usr/bin/jq '.instances[] | select (.main_ip == "'${server_ip}'").id' | /bin/sed 's/"//g'`"
+        machine_id="`/usr/bin/vultr instance list -o json | /usr/bin/jq '.instances[] | select (.label == "'${server_name}'").id' | /bin/sed 's/"//g'`"
 	
 	while ( [ "${machine_id}" = "" ] )
 	do
-        	machine_id="`/usr/bin/vultr instance list -o json | /usr/bin/jq '.instances[] | select (.main_ip == "'${server_ip}'").id' | /bin/sed 's/"//g'`"
+        	machine_id="`/usr/bin/vultr instance list -o json | /usr/bin/jq '.instances[] | select (.label == "'${server_name}'").id' | /bin/sed 's/"//g'`"
 		/bin/sleep 5
 	done
 
