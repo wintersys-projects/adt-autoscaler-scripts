@@ -57,8 +57,7 @@ then
 	export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
 	/bin/sleep 1
          vpc_id="`/usr/bin/vultr vpc2 list -o json | /usr/bin/jq '.vpcs[] | select (.description == "adt-vpc").id' | /bin/sed 's/"//g'`"
-	machine_id="`/usr/bin/vultr vpc2 nodes list ${vpc_id} -o json | /usr/bin/jq '.nodes[] | select (.internal_ip == "'${ip}'") | select (.node_status == "failed").id' | /bin/sed 's/"//g'`"
-
-	/usr/bin/vultr instance list ${machine_id} | /bin/grep ${machine_id} | /usr/bin/awk '{print $2}'
+	id="`/usr/bin/vultr vpc2 nodes list ${vpc_id} -o json | /usr/bin/jq '.nodes[] | select (.internal_ip == "'${ip}'") | select (.node_status == "failed").id' | /bin/sed 's/"//g'`"
+	/usr/bin/vultr instance get ${id} -o json | /usr/bin/jq '.instance.main_ip'
 fi
 
