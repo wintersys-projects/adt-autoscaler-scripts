@@ -84,7 +84,7 @@ then
 		/bin/sleep 5
 	done
 
-	vpc_id="`/usr/bin/vultr vpc2 list | grep adt-vpc | /usr/bin/awk '{print $1}'`"
+        vpc_id="`/usr/bin/vultr vpc2 list -o json | /usr/bin/jq '.vpcs[] | select (.description == "adt-vpc").id' | /bin/sed 's/"//g'`"
 	
 	if ( [ "${machine_id}" != "" ] )
 	then
@@ -93,13 +93,13 @@ then
 	
 	/bin/sleep 5
 
-	while ( [ "` /usr/bin/vultr vpc2 list nodes ${vpc_id} | /bin/grep ${ip} | /bin/grep "pending" | /usr/bin/awk '{print $1}'`" != "" ] )
+	while ( "`/usr/bin/vultr vpc2 nodes list ${vpc_id} -o json | /usr/bin/jq '.nodes[] | select (.ip_address == "'${ip}'") | select (.node_status == "pending").id' | /bin/sed 's/"//g' != "" ] )
 	do
 	   #This shouldn't go on forever because we don't expect to be in the pending state forever
 	   /bin/sleep 5
 	done
 
-	failed_machine_id="` /usr/bin/vultr vpc2 list nodes ${vpc_id} | /bin/grep ${ip} | /bin/grep "failed" | /usr/bin/awk '{print $1}'`"
+ 	failed_machine_id="`/usr/bin/vultr vpc2 nodes list ${vpc_id} -o json | /usr/bin/jq '.nodes[] | select (.ip_address == "'${ip}'") | select (.node_status == "failed").id' | /bin/sed 's/"//g'`"
 
 	count="0"
 
@@ -109,7 +109,7 @@ then
 		/bin/sleep 10
 		/usr/bin/vultr vpc2 nodes attach ${vpc_id} --nodes="${machine_id}"
 		/bin/sleep 30
-		failed_machine_id="` /usr/bin/vultr vpc2 list nodes ${vpc_id} | /bin/grep ${ip} | /bin/grep "failed" | /usr/bin/awk '{print $1}'`"
+ 		failed_machine_id="`/usr/bin/vultr vpc2 nodes list ${vpc_id} -o json | /usr/bin/jq '.nodes[] | select (.ip_address == "'${ip}'") | select (.node_status == "failed").id' | /bin/sed 's/"//g'`"
 		count="`/usr/bin/expr ${count} + 1`"
 	done
 
