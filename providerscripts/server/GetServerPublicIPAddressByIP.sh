@@ -39,7 +39,7 @@ if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
 	zone="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
 	server_name="`/usr/bin/exo compute private-network show adt_private_net_${zone} --zone ${zone} -O json | /usr/bin/jq '.leases[] | select(.ip_address=="'${ip}'") | .instance' | /bin/sed 's/"//g'`"
-	/usr/bin/exo compute instance list --zone ${zone} -O json | /usr/bin/jq '.[] | select (.name =="'${server_name}'").ip_address' | /bin/sed 's/"//g'
+	/usr/bin/exo compute instance list --zone ${zone} -O json | /usr/bin/jq '.[] | select (.name =="'${server_name}'").ip_address'  | /bin/grep -o '[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}'
 fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
@@ -48,7 +48,7 @@ then
         
 	for linodeid in ${linodeids}
         do
-                /usr/local/bin/linode-cli --json --pretty linodes ips-list ${linodeid} | /usr/bin/jq '.[].ipv4.vpc[] | select (.address == "'${ip}'").nat_1_1' | /bin/sed 's/"//g'
+                /usr/local/bin/linode-cli --json --pretty linodes ips-list ${linodeid} | /usr/bin/jq '.[].ipv4.vpc[] | select (.address == "'${ip}'").nat_1_1'  | /bin/grep -o '[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}'
         done
 fi
 
@@ -57,6 +57,6 @@ then
 	export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
          vpc_id="`/usr/bin/vultr vpc2 list -o json | /usr/bin/jq '.vpcs[] | select (.description == "adt-vpc").id' | /bin/sed 's/"//g'`"
         id="`/usr/bin/vultr vpc2 nodes list ${vpc_id} -o json | /usr/bin/jq '.nodes[] | select (.ip_address == "'${ip}'").id' | /bin/sed 's/"//g'`"
-        /usr/bin/vultr instance get ${id} -o json | /usr/bin/jq '.instance.main_ip' | /bin/sed 's/"//g'
+        /usr/bin/vultr instance get ${id} -o json | /usr/bin/jq '.instance.main_ip' | /bin/grep -o '[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}'
 fi
 
