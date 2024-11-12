@@ -55,13 +55,14 @@ if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
 	export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
 	/bin/sleep 1
-	server_type="`/bin/echo ${server_type} | /usr/bin/cut -c -25`"
-	ids="`/usr/bin/vultr instance list | /bin/grep ${server_type} | /usr/bin/awk '{print $1}'`"
-	
-	for id in ${ids}
-	do
-		/usr/bin/vultr instance get ${id} | /bin/grep "INTERNAL IP" | /usr/bin/awk '{print $3}'
-	done
+	server_type="`/bin/echo ${server_type} | /usr/bin/cut -c -25 | /bin/sed 's/\*//g'`"
+
+	ids="`/usr/bin/vultr instance list -o json | /usr/bin/jq '.instances[] | select (.label | contains("'${server_type}'")).id' | /bin/sed 's/"//g'`"
+
+        for id in ${ids}
+        do
+		/usr/bin/vultr instance list -o json | /usr/bin/jq '.instances[] | select (.id == "'${id}'").internal_ip' | /bin/sed 's/"//g'
+        done
 fi
 
 
