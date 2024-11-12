@@ -44,7 +44,6 @@ fi
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
 	export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
-	/bin/sleep 1
 	/usr/bin/vultr instance list | /bin/grep "${instance_type}"
 fi
 
