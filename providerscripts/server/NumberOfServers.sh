@@ -31,7 +31,6 @@ fi
 
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
-	server_type="`/bin/echo "${server_type}" | /bin/sed 's/\*//g'`"
 	zone="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
 	/usr/bin/exo compute instance list --zone ${zone} -O text | /bin/grep "${server_type}" | /usr/bin/wc -l
 fi
@@ -44,7 +43,6 @@ fi
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
 	export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
-	/bin/sleep 1
 	server_type="`/bin/echo ${server_type} | /usr/bin/cut -c -25`"
 	/usr/bin/vultr instance list | /bin/grep ${server_type} | /usr/bin/awk '{print $2}' | /usr/bin/wc -l
 fi
