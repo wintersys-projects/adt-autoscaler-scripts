@@ -37,7 +37,8 @@ then
 fi
 
 value="`${datastore_tool} ls s3://${configbucket}/$1 | /usr/bin/awk -F'/' '{print $NF}' | /bin/sed '/^$/d'`"
-if ( [ "`/bin/echo ${value} | /usr/bin/wc -w`" != "1" ] )
+
+if ( [ "`/bin/echo ${value} | /usr/bin/grep 's3://'`" != "" ] )
 then
         ${datastore_tool} ls s3://${configbucket}/$1 | /usr/bin/awk -F' ' '{print $NF}' | /bin/sed '/^$/d'
 else
