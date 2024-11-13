@@ -30,7 +30,7 @@ dns="${6}"
 
 if ( [ "${dns}" = "cloudflare" ] )
 then
-	/usr/bin/curl -X GET "https://api.cloudflare.com/client/v4/zones/${zoneid}/dns_records?type=A&name=${websiteurl}&content=${ip}&page=1&per_page=20&order=type&direction=desc&match=all" -H "X-Auth-Email: ${email}" -H "X-Auth-Key: ${authkey}" -H "Content-Type: application/json" | /usr/bin/jq '.result[].id' | /bin/sed 's/"//g'
+	/usr/bin/curl -X GET "https://api.cloudflare.com/client/v4/zones/${zoneid}/dns_records?type=A&name=${websiteurl}&content=${ip}&page=1&per_page=20&order=type&direction=desc&match=all" -H "X-Auth-Email: ${email}" -H "X-Auth-Key: ${authkey}" -H "Content-Type: application/json" | /usr/bin/jq -r '.result[].id'
 fi
 
 
@@ -74,8 +74,8 @@ dns="${6}"
 
 if ( [ "${dns}" = "linode" ] )
 then
-	domain_id="`/usr/local/bin/linode-cli --json domains list | /usr/bin/jq --arg tmp_domainurl "${domainurl}" '(.[] | select(.domain | contains($tmp_domainurl)) | .id)'`"
-	/usr/local/bin/linode-cli --json domains records-list ${domain_id} | /usr/bin/jq --arg tmp_ip "${ip}" '(.[] | select(.target | contains($tmp_ip)) | .id)'
+	domain_id="`/usr/local/bin/linode-cli --json domains list | /usr/bin/jq -r --arg tmp_domainurl "${domainurl}" '(.[] | select(.domain | contains($tmp_domainurl)) | .id)'`"
+	/usr/local/bin/linode-cli --json domains records-list ${domain_id} | /usr/bin/jq -r --arg tmp_ip "${ip}" '(.[] | select(.target | contains($tmp_ip)) | .id)'
 fi
 
 domainurl="`/bin/echo ${2} | /usr/bin/cut -d'.' -f2-`"
