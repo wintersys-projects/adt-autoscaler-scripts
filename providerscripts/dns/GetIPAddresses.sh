@@ -53,7 +53,7 @@ then
 	/usr/bin/exo -O json dns show ${domainurl} | /usr/bin/jq -r --arg tmp_subdomain "${subdomain}"  '.[] | select (.name == $tmp_subdomain ) | .content'
 	
 	#Alternative
-	#/usr/bin/curl  -H "X-DNS-Token: ${authkey}" -H 'Accept: application/json' https://api.exoscale.com/dns/v1/domains/${domainurl}/records | /usr/bin/jq --arg tmp_subdomain "${subdomain}"  '.[].record | select (.name == $tmp_subdomain ) | .content' | /bin/sed 's/"//g'
+	#/usr/bin/curl  -H "X-DNS-Token: ${authkey}" -H 'Accept: application/json' https://api.exoscale.com/dns/v1/domains/${domainurl}/records | /usr/bin/jq -r --arg tmp_subdomain "${subdomain}"  '.[].record | select (.name == $tmp_subdomain ) | .content'
 fi
 
 domain_url="`/bin/echo ${2} | /usr/bin/cut -d'.' -f2-`"
