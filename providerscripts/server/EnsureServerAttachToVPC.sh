@@ -39,7 +39,7 @@ then
 	export HOME="`/bin/cat /home/homedir.dat`"
 	zone_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
 	
-	private_network_id="`/usr/bin/exo -O json compute private-network list --zone ${zone_id} | /usr/bin/jq '.[] | select (.name =="'adt_private_net_${zone_id}'").id' | /bin/sed 's/"//g'`"
+	private_network_id="`/usr/bin/exo -O json compute private-network list --zone ${zone_id} | /usr/bin/jq -r '.[] | select (.name =="'adt_private_net_${zone_id}'").id'`"
 
 	count="0"
 	while ( [ "${private_network_id}" = "" ] && [ "${count}" -lt "5" ] )
@@ -47,7 +47,7 @@ then
 		/bin/sleep 10
 		count="`/usr/bin/expr ${count} + 1`"
 		/usr/bin/exo compute private-network create adt_private_net_${zone_id} --zone ${zone_id} --start-ip 10.0.0.20 --end-ip 10.0.0.200 --netmask 255.255.255.0
-		private_network_id="`/usr/bin/exo -O json compute private-network list --zone ${zone_id} | /usr/bin/jq '.[] | select (.name =="'adt_private_net_${zone_id}'").id' | /bin/sed 's/"//g'`"
+		private_network_id="`/usr/bin/exo -O json compute private-network list --zone ${zone_id} | /usr/bin/jq -r '.[] | select (.name =="'adt_private_net_${zone_id}'").id'`"
 	done
 
 	count="0"
@@ -76,15 +76,15 @@ ip="${3}"
 if ( [ "${cloudhost}" = "vultr" ] )
 then
 	export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
-        machine_id="`/usr/bin/vultr instance list -o json | /usr/bin/jq '.instances[] | select (.label == "'${server_name}'").id' | /bin/sed 's/"//g'`"
+        machine_id="`/usr/bin/vultr instance list -o json | /usr/bin/jq -r '.instances[] | select (.label == "'${server_name}'").id'`"
 	
 	while ( [ "${machine_id}" = "" ] )
 	do
-        	machine_id="`/usr/bin/vultr instance list -o json | /usr/bin/jq '.instances[] | select (.label == "'${server_name}'").id' | /bin/sed 's/"//g'`"
+        	machine_id="`/usr/bin/vultr instance list -o json | /usr/bin/jq -r '.instances[] | select (.label == "'${server_name}'").id'`"
 		/bin/sleep 5
 	done
 
-        vpc_id="`/usr/bin/vultr vpc2 list -o json | /usr/bin/jq '.vpcs[] | select (.description == "adt-vpc").id' | /bin/sed 's/"//g'`"
+        vpc_id="`/usr/bin/vultr vpc2 list -o json | /usr/bin/jq -r '.vpcs[] | select (.description == "adt-vpc").id'`"
 	
 	if ( [ "${machine_id}" != "" ] )
 	then
@@ -93,13 +93,13 @@ then
 	
 	/bin/sleep 5
 
-	while ( "`/usr/bin/vultr vpc2 nodes list ${vpc_id} -o json | /usr/bin/jq '.nodes[] | select (.ip_address == "'${ip}'") | select (.node_status == "pending").id' | /bin/sed 's/"//g' != "" ] )
+	while ( "`/usr/bin/vultr vpc2 nodes list ${vpc_id} -o json | /usr/bin/jq -r '.nodes[] | select (.ip_address == "'${ip}'") | select (.node_status == "pending").id'`" != "" ] )
 	do
 	   #This shouldn't go on forever because we don't expect to be in the pending state forever
 	   /bin/sleep 5
 	done
 
- 	failed_machine_id="`/usr/bin/vultr vpc2 nodes list ${vpc_id} -o json | /usr/bin/jq '.nodes[] | select (.ip_address == "'${ip}'") | select (.node_status == "failed").id' | /bin/sed 's/"//g'`"
+ 	failed_machine_id="`/usr/bin/vultr vpc2 nodes list ${vpc_id} -o json | /usr/bin/jq -r'.nodes[] | select (.ip_address == "'${ip}'") | select (.node_status == "failed").id'`"
 
 	count="0"
 
@@ -109,7 +109,7 @@ then
 		/bin/sleep 10
 		/usr/bin/vultr vpc2 nodes attach ${vpc_id} --nodes="${machine_id}"
 		/bin/sleep 30
- 		failed_machine_id="`/usr/bin/vultr vpc2 nodes list ${vpc_id} -o json | /usr/bin/jq '.nodes[] | select (.ip_address == "'${ip}'") | select (.node_status == "failed").id' | /bin/sed 's/"//g'`"
+ 		failed_machine_id="`/usr/bin/vultr vpc2 nodes list ${vpc_id} -o json | /usr/bin/jq -r '.nodes[] | select (.ip_address == "'${ip}'") | select (.node_status == "failed").id'`"
 		count="`/usr/bin/expr ${count} + 1`"
 	done
 
