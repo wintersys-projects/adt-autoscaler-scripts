@@ -96,7 +96,7 @@ then
 	then
 		server_to_delete=""
 		server_to_delete="`${HOME}/providerscripts/server/GetServerName.sh ${server_ip} 'linode'`"
-  		server_id="`/usr/local/bin/linode-cli --json --pretty linodes list | jq '.[] | select (.label == "'${server_to_delete}'").id' | /bin/sed 's/"//g'`"
+  		server_id="`/usr/local/bin/linode-cli --json --pretty linodes list | jq -r '.[] | select (.label == "'${server_to_delete}'").id'`"
 		/usr/local/bin/linode-cli linodes shutdown ${server_id}
 		/usr/local/bin/linode-cli linodes delete ${server_id}
 		/bin/echo "${0} `/bin/date`: Destroyed a server with name ${server_to_delete}" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
