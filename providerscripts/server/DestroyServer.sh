@@ -52,20 +52,9 @@ then
 	#This will destroy a server with the given ip address and cleanup all the associated configuration settings
 	if ( [ "${server_ip}" != "" ] )
 	then
-		server_id="`/usr/local/bin/doctl compute droplet list | /bin/grep ${server_ip} | /usr/bin/awk '{print $1}'`"
-
-		count="0"
-		while ( [ "${count}" -lt "10" ] )
-		do
-			/usr/local/bin/doctl -force compute droplet delete ${server_id}
-			if ( [ "$?" != "0" ] )
-			then
-				count="`/usr/bin/expr ${count} + 1`"
-				/bin/sleep 5
-			else
-				break
-			fi
-		done
+        	server_to_delete="`${HOME}/providerscripts/server/GetServerName.sh ${server_ip} 'digitalocean'`"
+        	server_id="`/usr/local/bin/doctl -o json compute droplet list | /usr/bin/jq -r '.[] | select (.name == "'${server_to_delete}'" ).id'`"
+        	/usr/local/bin/doctl -force compute droplet delete ${server_id} 
  
 		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverips/${private_server_ip}"
 		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverpublicips/${server_ip}" 
