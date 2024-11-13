@@ -26,8 +26,7 @@ export HOME="`/bin/cat /home/homedir.dat`"
 
 if ( [ -f ${HOME}/DROPLET ] || [ "${cloudhost}" = "digitalocean" ] )
 then
-	server_type="`/bin/echo ${server_type} | /bin/sed 's/\*//g'`"
-	/usr/local/bin/doctl compute droplet list | /bin/grep ".*${server_type}" | /usr/bin/awk '{print $3}'
+        /usr/local/bin/doctl compute droplet list -o json | /usr/bin/jq -r '.[] | select ( .name | contains ("'${server_type}'")).networks.v4[] | select (.type == "public").ip_address'  
 fi
 
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
