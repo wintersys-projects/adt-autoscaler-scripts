@@ -38,21 +38,21 @@ fi
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
 	zone="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
-	server_name="`/usr/bin/exo compute instance list --zone ${zone} -O json | /usr/bin/jq '.[] | select (.ip_address =="'${ip}'").name' | /bin/sed 's/"//g'`"
-	/usr/bin/exo  compute private-network show adt_private_net_${zone} --zone ${zone} -O json | /usr/bin/jq 'select (.leases[].instance | contains("'${server_name}'")).leases[].ip_address' | /bin/grep -o '[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}'
+	server_name="`/usr/bin/exo compute instance list --zone ${zone} -O json | /usr/bin/jq -r '.[] | select (.ip_address =="'${ip}'").name'`"
+	/usr/bin/exo  compute private-network show adt_private_net_${zone} --zone ${zone} -O json | /usr/bin/jq -r 'select (.leases[].instance | contains("'${server_name}'")).leases[].ip_address'
 fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
 then
-	linode_id="`/usr/local/bin/linode-cli --json --pretty linodes list | jq '.[] | select (.ipv4[] == "'${ip}'").id'`"
-	/usr/local/bin/linode-cli --json --pretty linodes ips-list ${linode_id} | /usr/bin/jq '.[].ipv4.vpc[].address'  | /bin/grep -o '[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}'		
+	linode_id="`/usr/local/bin/linode-cli --json --pretty linodes list | jq -r '.[] | select (.ipv4[] == "'${ip}'").id'`"
+	/usr/local/bin/linode-cli --json --pretty linodes ips-list ${linode_id} | /usr/bin/jq -r '.[].ipv4.vpc[].address'		
 fi
 
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
 	export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
-   	id="`/usr/bin/vultr instance list -o json | /usr/bin/jq '.instances[] | select (.main_ip == "'${ip}'").id' | /bin/sed 's/"//g'`"
-	/usr/bin/vultr instance get ${id} -o json | /usr/bin/jq '.instance.internal_ip' | /bin/grep -o '[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}'
+   	id="`/usr/bin/vultr instance list -o json | /usr/bin/jq -r '.instances[] | select (.main_ip == "'${ip}'").id'`"
+	/usr/bin/vultr instance get ${id} -o json | /usr/bin/jq -r '.instance.internal_ip' 
 fi
 
 
