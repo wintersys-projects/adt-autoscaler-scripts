@@ -149,8 +149,8 @@ then
 		emergency_password="`/bin/cat ${HOME}/.ssh/EMERGENCY_PASSWORD`"
 	fi
 
- 	vpc_id="`/usr/local/bin/linode-cli --json --pretty vpcs list | /usr/bin/jq '.[] | select (.label == "adt-vpc").id'`"
-	subnet_id="`/usr/local/bin/linode-cli --json --pretty vpcs subnets-list ${vpc_id} | /usr/bin/jq  '.[] | select (.label == "adt-subnet").id'`"
+ 	vpc_id="`/usr/local/bin/linode-cli --json --pretty vpcs list | /usr/bin/jq -r '.[] | select (.label == "adt-vpc").id'`"
+	subnet_id="`/usr/local/bin/linode-cli --json --pretty vpcs subnets-list ${vpc_id} | /usr/bin/jq -r '.[] | select (.label == "adt-subnet").id'`"
  
 	#Linode supports snapshots, so decide if we are building from a snapshot
 	if ( [ "${snapshot_id}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
@@ -227,12 +227,12 @@ then
 		${HOME}/providerscripts/utilities/StoreConfigValue.sh 'SNAPAUTOSCALE' '0'
 	fi
 
-	if ( [ "`/usr/bin/vultr vpc2 list -o json | /usr/bin/jq '.vpcs[] | select (.description == "adt-vpc").id'`" = "" ] )
+	if ( [ "`/usr/bin/vultr vpc2 list -o json | /usr/bin/jq -r '.vpcs[] | select (.description == "adt-vpc").id'`" = "" ] )
 	then
 		/usr/bin/vultr vpc2 create --region="${region}" --description="adt-vpc" --ip-type="v4" --ip-block="192.168.0.0" --prefix-length="16"
 	fi
 	
-        vpc_id="`/usr/bin/vultr vpc2 list -o json | /usr/bin/jq '.vpcs[] | select (.description == "adt-vpc").id' | /bin/sed 's/"//g'`"
+        vpc_id="`/usr/bin/vultr vpc2 list -o json | /usr/bin/jq -r '.vpcs[] | select (.description == "adt-vpc").id'`"
 
 
 	#Vultr supports snapshots, so decide if we are building from a snapshot
@@ -288,11 +288,11 @@ then
 		fi
 	fi
 	
- 	machine_id="`/usr/bin/vultr instance list -o json | /usr/bin/jq '.instances[] | select (.label == "'"${server_name}"'").id' | /bin/sed 's/"//g'`"
+ 	machine_id="`/usr/bin/vultr instance list -o json | /usr/bin/jq -r '.instances[] | select (.label == "'"${server_name}"'").id'`"
 	
 	while ( [ "${machine_id}" = "" ] )
 	do
- 		machine_id="`/usr/bin/vultr instance list -o json | /usr/bin/jq '.instances[] | select (.label == "'"${server_name}"'").id' | /bin/sed 's/"//g'`"
+ 		machine_id="`/usr/bin/vultr instance list -o json | /usr/bin/jq -r '.instances[] | select (.label == "'"${server_name}"'").id'`"
 	   /bin/sleep 5
 	done
 	
