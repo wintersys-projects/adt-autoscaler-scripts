@@ -32,8 +32,7 @@ fi
 
 if ( [ -f ${HOME}/DROPLET ] || [ "${cloudhost}" = "digitalocean" ] )
 then
-	name="`/usr/local/bin/doctl compute droplet list | /bin/grep -w "${server_ip}" | /usr/bin/awk '{print $2}'`"
-	/bin/echo "${name}"
+	/usr/local/bin/doctl compute droplet list -o json | /usr/bin/jq -r '.[] | select (.networks.v4[] | select (.ip_address == "'${server_ip}'")).name'
 fi
 
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
