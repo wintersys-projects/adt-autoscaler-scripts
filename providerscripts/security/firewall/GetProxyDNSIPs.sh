@@ -49,7 +49,7 @@ then
 	if ( [ "${CLOUDHOST}" = "digitalocean" ] )
 	then
 		#dynamic
-		alldnsproxyips="`/usr/bin/curl -X GET "https://api.cloudflare.com/client/v4/ips" | /usr/bin/jq '.result.ipv4_cidrs' | /bin/grep '"' | /bin/sed 's/.* "//g' | /bin/sed 's/".*//g' | /usr/bin/tr '\n' ' ' | /bin/sed 's/ $//g'`"
+		alldnsproxyips="`/usr/bin/curl -X GET "https://api.cloudflare.com/client/v4/ips" | /usr/bin/jq  -r '.result.ipv4_cidrs[]'  | /usr/bin/tr '\n' ' '`"
 
 		if ( [ "${alldnsproxyips}" = "" ] || [ "${alldnsproxyips}" = "null" ] )
 		then
@@ -65,7 +65,7 @@ then
 	if ( [ "${CLOUDHOST}" = "exoscale" ] )
 	then
 		#dynamic
-		alldnsproxyips="\"`/usr/bin/curl -X GET "https://api.cloudflare.com/client/v4/ips" | /usr/bin/jq '.result.ipv4_cidrs' | /bin/grep '"' | /bin/sed 's/.* "//g' | /bin/sed 's/".*//g' | /usr/bin/tr '\n' ' ' | /bin/sed 's/ /,/g'  | /bin/sed 's/,$//g'| /bin/sed 's/ $//g'`\""
+		alldnsproxyips="`/usr/bin/curl -X GET "https://api.cloudflare.com/client/v4/ips" | /usr/bin/jq  -r '.result.ipv4_cidrs[]'  | /usr/bin/tr '\n' ','`"
 	   
 		if ( [ "${alldnsproxyips}" = "" ] || [ "${alldnsproxyips}" = "null" ] )
 		then
@@ -80,7 +80,7 @@ then
 	if ( [ "${CLOUDHOST}" = "linode" ] )
 	then
 		#dynamic
-		alldnsproxyips="`/usr/bin/curl -X GET "https://api.cloudflare.com/client/v4/ips" | /usr/bin/jq '.result.ipv4_cidrs'  | /usr/bin/tr '\n' ' ' | /bin/sed 's/ \+/ /g' | /bin/sed 's/\[//g' | /bin/sed 's/\]//g' | /bin/sed 's/ //g'`"        
+                 alldnsproxyips="`/usr/bin/curl -X GET "https://api.cloudflare.com/client/v4/ips" | /usr/bin/jq  '.result.ipv4_cidrs[]'  | /usr/bin/tr '\n' ',' | /bin/sed 's/.$//'`"		 #hardcoded
 
 		 #hardcoded
 		 if ( [ "${alldnsproxyips}" = "" ] || [ "${alldnsproxyips}" = "null" ] )
@@ -93,7 +93,7 @@ then
 	if ( [ "${CLOUDHOST}" = "vultr" ] )
 	then
 		#dynamic
-		alldnsproxyips="\"`/usr/bin/curl -X GET "https://api.cloudflare.com/client/v4/ips" | /usr/bin/jq '.result.ipv4_cidrs' | /bin/grep '"' | /bin/sed 's/.* "//g' | /bin/sed 's/".*//g' | /usr/bin/tr '\n' ' ' | /bin/sed 's/ $//g'`\""
+		 alldnsproxyips="`/usr/bin/curl -X GET "https://api.cloudflare.com/client/v4/ips" | /usr/bin/jq  -r '.result.ipv4_cidrs[]'  | /usr/bin/tr '\n' ' '`"
 	   
 		if ( [ "${alldnsproxyips}" = "" ] || [ "${alldnsproxyips}" = "null" ] )
 		then
