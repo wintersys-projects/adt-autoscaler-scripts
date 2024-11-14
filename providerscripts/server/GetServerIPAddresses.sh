@@ -32,19 +32,19 @@ fi
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then    
 	zone="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
- 	/usr/bin/exo  compute instance list --zone ${zone} -O json | /usr/bin/jq '.[] | select (.name | contains ("'${server_type}'")).ip_address' | /bin/grep -o '[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}'
+ 	/usr/bin/exo  compute instance list --zone ${zone} -O json | /usr/bin/jq -r '.[] | select (.name | contains ("'${server_type}'")).ip_address'
 fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
 then
-	/usr/local/bin/linode-cli --json --pretty linodes list | jq '.[] | select (.label | contains("'${server_type}'")).ipv4' | /bin/grep -o '[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}'
+	/usr/local/bin/linode-cli --json --pretty linodes list | jq -r '.[] | select (.label | contains("'${server_type}'")).ipv4[]'
 fi
 
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
 	export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
 	server_type="`/bin/echo ${server_type} | /usr/bin/cut -c -25`"
-        /usr/bin/vultr instance list -o json | /usr/bin/jq '.instances[] | select (.label | contains("'${server_type}'")).main_ip' | /bin/grep -o '[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}.[0-9]\{1,3\}'
+        /usr/bin/vultr instance list -o json | /usr/bin/jq -r '.instances[] | select (.label | contains("'${server_type}'")).main_ip' 
 fi
 
 
