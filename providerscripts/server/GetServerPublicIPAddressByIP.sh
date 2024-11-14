@@ -55,7 +55,7 @@ fi
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
 	export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
-         vpc_id="`/usr/bin/vultr vpc2 list -o json | /usr/bin/jq -r '.vpcs[] | select (.description == "adt-vpc").id'`"
+	vpc_id="`/usr/bin/vultr vpc2 list -o json | /usr/bin/jq -r '.vpcs[] | select (.description == "adt-vpc").id'`"
         id="`/usr/bin/vultr vpc2 nodes list ${vpc_id} -o json | /usr/bin/jq -r '.nodes[] | select (.ip_address == "'${ip}'").id'`"
         /usr/bin/vultr instance get ${id} -o json | /usr/bin/jq -r '.instance.main_ip'
 	
