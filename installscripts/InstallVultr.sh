@@ -25,54 +25,60 @@ then
 	buildos="${1}"
 fi
 
-#curl -L https://api.github.com/repos/vultr/vultr-cli/releases/latest | jq -r '.name' | /bin/sed 's/^v//'
-
 if ( [ "${buildos}" = "ubuntu" ] )
 then
-	if ( [ ! -f /usr/bin/make ] )										#####UBUNTU-VULTR-SOURCE#####
-	then													#####UBUNTU-VULTR-SOURCE#####
-		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq install make	#####UBUNTU-VULTR-SOURCE#####
-	fi													#####UBUNTU-VULTR-SOURCE#####
-	if ( [ ! -d /usr/local/src/vultr ] )									#####UBUNTU-VULTR-SOURCE#####
-	then													#####UBUNTU-VULTR-SOURCE#####
-		/bin/mkdir /usr/local/src/vultr									#####UBUNTU-VULTR-SOURCE#####
-	else													#####UBUNTU-VULTR-SOURCE#####
-		/bin/rm -r /usr/local/src/vultr/* 2>/dev/null							#####UBUNTU-VULTR-SOURCE#####
-	fi													#####UBUNTU-VULTR-SOURCE#####
-	cwd="`/usr/bin/pwd`"											#####UBUNTU-VULTR-SOURCE#####
-	cd /usr/local/src/vultr											#####UBUNTU-VULTR-SOURCE#####
-	
-	/usr/bin/git clone https://github.com/vultr/vultr-cli.git						#####UBUNTU-VULTR-SOURCE#####
-	cd vultr-cli												#####UBUNTU-VULTR-SOURCE#####
-	
-	/usr/bin/make builds/vultr-cli_linux_amd64								#####UBUNTU-VULTR-SOURCE#####
-	/bin/cp builds/vultr-cli_linux_amd64 /usr/bin/vultr							#####UBUNTU-VULTR-SOURCE#####
-	
-	cd ${cwd}												#####UBUNTU-VULTR-SOURCE-SKIP#####
+	vultr_cli_version="`/usr/bin/curl -L https://api.github.com/repos/vultr/vultr-cli/releases/latest | /usr/bin/jq -r '.name'`"		#####DEBIAN-VULTR-BINARY#####
+	/usr/bin/wget https://github.com/vultr/vultr-cli/releases/download/${vultr_cli_version}/vultr-cli_${vultr_cli_version}_linux_amd64.tar.gz -C /usr/bin/	#####DEBIAN-VULTR-BINARY#####
+	/bin/mv /usr/bin/vultr-cli /usr/bin/vultr												#####DEBIAN-VULTR-BINARY#####
+	/bin/chown root:root /usr/bin/vultr													#####DEBIAN-VULTR-BINARY#####
+#	if ( [ ! -f /usr/bin/make ] )										#####UBUNTU-VULTR-SOURCE#####
+#	then													#####UBUNTU-VULTR-SOURCE#####
+#		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq install make	#####UBUNTU-VULTR-SOURCE#####
+#	fi													#####UBUNTU-VULTR-SOURCE#####
+#	if ( [ ! -d /usr/local/src/vultr ] )									#####UBUNTU-VULTR-SOURCE#####
+#	then													#####UBUNTU-VULTR-SOURCE#####
+#		/bin/mkdir /usr/local/src/vultr									#####UBUNTU-VULTR-SOURCE#####
+#	else													#####UBUNTU-VULTR-SOURCE#####
+#		/bin/rm -r /usr/local/src/vultr/* 2>/dev/null							#####UBUNTU-VULTR-SOURCE#####
+#	fi													#####UBUNTU-VULTR-SOURCE#####
+#	cwd="`/usr/bin/pwd`"											#####UBUNTU-VULTR-SOURCE#####
+#	cd /usr/local/src/vultr											#####UBUNTU-VULTR-SOURCE#####
+#	
+#	/usr/bin/git clone https://github.com/vultr/vultr-cli.git						#####UBUNTU-VULTR-SOURCE#####
+#	cd vultr-cli												#####UBUNTU-VULTR-SOURCE#####
+#	
+#	/usr/bin/make builds/vultr-cli_linux_amd64								#####UBUNTU-VULTR-SOURCE#####
+#	/bin/cp builds/vultr-cli_linux_amd64 /usr/bin/vultr							#####UBUNTU-VULTR-SOURCE#####
+#	
+#	cd ${cwd}												#####UBUNTU-VULTR-SOURCE-SKIP#####
 fi
 
 if ( [ "${buildos}" = "debian" ] )
 then
-	if ( [ ! -f /usr/bin/make ] )										#####DEBIAN-VULTR-SOURCE#####
-	then													#####DEBIAN-VULTR-SOURCE#####
-		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq install make	#####DEBIAN-VULTR-SOURCE#####
-	fi													#####DEBIAN-VULTR-SOURCE#####
-	if ( [ ! -d /usr/local/src/vultr ] )									#####DEBIAN-VULTR-SOURCE#####
-	then													#####DEBIAN-VULTR-SOURCE#####
-		/bin/mkdir /usr/local/src/vultr									#####DEBIAN-VULTR-SOURCE#####
-	else													#####DEBIAN-VULTR-SOURCE#####
-		/bin/rm -r /usr/local/src/vultr/* 2>/dev/null							#####DEBIAN-VULTR-SOURCE#####
-	fi													#####DEBIAN-VULTR-SOURCE#####
-	cwd="`/usr/bin/pwd`"											#####DEBIAN-VULTR-SOURCE#####
-	cd /usr/local/src/vultr											#####DEBIAN-VULTR-SOURCE#####
-	
-	/usr/bin/git clone https://github.com/vultr/vultr-cli.git						#####DEBIAN-VULTR-SOURCE#####
-	cd vultr-cli												#####DEBIAN-VULTR-SOURCE#####
-	
-	/usr/bin/make builds/vultr-cli_linux_amd64								#####DEBIAN-VULTR-SOURCE#####
-	/bin/cp builds/vultr-cli_linux_amd64 /usr/bin/vultr							#####DEBIAN-VULTR-SOURCE#####
-	
-	cd ${cwd}												#####DEBIAN-VULTR-SOURCE-SKIP#####
+	vultr_cli_version="`/usr/bin/curl -L https://api.github.com/repos/vultr/vultr-cli/releases/latest | /usr/bin/jq -r '.name'`"	#####DEBIAN-VULTR-BINARY#####
+	/usr/bin/wget https://github.com/vultr/vultr-cli/releases/download/${vultr_cli_version}/vultr-cli_${vultr_cli_version}_linux_amd64.tar.gz -C /usr/bin/ #####DEBIAN-VULTR-BINARY#####
+	/bin/mv /usr/bin/vultr-cli /usr/bin/vultr											#####DEBIAN-VULTR-BINARY#####
+	/bin/chown root:root /usr/bin/vultr												#####DEBIAN-VULTR-BINARY#####
+#	if ( [ ! -f /usr/bin/make ] )										#####DEBIAN-VULTR-SOURCE#####
+#	then													#####DEBIAN-VULTR-SOURCE#####
+#		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq install make	#####DEBIAN-VULTR-SOURCE#####
+#	fi													#####DEBIAN-VULTR-SOURCE#####
+#	if ( [ ! -d /usr/local/src/vultr ] )									#####DEBIAN-VULTR-SOURCE#####
+#	then													#####DEBIAN-VULTR-SOURCE#####
+#		/bin/mkdir /usr/local/src/vultr									#####DEBIAN-VULTR-SOURCE#####
+#	else													#####DEBIAN-VULTR-SOURCE#####
+#		/bin/rm -r /usr/local/src/vultr/* 2>/dev/null							#####DEBIAN-VULTR-SOURCE#####
+#	fi													#####DEBIAN-VULTR-SOURCE#####
+#	cwd="`/usr/bin/pwd`"											#####DEBIAN-VULTR-SOURCE#####
+#	cd /usr/local/src/vultr											#####DEBIAN-VULTR-SOURCE#####
+#	
+#	/usr/bin/git clone https://github.com/vultr/vultr-cli.git						#####DEBIAN-VULTR-SOURCE#####
+#	cd vultr-cli												#####DEBIAN-VULTR-SOURCE#####
+#	
+#	/usr/bin/make builds/vultr-cli_linux_amd64								#####DEBIAN-VULTR-SOURCE#####
+#	/bin/cp builds/vultr-cli_linux_amd64 /usr/bin/vultr							#####DEBIAN-VULTR-SOURCE#####
+#	
+#	cd ${cwd}												#####DEBIAN-VULTR-SOURCE-SKIP#####
 fi
 
 
