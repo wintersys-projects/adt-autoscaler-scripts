@@ -30,27 +30,27 @@ fi
 
 if ( [ "${buildos}" = "ubuntu" ] )
 then
-	DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y install pipx
-	if ( [ -f /usr/local/bin/linode-cli ] )
-	then
-		/usr/bin/pipx upgrade linode-cli 
-	else
-		/usr/bin/pipx install linode-cli 
-  		/bin/rm /usr/local/bin/linode-cli
-		/usr/bin/ln -s ${HOME}/.local/bin/linode-cli /usr/local/bin/linode-cli
-	fi
+	DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y install pipx		#####UBUNTU-LINODECLIL-REPO#####
+	if ( [ -f /usr/local/bin/linode-cli ] )									#####UBUNTU-LINODECLIL-REPO#####
+	then													#####UBUNTU-LINODECLIL-REPO#####
+		/usr/bin/pipx upgrade linode-cli 								#####UBUNTU-LINODECLIL-REPO#####
+	else													#####UBUNTU-LINODECLIL-REPO#####
+		/usr/bin/pipx install linode-cli 								#####UBUNTU-LINODECLIL-REPO#####
+  		/bin/rm /usr/local/bin/linode-cli								#####UBUNTU-LINODECLIL-REPO#####
+		/usr/bin/ln -s ${HOME}/.local/bin/linode-cli /usr/local/bin/linode-cli				#####UBUNTU-LINODECLIL-REPO#####
+	fi													#####UBUNTU-LINODECLIL-REPO#####
 fi
 
 if ( [ "${buildos}" = "debian" ] )
 then
-	DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y install pipx
-	if ( [ -f /usr/local/bin/linode-cli ] )
-	then
-		/usr/bin/pipx upgrade linode-cli 
-	else
-		/usr/bin/pipx install linode-cli 
-		/bin/rm /usr/local/bin/linode-cli
-		/usr/bin/ln -s ${HOME}/.local/bin/linode-cli /usr/local/bin/linode-cli
-	fi
+	DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y install pipx		#####DEBIAN-LINODECLIL-REPO#####
+	if ( [ -f /usr/local/bin/linode-cli ] )									#####DEBIAN-LINODECLIL-REPO#####
+	then													#####DEBIAN-LINODECLIL-REPO#####
+		/usr/bin/pipx upgrade linode-cli 								#####DEBIAN-LINODECLIL-REPO#####
+	else													#####DEBIAN-LINODECLIL-REPO#####
+		/usr/bin/pipx install linode-cli 								#####DEBIAN-LINODECLIL-REPO#####
+		/bin/rm /usr/local/bin/linode-cli								#####DEBIAN-LINODECLIL-REPO#####
+		/usr/bin/ln -s ${HOME}/.local/bin/linode-cli /usr/local/bin/linode-cli				#####DEBIAN-LINODECLIL-REPO#####
+	fi													#####DEBIAN-LINODECLIL-REPO#####
 fi
 
