@@ -40,25 +40,25 @@ if ( [ "${apt}" != "" ] )
 then
 	if ( [ "${buildos}" = "ubuntu" ] )
 	then
-                DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install iptables
+                DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install iptables			#####UBUNTU-IPTABLES-REPO#####
 
-                /usr/bin/debconf-set-selections <<EOF
-iptables-persistent iptables-persistent/autosave_v4 boolean true
-iptables-persistent iptables-persistent/autosave_v6 boolean true
-EOF
-                DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install netfilter-persistent
-                DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install iptables-persistent
+                /usr/bin/debconf-set-selections <<EOF									#####UBUNTU-IPTABLES-REPO#####
+iptables-persistent iptables-persistent/autosave_v4 boolean true							#####UBUNTU-IPTABLES-REPO#####
+iptables-persistent iptables-persistent/autosave_v6 boolean true							#####UBUNTU-IPTABLES-REPO#####
+EOF															#####UBUNTU-IPTABLES-REPO#####
+                DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install netfilter-persistent	#####UBUNTU-IPTABLES-REPO#####
+                DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install iptables-persistent	#####UBUNTU-IPTABLES-REPO#####
 	fi
 
 	if ( [ "${buildos}" = "debian" ] )
 	then
-                DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install iptables
+                DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install iptables			#####DEBIAN-IPTABLES-REPO#####
 
-                /usr/bin/debconf-set-selections <<EOF
-iptables-persistent iptables-persistent/autosave_v4 boolean true
-iptables-persistent iptables-persistent/autosave_v6 boolean true
-EOF
-                DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install netfilter-persistent
-                DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install iptables-persistent
+                /usr/bin/debconf-set-selections <<EOF									#####DEBIAN-IPTABLES-REPO#####
+iptables-persistent iptables-persistent/autosave_v4 boolean true							#####DEBIAN-IPTABLES-REPO#####
+iptables-persistent iptables-persistent/autosave_v6 boolean true							#####DEBIAN-IPTABLES-REPO#####
+EOF															#####DEBIAN-IPTABLES-REPO#####
+                DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install netfilter-persistent	#####DEBIAN-IPTABLES-REPO#####
+                DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install iptables-persistent	#####DEBIAN-IPTABLES-REPO#####
         fi
 fi
