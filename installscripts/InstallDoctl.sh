@@ -26,23 +26,23 @@ fi
 
 if ( [ "${buildos}" = "ubuntu" ] )
 then
-	 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install snapd
-	 snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"
-	 ${snap} install doctl
-	 /usr/bin/ln -s /snap/bin/doctl /usr/local/bin/doctl
-	 /bin/mkdir -p /root/.config/doctl 
-	 /bin/cp ${HOME}/.config/doctl/config.yaml /root/.config/doctl
-	 /bin/chmod 400 ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml
+	 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install snapd	#####UBUNTU-DOCTL-REPO#####
+	 snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"		#####UBUNTU-DOCTL-REPO#####
+	 ${snap} install doctl											#####UBUNTU-DOCTL-REPO#####
+	 /usr/bin/ln -s /snap/bin/doctl /usr/local/bin/doctl							#####UBUNTU-DOCTL-REPO#####
+	 /bin/mkdir -p /root/.config/doctl 									#####UBUNTU-DOCTL-REPO#####
+	 /bin/cp ${HOME}/.config/doctl/config.yaml /root/.config/doctl						#####UBUNTU-DOCTL-REPO#####
+	 /bin/chmod 400 ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml			#####UBUNTU-DOCTL-REPO#####
 fi
 
 if ( [ "${buildos}" = "debian" ] )
 then
-	 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install snapd
-	 snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"
-	 ${snap} install doctl
-	 /usr/bin/ln -s /snap/bin/doctl /usr/local/bin/doctl
-	 /bin/mkdir -p /root/.config/doctl 
-	 /bin/cp ${HOME}/.config/doctl/config.yaml /root/.config/doctl
-	 /bin/chmod 400 ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml
+	 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install snapd	#####DEBIAN-DOCTL-REPO#####
+	 snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"		#####DEBIAN-DOCTL-REPO#####
+	 ${snap} install doctl											#####DEBIAN-DOCTL-REPO#####
+	 /usr/bin/ln -s /snap/bin/doctl /usr/local/bin/doctl							#####DEBIAN-DOCTL-REPO#####
+	 /bin/mkdir -p /root/.config/doctl 									#####DEBIAN-DOCTL-REPO#####
+	 /bin/cp ${HOME}/.config/doctl/config.yaml /root/.config/doctl						#####DEBIAN-DOCTL-REPO#####
+	 /bin/chmod 400 ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml			#####DEBIAN-DOCTL-REPO#####
 fi
 
