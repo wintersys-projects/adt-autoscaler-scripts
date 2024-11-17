@@ -37,17 +37,26 @@ then
  	then
 		if ( [ "${BUILDOS}" = "ubuntu" ] )
 		then
-			DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install s3cmd
+			DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install s3cmd	#####UBUNTU-S3CMD-REPO#####
 		fi
 
 		if ( [ "${BUILDOS}" = "debian" ] )
 		then
-			DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install s3cmd
+			DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install s3cmd	#####DEBIAN-S3CMD-REPO#####
 		fi
 	elif ( [ "`${HOME}/providerscripts/utilities/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ] )
  	then
-  		/usr/bin/go install github.com/peak/s5cmd/v2@latest
-		/bin/cp ${HOME}/go/bin/s5cmd /usr/bin/s5cmd
+  		if ( [ "${BUILDOS}" = "ubuntu" ] )
+		then
+  			/usr/bin/go install github.com/peak/s5cmd/v2@latest					#####UBUNTU-S5CMD-REPO#####			
+			/bin/cp ${HOME}/go/bin/s5cmd /usr/bin/s5cmd						#####UBUNTU-S5CMD-REPO#####
+   		fi
+     
+     		if ( [ "${BUILDOS}" = "debian" ] )
+		then
+  			/usr/bin/go install github.com/peak/s5cmd/v2@latest					#####DEBIAN-S3CMD-REPO#####			
+			/bin/cp ${HOME}/go/bin/s5cmd /usr/bin/s5cmd						#####DEBIAN-S3CMD-REPO#####
+   		fi
   	fi
 fi
    
