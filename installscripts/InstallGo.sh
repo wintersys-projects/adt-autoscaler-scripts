@@ -25,10 +25,10 @@ then
 	buildos="${1}"
 fi
 
-version="`/usr/bin/curl https://go.dev/dl/ | /bin/grep download | /bin/grep -v darwin | /bin/grep filename | /bin/grep  linux | /bin/grep amd64 | /bin/sed 's/.*>go//g' | /bin/grep -v rc | /bin/grep -v beta | /bin/grep -v alpha | /bin/sed 's/\.linux.*//g' | /usr/bin/head -1`"
 
 if ( [ "${buildos}" = "ubuntu" ] )
 then
+	version="`curl https://go.dev/dl/?mode=json | jq -r '.[0].version' | /bin/sed 's/go//g'
 	/usr/bin/curl -O -s https://storage.googleapis.com/golang/go${version}.linux-amd64.tar.gz
 	/bin/tar -xf go${version}.linux-amd64.tar.gz
 	/bin/mv go /usr/local
@@ -38,6 +38,7 @@ fi
 
 if ( [ "${buildos}" = "debian" ] )
 then
+	version="`curl https://go.dev/dl/?mode=json | jq -r '.[0].version' | /bin/sed 's/go//g'
 	/usr/bin/curl -O -s https://storage.googleapis.com/golang/go${version}.linux-amd64.tar.gz
 	/bin/tar -xf go${version}.linux-amd64.tar.gz
 	/bin/mv go /usr/local
