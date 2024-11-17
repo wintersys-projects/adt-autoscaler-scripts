@@ -37,11 +37,11 @@ if ( [ "${apt}" != "" ] )
 then
 	if ( [ "${buildos}" = "ubuntu" ] )
 	then
-		DEBIAN_FRONTEND=noninteractive ${apt}  -o DPkg::Lock::Timeout=-1 -qq -y install bc
+		DEBIAN_FRONTEND=noninteractive ${apt}  -o DPkg::Lock::Timeout=-1 -qq -y install bc	#####UBUNTU-BC-REPO#####
 	fi
 
 	if ( [ "${buildos}" = "debian" ] )
 	then
-		DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install bc
+		DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install bc	#####DEBIAN-BC-REPO#####
 	fi
 fi
