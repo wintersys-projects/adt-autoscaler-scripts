@@ -29,10 +29,10 @@ export DEBIAN_FRONTEND=noninteractive
 
 if ( [ "${buildos}" = "ubuntu" ] )
 then
-	/usr/bin/curl -fsSL https://raw.githubusercontent.com/exoscale/cli/master/install-latest.sh | /bin/sh
+	/usr/bin/curl -fsSL https://raw.githubusercontent.com/exoscale/cli/master/install-latest.sh | /bin/sh	#####UBUNTU-EXO-REPO#####
 fi
 
 if ( [ "${buildos}" = "debian" ] )
 then
-	/usr/bin/curl -fsSL https://raw.githubusercontent.com/exoscale/cli/master/install-latest.sh | /bin/sh 
+	/usr/bin/curl -fsSL https://raw.githubusercontent.com/exoscale/cli/master/install-latest.sh | /bin/sh 	#####DEBIAN-EXO-REPO#####
 fi
