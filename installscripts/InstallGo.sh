@@ -28,7 +28,8 @@ fi
 
 if ( [ "${buildos}" = "ubuntu" ] )
 then
-	version="`curl https://go.dev/dl/?mode=json | jq -r '.[0].version' | /bin/sed 's/go//g'
+	DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install jq
+	version="`curl https://go.dev/dl/?mode=json | jq -r '.[0].version' | /bin/sed 's/go//g'1"
 	/usr/bin/curl -O -s https://storage.googleapis.com/golang/go${version}.linux-amd64.tar.gz
 	/bin/tar -xf go${version}.linux-amd64.tar.gz
 	/bin/mv go /usr/local
@@ -38,7 +39,8 @@ fi
 
 if ( [ "${buildos}" = "debian" ] )
 then
-	version="`curl https://go.dev/dl/?mode=json | jq -r '.[0].version' | /bin/sed 's/go//g'
+	DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install jq
+	version="`curl https://go.dev/dl/?mode=json | jq -r '.[0].version' | /bin/sed 's/go//g'`"
 	/usr/bin/curl -O -s https://storage.googleapis.com/golang/go${version}.linux-amd64.tar.gz
 	/bin/tar -xf go${version}.linux-amd64.tar.gz
 	/bin/mv go /usr/local
