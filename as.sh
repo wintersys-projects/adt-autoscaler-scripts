@@ -256,45 +256,16 @@ fi
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 
 #Double down on preventing logins as root. We already tried, but, make absolutely sure because we can't guarantee format of /etc/ssh/sshd_config
-if ( [ "`/bin/grep '^#PermitRootLogin' /etc/ssh/sshd_config`" != "" ] || [ "`/bin/grep '^PermitRootLogin' /etc/ssh/sshd_config`" != "" ] )
-then
-	/bin/sed -i "s/^PermitRootLogin.*/PermitRootLogin no/g" /etc/ssh/sshd_config
-	/bin/sed -i "s/^#PermitRootLogin.*/PermitRootLogin no/g" /etc/ssh/sshd_config
-else
-	/bin/echo "PermitRootLogin no" >> /etc/ssh/sshd_config
-fi
-
-if ( [ "`/bin/grep '^#PasswordAuthentication' /etc/ssh/sshd_config`" != "" ] || [ "`/bin/grep '^PasswordAuthentication' /etc/ssh/sshd_config`" != "" ] )
-then
-	/bin/sed -i "s/^PasswordAuthentication.*/PasswordAuthentication no/g" /etc/ssh/sshd_config
-	/bin/sed -i "s/^#PasswordAuthentication.*/PasswordAuthentication no/g" /etc/ssh/sshd_config
-else
-	/bin/echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
-fi
-
-if ( [ "`/bin/grep '^#KbdInteractiveAuthentication' /etc/ssh/sshd_config`" != "" ] || [ "`/bin/grep '^KbdInteractiveAuthentication' /etc/ssh/sshd_config`" != "" ] )
-then
-	/bin/sed -i "s/^KbdInteractiveAuthentication.*/KbdInteractiveAuthentication no/g" /etc/ssh/sshd_config
-	/bin/sed -i "s/^#KbdInteractiveAuthentication.*/KbdInteractiveAuthentication no/g" /etc/ssh/sshd_config
-else
-	/bin/echo "KbdInteractiveAuthentication no" >> /etc/ssh/sshd_config
-fi
-
-if ( [ "`/bin/grep '^#ChallengeResponseAuthentication' /etc/ssh/sshd_config`" != "" ] || [ "`/bin/grep '^ChallengeResponseAuthentication' /etc/ssh/sshd_config`" != "" ] )
-then
-	/bin/sed -i "s/^ChallengeResponseAuthentication.*/ChallengeResponseAuthentication no/g" /etc/ssh/sshd_config
-	/bin/sed -i "s/^#ChallengeResponseAuthentication.*/ChallengeResponseAuthentication no/g" /etc/ssh/sshd_config
-else
-	/bin/echo "ChallengeResponseAuthentication no" >> /etc/ssh/sshd_config
-fi
-
-if ( [ "`/bin/grep '^#AddressFamily' /etc/ssh/sshd_config`" != "" ] || [ "`/bin/grep '^AddressFamily' /etc/ssh/sshd_config`" != "" ] )
-then
-  	/bin/sed -i "s/^AddressFamily.*/AddressFamily inet/g" /etc/ssh/sshd_config
-	/bin/sed -i "s/^#AddressFamily.*/AddressFamily inet/g" /etc/ssh/sshd_config
-else
-	/bin/echo "AddressFamily inet" >> /etc/ssh/sshd_config
-fi
+/usr/bin/find /etc/ssh -name '*' -type f -exec sed -i 's/^PasswordAuthentication.*/PasswordAuthentication no/g' {} +
+/usr/bin/find /etc/ssh -name '*' -type f -exec sed -i 's/^#PasswordAuthentication.*/PasswordAuthentication no/g' {} +
+/usr/bin/find /etc/ssh -name '*' -type f -exec sed -i 's/^PermitRootLogin.*/PermitRootLogin no/g' {} +
+/usr/bin/find /etc/ssh -name '*' -type f -exec sed -i 's/^#PermitRootLogin.*/PermitRootLogin no/g' {} +
+/usr/bin/find /etc/ssh -name '*' -type f -exec sed -i 's/^KbdInteractiveAuthentication.*/KbdInteractiveAuthentication no/g' {} +
+/usr/bin/find /etc/ssh -name '*' -type f -exec sed -i 's/^#KbdInteractiveAuthentication.*/KbdInteractiveAuthentication no/g' {} +
+/usr/bin/find /etc/ssh -name '*' -type f -exec sed -i 's/^ChallengeResponseAuthentication.*/ChallengeResponseAuthentication no/g' {} +
+/usr/bin/find /etc/ssh -name '*' -type f -exec sed -i 's/^#ChallengeResponseAuthentication.*/ChallengeResponseAuthentication no/g' {} +
+/usr/bin/find /etc/ssh -name '*' -type f -exec sed -i 's/^AddressFamily.*/AddressFamily inet/g' {} +
+/usr/bin/find /etc/ssh -name '*' -type f -exec sed -i 's/^#AddressFamily.*/AddressFamily inet/g' {} +
 
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 >&2 /bin/echo "${0} Ensuring SSH connections are long lasting"
