@@ -266,10 +266,7 @@ then
 	else
 		#If we are here, then we are doing a regular build
 		/bin/echo "${0} `/bin/date`: Building a new webserver using the standard build method" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
-		/bin/sleep 1
-  		os_choice="`/usr/bin/vultr os list -o json | /usr/bin/jq '.os[] | select (.name == "'"${os_choice}"'").id'`"
-		/bin/sleep 1
-
+        	os_choice="`/usr/bin/vultr os list -o json | /usr/bin/jq -r '.os[] | select (.name | contains ("'"${os_choice}"'")).id'`"		
 		user_data=`/bin/cat ${HOME}/providerscripts/server/cloud-init/vultr.dat`
 
 		if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh ENABLEDDOSPROTECTION:1`" = "1" ] )
