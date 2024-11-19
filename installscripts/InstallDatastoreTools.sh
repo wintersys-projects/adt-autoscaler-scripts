@@ -48,15 +48,27 @@ then
  	then
   		if ( [ "${BUILDOS}" = "ubuntu" ] )
 		then
-  			/usr/bin/go install github.com/peak/s5cmd/v2@latest					#####UBUNTU-S5CMD-REPO#####			
-			/bin/cp ${HOME}/go/bin/s5cmd /usr/bin/s5cmd						#####UBUNTU-S5CMD-REPO#####
-   		fi
-     
+  			/usr/bin/go install github.com/peak/s5cmd/v2@latest					#####UBUNTU-S5CMD-REPO#####
+     			if ( [ -f ${HOME}/go/bin/s5cmd ] )							#####UBUNTU-S5CMD-REPO#####
+			then											#####UBUNTU-S5CMD-REPO#####
+				/bin/cp ${HOME}/go/bin/s5cmd /usr/bin/s5cmd					#####UBUNTU-S5CMD-REPO#####
+   			elif ( [ -f /root/go/bin/s5cmd ] )							#####UBUNTU-S5CMD-REPO#####
+      			then											#####UBUNTU-S5CMD-REPO#####
+	 			/bin/cp /root/go/bin/s5cmd /usr/bin/s5cmd					#####UBUNTU-S5CMD-REPO#####
+     			fi											#####UBUNTU-S5CMD-REPO#####
+     		fi	
+
      		if ( [ "${BUILDOS}" = "debian" ] )
 		then
-  			/usr/bin/go install github.com/peak/s5cmd/v2@latest					#####DEBIAN-S3CMD-REPO#####			
-			/bin/cp ${HOME}/go/bin/s5cmd /usr/bin/s5cmd						#####DEBIAN-S3CMD-REPO#####
-   		fi
+  			/usr/bin/go install github.com/peak/s5cmd/v2@latest					#####DEBIAN-S5CMD-REPO#####
+     			if ( [ -f ${HOME}/go/bin/s5cmd ] )							#####DEBIAN-S5CMD-REPO#####
+			then											#####DEBIAN-S5CMD-REPO#####
+				/bin/cp ${HOME}/go/bin/s5cmd /usr/bin/s5cmd					#####DEBIAN-S5CMD-REPO#####
+   			elif ( [ -f /root/go/bin/s5cmd ] )							#####DEBIAN-S5CMD-REPO#####
+      			then											#####DEBIAN-S5CMD-REPO#####
+	 			/bin/cp /root/go/bin/s5cmd /usr/bin/s5cmd					#####DEBIAN-S5CMD-REPO#####
+     			fi	   										#####DEBIAN-S5CMD-REPO#####
+		fi
   	fi
 fi
    
