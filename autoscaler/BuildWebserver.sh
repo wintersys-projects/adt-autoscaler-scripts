@@ -278,8 +278,8 @@ else
 	/bin/echo "${0} `/bin/date`: The webserver is now provisioned and I am about to start building its software" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 fi
 
-/bin/echo "${0} `/bin/date`: Ensuring that the server is attached to the VPC (if one is being used)" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-${HOME}/providerscripts/server/EnsureServerAttachToVPC.sh "${CLOUDHOST}" "${webserver_name}" "${private_ip}"
+#/bin/echo "${0} `/bin/date`: Ensuring that the server is attached to the VPC (if one is being used)" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+#${HOME}/providerscripts/server/EnsureServerAttachToVPC.sh "${CLOUDHOST}" "${webserver_name}" "${private_ip}"
 
 if ( [ ! -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip} ] )
 then
