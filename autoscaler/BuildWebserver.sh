@@ -317,20 +317,9 @@ ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${HOME}/
 . ${HOME}/providerscripts/security/firewall/TightenDBaaSFirewall.sh
 
 # Build our webserver
-if ( [ "`/bin/echo ${buildmethod} | /bin/grep 'SNAPPED'`" = "" ] )
-then   
-	if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh AUTOSCALEFROMBACKUP:1`" = "1" ] )
-	then
-		/bin/echo "${0} `/bin/date`: Performing a backup style build for this webserver" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-		. ${HOME}/autoscaler/buildmethods/BackupBuildMethod.sh
-	else
-		/bin/echo "${0} `/bin/date`: Performing a regular style build for this webserver" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-		. ${HOME}/autoscaler/buildmethods/RegularBuildMethod.sh
-	fi
-else
-	/bin/echo "${0} `/bin/date`: Performing a snapshot style build for this webserver" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-	. ${HOME}/autoscaler/buildmethods/SnapshotBuildMethod.sh
-fi
+
+/bin/echo "${0} `/bin/date`: Performing a regular style build for this webserver" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+. ${HOME}/autoscaler/buildmethods/RegularBuildMethod.sh
 
 /bin/echo "${0} `/bin/date`: The main build has completed now just have to check that it's been dun right" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 
