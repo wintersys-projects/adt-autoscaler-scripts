@@ -43,7 +43,6 @@ then
 	if ( [ "S{snapshotid}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
 	then
 		#If we get to here, then we are building from a snapshot and we pass the snapshotid in as the oschoice parameter
-		snapshotid="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SNAPSHOTID'`"
 
 		os_choice="${snapshotid}"
 		key_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'KEYID'`"
@@ -224,7 +223,6 @@ then
 
 		#If we are here, then we are building from a snapshot, so, get the snapshot id and pass it in to the server create command
 		#Note 164 is a special os id to say that we are building from a snapshot and not a standard image
-		snapshot_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SNAPSHOTID'`"
 
 		user_data=`/bin/cat ${HOME}/providerscripts/server/cloud-init/vultr.dat`
 		
