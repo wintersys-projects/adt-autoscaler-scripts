@@ -27,7 +27,7 @@ fi
 if ( [ "${buildos}" = "ubuntu" ] )
 then
 	 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install snapd	#####UBUNTU-DOCTL-REPO#####
-	 snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"		#####UBUNTU-DOCTL-REPO#####
+	 snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"		#####UBUNTU-DOCTL-REPO-SKIP#####
 	 ${snap} install doctl											#####UBUNTU-DOCTL-REPO#####
 	 /usr/bin/ln -s /snap/bin/doctl /usr/local/bin/doctl							#####UBUNTU-DOCTL-REPO#####
 	 /bin/mkdir -p /root/.config/doctl 									#####UBUNTU-DOCTL-REPO#####
@@ -38,7 +38,7 @@ fi
 if ( [ "${buildos}" = "debian" ] )
 then
 	 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1  -qq -y install snapd	#####DEBIAN-DOCTL-REPO#####
-	 snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"		#####DEBIAN-DOCTL-REPO#####
+	 snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"		#####DEBIAN-DOCTL-REPO-SKIP#####
 	 ${snap} install doctl											#####DEBIAN-DOCTL-REPO#####
 	 /usr/bin/ln -s /snap/bin/doctl /usr/local/bin/doctl							#####DEBIAN-DOCTL-REPO#####
 	 /bin/mkdir -p /root/.config/doctl 									#####DEBIAN-DOCTL-REPO#####
