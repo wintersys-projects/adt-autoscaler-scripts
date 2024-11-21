@@ -55,7 +55,7 @@ then
 		os_choice="${snapshotid}"
 		key_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'KEYID'`"
 		
-		/bin/echo "${0} `/bin/date`: Building a new webserver using the snapshot build method" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
+		/bin/echo "${0} `/bin/date`: Building a new webserver using the snapshot with id ${snapshot_id}" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
 
 		/usr/local/bin/doctl compute droplet create "${server_name}" --size "${server_size}" --image "${os_choice}"  --region "${region}" --ssh-keys "${key_id}" --vpc-uuid "${vpc_id}"
 		if ( [ "$?" != "0" ] )
@@ -108,7 +108,7 @@ then
 		/bin/echo "${0} `/bin/date`: Building a new webserver using the standard build method" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
 		/bin/echo "STANDARD"
 	else
-		/bin/echo "${0} `/bin/date`: Building a new webserver using the snapshot build method" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
+		/bin/echo "${0} `/bin/date`: Building a new webserver using the snapshot with id ${snapshot_id}" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
 		template_id="${snapshot_id}"
 		/bin/echo "SNAPPED"
 	fi
@@ -166,10 +166,7 @@ then
 	#Linode supports snapshots, so decide if we are building from a snapshot
 	if ( [ "${snapshot_id}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
 	then
-		#If we are here, then we are building from a snapshot, so, get the snapshot id and pass it in to the server create command
-		#Note 164 is a special os id to say that we are building from a snapshot and not a standard image
-		snapshot_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SNAPSHOTID'`"
-		/bin/echo "${0} `/bin/date`: Building a new webserver using the snapshot build method" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
+		/bin/echo "${0} `/bin/date`: Building a new webserver using the snapshot with id ${snapshot_id}" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
 		/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${location} --image "private/${snapshot_id}" --type ${server_size} --label "${server_name}" --no-defaults --interfaces.primary true --interfaces.purpose vpc --interfaces.subnet_id ${subnet_id} --interfaces.ipv4.nat_1_1 any
 		/bin/echo "SNAPPED"
 	else
@@ -251,7 +248,7 @@ then
 	#Vultr supports snapshots, so decide if we are building from a snapshot
 	if ( [ "${snapshot_id}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
 	then
-		/bin/echo "${0} `/bin/date`: Building a new webserver using the snapshot build method" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
+		/bin/echo "${0} `/bin/date`: Building a new webserver using the snapshot with id ${snapshot_id}" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
 
 		#If we are here, then we are building from a snapshot, so, get the snapshot id and pass it in to the server create command
 		#Note 164 is a special os id to say that we are building from a snapshot and not a standard image
