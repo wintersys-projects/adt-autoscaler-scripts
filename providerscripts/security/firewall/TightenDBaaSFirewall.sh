@@ -118,14 +118,14 @@ then
   #  ipaddresses="${autoscaler_ips} ${webserver_ips} ${database_ips} ${autoscaler_private_ips} ${webserver_private_ips} ${database_private_ips}"
  #   ipaddresses="`/bin/echo ${ipaddresses} | /bin/sed 's/  / /g;' | /bin/sed 's/ /,/g'`"
 #
-    databaseids="`/usr/bin/vultr database list | /bin/egrep "^ID" | /usr/bin/awk '{print $NF}'`"
+    databaseids="`/usr/bin/vultr database list -o json | /usr/bin/jq -r '.databases[] | select (.label == "'${label}'").id'`"
     selected_databaseid=""
 
     DBaaS_HOSTNAME="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBaaS_HOSTNAME'`"
 
     for databaseid in ${databaseids}
     do
-        if ( [ "`/usr/bin/vultr database get ${databaseid} | /bin/grep "${DBaaS_HOSTNAME}"`" != "" ] )
+	if ( [ "`/usr/bin/vultr database get ${databaseid} -o json | /usr/bin/jq -r '.database | select (.dbname == "'${DBaaS_HOSTNAME}'").id'`" != "" ] )
         then
              selected_databaseid="${databaseid}"
         fi
