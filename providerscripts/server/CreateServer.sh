@@ -37,13 +37,6 @@ if ( [ -f ${HOME}/DROPLET ] || [ "${cloudhost}" = "digitalocean" ] )
 then
 	snapshotid="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSERVERIMAGEID'`"
 
- 	if ( [ "${snapshotid}" = "" ] )
-	then
-		${HOME}/providerscripts/utilities/StoreConfigValue.sh 'SNAPAUTOSCALE' '0'
-  	else
-		${HOME}/providerscripts/utilities/StoreConfigValue.sh 'SNAPAUTOSCALE' '1'
-	fi
-
 	vpc_id="`/usr/local/bin/doctl vpcs list  | /bin/grep "adt-vpc" | /bin/grep "${region}" | /usr/bin/awk '{print $1}'`"
 
 	#Digital ocean supports snapshots so, we test to see if we want to use them
@@ -95,13 +88,6 @@ if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
 	snapshot_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSERVERIMAGEID'`"
 
- 	if ( [ "${snapshotid}" = "" ] )
-	then
-		${HOME}/providerscripts/utilities/StoreConfigValue.sh 'SNAPAUTOSCALE' '0'
-  	else
-		${HOME}/providerscripts/utilities/StoreConfigValue.sh 'SNAPAUTOSCALE' '1'
-	fi
-
 	if ( [ "${snapshot_id}" = "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "0" ] )
 	then
 		template_id="`/bin/echo "${template_id}" | /bin/sed "s/'//g"`"
@@ -145,13 +131,6 @@ username="${7}"
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
 then
 	snapshot_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSERVERIMAGEID'`"
-
- 	if ( [ "${snapshotid}" = "" ] )
-	then
-		${HOME}/providerscripts/utilities/StoreConfigValue.sh 'SNAPAUTOSCALE' '0'
-  	else
-		${HOME}/providerscripts/utilities/StoreConfigValue.sh 'SNAPAUTOSCALE' '1'
-	fi
  
 	key="`/usr/local/bin/linode-cli --text sshkeys view ${key_id} | /usr/bin/awk '{print $4,$5,$6}' | /usr/bin/tail -n-1`"
 	
@@ -229,13 +208,6 @@ if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
 	export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
 	snapshot_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSERVERIMAGEID'`"
-	
- 	if ( [ "${snapshotid}" = "" ] )
-	then
-		${HOME}/providerscripts/utilities/StoreConfigValue.sh 'SNAPAUTOSCALE' '0'
-  	else
-		${HOME}/providerscripts/utilities/StoreConfigValue.sh 'SNAPAUTOSCALE' '1'
-	fi
 
 	if ( [ "`/usr/bin/vultr vpc2 list -o json | /usr/bin/jq -r '.vpcs[] | select (.description == "adt-vpc").id'`" = "" ] )
 	then
