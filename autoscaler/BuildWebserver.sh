@@ -5,12 +5,7 @@
 # Description : This script will build a webserver from scratch in response to an autoscaling event
 # It depends on the provider scripts and will build according to the provider it is configured for
 # If we are configured to use snapshots, then the build will be completed using a snapshot (which
-# must exist) otherwise, we perform a vanilla build of our webserver from scratch. A build can 
-# also be made from a backup and all you have to do to use this option is set the value
-# AUTOSCALE_FROM_BACKUP to "1" and the build process will generate an entire machine backup on 
-# the first webserver that is built and all subsequent webseervers will not be directly installed
-# but rather extracted from that backup which is a faster way to get your webservers online
-# during autoscaling processes.
+# must exist) otherwise, we perform a vanilla build of our webserver from scratch. 
 # With each of these three methods, there are advantages and disadvantages and it just depends
 # what suits you
 ##############################################################################################
