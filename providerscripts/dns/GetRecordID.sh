@@ -61,6 +61,7 @@ dns="${6}"
 
 if ( [ "${dns}" = "exoscale" ] )
 then
+	zone="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
 	/usr/bin/exo -O json dns show ${domainurl} | /usr/bin/jq --arg tmp_content "${ip}" '.[] | select (.content == $tmp_content ) | .id' 
 	#Alternative
 	#/usr/bin/curl  -H "X-DNS-Token: ${authkey}" -H 'Accept: application/json' https://api.exoscale.com/dns/v1/domains/${domainurl}/records | /usr/bin/jq --arg tmp_subdomain "${subdomain}" --arg tmp_content "${ip}" '.[].record | select (.name == $tmp_subdomain and .content == $tmp_content ) | .id'
