@@ -50,6 +50,7 @@ dns="${5}"
 
 if ( [ "${dns}" = "exoscale" ] )
 then
+	zone="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
 	/usr/bin/exo -O json dns show ${domainurl} | /usr/bin/jq -r --arg tmp_subdomain "${subdomain}"  '.[] | select (.name == $tmp_subdomain ) | .content'
 	
 	#Alternative
