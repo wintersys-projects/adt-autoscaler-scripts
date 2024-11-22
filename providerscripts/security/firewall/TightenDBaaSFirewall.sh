@@ -63,11 +63,11 @@ if ( [ "${CLOUDHOST}" = "linode" ] )
 then
 	token="`/bin/grep token ${HOME}/.config/linode-cli | /usr/bin/awk '{print $NF}'`"
 	label="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
-	database_id="`/usr/local/bin/linode-cli --json databases mysql-list | jq ".[] | select(.[\\"label\\"] | contains (\\"${label}\\")) | .id"`"
+	database_id="`/usr/local/bin/linode-cli --json databases mysql-list | /usr/bin/jq ".[] | select(.[\\"label\\"] | contains (\\"${label}\\")) | .id"`"
    
    if ( [ "${database_id}" = "" ] )
 	then
-		database_id="`/usr/local/bin/linode-cli --json databases postgresql-list | jq ".[] | select(.[\\"label\\"] | contains (\\"${label}\\")) | .id"`"
+		database_id="`/usr/local/bin/linode-cli --json databases postgresql-list | /usr/bin/jq ".[] | select(.[\\"label\\"] | contains (\\"${label}\\")) | .id"`"
 	fi
 	
 	autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
