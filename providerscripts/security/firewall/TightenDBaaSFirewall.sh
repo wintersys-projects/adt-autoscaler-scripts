@@ -133,6 +133,7 @@ then
 
     if ( [ "${selected_databaseid}" != "" ] )
     then
-        /usr/bin/vultr database update ${selected_databaseid} --trusted-ips="192.168.0.0/16"
+    	VPC_IP_RANGE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'VPCIPRANGE'`"
+        /usr/bin/vultr database update ${selected_databaseid} --trusted-ips="${VPC_IP_RANGE}"
     fi
 fi
