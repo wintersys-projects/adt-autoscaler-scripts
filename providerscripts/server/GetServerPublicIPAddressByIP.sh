@@ -44,7 +44,7 @@ fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
 then
-	linodeids="`/usr/local/bin/linode-cli --json --pretty linodes list | jq '.[].id'`"
+	linodeids="`/usr/local/bin/linode-cli --json --pretty linodes list | /usr/bin/jq '.[].id'`"
         
 	for linodeid in ${linodeids}
         do
