@@ -35,7 +35,7 @@ fi
 
 if ( [ -f ${HOME}/DROPLET ] )
 then    
-	firewall_id="`/usr/local/bin/doctl -o json compute firewall list | jq '.[] | select (.name == "adt-webserver" ).id' | /bin/sed 's/"//g'`"
+	firewall_id="`/usr/local/bin/doctl -o json compute firewall list | /usr/bin/jq '.[] | select (.name == "adt-webserver" ).id' | /bin/sed 's/"//g'`"
 	webserver_ids="`${HOME}/providerscripts/server/ListServerIDs.sh webserver ${CLOUDHOST}`"
 
 	for webserver_id in ${webserver_ids}
@@ -54,7 +54,7 @@ fi
 
 if ( [ -f ${HOME}/LINODE ] )
 then
-	firewall_id="`/usr/local/bin/linode-cli --json firewalls list | jq '.[] | select (.label == "adt-webserver" ).id'`"
+	firewall_id="`/usr/local/bin/linode-cli --json firewalls list | /usr/bin/jq '.[] | select (.label == "adt-webserver" ).id'`"
 	webserver_ids="`${HOME}/providerscripts/server/ListServerIDs.sh webserver ${CLOUDHOST}`"
 
 	for webserver_id in ${webserver_ids}
