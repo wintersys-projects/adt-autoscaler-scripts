@@ -26,13 +26,13 @@ then
 	/usr/sbin/dhclient 1>/dev/null 2>/dev/null
 fi
 
-ip="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'MYIP'`"
+IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'MYIP'`"
 
-if ( [ "`/usr/bin/hostname -I | /bin/grep ${ip}`" = "" ] )
+if ( [ "`/usr/bin/hostname -I | /bin/grep ${IP}`" = "" ] )
 then
-	ip="`/usr/bin/hostname -I | /usr/bin/awk '{print $2}'`"
-	${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh 'MYIP' "${ip}"
+	IP="`/usr/bin/hostname -I | /usr/bin/awk '{print $2}'`"
+	${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh 'MYIP' "${IP}"
 fi
 
-/bin/echo ${ip}
+/bin/echo ${IP}
 
