@@ -32,8 +32,10 @@ then
 	exit
 fi
 
+BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
+REGION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
 dnsips="`${HOME}/autoscaler/GetDNSIPs.sh`"
-ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "webserver" ${CLOUDHOST}`"
+ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
 
 if ( [ "${dnsips}" = "" ] )
 then
