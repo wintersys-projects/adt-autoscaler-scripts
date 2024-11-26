@@ -24,26 +24,27 @@
 #############################################################################################
 #set -x
 
-
 if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh INSTALLMONITORINGGEAR:1`" = "1" ] )
 then
 
-	CLOUDHOST="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOST'`"
+        CLOUDHOST="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOST'`"
+        BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
+        REGION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
 
-	noprovisioned="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "webserver" ${CLOUDHOST} | /usr/bin/tr '\n' ' ' | /usr/bin/wc -w`"
-	noactive="`${HOME}/autoscaler/GetDNSIPs.sh | /usr/bin/wc -w`"
+        noprovisioned="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST} | /usr/bin/tr '\n' ' ' | /usr/bin/wc -w`"
+        noactive="`${HOME}/autoscaler/GetDNSIPs.sh | /usr/bin/wc -w`"
 
-	if ( [ "${no_active}" = "" ] )
-	then
-		no_active="0"
-	fi
+        if ( [ "${no_active}" = "" ] )
+        then
+                no_active="0"
+        fi
 
-	if ( [ ! -d ${HOME}/logs/monitoring ] )
-	then
-		/bin/mkdir -p ${HOME}/logs/monitoring
-	fi
+        if ( [ ! -d ${HOME}/logs/monitoring ] )
+        then
+                /bin/mkdir -p ${HOME}/logs/monitoring
+        fi
 
-	/bin/echo "###############################`/usr/bin/date`##################################################################" >> ${HOME}/logs/monitoring/WebserverHistory.log
-	/bin/echo "The number of webserver IP addresses registered with the DNS system at this time is ${no_active} online machines" >> ${HOME}/logs/monitoring/WebserverHistory.log
-	/bin/echo "The number of webserver machines that have been provisioned at this time is: ${noprovisioned} allocated machines" >> ${HOME}/logs/monitoring/WebserverHistory.log
+        /bin/echo "###############################`/usr/bin/date`##################################################################" >> ${HOME}/logs/monitoring/WebserverHistory.log
+        /bin/echo "The number of webserver IP addresses registered with the DNS system at this time is ${no_active} online machines" >> ${HOME}/logs/monitoring/WebserverHistory.log
+        /bin/echo "The number of webserver machines that have been provisioned at this time is: ${noprovisioned} allocated machines" >> ${HOME}/logs/monitoring/WebserverHistory.log
  fi
