@@ -88,6 +88,7 @@ then
 		emergency_password="`/bin/cat ${HOME}/.ssh/EMERGENCY_PASSWORD`"
 	fi
 
+ 	key="`/usr/local/bin/linode-cli --text sshkeys view ${key_id} | /usr/bin/awk '{print $4,$5,$6}' | /usr/bin/tail -n-1`"
  	vpc_id="`/usr/local/bin/linode-cli --json --pretty vpcs list | /usr/bin/jq -r '.[] | select (.label == "adt-vpc").id'`"
 	subnet_id="`/usr/local/bin/linode-cli --json --pretty vpcs subnets-list ${vpc_id} | /usr/bin/jq -r '.[] | select (.label == "adt-subnet").id'`"
  
@@ -99,13 +100,6 @@ then
  	/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${region} --image "os_choice" --type ${server_size} --label "${server_name}" --no-defaults --interfaces.primary true --interfaces.purpose vpc --interfaces.subnet_id ${subnet_id} --interfaces.ipv4.nat_1_1 any
 	
 fi
-
-os_choice="${1}"
-region="${2}"
-server_plan="${3}"
-server_name="${4}"
-key_id="${5}"
-cloudhost="${6}"
 
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
