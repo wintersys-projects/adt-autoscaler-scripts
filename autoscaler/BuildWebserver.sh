@@ -195,7 +195,7 @@ name="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{print $1}'`"
 
 # Set up the webservers properties, like its name and so on.
 rnd="`/usr/bin/openssl rand -base64 32 | /usr/bin/tr -cd 'a-zA-Z0-9' | /usr/bin/cut -b 1-4`"
-server_type="webserver"
+server_type="ws-${REGION}-${BUILD_IDENTIFIER}"
 autoscalerip="`${HOME}/providerscripts/utilities/GetPublicIP.sh`"
 autoscaler_name="`${HOME}/providerscripts/server/GetServerName.sh ${autoscalerip} ${CLOUDHOST}`"
 autoscaler_no="`/bin/echo ${autoscaler_name} | /usr/bin/awk -F'-' '{print $2}'`"
