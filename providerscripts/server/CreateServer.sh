@@ -113,14 +113,19 @@ then
   	fi
 
 	user_data=`/bin/cat ${HOME}/providerscripts/server/cloud-init/vultr.dat`
-		
-	if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh ENABLEDDOSPROTECTION:1`" = "1" ] )
-	then
-		/usr/bin/vultr instance create --label="${server_name}" --region="${region}" --plan="${server_size}" --ipv6=false -s ${key_id} --snapshot="${os_choice}" --ddos=true --userdata="${user_data}" --firewall-group="${firewall_id}"
-	else
-		/usr/bin/vultr instance create --label="${server_name}" --region="${region}" --plan="${server_size}" --ipv6=false -s ${key_id} --snapshot="${os_choice}" --ddos=false --userdata="${user_data}" --firewall-group="${firewall_id}"
-	fi
 
+	ddos="false"
+ 	if ( [ "${ddos_protection}" = "1" ] )
+  	then
+   		ddos="true"
+     	fi
+	if ( [ "${snapshot_id}" = "" ] )
+ 	then
+		/usr/bin/vultr instance create --label="${server_name}" --region="${region}" --plan="${server_size}" --ipv6=false -s ${key_id} --os="${os_choice}" --ddos="${ddos}" --userdata="${user_data}" --firewall-group="${firewall_id}"
+	else	
+  		/usr/bin/vultr instance create --label="${server_name}" --region="${region}" --plan="${server_size}" --ipv6=false -s ${key_id} --snapshot="${os_choice}" --ddos="${ddos}" --userdata="${user_data}" --firewall-group="${firewall_id}"
+	fi
+ 
  	machine_id=""
  	count="0"
 	while ( [ "${machine_id}" = "" ] && [ "${count}" -lt "10" ] )
