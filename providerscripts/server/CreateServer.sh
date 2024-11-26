@@ -56,13 +56,6 @@ then
 		/usr/local/bin/doctl compute droplet create "${server_name}" --size "${server_size}" --image "${os_choice}"  --region "${region}" --ssh-keys "${key_id}" --vpc-uuid "${vpc_id}"
 fi
 
-template_id="${1}"
-zone_id="${2}"
-server_size="${3}" 
-server_name="${4}"
-key_pair="${5}"
-cloudhost="${6}"
-
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
 	if ( [ "${snapshot_id}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
