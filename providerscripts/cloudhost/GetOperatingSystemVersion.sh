@@ -65,14 +65,29 @@ then
 	fi
 fi
 
-if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
+if ( [ "${cloudhost}" = "linode" ] )
 then
-	if ( [ "${BUILDOS}" = "ubuntu" ] )
+	if ( [ "${buildos}" = "ubuntu" ] )
 	then
-		/bin/echo "Ubuntu ${BUILDOSVERSION}"
-elif ( [ "${BUILDOS}" = "debian" ] )
+ 		if ( [ "${buildos_version}" = "20.04" ] )
+		then
+			/bin/echo "linode/ubuntu20.04"
+		elif ( [ "${buildos_version}" = "22.04" ] )
+		then
+			/bin/echo "linode/ubuntu22.04"
+		elif ( [ "${buildos_version}" = "24.04" ] )
+		then
+			/bin/echo "linode/ubuntu24.04"
+		fi
+	elif ( [ "${buildos}" = "debian" ] )
 	then
-		/bin/echo "Debian ${BUILDOSVERSION}"
+		if ( [ "${buildos_version}" = "11" ] )
+		then 
+			/bin/echo "linode/debian11"
+		elif ( [ "${buildos_version}" = "12" ] )
+		then
+			/bin/echo "linode/debian12"
+		fi
 	fi
 fi
 
