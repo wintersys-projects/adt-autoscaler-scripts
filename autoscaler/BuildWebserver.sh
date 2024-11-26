@@ -199,7 +199,7 @@ server_type="ws-${REGION}-${BUILD_IDENTIFIER}"
 autoscalerip="`${HOME}/providerscripts/utilities/GetPublicIP.sh`"
 autoscaler_name="`${HOME}/providerscripts/server/GetServerName.sh ${autoscalerip} ${CLOUDHOST}`"
 autoscaler_no="`/bin/echo ${autoscaler_name} | /usr/bin/awk -F'-' '{print $2}'`"
-webserver_name="webserver-${autoscaler_no}-${rnd}-`/bin/echo ${BUILD_IDENTIFIER} | /usr/bin/tr '[:upper:]' '[:lower:]'`"
+webserver_name="ws-${REGION}-${BUILD_IDENTIFIER}-${autoscaler_no}-${rnd}"
 server_instance_name="`/bin/echo ${webserver_name} | /usr/bin/cut -c -32 | /bin/sed 's/-$//g'`"
 
 logdir="${logdir}/${webserver_name}"
