@@ -22,7 +22,7 @@
 
 export HOME=`/bin/cat /home/homedir.dat`
 WEBSITE_URL="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL'`"
-configbucket="`/bin/echo "${WEBSITE_URL}-config | /bin/sed 's/\./-/g'`"
+configbucket="`/bin/echo "${WEBSITE_URL}"-config | /bin/sed 's/\./-/g'`"
 
 if ( [ "${1}" = "" ] )
 then
