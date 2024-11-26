@@ -80,20 +80,9 @@ then
 	/usr/bin/exo compute instance private-network attach  ${server_name} adt_private_net_${region} --zone ${region}
 fi
 
-distribution="${1}"
-location="${2}"
-server_size="${3}"
-server_name="`/bin/echo ${4} | /usr/bin/cut -c -32`"
-key_id="${5}"
-cloudhost="${6}"
-username="${7}"
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
-then
-	snapshot_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSERVERIMAGEID'`"
- 
-	key="`/usr/local/bin/linode-cli --text sshkeys view ${key_id} | /usr/bin/awk '{print $4,$5,$6}' | /usr/bin/tail -n-1`"
-	
+then	
 	if ( [ -f ${HOME}/.ssh/EMERGENCY_PASSWORD ] )
 	then
 		emergency_password="`/bin/cat ${HOME}/.ssh/EMERGENCY_PASSWORD`"
@@ -102,59 +91,13 @@ then
  	vpc_id="`/usr/local/bin/linode-cli --json --pretty vpcs list | /usr/bin/jq -r '.[] | select (.label == "adt-vpc").id'`"
 	subnet_id="`/usr/local/bin/linode-cli --json --pretty vpcs subnets-list ${vpc_id} | /usr/bin/jq -r '.[] | select (.label == "adt-subnet").id'`"
  
-	#Linode supports snapshots, so decide if we are building from a snapshot
 	if ( [ "${snapshot_id}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
 	then
-		/bin/echo "${0} `/bin/date`: Building a new webserver using the snapshot with id ${snapshot_id}" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
-		/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${location} --image "private/${snapshot_id}" --type ${server_size} --label "${server_name}" --no-defaults --interfaces.primary true --interfaces.purpose vpc --interfaces.subnet_id ${subnet_id} --interfaces.ipv4.nat_1_1 any
-		/bin/echo "SNAPPED"
-	else
-		/bin/echo "${0} `/bin/date`: Building a new webserver using the standard build method" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
-
-		if ( [ "`/bin/echo ${distribution} | /bin/grep 'Ubuntu 20.04'`" != "" ] )
-		then
-			/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}"  --root_pass ${emergency_password} --region ${location} --image linode/ubuntu20.04 --type ${server_size} --label "${server_name}" --no-defaults --interfaces.primary true --interfaces.purpose vpc --interfaces.subnet_id ${subnet_id} --interfaces.ipv4.nat_1_1 any
-			if ( [ "$?" != "0" ] )
-			then
-				 ${HOME}/providerscripts/email/SendEmail.sh "FAILED TO CREATE LINODE" "I tried to create a droplet called ${server_name} and failed. I don't know why, please investigate" "ERROR"
-			fi
-		elif ( [ "`/bin/echo ${distribution} | /bin/grep 'Ubuntu 22.04'`" != "" ] )
-		then
-			/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${location} --image linode/ubuntu22.04 --type ${server_size} --label "${server_name}" --no-defaults --interfaces.primary true --interfaces.purpose vpc --interfaces.subnet_id ${subnet_id} --interfaces.ipv4.nat_1_1 any
-			if ( [ "$?" != "0" ] )
-			then
-				 ${HOME}/providerscripts/email/SendEmail.sh "FAILED TO CREATE LINODE" "I tried to create a linode called ${server_name} and failed. I don't know why, please investigate" "ERROR"
-			fi
-		elif ( [ "`/bin/echo ${distribution} | /bin/grep 'Ubuntu 24.04'`" != "" ] )
-		then
-			/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${location} --image linode/ubuntu24.04 --type ${server_size} --label "${server_name}" --no-defaults --interfaces.primary true --interfaces.purpose vpc --interfaces.subnet_id ${subnet_id} --interfaces.ipv4.nat_1_1 any
-			if ( [ "$?" != "0" ] )
-			then
-				 ${HOME}/providerscripts/email/SendEmail.sh "FAILED TO CREATE LINODE" "I tried to create a linode called ${server_name} and failed. I don't know why, please investigate" "ERROR"
-			fi
-		elif ( [ "`/bin/echo ${distribution} | /bin/grep 'Debian 10'`" != "" ] )
-		then
-			/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${location} --image linode/debian10 --type ${server_size} --label "${server_name}" --no-defaults --interfaces.primary true --interfaces.purpose vpc --interfaces.subnet_id ${subnet_id} --interfaces.ipv4.nat_1_1 any
-			if ( [ "$?" != "0" ] )
-			then
-				 ${HOME}/providerscripts/email/SendEmail.sh "FAILED TO CREATE LINODE" "I tried to create a linode called ${server_name} and failed. I don't know why, please investigate" "ERROR"
-			fi
-		elif ( [ "`/bin/echo ${distribution} | /bin/grep 'Debian 11'`" != "" ] )
-		then
-			/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${location} --image linode/debian11 --type ${server_size} --label "${server_name}" --no-defaults --interfaces.primary true --interfaces.purpose vpc --interfaces.subnet_id ${subnet_id} --interfaces.ipv4.nat_1_1 any
-			if ( [ "$?" != "0" ] )
-			then
-				 ${HOME}/providerscripts/email/SendEmail.sh "FAILED TO CREATE LINODE" "I tried to create a linode called ${server_name} and failed. I don't know why, please investigate" "ERROR"
-			fi
-		elif ( [ "`/bin/echo ${distribution} | /bin/grep 'Debian 12'`" != "" ] )
-		then
-			/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${location} --image linode/debian12 --type ${server_size} --label "${server_name}" --no-defaults --interfaces.primary true --interfaces.purpose vpc --interfaces.subnet_id ${subnet_id} --interfaces.ipv4.nat_1_1 any	
-			if ( [ "$?" != "0" ] )
-			then
-				 ${HOME}/providerscripts/email/SendEmail.sh "FAILED TO CREATE LINODE" "I tried to create a linode called ${server_name} and failed. I don't know why, please investigate" "ERROR"
-			fi
-		fi
-	fi
+ 		os_choice="private/${snapshot_id}"
+   	fi
+	
+ 	/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${region} --image "os_choice" --type ${server_size} --label "${server_name}" --no-defaults --interfaces.primary true --interfaces.purpose vpc --interfaces.subnet_id ${subnet_id} --interfaces.ipv4.nat_1_1 any
+	
 fi
 
 os_choice="${1}"
@@ -167,7 +110,6 @@ cloudhost="${6}"
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
 	export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
-	snapshot_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSERVERIMAGEID'`"
 
 	if ( [ "`/usr/bin/vultr vpc2 list -o json | /usr/bin/jq -r '.vpcs[] | select (.description == "adt-vpc").id'`" = "" ] )
 	then
@@ -180,75 +122,26 @@ then
 	#Vultr supports snapshots, so decide if we are building from a snapshot
 	if ( [ "${snapshot_id}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
 	then
-		/bin/echo "${0} `/bin/date`: Building a new webserver using the snapshot with id ${snapshot_id}" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
+		os_choice="${snapshot_id}"
+  	fi
 
-		#If we are here, then we are building from a snapshot, so, get the snapshot id and pass it in to the server create command
-		#Note 164 is a special os id to say that we are building from a snapshot and not a standard image
-
-		user_data=`/bin/cat ${HOME}/providerscripts/server/cloud-init/vultr.dat`
+	user_data=`/bin/cat ${HOME}/providerscripts/server/cloud-init/vultr.dat`
 		
-		if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh ENABLEDDOSPROTECTION:1`" = "1" ] )
-		then
-		   /usr/bin/vultr instance create --label="${server_name}" --region="${region}" --plan="${server_plan}" --ipv6=false -s ${key_id} --snapshot="${snapshot_id}" --ddos=true --userdata="${user_data}" --firewall-group="${firewall_id}"
-		   if ( [ "$?" != "0" ] )
-		   then
-				 ${HOME}/providerscripts/email/SendEmail.sh "FAILED TO CREATE VPS Machine" "I tried to create a VPS Machine called ${server_name} and failed. I don't know why, please investigate" "ERROR"
-		   fi
-		else
-		   /usr/bin/vultr instance create --label="${server_name}" --region="${region}" --plan="${server_plan}" --ipv6=false -s ${key_id} --snapshot="${snapshot_id}" --ddos=false --userdata="${user_data}" --firewall-group="${firewall_id}"
-		   if ( [ "$?" != "0" ] )
-		   then
-				 ${HOME}/providerscripts/email/SendEmail.sh "FAILED TO CREATE VPS Machine" "I tried to create a VPS Machine called ${server_name} and failed. I don't know why, please investigate" "ERROR"
-		   fi
-		fi
-
-		#Pass back a token to say we built from a snapshot
-		/bin/echo "SNAPPED"
+	if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh ENABLEDDOSPROTECTION:1`" = "1" ] )
+	then
+		/usr/bin/vultr instance create --label="${server_name}" --region="${region}" --plan="${server_size}" --ipv6=false -s ${key_id} --snapshot="${os_choice}" --ddos=true --userdata="${user_data}" --firewall-group="${firewall_id}"
 	else
-		#If we are here, then we are doing a regular build
-		/bin/echo "${0} `/bin/date`: Building a new webserver using the standard build method" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
-        	os_choice="`/usr/bin/vultr os list -o json | /usr/bin/jq -r '.os[] | select (.name | contains ("'"${os_choice}"'")).id'`"		
-		user_data=`/bin/cat ${HOME}/providerscripts/server/cloud-init/vultr.dat`
-
-		if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh ENABLEDDOSPROTECTION:1`" = "1" ] )
-		then        
-			/usr/bin/vultr instance create --label="${server_name}" --region="${region}" --plan="${server_plan}" --os="${os_choice}" --ipv6=false -s ${key_id} --ddos=true --userdata="${user_data}" --firewall-group="${firewall_id}"
-			if ( [ "$?" != "0" ] )
-			then
-				 ${HOME}/providerscripts/email/SendEmail.sh "FAILED TO CREATE VPS Machine" "I tried to create a VPS Machine called ${server_name} and failed. I don't know why, please investigate" "ERROR"
-			fi
-		else
-			/usr/bin/vultr instance create --label="${server_name}" --region="${region}" --plan="${server_plan}" --os="${os_choice}" --ipv6=false -s ${key_id} --ddos=false --userdata="${user_data}" --firewall-group="${firewall_id}"
-			if ( [ "$?" != "0" ] )
-			then
-				 ${HOME}/providerscripts/email/SendEmail.sh "FAILED TO CREATE VPS Machine" "I tried to create a VPS Machine called ${server_name} and failed. I don't know why, please investigate" "ERROR"
-			fi
-		fi
+		/usr/bin/vultr instance create --label="${server_name}" --region="${region}" --plan="${server_size}" --ipv6=false -s ${key_id} --snapshot="${os_choice}" --ddos=false --userdata="${user_data}" --firewall-group="${firewall_id}"
 	fi
-	
- 	machine_id="`/usr/bin/vultr instance list -o json | /usr/bin/jq -r '.instances[] | select (.label == "'"${server_name}"'").id'`"
-	
-	while ( [ "${machine_id}" = "" ] )
+
+ 	machine_id=""
+ 	count="0"
+	while ( [ "${machine_id}" = "" ] && [ "${count}" -lt "10" ] )
 	do
  		machine_id="`/usr/bin/vultr instance list -o json | /usr/bin/jq -r '.instances[] | select (.label == "'"${server_name}"'").id'`"
-	   /bin/sleep 5
+	   	/bin/sleep 5
+     		count="`/usr/bin/expr ${count} + 1`"
 	done
 	
-	if ( [ "${machine_id}" != "" ] )
-	then
-		count="0"
-		/usr/bin/vultr vpc2 nodes attach ${vpc_id} --nodes="${machine_id}"
-
-		while ( [ "$?" != "0" ] && [ "${count}" -lt "5" ] )
-		do
-			count="`/usr/bin/expr ${count} + 1`"
-			/bin/sleep 30
-			/usr/bin/vultr vpc2 nodes attach ${vpc_id} --nodes="${machine_id}"
-		done 
-		
-		if ( [ "${count}" = "5" ] )
-		then
-			${HOME}/providerscripts/email/SendEmail.sh "MACHINE NOT ATTACHED TO Private Network" "A machine ${machine_id} failed to add to the VPC ${vpc_id} network you might be able to manually add it with the cli or you may have to manually terrminate it because it won't come online" "ERROR"
-		fi
-	fi
+	/usr/bin/vultr vpc2 nodes attach ${vpc_id} --nodes="${machine_id}"
 fi
