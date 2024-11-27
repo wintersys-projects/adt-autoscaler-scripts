@@ -42,7 +42,7 @@ then
 
         for webserver_id in ${webserver_ids}
         do
-                if ( [ "`/usr/local/bin/doctl compute firewall  list | /bin/grep "adt-webserver" | /bin/grep ${webserver_id}`" = "" ] )
+                if ( [ "`/usr/local/bin/doctl compute firewall  list | /bin/grep "adt-webserver-${BUILD_IDENTIFIER}" | /bin/grep ${webserver_id}`" = "" ] )
                 then
                         /usr/local/bin/doctl compute firewall add-droplets ${firewall_id} --droplet-ids ${webserver_id}
                 fi
@@ -56,7 +56,7 @@ fi
 
 if ( [ -f ${HOME}/LINODE ] )
 then
-        firewall_id="`/usr/local/bin/linode-cli --json firewalls list | /usr/bin/jq '.[] | select (.label == "adt-webserver" ).id'`"
+        firewall_id="`/usr/local/bin/linode-cli --json firewalls list | /usr/bin/jq '.[] | select (.label == "adt-webserver-"'${BUILD_IDENTIFIER}'" ).id'`"
         webserver_ids="`${HOME}/providerscripts/server/ListServerIDs.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
 
         for webserver_id in ${webserver_ids}
