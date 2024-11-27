@@ -21,81 +21,86 @@
 ########################################################################################
 #set -x
 
+BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
+REGION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
+
+ws-${REGION}-${BUILD_IDENTIFIER}
+
 if ( [ "${CLOUDHOST}" = "digitalocean" ] )
 then
-	dbaas="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
-	cluster_id="`/bin/echo ${dbaas} | /usr/bin/awk '{print $NF}'`"
-	ip_addr="`/usr/local/bin/doctl vpcs list | /bin/grep adt-vpc | /bin/grep -Po "10.*" | /usr/bin/awk '{print $1}'`"
+        dbaas="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
+        cluster_id="`/bin/echo ${dbaas} | /usr/bin/awk '{print $NF}'`"
+        ip_addr="`/usr/local/bin/doctl vpcs list | /bin/grep adt-vpc | /bin/grep -Po "10.*" | /usr/bin/awk '{print $1}'`"
 
-	if ( [ "${cluster_id}" != "" ] )
-	then
-		/usr/local/bin/doctl databases firewalls append ${cluster_id} --rule ip_addr:${ip_addr}
-	fi
+        if ( [ "${cluster_id}" != "" ] )
+        then
+                /usr/local/bin/doctl databases firewalls append ${cluster_id} --rule ip_addr:${ip_addr}
+        fi
 fi
 
 if ( [ "${CLOUDHOST}" = "exoscale" ] )
 then
-	dbaas="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
-	zone="`/bin/echo ${dbaas} | /usr/bin/awk '{print $4}'`"
-	database_name="`/bin/echo ${dbaas} | /usr/bin/awk '{print $6}'`"
-	
-	autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
-	webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh webserver ${CLOUDHOST}`"
-	database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh database ${CLOUDHOST}`"
-	
-	autoscaler_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh autoscaler ${CLOUDHOST}`"
-	webserver_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh webserver ${CLOUDHOST}`"
-	database_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh database ${CLOUDHOST}`"
+        dbaas="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
+        zone="`/bin/echo ${dbaas} | /usr/bin/awk '{print $4}'`"
+        database_name="`/bin/echo ${dbaas} | /usr/bin/awk '{print $6}'`"
 
-	newips="${autoscaler_ips} ${webserver_ips} ${database_ips} ${autoscaler_private_ips} ${webserver_private_ips} ${database_private_ips}"
-	newips="`/bin/echo ${newips} | /bin/sed 's/  / /g' | /bin/tr ' ' ',' | /bin/sed 's/,$//g'`"
-	
-	if ( [ "`/bin/echo ${dbaas} | /bin/grep ' pg '`" != "" ] )
-	then
-		/usr/bin/exo dbaas update -z ${zone}  ${database_name} --pg-ip-filter=${newips}
-	elif ( [ "`/bin/echo ${dbaas} | /bin/grep ' mysql '`" != "" ] )
-	then
-		/usr/bin/exo dbaas update -z ${zone}  ${database_name} --mysql-ip-filter=${newips}
-	fi
+        autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "as-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+        webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+        database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "db-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+
+        autoscaler_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "as-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+        webserver_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+        database_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "db-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+
+        newips="${autoscaler_ips} ${webserver_ips} ${database_ips} ${autoscaler_private_ips} ${webserver_private_ips} ${database_private_ips}"
+        newips="`/bin/echo ${newips} | /bin/sed 's/  / /g' | /bin/tr ' ' ',' | /bin/sed 's/,$//g'`"
+
+        if ( [ "`/bin/echo ${dbaas} | /bin/grep ' pg '`" != "" ] )
+        then
+                /usr/bin/exo dbaas update -z ${zone}  ${database_name} --pg-ip-filter=${newips}
+        elif ( [ "`/bin/echo ${dbaas} | /bin/grep ' mysql '`" != "" ] )
+        then
+                /usr/bin/exo dbaas update -z ${zone}  ${database_name} --mysql-ip-filter=${newips}
+        fi
 fi
 
 if ( [ "${CLOUDHOST}" = "linode" ] )
 then
-	token="`/bin/grep token ${HOME}/.config/linode-cli | /usr/bin/awk '{print $NF}'`"
-	label="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
-	database_id="`/usr/local/bin/linode-cli --json databases mysql-list | /usr/bin/jq ".[] | select(.[\\"label\\"] | contains (\\"${label}\\")) | .id"`"
+        token="`/bin/grep token ${HOME}/.config/linode-cli | /usr/bin/awk '{print $NF}'`"
+        label="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
+        database_id="`/usr/local/bin/linode-cli --json databases mysql-list | /usr/bin/jq ".[] | select(.[\\"label\\"] | contains (\\"${label}\\")) | .id"`"
    
    if ( [ "${database_id}" = "" ] )
-	then
-		database_id="`/usr/local/bin/linode-cli --json databases postgresql-list | /usr/bin/jq ".[] | select(.[\\"label\\"] | contains (\\"${label}\\")) | .id"`"
-	fi
-	
-	autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
-	webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh webserver ${CLOUDHOST}`"
-	database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh database ${CLOUDHOST}`"
-	
-	autoscaler_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh autoscaler ${CLOUDHOST}`"
-	webserver_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh webserver ${CLOUDHOST}`"
-	database_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh database ${CLOUDHOST}`"
+        then
+                database_id="`/usr/local/bin/linode-cli --json databases postgresql-list | /usr/bin/jq ".[] | select(.[\\"label\\"] | contains (\\"${label}\\")) | .id"`"
+        fi
 
-	ipaddresses="${autoscaler_ips} ${webserver_ips} ${database_ips} ${autoscaler_private_ips} ${webserver_private_ips} ${database_private_ips}"
+        autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "as-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+        webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+        database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "db-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
 
-	for ipaddress in ${ipaddresses}
-	do
-		newips=${newips}"\"${ipaddress}/32\","
-	done
-	
-	if ( [ "`/bin/echo ${ipaddresses} | /bin/grep ${ip}`" = "" ] )
-	then
-		ipaddresses=${newips}"\"${ip}/32\""
-	else
-		ipaddresses="`/bin/echo ${newips} | /bin/sed 's/,$//g'`"
-	fi
-	
-	#if we are a mysql database, this will work
-	/usr/bin/curl -H "Content-Type: application/json" -H "Authorization: Bearer ${token}" -X PUT -d "{ \"allow_list\": [ ${ipaddresses} ] }" https://api.linode.com/v4/databases/mysql/instances/${database_id}
-	#If we are a postgres database, this will work
-	/usr/bin/curl -H "Content-Type: application/json" -H "Authorization: Bearer ${token}" -X PUT -d "{ \"allow_list\": [ ${ipaddresses} ] }" https://api.linode.com/v4/databases/postgresql/instances/${database_id}
+        autoscaler_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "as-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+        webserver_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+        database_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "db-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+
+        ipaddresses="${autoscaler_ips} ${webserver_ips} ${database_ips} ${autoscaler_private_ips} ${webserver_private_ips} ${database_private_ips}"
+
+        for ipaddress in ${ipaddresses}
+        do
+                newips=${newips}"\"${ipaddress}/32\","
+        done
+
+        if ( [ "`/bin/echo ${ipaddresses} | /bin/grep ${ip}`" = "" ] )
+        then
+                ipaddresses=${newips}"\"${ip}/32\""
+        else
+                ipaddresses="`/bin/echo ${newips} | /bin/sed 's/,$//g'`"
+        fi
+
+        #if we are a mysql database, this will work
+        /usr/bin/curl -H "Content-Type: application/json" -H "Authorization: Bearer ${token}" -X PUT -d "{ \"allow_list\": [ ${ipaddresses} ] }" https://api.linode.com/v4/databases/mysql/instances/${database_id}
+        #If we are a postgres database, this will work
+        /usr/bin/curl -H "Content-Type: application/json" -H "Authorization: Bearer ${token}" -X PUT -d "{ \"allow_list\": [ ${ipaddresses} ] }" https://api.linode.com/v4/databases/postgresql/instances/${database_id}
 
 fi
 
@@ -106,14 +111,14 @@ fi
 if ( [ "${CLOUDHOST}" = "vultr" ] )
 then
     export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
-	
-  #  autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh autoscaler ${CLOUDHOST}`"
-  #  webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh webserver ${CLOUDHOST}`"
-  #  database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh database ${CLOUDHOST}`"
-	
-  #  autoscaler_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh autoscaler ${CLOUDHOST}`"
-  #  webserver_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh webserver ${CLOUDHOST}`"
-  #  database_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh database ${CLOUDHOST}`"
+
+  #  autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "as-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+  #  webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+  #  database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "db-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+
+  #  autoscaler_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "as-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+  #  webserver_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+  #  database_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "db-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
 
   #  ipaddresses="${autoscaler_ips} ${webserver_ips} ${database_ips} ${autoscaler_private_ips} ${webserver_private_ips} ${database_private_ips}"
  #   ipaddresses="`/bin/echo ${ipaddresses} | /bin/sed 's/  / /g;' | /bin/sed 's/ /,/g'`"
@@ -125,7 +130,7 @@ then
 
     for databaseid in ${databaseids}
     do
-	if ( [ "`/usr/bin/vultr database get ${databaseid} -o json | /usr/bin/jq -r '.database | select (.dbname == "'${DBaaS_HOSTNAME}'").id'`" != "" ] )
+        if ( [ "`/usr/bin/vultr database get ${databaseid} -o json | /usr/bin/jq -r '.database | select (.dbname == "'${DBaaS_HOSTNAME}'").id'`" != "" ] )
         then
              selected_databaseid="${databaseid}"
         fi
@@ -133,7 +138,7 @@ then
 
     if ( [ "${selected_databaseid}" != "" ] )
     then
-    	VPC_IP_RANGE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'VPCIPRANGE'`"
+        VPC_IP_RANGE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'VPCIPRANGE'`"
         /usr/bin/vultr database update ${selected_databaseid} --trusted-ips="${VPC_IP_RANGE}"
     fi
 fi
