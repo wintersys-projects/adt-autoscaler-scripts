@@ -197,7 +197,7 @@ fi
 if ( [ "${autoscaler_no}" != "0" ] && [ "${total_needed}" -lt "${no_autoscalers}" ] )
 then
 	/bin/sleep 180
-	initial_no_webservers="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "webserver" ${CLOUDHOST} | /usr/bin/tr '\n' ' ' | /usr/bin/wc -w`"
+	initial_no_webservers="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}"  ${CLOUDHOST} | /usr/bin/tr '\n' ' ' | /usr/bin/wc -w`"
 	total_needed="`/usr/bin/expr ${NO_WEBSERVERS} - ${initial_no_webservers}`"
 
 	if ( [ "${total_needed}" -lt "${no_autoscalers}" ] )
