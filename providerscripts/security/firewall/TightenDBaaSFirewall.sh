@@ -24,8 +24,6 @@
 BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
 REGION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
 
-ws-${REGION}-${BUILD_IDENTIFIER}
-
 if ( [ "${CLOUDHOST}" = "digitalocean" ] )
 then
         dbaas="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
