@@ -171,7 +171,7 @@ do
    count="`/usr/bin/expr ${count} + 1`"
 done
 
-all_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh webserver ${CLOUDHOST}`"
+all_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
 online_ips="${all_ips}"
 
 for ip in ${online_ips}
