@@ -23,10 +23,12 @@
 
 if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh ACTIVEFIREWALLS:2`" = "0" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh ACTIVEFIREWALLS:3`" = "0" ] )
 then
-	exit
+        exit
 fi
 
 CLOUDHOST="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOST'`"
+BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
+REGION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
 
 if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "INSTALLEDSUCCESSFULLY"`" = "0" ] )
 then
@@ -35,35 +37,35 @@ fi
 
 if ( [ -f ${HOME}/DROPLET ] )
 then    
-	firewall_id="`/usr/local/bin/doctl -o json compute firewall list | /usr/bin/jq '.[] | select (.name == "adt-webserver" ).id' | /bin/sed 's/"//g'`"
-	webserver_ids="`${HOME}/providerscripts/server/ListServerIDs.sh webserver ${CLOUDHOST}`"
+        firewall_id="`/usr/local/bin/doctl -o json compute firewall list | /usr/bin/jq '.[] | select (.name == "adt-webserver" ).id' | /bin/sed 's/"//g'`"
+        webserver_ids="`${HOME}/providerscripts/server/ListServerIDs.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
 
-	for webserver_id in ${webserver_ids}
-	do
-		if ( [ "`/usr/local/bin/doctl compute firewall  list | /bin/grep "adt-webserver" | /bin/grep ${webserver_id}`" = "" ] )
-		then
-			/usr/local/bin/doctl compute firewall add-droplets ${firewall_id} --droplet-ids ${webserver_id}
-		fi
-	done
+        for webserver_id in ${webserver_ids}
+        do
+                if ( [ "`/usr/local/bin/doctl compute firewall  list | /bin/grep "adt-webserver" | /bin/grep ${webserver_id}`" = "" ] )
+                then
+                        /usr/local/bin/doctl compute firewall add-droplets ${firewall_id} --droplet-ids ${webserver_id}
+                fi
+        done
 fi
 
 if ( [ -f ${HOME}/EXOSCALE ] )
 then   
-	 :
+         :
 fi
 
 if ( [ -f ${HOME}/LINODE ] )
 then
-	firewall_id="`/usr/local/bin/linode-cli --json firewalls list | /usr/bin/jq '.[] | select (.label == "adt-webserver" ).id'`"
-	webserver_ids="`${HOME}/providerscripts/server/ListServerIDs.sh webserver ${CLOUDHOST}`"
+        firewall_id="`/usr/local/bin/linode-cli --json firewalls list | /usr/bin/jq '.[] | select (.label == "adt-webserver" ).id'`"
+        webserver_ids="`${HOME}/providerscripts/server/ListServerIDs.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
 
-	for webserver_id in ${webserver_ids}
-	do
-		if ( [ "`/usr/local/bin/linode-cli --json firewalls devices-list ${firewall_id} | /bin/grep ${webserver_id}`" = ""  ] )
-		then
-			/usr/local/bin/linode-cli firewalls device-create --id ${webserver_id} --type linode ${firewall_id} 
-		fi
-	done
+        for webserver_id in ${webserver_ids}
+        do
+                if ( [ "`/usr/local/bin/linode-cli --json firewalls devices-list ${firewall_id} | /bin/grep ${webserver_id}`" = ""  ] )
+                then
+                        /usr/local/bin/linode-cli firewalls device-create --id ${webserver_id} --type linode ${firewall_id} 
+                fi
+        done
 fi
 
 
