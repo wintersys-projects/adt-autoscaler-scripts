@@ -71,8 +71,8 @@ fi
 
 if ( [ -f ${HOME}/VULTR ] )
 then
-        webserver_ids="`${BUILD_HOME}/providerscripts/server/ListServerIDs.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
-        firewall_id="`/usr/bin/vultr firewall group list -o json | /usr/bin/jq -r '.firewall_groups[] | select (.description | contains ("adt-webserver")) |  select (.description | endswith ("'${BUILD_IDENTIFIER}'") | not).id'`"
+        webserver_ids="`${HOME}/providerscripts/server/ListServerIDs.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+        firewall_id="`/usr/bin/vultr firewall group list -o json | /usr/bin/jq -r '.firewall_groups[] | select (.description | contains ("adt-webserver")) |  select (.description | endswith ("'${BUILD_IDENTIFIER}'")).id'`"
 
         if ( [ "${webserver_ids}" != "" ] )
         then
