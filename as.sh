@@ -188,6 +188,9 @@ ${HOME}/providerscripts/utilities/RunServiceCommand.sh ssh restart
 
 . ${HOME}/installscripts/InstallAll.sh
 
+${HOME}/security/SetupFirewall.sh
+
+
 #>&2 /bin/echo "${0} Update.sh"
 #${HOME}/installscripts/Update.sh ${BUILDOS}
 #>&2 /bin/echo "${0} InstallFirewall.sh"
@@ -309,7 +312,7 @@ fi
 /bin/echo "${0} `/bin/date`: Rebooting the autoscaler post installation" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 
-${HOME}/security/SetupFirewall.sh
+#${HOME}/security/SetupFirewall.sh
 
 ${HOME}/providerscripts/utilities/CleanupAfterBuild.sh
 
