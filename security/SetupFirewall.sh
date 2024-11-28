@@ -56,6 +56,7 @@ fi
 if ( [ "${firewall}" = "ufw" ] && [ ! -f ${HOME}/runtime/FIREWALL-ACTIVE ] )
 then
 	/usr/sbin/ufw reset
+  	/usr/sbin/ufw delete allow 22/tcp
  	/bin/sed -i "s/IPV6=yes/IPV6=no/g" /etc/default/ufw
         /usr/sbin/ufw logging off
 	/usr/sbin/ufw reload
