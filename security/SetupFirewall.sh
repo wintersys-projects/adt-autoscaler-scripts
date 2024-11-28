@@ -56,7 +56,9 @@ fi
 if ( [ "${firewall}" = "ufw" ] && [ -f ${HOME}/runtime/FIREWALL-ACTIVE ] )
 then
 	/usr/sbin/ufw reset
+ 	/bin/sed -i "s/IPV6=yes/IPV6=no/g" /etc/default/ufw
         /usr/sbin/ufw logging off
+	/usr/sbin/ufw reload
 fi
 
 
