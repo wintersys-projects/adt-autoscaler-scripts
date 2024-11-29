@@ -32,7 +32,11 @@ then
         DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install jq                       #####UBUNTU-GO-REPO#####
         version="`/usr/bin/curl https://go.dev/dl/?mode=json | /usr/bin/jq -r '.[0].version' | /bin/sed 's/go//g'1`"            #####UBUNTU-GO-REPO#####
         /usr/bin/wget -c https://storage.googleapis.com/golang/go${version}.linux-amd64.tar.gz  -O - | /usr/bin/tar -xz -C /usr/local   #####UBUNTU-GO-REPO-SKIP#####
-        /usr/bin/ln -s /usr/local/go/bin/go /usr/bin/go 
+        if ( [ -f /usr/bin/go ] )
+  	then
+   		/bin/rm /usr/bin/go
+     	fi
+	/usr/bin/ln -s /usr/local/go/bin/go /usr/bin/go 
 
 #	/usr/bin/curl -O -s https://storage.googleapis.com/golang/go${version}.linux-amd64.tar.gz		#####UBUNTU-GO-REPO-SKIP#####
 #	/bin/tar -xf go${version}.linux-amd64.tar.gz								#####UBUNTU-GO-REPO-SKIP#####
@@ -48,7 +52,11 @@ then
         DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install jq                       #####DEBIAN-GO-REPO#####
         version="`/usr/bin/curl https://go.dev/dl/?mode=json | /usr/bin/jq -r '.[0].version' | /bin/sed 's/go//g'1`"            #####DEBIAN-GO-REPO#####
         /usr/bin/wget -c https://storage.googleapis.com/golang/go${version}.linux-amd64.tar.gz  -O - | /usr/bin/tar -xz -C /usr/local   #####DEBIAN-GO-REPO-SKIP#####
-        /usr/bin/ln -s /usr/local/go/bin/go /usr/bin/go 
+        if ( [ -f /usr/bin/go ] )
+  	then
+   		/bin/rm /usr/bin/go
+     	fi
+	/usr/bin/ln -s /usr/local/go/bin/go /usr/bin/go 
 #	/usr/bin/curl -O -s https://storage.googleapis.com/golang/go${version}.linux-amd64.tar.gz		#####DEBIAN-GO-REPO-SKIP#####
 #	/bin/tar -xf go${version}.linux-amd64.tar.gz								#####DEBIAN-GO-REP-SKIP#####
 #	/bin/mv go /usr/local											#####DEBIAN-GO-REPO#####
