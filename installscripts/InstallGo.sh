@@ -27,8 +27,6 @@ fi
 
 if ( [ "${buildos}" = "ubuntu" ] )
 then
-	DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install jq			#####UBUNTU-GO-REPO#####
-	version="`/usr/bin/curl https://go.dev/dl/?mode=json | /usr/bin/jq -r '.[0].version' | /bin/sed 's/go//g'1`"		#####UBUNTU-GO-REPO#####
         DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install jq                       #####UBUNTU-GO-REPO#####
         version="`/usr/bin/curl https://go.dev/dl/?mode=json | /usr/bin/jq -r '.[0].version' | /bin/sed 's/go//g'1`"            #####UBUNTU-GO-REPO#####
         /usr/bin/wget -c https://storage.googleapis.com/golang/go${version}.linux-amd64.tar.gz  -O - | /usr/bin/tar -xz -C /usr/local   #####UBUNTU-GO-REPO-SKIP#####
@@ -47,8 +45,6 @@ fi
 
 if ( [ "${buildos}" = "debian" ] )
 then
-	DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install jq			#####DEBIAN-GO-REPO#####
-	version="`/usr/bin/curl https://go.dev/dl/?mode=json | /usr/bin/jq -r '.[0].version' | /bin/sed 's/go//g'`"		#####DEBIAN-GO-REPO#####
         DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install jq                       #####DEBIAN-GO-REPO#####
         version="`/usr/bin/curl https://go.dev/dl/?mode=json | /usr/bin/jq -r '.[0].version' | /bin/sed 's/go//g'1`"            #####DEBIAN-GO-REPO#####
         /usr/bin/wget -c https://storage.googleapis.com/golang/go${version}.linux-amd64.tar.gz  -O - | /usr/bin/tar -xz -C /usr/local   #####DEBIAN-GO-REPO-SKIP#####
