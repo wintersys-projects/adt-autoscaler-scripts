@@ -59,8 +59,12 @@ then
                         if ( [ -f /root/scratch/s5cmd ] )                                                       #####UBUNTU-S5CMD-REPO#####
                         then                                                                                    #####UBUNTU-S5CMD-REPO#####
                                 /bin/mv /root/scratch/s5cmd /usr/bin/s5cmd                                      #####UBUNTU-S5CMD-REPO#####
-                        fi   											#####UBUNTU-S5CMD-REPO#####
-     		fi	
+                        fi  											#####UBUNTU-S5CMD-REPO#####
+     		  	if ( [ -d /root/scratch ] )								#####UBUNTU-S5CMD-REPO#####
+    			then											#####UBUNTU-S5CMD-REPO#####
+      				/bin/rm -r /root/scratch							#####UBUNTU-S5CMD-REPO#####
+	 		fi											#####UBUNTU-S5CMD-REPO#####
+       		fi	
 
      		if ( [ "${BUILDOS}" = "debian" ] )
 		then
@@ -76,11 +80,11 @@ then
                         then                                                                                    #####DEBIAN-S5CMD-REPO#####
                                 /bin/mv /root/scratch/s5cmd /usr/bin/s5cmd                                      #####DEBIAN-S5CMD-REPO#####
                         fi 											#####DEBIAN-S5CMD-REPO#####
-		fi
-  		if ( [ -d /root/scratch ] )
-    		then
-      			/bin/rm -r /root/scratch
-	 	fi
+		  	if ( [ -d /root/scratch ] )								#####DEBIAN-S5CMD-REPO#####
+    			then											#####DEBIAN-S5CMD-REPO#####
+      				/bin/rm -r /root/scratch							#####DEBIAN-S5CMD-REPO#####
+	 		fi											#####DEBIAN-S5CMD-REPO#####
+  		fi	
   	fi
 fi
    
