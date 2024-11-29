@@ -44,29 +44,19 @@ fi
 
 if ( [ "`${HOME}/providerscripts/utilities/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt-fast" ] )
 then
-	if ( [ -d /root/scratch ] )
- 	then
-  		cd /root/scratch
-    	else
-     		/bin/mkdir /root/scratch
-       		cd /root/scratch
-	fi
-
-	cwd="`/usr/bin/pwd`"
- 	cd /root/scratch
 	if ( [ "${buildos}" = "ubuntu" ] )
 	then
 		/usr/bin/yes | /usr/bin/dpkg --configure -a
 		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -y -qq apt-utils 
 		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages  
-		/usr/bin/git clone https://github.com/ilikenwf/apt-fast.git
-		/bin/cp apt-fast/apt-fast /usr/sbin/
+		/usr/bin/git clone https://github.com/ilikenwf/apt-fast.git /usr/local
+		/bin/ln -s /usr/local/apt-fast/apt-fast /usr/sbin/
 		/bin/chmod +x /usr/sbin/apt-fast
-		/bin/cp apt-fast/apt-fast.conf /etc
+		/bin/ln -s /usr/local/apt-fast/apt-fast.conf /etc
 		/bin/chown root:root /etc/apt-fast.conf
 		/bin/chown root:root /usr/sbin/apt-fast
 		/usr/bin/snap install aria2c        
-		/bin/rm -r ./apt-fast
+		#/bin/rm -r ./apt-fast
 	fi
 	
 	if ( [ "${buildos}" = "debian" ] )
@@ -75,14 +65,13 @@ then
 		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -y -qq apt-utils 
 		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -y -qq aria2 
 		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages  
-		/usr/bin/git clone https://github.com/ilikenwf/apt-fast.git
-		/bin/cp apt-fast/apt-fast /usr/sbin/
+		/usr/bin/git clone https://github.com/ilikenwf/apt-fast.git /usr/local
+		/bin/ln -s /usr/local/apt-fast/apt-fast /usr/sbin/
 		/bin/chmod +x /usr/sbin/apt-fast
-		/bin/cp apt-fast/apt-fast.conf /etc
+		/bin/ln -s /usr/local/apt-fast/apt-fast.conf /etc
 		/bin/chown root:root /etc/apt-fast.conf
 		/bin/chown root:root /usr/sbin/apt-fast
-		/bin/rm -r ./apt-fast
+		/usr/bin/snap install aria2c     
 	fi   
 fi
-cd ${cwd}
 
