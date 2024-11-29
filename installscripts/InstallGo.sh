@@ -26,10 +26,15 @@ then
 fi
 
 cwd="`/usr/bin/pwd`"
+
 if ( [ -d /root/scratch ] )
 then
 	cd /root/scratch
+else
+	/bin/mkdir /root/scatch
+ 	cd /root/scratch
 fi
+
 if ( [ "${buildos}" = "ubuntu" ] )
 then
 	DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install jq			#####UBUNTU-GO-REPO#####
