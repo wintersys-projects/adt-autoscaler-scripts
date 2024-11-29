@@ -25,27 +25,29 @@ then
 	buildos="${1}"
 fi
 
-if ( [ "${buildos}" = "ubuntu" ] )
+if ( [ "${apt}" != "" ] )
 then
-        DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install jq                       #####UBUNTU-GO-BINARY#####
-        version="`/usr/bin/curl https://go.dev/dl/?mode=json | /usr/bin/jq -r '.[0].version' | /bin/sed 's/go//g'1`"            #####UBUNTU-GO-BINARY#####
-        /usr/bin/wget -c https://storage.googleapis.com/golang/go${version}.linux-amd64.tar.gz  -O - | /usr/bin/tar -xz -C /usr/local   #####UBUNTU-GO-BINARY-SKIP#####
-        if ( [ -f /usr/bin/go ] )										#####UBUNTU-GO-BINARY#####
-  	then													#####UBUNTU-GO-BINARY#####
-   		/bin/rm /usr/bin/go										#####UBUNTU-GO-BINARY#####
-     	fi													#####UBUNTU-GO-BINARY#####
-	/usr/bin/ln -s /usr/local/go/bin/go /usr/bin/go 							#####UBUNTU-GO-BINARY#####
-
-if ( [ "${buildos}" = "debian" ] )
-then
-        DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install jq                       #####DEBIAN-GO-BINARY#####
-        version="`/usr/bin/curl https://go.dev/dl/?mode=json | /usr/bin/jq -r '.[0].version' | /bin/sed 's/go//g'1`"            #####DEBIAN-GO-BINARY#####
-        /usr/bin/wget -c https://storage.googleapis.com/golang/go${version}.linux-amd64.tar.gz  -O - | /usr/bin/tar -xz -C /usr/local   #####DEBIAN-GO-BINARY-SKIP#####
-        if ( [ -f /usr/bin/go ] )										#####DEBIAN-GO-BINARY#####
-  	then													#####DEBIAN-GO-BINARY#####
-   		/bin/rm /usr/bin/go										#####DEBIAN-GO-BINARY#####
-     	fi													#####DEBIAN-GO-BINARY#####
-	/usr/bin/ln -s /usr/local/go/bin/go /usr/bin/go 							#####DEBIAN-GO-BINARY#####
-
+	if ( [ "${buildos}" = "ubuntu" ] )
+	then
+        	DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install jq                       #####UBUNTU-GO-BINARY#####
+        	version="`/usr/bin/curl https://go.dev/dl/?mode=json | /usr/bin/jq -r '.[0].version' | /bin/sed 's/go//g'1`"            #####UBUNTU-GO-BINARY#####
+        	/usr/bin/wget -c https://storage.googleapis.com/golang/go${version}.linux-amd64.tar.gz  -O - | /usr/bin/tar -xz -C /usr/local   #####UBUNTU-GO-BINARY-SKIP#####
+        	if ( [ -f /usr/bin/go ] )										#####UBUNTU-GO-BINARY#####
+  		then													#####UBUNTU-GO-BINARY#####
+   			/bin/rm /usr/bin/go										#####UBUNTU-GO-BINARY#####
+     		fi													#####UBUNTU-GO-BINARY#####
+		/usr/bin/ln -s /usr/local/go/bin/go /usr/bin/go 							#####UBUNTU-GO-BINARY#####
+	fi
+	if ( [ "${buildos}" = "debian" ] )
+	then
+        	DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install jq                       #####DEBIAN-GO-BINARY#####
+        	version="`/usr/bin/curl https://go.dev/dl/?mode=json | /usr/bin/jq -r '.[0].version' | /bin/sed 's/go//g'1`"            #####DEBIAN-GO-BINARY#####
+        	/usr/bin/wget -c https://storage.googleapis.com/golang/go${version}.linux-amd64.tar.gz  -O - | /usr/bin/tar -xz -C /usr/local   #####DEBIAN-GO-BINARY-SKIP#####
+        	if ( [ -f /usr/bin/go ] )										#####DEBIAN-GO-BINARY#####
+  		then													#####DEBIAN-GO-BINARY#####
+   			/bin/rm /usr/bin/go										#####DEBIAN-GO-BINARY#####
+     		fi													#####DEBIAN-GO-BINARY#####
+		/usr/bin/ln -s /usr/local/go/bin/go /usr/bin/go 							#####DEBIAN-GO-BINARY#####
+	fi
 fi
 
