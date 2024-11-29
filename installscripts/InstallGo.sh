@@ -25,7 +25,11 @@ then
 	buildos="${1}"
 fi
 
-
+cwd="`/usr/bin/pwd`"
+if ( [ -d /root/scratch ] )
+then
+	cd /root/scratch
+fi
 if ( [ "${buildos}" = "ubuntu" ] )
 then
 	DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install jq			#####UBUNTU-GO-REPO#####
@@ -42,8 +46,9 @@ then
 	DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install jq			#####DEBIAN-GO-REPO#####
 	version="`/usr/bin/curl https://go.dev/dl/?mode=json | /usr/bin/jq -r '.[0].version' | /bin/sed 's/go//g'`"		#####DEBIAN-GO-REPO#####
 	/usr/bin/curl -O -s https://storage.googleapis.com/golang/go${version}.linux-amd64.tar.gz		#####DEBIAN-GO-REPO-SKIP#####
-	/bin/tar -xf go${version}.linux-amd64.tar.gz								#####DEBIAN-GO-REP-SKIPO#####
+	/bin/tar -xf go${version}.linux-amd64.tar.gz								#####DEBIAN-GO-REP-SKIP#####
 	/bin/mv go /usr/local											#####DEBIAN-GO-REPO#####
 	/bin/rm go${version}.linux-amd64.tar.gz									#####DEBIAN-GO-REPO-SKIP#####
 	/usr/bin/ln -s /usr/local/go/bin/go /usr/bin/go								#####DEBIAN-GO-REPO#####
 fi
+cd ${cwd}
