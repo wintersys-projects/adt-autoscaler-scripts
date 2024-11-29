@@ -44,6 +44,16 @@ fi
 
 if ( [ "`${HOME}/providerscripts/utilities/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt-fast" ] )
 then
+	if ( [ -d /root/scratch ] )
+ 	then
+  		cd /root/scratch
+    	else
+     		/bin/mkdir /root/scratch
+       		cd /root/scratch
+	fi
+
+	cwd="`/usr/bin/pwd`"
+ 	cd /root/scratch
 	if ( [ "${buildos}" = "ubuntu" ] )
 	then
 		/usr/bin/yes | /usr/bin/dpkg --configure -a
@@ -74,4 +84,5 @@ then
 		/bin/rm -r ./apt-fast
 	fi   
 fi
+cd ${cwd}
 
