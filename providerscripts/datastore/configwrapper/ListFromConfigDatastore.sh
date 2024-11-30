@@ -21,30 +21,20 @@
 #set -x
 
 export HOME=`/bin/cat /home/homedir.dat`
-
 WEBSITE_URL="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL'`"
-
 SERVER_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSER'`"
 TOKEN="`/bin/echo ${SERVER_USER} | /usr/bin/fold -w 4 | /usr/bin/head -n 1 | /usr/bin/tr '[:upper:]' '[:lower:]'`"
-
 configbucket="`/bin/echo "${WEBSITE_URL}"-config | /bin/sed 's/\./-/g'`-${TOKEN}"
+file_to_list="${1}"
 
 if ( [ "`${HOME}/providerscripts/utilities/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
 then
-        datastore_tool="/usr/bin/s3cmd "
-	datastore_tool_1="/usr/bin/s3cmd ls "
+        datastore_tool="/usr/bin/s3cmd ls "
 elif ( [ "`${HOME}/providerscripts/utilities/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ]  )
 then
         host_base="`/bin/grep host_base /root/.s5cfg | /bin/grep host_base | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
-        datastore_tool="/usr/bin/s5cmd --credentials-file /root/.s5cfg --endpoint-url https://${host_base} "
+        datastore_tool="/usr/bin/s5cmd --credentials-file /root/.s5cfg --endpoint-url https://${host_base} ls "
 fi
 
-value="`${datastore_tool} ls s3://${configbucket}/$1 | /usr/bin/awk -F'/' '{print $NF}' | /bin/sed '/^$/d'`"
-
-if ( [ "`/bin/echo ${value} | /usr/bin/grep 's3://'`" != "" ] )
-then
-        ${datastore_tool} ls s3://${configbucket}/$1 | /usr/bin/awk -F' ' '{print $NF}' | /bin/sed '/^$/d'
-else
-        /bin/echo ${value}
-fi
+${datastore_tool} s3://${configbucket}/${file_to_list} | /usr/bin/awk '{print $NF}'
 
