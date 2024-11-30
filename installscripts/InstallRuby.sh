@@ -44,4 +44,5 @@ then
 	then
 		DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install ruby   #####DEBIAN-RUBY-REPO#####
 	fi
+   	/bin/touch ${HOME}/runtime/installedsoftware/InstallRuby.sh	
 fi
