@@ -44,4 +44,6 @@ then
 	then
 		DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1  -qq -y install rsync   #####DEBIAN-GLANCES-REPO#####
 	fi
+  	/bin/touch ${HOME}/runtime/installedsoftware/InstallRsync.sh	
+
 fi
