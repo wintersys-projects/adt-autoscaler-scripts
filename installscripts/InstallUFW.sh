@@ -48,6 +48,8 @@ then
 	fi
 fi
 
+/bin/touch ${HOME}/runtime/installedsoftware/InstallUFW.sh	
+
 /usr/sbin/ufw disable
 
 if ( [ ! -f /usr/bin/ufw ] )
