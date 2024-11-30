@@ -45,4 +45,6 @@ then
 	 /bin/cp ${HOME}/.config/doctl/config.yaml /root/.config/doctl						#####DEBIAN-DOCTL-REPO#####
 	 /bin/chmod 400 ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml			#####DEBIAN-DOCTL-REPO#####
 fi
+/bin/touch ${HOME}/runtime/installedsoftware/InstallDoctl.sh	
+
 
