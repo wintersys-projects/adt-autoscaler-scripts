@@ -186,7 +186,7 @@ ${HOME}/providerscripts/utilities/RunServiceCommand.sh ssh restart
 >&2 /bin/echo "${0} Installing software packages "
 /bin/echo "${0} `/bin/date`: Installing Software packages" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 
-. ${HOME}/installscripts/InstallAll.sh
+. ${HOME}/installscripts/InstallCoreSoftware.sh
 
 ${HOME}/security/SetupFirewall.sh
 
