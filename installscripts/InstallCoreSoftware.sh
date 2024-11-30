@@ -1,5 +1,8 @@
 #!/bin/sh
-
+if ( [ ! -d ${HOME}/runtime/installedsoftware ] )
+then
+  /bin/mkdir -p ${HOME}/runtime/installedsoftware
+fi
 #Install the programs that we need to use when building the autoscaler
 >&2 /bin/echo "${0} Installing software packages "
 /bin/echo "${0} `/bin/date`: Installing Software packages" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
