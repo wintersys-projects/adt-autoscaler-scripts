@@ -204,4 +204,5 @@ then
 			fi   
 		fi
 	fi
+ 	/bin/touch ${HOME}/runtime/installedsoftware/InstallMonitoringGear.sh	
 fi
