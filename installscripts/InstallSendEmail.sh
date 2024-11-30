@@ -44,5 +44,6 @@ then
 	then
 		DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1  -qq install sendemail		#####DEBIAN-SENDEMAIL-REPO#####
 	fi
+     	/bin/touch ${HOME}/runtime/installedsoftware/InstallSendEmail.sh	
 fi
 
