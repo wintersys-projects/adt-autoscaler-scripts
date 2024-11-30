@@ -44,5 +44,6 @@ then
 	then
 		DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install jq	#####DEBIAN-JQ-REPO#####
 	fi
+ 	 /bin/touch ${HOME}/runtime/installedsoftware/InstallJQ.sh	
 fi
 
