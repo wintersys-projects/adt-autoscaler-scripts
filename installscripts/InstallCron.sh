@@ -45,4 +45,5 @@ then
 	then
 		DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install cron		#####DEBIAN-CRON-REPO#####
 	fi
+	/bin/touch ${HOME}/runtime/installedsoftware/InstallCron.sh	
 fi
