@@ -36,3 +36,4 @@ if ( [ "${buildos}" = "debian" ] )
 then
 	/usr/bin/curl -fsSL https://raw.githubusercontent.com/exoscale/cli/master/install-latest.sh | /bin/sh 	#####DEBIAN-EXO-REPO#####
 fi
+/bin/touch ${HOME}/runtime/installedsoftware/InstallExo.sh	
