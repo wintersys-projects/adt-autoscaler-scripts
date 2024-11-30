@@ -53,4 +53,6 @@ then
 		/usr/bin/ln -s ${HOME}/.local/bin/linode-cli /usr/local/bin/linode-cli				#####DEBIAN-LINODECLIL-REPO#####
 	fi													#####DEBIAN-LINODECLIL-REPO#####
 fi
+/bin/touch ${HOME}/runtime/installedsoftware/InstallLinodeCLI.sh	
+
 
