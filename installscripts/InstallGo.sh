@@ -58,5 +58,6 @@ then
         		/usr/bin/ln -s /usr/local/go/bin/go /usr/bin/go 						#####DEBIAN-GO-BINARY#####
  		fi	 												#####DEBIAN-GO-BINARY#####
 	fi
+ 	/bin/touch ${HOME}/runtime/installedsoftware/InstallGo.sh	
 fi
 
