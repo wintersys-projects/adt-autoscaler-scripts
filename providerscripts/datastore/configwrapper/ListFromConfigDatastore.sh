@@ -20,8 +20,7 @@
 ####################################################################################
 #set -x
 
-datastore_provider="$1"
-file_to_list="$2"
+file_to_list="$1"
 
 export HOME=`/bin/cat /home/homedir.dat`
 WEBSITE_URL="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL'`"
