@@ -25,8 +25,7 @@ command="$1"
 SERVER_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSER'`"
 SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSHPORT'`"
 ALGORITHM="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ALGORITHM'`"
-DATASTORE_CHOICE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DATASTORECHOICE'`"
-HOST="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh ${DATASTORE_CHOICE} webserverips/*`"
+HOST="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh webserverips/*`"
 
 for ip in ${webserver_ips}
 do
