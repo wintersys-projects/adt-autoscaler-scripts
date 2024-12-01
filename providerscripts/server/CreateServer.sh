@@ -39,6 +39,7 @@ region="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
 ddos_protection="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ENABLEDDOSPROTECTION'`"
 vpc_ip_range="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'VPCIPRANGE'`"
 key_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'KEYID'`"
+build_identifier="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
 
 os_choice="`${HOME}/providerscripts/cloudhost/GetOperatingSystemVersion.sh ${cloudhost} ${buildos} ${buildos_version} | /bin/sed "s/'//g"`"
 
@@ -114,6 +115,8 @@ then
   	fi
 
 	user_data=`/bin/cat ${HOME}/providerscripts/server/cloud-init/vultr.dat`
+
+ 	firewall_id="`/usr/bin/vultr firewall group list -o json | /usr/bin/jq -r '.firewall_groups[] | select (.description | contains ("adt-webserver")) |  select (.description | endswith ("'-${BUILD_IDENTIFIER}'")).id'`"
 
 	ddos="false"
  	if ( [ "${ddos_protection}" = "1" ] )
