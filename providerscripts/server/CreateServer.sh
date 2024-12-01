@@ -64,7 +64,7 @@ then
 		os_choice="${snapshot_id}"
 	fi
 	
-	/usr/bin/exo compute instance create "${server_name}" --instance-type standard.${server_size}  --security-group adt-webserver --template "${os_choice}" --zone ${region} --ssh-key ${key_id} --cloud-init "${HOME}/providerscripts/server/cloud-init/exoscale.dat"
+	/usr/bin/exo compute instance create "${server_name}" --instance-type standard.${server_size}  --security-group adt-webserver-${build_identifier} --template "${os_choice}" --zone ${region} --ssh-key ${key_id} --cloud-init "${HOME}/providerscripts/server/cloud-init/exoscale.dat"
 
 	if ( [ "`/usr/bin/exo compute private-network list -O text | /bin/grep adt_private_net_${region}`" = "" ] )
 	then
