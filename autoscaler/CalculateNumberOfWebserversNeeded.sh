@@ -92,6 +92,13 @@ fi
 if ( [ "${NO_WEBSERVERS}" -lt "2" ] || [ ! -n "${NO_WEBSERVERS}" ] )
 then
 	NO_WEBSERVERS="2"
+ 	/bin/echo  "SCALING_MODE=${scaling_mode}" > /tmp/profile.cnf
+	/bin/echo  "NO_WEBSERVERS=${NO_WEBSERVERS}" >> /tmp/profile.cnf  
+	${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh /tmp/profile.cnf "scalingprofile/profile.cnf"
+ 	if ( [ -f /tmp/profile.cnf ] )
+	then
+		/bin/rm /tmp/profile.cnf
+	fi
 fi
 
 
