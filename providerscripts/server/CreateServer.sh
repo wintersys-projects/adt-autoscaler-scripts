@@ -46,7 +46,7 @@ os_choice="`${HOME}/providerscripts/cloudhost/GetOperatingSystemVersion.sh ${clo
 if ( [ -f ${HOME}/DROPLET ] || [ "${cloudhost}" = "digitalocean" ] )
 then
 
-	vpc_id="`/usr/local/bin/doctl vpcs list  | /bin/grep "adt-vpc" | /bin/grep "${region}" | /usr/bin/awk '{print $1}'`"
+	vpc_id="`/usr/local/bin/doctl vpcs list  | /bin/grep -w "adt-vpc" | /bin/grep -w "${region}" | /usr/bin/awk '{print $1}'`"
 
 	#Digital ocean supports snapshots so, we test to see if we want to use them
 	if ( [ "S{snapshotid}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
@@ -66,7 +66,7 @@ then
 	
 	/usr/bin/exo compute instance create "${server_name}" --instance-type standard.${server_size}  --security-group adt-webserver-${build_identifier} --template "${os_choice}" --zone ${region} --ssh-key ${key_id} --cloud-init "${HOME}/providerscripts/server/cloud-init/exoscale.dat"
 
-	if ( [ "`/usr/bin/exo compute private-network list -O text | /bin/grep adt_private_net_${region}`" = "" ] )
+	if ( [ "`/usr/bin/exo compute private-network list -O text | /bin/grep -w "adt_private_net_${region}"`" = "" ] )
 	then
 		/usr/bin/exo compute private-network create adt_private_net_${region} --zone ${region} --start-ip 10.0.0.20 --end-ip 10.0.0.200 --netmask 255.255.255.0
 	fi
@@ -83,8 +83,8 @@ then
 	fi
 
  	key="`/usr/local/bin/linode-cli --json sshkeys view ${key_id} | /usr/bin/jq -r '.[].ssh_key'`"
- 	vpc_id="`/usr/local/bin/linode-cli --json --pretty vpcs list | /usr/bin/jq -r '.[] | select (.label == "adt-vpc").id'`"
-	subnet_id="`/usr/local/bin/linode-cli --json --pretty vpcs subnets-list ${vpc_id} | /usr/bin/jq -r '.[] | select (.label == "adt-subnet").id'`"
+ 	vpc_id="`/usr/local/bin/linode-cli --json vpcs list | /usr/bin/jq -r '.[] | select (.label == "adt-vpc").id'`"
+	subnet_id="`/usr/local/bin/linode-cli --json vpcs subnets-list ${vpc_id} | /usr/bin/jq -r '.[] | select (.label == "adt-subnet").id'`"
  
 	if ( [ "${snapshot_id}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
 	then
