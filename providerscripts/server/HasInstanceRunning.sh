@@ -22,23 +22,23 @@
 
 export HOME="`/bin/cat /home/homedir.dat`"
 
-instance_type="${1}"
+server_type="${1}"
 cloudhost="${2}"
 
 if ( [ -f ${HOME}/DROPLET ] || [ "${cloudhost}" = "digitalocean" ] )
 then
-	/usr/local/bin/doctl compute droplet list | /bin/grep ${instance_type}
+	/usr/local/bin/doctl compute droplet list | /bin/grep ${server_type}
 fi
 
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
 	zone="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
-	/usr/bin/exo compute instance list --zone ${zone} -O text | /bin/grep "${instance_type}" 
+	/usr/bin/exo compute instance list --zone ${zone} -O text | /bin/grep "${server_type}" 
 fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
 then
-	/usr/local/bin/linode-cli --json linodes list | /usr/bin/jq -r '.[] | select (.label | contains("'${instance_type}'")).id' 
+	/usr/local/bin/linode-cli --json linodes list | /usr/bin/jq -r '.[] | select (.label | contains("'${server_type}'")).id' 
 fi
 
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
