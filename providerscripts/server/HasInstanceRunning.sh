@@ -44,7 +44,8 @@ fi
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
 	export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
-	/usr/bin/vultr instance list | /bin/grep "${instance_type}"
+	server_type="`/bin/echo ${server_type} | /usr/bin/cut -c -25`"
+ 	/usr/bin/vultr instance list -o json | /usr/bin/jq -r '.instances[] | select (.label | contains("'${server_type}'")).id'
 fi
 
 
