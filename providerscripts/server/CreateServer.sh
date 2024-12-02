@@ -42,7 +42,7 @@ key_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'KEYID'`"
 build_identifier="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
 active_firewall="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ACTIVEFIREWALLS'`"
 
-os_choice="`${HOME}/providerscripts/cloudhost/GetOperatingSystemVersion.sh ${cloudhost} ${buildos} ${buildos_version} | /bin/sed "s/'//g"`"
+os_choice="`${HOME}/providerscripts/cloudhost/GetOperatingSystemVersion.sh`"
 
 if ( [ -f ${HOME}/DROPLET ] || [ "${cloudhost}" = "digitalocean" ] )
 then
