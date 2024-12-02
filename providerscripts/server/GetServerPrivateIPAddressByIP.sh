@@ -44,8 +44,8 @@ fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
 then
-	linode_id="`/usr/local/bin/linode-cli --json --pretty linodes list | /usr/bin/jq -r '.[] | select (.ipv4[] == "'${ip}'").id'`"
-	/usr/local/bin/linode-cli --json --pretty linodes ips-list ${linode_id} | /usr/bin/jq -r '.[].ipv4.vpc[].address'		
+	linode_id="`/usr/local/bin/linode-cli --json linodes list | /usr/bin/jq -r '.[] | select (.ipv4[] == "'${ip}'").id'`"
+	/usr/local/bin/linode-cli --json linodes ips-list ${linode_id} | /usr/bin/jq -r '.[].ipv4.vpc[].address'		
 fi
 
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
