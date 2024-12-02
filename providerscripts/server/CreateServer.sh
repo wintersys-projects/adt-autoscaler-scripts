@@ -90,8 +90,9 @@ then
 	then
  		os_choice="private/${snapshot_id}"
    	fi
-	
- 	/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${region} --image "os_choice" --type ${server_size} --label "${server_name}" --no-defaults --interfaces.primary true --interfaces.purpose vpc --interfaces.subnet_id ${subnet_id} --interfaces.ipv4.nat_1_1 any
+
+        firewall_id="`/usr/local/bin/linode-cli --json firewalls list | /usr/bin/jq -r '.[] | select (.label | contains ("adt-webserver")) |  select (.label | endswith ("'-${build_identifier}'")).id'`"
+ 	/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${region} --image "${os_choice}" --firewall_id="${firewall_id}" --type ${server_size} --label "${server_name}" --no-defaults --interfaces.primary true --interfaces.purpose vpc --interfaces.subnet_id ${subnet_id} --interfaces.ipv4.nat_1_1 any
 	
 fi
 
