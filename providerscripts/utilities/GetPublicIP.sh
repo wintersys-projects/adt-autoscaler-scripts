@@ -20,25 +20,19 @@
 #######################################################################################################
 #set -x
 
-IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'MYPUBLICIP'`"
-
-if ( [ "`/usr/bin/hostname -I | /bin/grep ${IP}`" = "" ] )
+IP="`/usr/bin/wget http://ipinfo.io/ip -qO -`"
+ 
+if ( [ "${IP}" = "" ] )
 then
-	IP="`/usr/bin/wget http://ipinfo.io/ip -qO -`"
- 
-	if ( [ "${IP}" = "" ] )
-	then
-		export IP="`/usr/bin/curl -4 icanhazip.com`"
-	fi
-
-	if ( [ "${IP}" = "" ] )
-	then
-		export BUILD_CLIENT_IP="`/bin/hostname -I | /usr/bin/awk '{print $1}'`"
-	fi
- 
-	${HOME}/providerscripts/utilities/StoreConfigValue.sh 'MYPUBLICIP' "${IP}"
+	IP="`/usr/bin/curl -4 icanhazip.com`"
 fi
 
+if ( [ "${IP}" = "" ] )
+then
+	IP="`/bin/hostname -I | /usr/bin/awk '{print $1}'`"
+fi
+ 
+${HOME}/providerscripts/utilities/StoreConfigValue.sh 'MYPUBLICIP' "${IP}"
 /bin/echo ${IP}
 
 
