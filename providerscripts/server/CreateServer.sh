@@ -40,6 +40,7 @@ ddos_protection="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ENABL
 vpc_ip_range="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'VPCIPRANGE'`"
 key_id="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'KEYID'`"
 build_identifier="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
+active_firewall="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ACTIVEFIREWALLS'`"
 
 os_choice="`${HOME}/providerscripts/cloudhost/GetOperatingSystemVersion.sh ${cloudhost} ${buildos} ${buildos_version} | /bin/sed "s/'//g"`"
 
@@ -91,9 +92,13 @@ then
  		os_choice="private/${snapshot_id}"
    	fi
 
-        firewall_id="`/usr/local/bin/linode-cli --json firewalls list | /usr/bin/jq -r '.[] | select (.label | contains ("adt-webserver")) |  select (.label | endswith ("'-${build_identifier}'")).id'`"
- 	/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${region} --image "${os_choice}" --firewall_id="${firewall_id}" --type ${server_size} --label "${server_name}" --no-defaults --interfaces.primary true --interfaces.purpose vpc --interfaces.subnet_id ${subnet_id} --interfaces.ipv4.nat_1_1 any
-	
+	if ( [ "${active_firewall}" = "2" ] || [ "${active_firewall}" = "3" ] )
+ 	then
+        	firewall_id="`/usr/local/bin/linode-cli --json firewalls list | /usr/bin/jq -r '.[] | select (.label | contains ("adt-webserver")) |  select (.label | endswith ("'-${build_identifier}'")).id'`"
+ 		/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${region} --image "${os_choice}" --firewall_id="${firewall_id}" --type ${server_size} --label "${server_name}" --no-defaults --interfaces.primary true --interfaces.purpose vpc --interfaces.subnet_id ${subnet_id} --interfaces.ipv4.nat_1_1 any
+	else
+ 		/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${region} --image "${os_choice}" --type ${server_size} --label "${server_name}" --no-defaults --interfaces.primary true --interfaces.purpose vpc --interfaces.subnet_id ${subnet_id} --interfaces.ipv4.nat_1_1 any
+ 	fi
 fi
 
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
@@ -126,10 +131,20 @@ then
      	fi
 	if ( [ "${snapshot_id}" = "" ] )
  	then
-		/usr/bin/vultr instance create --label="${server_name}" --region="${region}" --plan="${server_size}" --ipv6=false -s ${key_id} --os="${os_choice}" --ddos="${ddos}" --userdata="${user_data}" --firewall-group="${firewall_id}"
-	else	
-  		/usr/bin/vultr instance create --label="${server_name}" --region="${region}" --plan="${server_size}" --ipv6=false -s ${key_id} --snapshot="${os_choice}" --ddos="${ddos}" --userdata="${user_data}" --firewall-group="${firewall_id}"
-	fi
+  		if ( [ "${active_firewall}" = "2" ] || [ "${active_firewall}" = "3" ] )
+ 		then
+			/usr/bin/vultr instance create --label="${server_name}" --region="${region}" --plan="${server_size}" --ipv6=false -s ${key_id} --os="${os_choice}" --ddos="${ddos}" --userdata="${user_data}" --firewall-group="${firewall_id}"
+		else
+  			/usr/bin/vultr instance create --label="${server_name}" --region="${region}" --plan="${server_size}" --ipv6=false -s ${key_id} --os="${os_choice}" --ddos="${ddos}" --userdata="${user_data}" 
+  		fi
+ 	else
+  		if ( [ "${active_firewall}" = "2" ] || [ "${active_firewall}" = "3" ] )
+ 		then
+  			/usr/bin/vultr instance create --label="${server_name}" --region="${region}" --plan="${server_size}" --ipv6=false -s ${key_id} --snapshot="${os_choice}" --ddos="${ddos}" --userdata="${user_data}" --firewall-group="${firewall_id}"
+		else
+   			/usr/bin/vultr instance create --label="${server_name}" --region="${region}" --plan="${server_size}" --ipv6=false -s ${key_id} --snapshot="${os_choice}" --ddos="${ddos}" --userdata="${user_data}"
+		fi 
+ 	fi
  
  	machine_id=""
  	count="0"
