@@ -56,16 +56,17 @@ fi
 
 if ( [ -f ${HOME}/LINODE ] )
 then
-        firewall_id="`/usr/local/bin/linode-cli --json firewalls list | /usr/bin/jq '.[] | select (.label == "adt-webserver-"'${BUILD_IDENTIFIER}'" ).id'`"
-        webserver_ids="`${HOME}/providerscripts/server/ListServerIDs.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
-
-        for webserver_id in ${webserver_ids}
-        do
-                if ( [ "`/usr/local/bin/linode-cli --json firewalls devices-list ${firewall_id} | /bin/grep ${webserver_id}`" = ""  ] )
-                then
-                        /usr/local/bin/linode-cli firewalls device-create --id ${webserver_id} --type linode ${firewall_id} 
-                fi
-        done
+:
+     #   firewall_id="`/usr/local/bin/linode-cli --json firewalls list | /usr/bin/jq '.[] | select (.label == "adt-webserver-"'${BUILD_IDENTIFIER}'" ).id'`"
+     #   webserver_ids="`${HOME}/providerscripts/server/ListServerIDs.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"#####
+#
+ #       for webserver_id in ${webserver_ids}
+  #      do
+   #             if ( [ "`/usr/local/bin/linode-cli --json firewalls devices-list ${firewall_id} | /bin/grep ${webserver_id}`" = ""  ] )
+    #            then
+     #                   /usr/local/bin/linode-cli firewalls device-create --id ${webserver_id} --type linode ${firewall_id} 
+     #           fi
+      #  done
 fi
 
 
