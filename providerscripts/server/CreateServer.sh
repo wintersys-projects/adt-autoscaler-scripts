@@ -82,7 +82,7 @@ then
 		emergency_password="`/bin/cat ${HOME}/.ssh/EMERGENCY_PASSWORD`"
 	fi
 
- 	key="`/usr/local/bin/linode-cli --text sshkeys view ${key_id} | /usr/bin/awk '{print $4,$5,$6}' | /usr/bin/tail -n-1`"
+ 	key="`/usr/local/bin/linode-cli --json sshkeys view ${key_id} | /usr/bin/jq -r '.[].ssh_key'`"
  	vpc_id="`/usr/local/bin/linode-cli --json --pretty vpcs list | /usr/bin/jq -r '.[] | select (.label == "adt-vpc").id'`"
 	subnet_id="`/usr/local/bin/linode-cli --json --pretty vpcs subnets-list ${vpc_id} | /usr/bin/jq -r '.[] | select (.label == "adt-subnet").id'`"
  
