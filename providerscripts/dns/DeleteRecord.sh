@@ -62,7 +62,7 @@ domain_url="`${home}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL
 
 if ( [ "${dns}" = "linode" ] )
 then
-	domain_id="`/usr/local/bin/linode-cli --json --pretty linodes list | /usr/bin/jq -r '.[] | select (.domain | contains("'${domain_url}'")).id'`"
+	domain_id="`/usr/local/bin/linode-cli --json linodes list | /usr/bin/jq -r '.[] | select (.domain | contains("'${domain_url}'")).id'`"
 	/usr/local/bin/linode-cli domains records-delete ${domain_id} ${record_id}
 fi
 
