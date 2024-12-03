@@ -36,17 +36,18 @@ then
 fi
 
 if ( [ -f ${HOME}/DROPLET ] )
-then    
-        firewall_id="`/usr/local/bin/doctl -o json compute firewall list | /usr/bin/jq '.[] | select (.name == "adt-webserver" ).id' | /bin/sed 's/"//g'`"
-        webserver_ids="`${HOME}/providerscripts/server/ListServerIDs.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+then   
+:
+     #   firewall_id="`/usr/local/bin/doctl -o json compute firewall list | /usr/bin/jq '.[] | select (.name == "adt-webserver" ).id' | /bin/sed 's/"//g'`"
+      #  webserver_ids="`${HOME}/providerscripts/server/ListServerIDs.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"#
 
-        for webserver_id in ${webserver_ids}
-        do
-                if ( [ "`/usr/local/bin/doctl compute firewall  list | /bin/grep "adt-webserver-${BUILD_IDENTIFIER}" | /bin/grep ${webserver_id}`" = "" ] )
-                then
-                        /usr/local/bin/doctl compute firewall add-droplets ${firewall_id} --droplet-ids ${webserver_id}
-                fi
-        done
+      #  for webserver_id in ${webserver_ids}
+      #  do
+      #          if ( [ "`/usr/local/bin/doctl compute firewall  list | /bin/grep "adt-webserver-${BUILD_IDENTIFIER}" | /bin/grep ${webserver_id}`" = "" ] )
+      #          then
+      #                  /usr/local/bin/doctl compute firewall add-droplets ${firewall_id} --droplet-ids ${webserver_id}
+      #          fi
+      #  done
 fi
 
 if ( [ -f ${HOME}/EXOSCALE ] )
