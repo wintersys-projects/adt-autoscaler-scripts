@@ -56,7 +56,11 @@ then
 		os_choice="${snapshotid}"	
   	fi
 	webserver_id="`/usr/local/bin/doctl compute droplet create "${server_name}" -o json --size "${server_size}" --image "${os_choice}"  --region "${region}" --ssh-keys "${key_id}" --vpc-uuid "${vpc_id}" | /usr/bin/jq -r '.[].id'`"
-        /usr/local/bin/doctl compute firewall add-droplets ${firewall_id} --droplet-ids ${webserver_id}
+       
+	if ( [ "${active_firewall}" = "2" ] || [ "${active_firewall}" = "3" ] )
+ 	then
+		/usr/local/bin/doctl compute firewall add-droplets ${firewall_id} --droplet-ids ${webserver_id}
+  	fi
 fi
 
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
