@@ -139,7 +139,7 @@ then
         then
                 ddos="true"
         fi
-        if ( [ "${snapshot_id}" = "" ] )
+        if ( [ "${SNAPSHOT_ID}" = "" ] )
         then
                 if ( [ "${ACTIVE_FIREWALL}" = "2" ] || [ "${ACTIVE_FIREWALL}" = "3" ] )
                 then
