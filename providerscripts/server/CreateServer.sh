@@ -65,9 +65,9 @@ fi
 
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${CLOUDHOST}" = "exoscale" ] )
 then
-        if ( [ "${snapshot_id}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
+        if ( [ "${SNAPSHOT_ID}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
         then
-                OS_CHOICE="${snapshot_id}"
+                OS_CHOICE="${SNAPSHOT_ID}"
         fi
 
         if ( [ "${ACTIVE_FIREWALL}" = "2" ] || [ "${ACTIVE_FIREWALL}" = "3" ] )
@@ -97,9 +97,9 @@ then
         vpc_id="`/usr/local/bin/linode-cli --json vpcs list | /usr/bin/jq -r '.[] | select (.label == "adt-vpc").id'`"
         subnet_id="`/usr/local/bin/linode-cli --json vpcs subnets-list ${vpc_id} | /usr/bin/jq -r '.[] | select (.label == "adt-subnet").id'`"
  
-        if ( [ "${snapshot_id}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
+        if ( [ "${SNAPSHOT_ID}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
         then
-                OS_CHOICE="private/${snapshot_id}"
+                OS_CHOICE="private/${SNAPSHOT_ID}"
         fi
 
         if ( [ "${ACTIVE_FIREWALL}" = "2" ] || [ "${ACTIVE_FIREWALL}" = "3" ] )
@@ -125,9 +125,9 @@ then
 
 
         #Vultr supports snapshots, so decide if we are building from a snapshot
-        if ( [ "${snapshot_id}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
+        if ( [ "${SNAPSHOT_ID}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
         then
-                OS_CHOICE="${snapshot_id}"
+                OS_CHOICE="${SNAPSHOT_ID}"
         fi
 
         user_data=`/bin/cat ${HOME}/providerscripts/server/cloud-init/vultr.dat`
