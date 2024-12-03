@@ -42,12 +42,12 @@ KEY_ID="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'KEYID'`"
 BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
 ACTIVE_FIREWALL="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ACTIVEFIREWALLS'`"
 
-OS_CHOICE="`${HOME}/providerscripts/CLOUDHOST/GetOperatingSystemVersion.sh`"
+OS_CHOICE="`${HOME}/providerscripts/cloudhost/GetOperatingSystemVersion.sh`"
 
 if ( [ -f ${HOME}/DROPLET ] || [ "${CLOUDHOST}" = "digitalocean" ] )
 then
 
-        vpc_id="`/usr/local/bin/doctl vpcs list -o json | /usr/bin/jq -r '.[] | select (.REGION == "'${REGION}'") | select (.name == "adt-vpc").id'`"
+        vpc_id="`/usr/local/bin/doctl vpcs list -o json | /usr/bin/jq -r '.[] | select (.region == "'${REGION}'") | select (.name == "adt-vpc").id'`"
         firewall_id="`/usr/local/bin/doctl -o json compute firewall list | /usr/bin/jq -r '.[] | select (.name == "adt-webserver-'${BUILD_IDENTIFIER}'" ).id'`"
         #Digital ocean supports snapshots so, we test to see if we want to use them
         if ( [ "S{SNAPSHOT_ID}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
@@ -55,7 +55,7 @@ then
                 #If we get to here, then we are building from a snapshot and we pass the SNAPSHOT_ID in as the oschoice parameter
                 OS_CHOICE="${SNAPSHOT_ID}"
         fi
-        webserver_id="`/usr/local/bin/doctl compute droplet create "${server_name}" -o json --size "${server_size}" --image "${OS_CHOICE}"  --REGION "${REGION}" --ssh-keys "${KEY_ID}" --vpc-uuid "${vpc_id}" | /usr/bin/jq -r '.[].id'`"
+        webserver_id="`/usr/local/bin/doctl compute droplet create "${server_name}" -o json --size "${server_size}" --image "${OS_CHOICE}"  --region "${REGION}" --ssh-keys "${KEY_ID}" --vpc-uuid "${vpc_id}" | /usr/bin/jq -r '.[].id'`"
        
         if ( [ "${ACTIVE_FIREWALL}" = "2" ] || [ "${ACTIVE_FIREWALL}" = "3" ] )
         then
@@ -105,9 +105,9 @@ then
         if ( [ "${ACTIVE_FIREWALL}" = "2" ] || [ "${ACTIVE_FIREWALL}" = "3" ] )
         then
                 firewall_id="`/usr/local/bin/linode-cli --json firewalls list | /usr/bin/jq -r '.[] | select (.label | contains ("adt-webserver")) |  select (.label | endswith ("'-${BUILD_IDENTIFIER}'")).id'`"
-                /usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --REGION ${REGION} --image "${OS_CHOICE}" --firewall_id="${firewall_id}" --type ${server_size} --label "${server_name}" --no-defaults --interfaces.primary true --interfaces.purpose vpc --interfaces.subnet_id ${subnet_id} --interfaces.ipv4.nat_1_1 any
+                /usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${REGION} --image "${OS_CHOICE}" --firewall_id="${firewall_id}" --type ${server_size} --label "${server_name}" --no-defaults --interfaces.primary true --interfaces.purpose vpc --interfaces.subnet_id ${subnet_id} --interfaces.ipv4.nat_1_1 any
         else
-                /usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --REGION ${REGION} --image "${OS_CHOICE}" --type ${server_size} --label "${server_name}" --no-defaults --interfaces.primary true --interfaces.purpose vpc --interfaces.subnet_id ${subnet_id} --interfaces.ipv4.nat_1_1 any
+                /usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${REGION} --image "${OS_CHOICE}" --type ${server_size} --label "${server_name}" --no-defaults --interfaces.primary true --interfaces.purpose vpc --interfaces.subnet_id ${subnet_id} --interfaces.ipv4.nat_1_1 any
         fi
 fi
 
@@ -118,7 +118,7 @@ then
 
         if ( [ "`/usr/bin/vultr vpc2 list -o json | /usr/bin/jq -r '.vpcs[] | select (.description == "adt-vpc").id'`" = "" ] )
         then
-                /usr/bin/vultr vpc2 create --REGION="${REGION}" --description="adt-vpc" --ip-type="v4" --ip-block="192.168.0.0" --prefix-length="16"
+                /usr/bin/vultr vpc2 create --region="${REGION}" --description="adt-vpc" --ip-type="v4" --ip-block="192.168.0.0" --prefix-length="16"
         fi
 
         vpc_id="`/usr/bin/vultr vpc2 list -o json | /usr/bin/jq -r '.vpcs[] | select (.description == "adt-vpc").id'`"
@@ -143,16 +143,16 @@ then
         then
                 if ( [ "${ACTIVE_FIREWALL}" = "2" ] || [ "${ACTIVE_FIREWALL}" = "3" ] )
                 then
-                        /usr/bin/vultr instance create --label="${server_name}" --REGION="${REGION}" --plan="${server_size}" --ipv6=false -s ${KEY_ID} --os="${OS_CHOICE}" --ddos="${ddos}" --userdata="${user_data}" --firewall-group="${firewall_id}"
+                        /usr/bin/vultr instance create --label="${server_name}" --region="${REGION}" --plan="${server_size}" --ipv6=false -s ${KEY_ID} --os="${OS_CHOICE}" --ddos="${ddos}" --userdata="${user_data}" --firewall-group="${firewall_id}"
                 else
-                        /usr/bin/vultr instance create --label="${server_name}" --REGION="${REGION}" --plan="${server_size}" --ipv6=false -s ${KEY_ID} --os="${OS_CHOICE}" --ddos="${ddos}" --userdata="${user_data}" 
+                        /usr/bin/vultr instance create --label="${server_name}" --region="${REGION}" --plan="${server_size}" --ipv6=false -s ${KEY_ID} --os="${OS_CHOICE}" --ddos="${ddos}" --userdata="${user_data}" 
                 fi
         else
                 if ( [ "${ACTIVE_FIREWALL}" = "2" ] || [ "${ACTIVE_FIREWALL}" = "3" ] )
                 then
-                        /usr/bin/vultr instance create --label="${server_name}" --REGION="${REGION}" --plan="${server_size}" --ipv6=false -s ${KEY_ID} --snapshot="${OS_CHOICE}" --ddos="${ddos}" --userdata="${user_data}" --firewall-group="${firewall_id}"
+                        /usr/bin/vultr instance create --label="${server_name}" --region="${REGION}" --plan="${server_size}" --ipv6=false -s ${KEY_ID} --snapshot="${OS_CHOICE}" --ddos="${ddos}" --userdata="${user_data}" --firewall-group="${firewall_id}"
                 else
-                        /usr/bin/vultr instance create --label="${server_name}" --REGION="${REGION}" --plan="${server_size}" --ipv6=false -s ${KEY_ID} --snapshot="${OS_CHOICE}" --ddos="${ddos}" --userdata="${user_data}"
+                        /usr/bin/vultr instance create --label="${server_name}" --region="${REGION}" --plan="${server_size}" --ipv6=false -s ${KEY_ID} --snapshot="${OS_CHOICE}" --ddos="${ddos}" --userdata="${user_data}"
                 fi 
         fi
  
