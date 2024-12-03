@@ -28,7 +28,7 @@ if ( [ "${CLOUDHOST}" = "digitalocean" ] )
 then
         dbaas="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
         cluster_id="`/bin/echo ${dbaas} | /usr/bin/awk '{print $NF}'`"
-        ip_addr="`/usr/local/bin/doctl vpcs list | /bin/grep adt-vpc | /bin/grep -Po "10.*" | /usr/bin/awk '{print $1}'`"
+        ip_addr="`/usr/local/bin/doctl vpcs list -o json | /usr/bin/jq -r '.[] | select (.name == "adt-vpc" ) | select (.region == "'${REGION}'").ip_range'`"
 
         if ( [ "${cluster_id}" != "" ] )
         then
