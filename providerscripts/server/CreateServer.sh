@@ -47,7 +47,7 @@ os_choice="`${HOME}/providerscripts/cloudhost/GetOperatingSystemVersion.sh`"
 if ( [ -f ${HOME}/DROPLET ] || [ "${cloudhost}" = "digitalocean" ] )
 then
 
-	vpc_id="`/usr/local/bin/doctl vpcs list  | /bin/grep -w "adt-vpc" | /bin/grep -w "${region}" | /usr/bin/awk '{print $1}'`"
+	vpc_id="`/usr/local/bin/doctl vpcs list -o json | /usr/bin/jq -r '.[] | select (.region == "'${region}'") | select (.name == "adt-vpc").id'`"
 
 	#Digital ocean supports snapshots so, we test to see if we want to use them
 	if ( [ "S{snapshotid}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
