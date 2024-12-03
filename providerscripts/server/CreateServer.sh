@@ -65,9 +65,14 @@ then
 	then
 		os_choice="${snapshot_id}"
 	fi
-	
-	/usr/bin/exo compute instance create "${server_name}" --instance-type standard.${server_size}  --security-group adt-webserver-${build_identifier} --template "${os_choice}" --zone ${region} --ssh-key ${key_id} --cloud-init "${HOME}/providerscripts/server/cloud-init/exoscale.dat"
 
+   	if ( [ "${active_firewall}" = "2" ] || [ "${active_firewall}" = "3" ] )
+ 	then
+		/usr/bin/exo compute instance create "${server_name}" --instance-type standard.${server_size}  --security-group adt-webserver-${build_identifier} --template "${os_choice}" --zone ${region} --ssh-key ${key_id} --cloud-init "${HOME}/providerscripts/server/cloud-init/exoscale.dat"
+	else
+		/usr/bin/exo compute instance create "${server_name}" --instance-type standard.${server_size}  --template "${os_choice}" --zone ${region} --ssh-key ${key_id} --cloud-init "${HOME}/providerscripts/server/cloud-init/exoscale.dat"
+ 	fi
+  
 	if ( [ "`/usr/bin/exo compute private-network list -O text | /bin/grep -w "adt_private_net_${region}"`" = "" ] )
 	then
 		/usr/bin/exo compute private-network create adt_private_net_${region} --zone ${region} --start-ip 10.0.0.20 --end-ip 10.0.0.200 --netmask 255.255.255.0
