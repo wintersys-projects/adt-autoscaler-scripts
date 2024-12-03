@@ -55,7 +55,8 @@ then
 		#If we get to here, then we are building from a snapshot and we pass the snapshotid in as the oschoice parameter
 		os_choice="${snapshotid}"	
   fi
-		/usr/local/bin/doctl compute droplet create "${server_name}" --size "${server_size}" --image "${os_choice}"  --region "${region}" --ssh-keys "${key_id}" --vpc-uuid "${vpc_id}"
+		droplet_id="`/usr/local/bin/doctl compute droplet create "${server_name}" -o json --size "${server_size}" --image "${os_choice}"  --region "${region}" --ssh-keys "${key_id}" --vpc-uuid "${vpc_id}" | /usr/bin/jq -r '.[] | select (.id)'`"
+  
 fi
 
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
