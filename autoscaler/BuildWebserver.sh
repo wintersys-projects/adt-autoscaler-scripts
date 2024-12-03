@@ -441,7 +441,7 @@ then
 	/usr/bin/kill -TERM $$
 else
 	/bin/echo "${0} `/bin/date`: All checks passed for ip address ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-	. ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
+#	. ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
 
 	#If we got to here then we are a successful build as as best as we can tell, everything is online
 	#So, we add the ip address of our new machine to our DNS provider and that machine is then ready
