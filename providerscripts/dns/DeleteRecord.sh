@@ -39,7 +39,6 @@ dns="${5}"
 
 if ( [ "${dns}" = "digitalocean" ] )
 then
-	/usr/local/bin/doctl compute domain records list ${domainurl} | /bin/grep ${recordid} | /usr/bin/awk '{print $1}'
 	/usr/local/bin/doctl compute domain records delete --force ${domainurl} ${recordid}
 fi
 
