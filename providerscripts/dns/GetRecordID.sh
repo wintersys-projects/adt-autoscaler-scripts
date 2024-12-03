@@ -42,15 +42,7 @@ dns="${6}"
 
 if ( [ "${dns}" = "digitalocean" ] )
 then
-	recordid="`/usr/local/bin/doctl compute domain records list ${domainurl} | /bin/grep ${subdomain} | /bin/grep ${ip} | /usr/bin/awk '{print $1}'`"
-	count="0"
-	while ( [ "${count}" -lt "5" ] && [ "${recordid}" = "" ] )
-	do
-		/bin/sleep 5
-		recordid="`/usr/local/bin/doctl compute domain records list ${domainurl} | /bin/grep ${subdomain} | /bin/grep ${ip} | /usr/bin/awk '{print $1}'`"
-	count="`/usr/bin/expr ${count} + 1`"
-	done
-	/bin/echo "${recordid}"
+	/usr/local/bin/doctl compute domain records list ${domainurl} -o json | /usr/bin/jq -r '.[] | select (.type == "A") | select (.name == "'${subdomain}'" | select (.data == "'${ip}'").id'
 fi
 
 domainurl="`/bin/echo ${2} | /usr/bin/cut -d'.' -f2-`"
