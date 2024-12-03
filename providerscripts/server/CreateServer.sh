@@ -55,7 +55,7 @@ then
 		#If we get to here, then we are building from a snapshot and we pass the snapshotid in as the oschoice parameter
 		os_choice="${snapshotid}"	
   	fi
-	webserver_id="`/usr/local/bin/doctl compute droplet create "${server_name}" -o json --size "${server_size}" --image "${os_choice}"  --region "${region}" --ssh-keys "${key_id}" --vpc-uuid "${vpc_id}" | /usr/bin/jq -r '.[] | select (.id)'`"
+	webserver_id="`/usr/local/bin/doctl compute droplet create "${server_name}" -o json --size "${server_size}" --image "${os_choice}"  --region "${region}" --ssh-keys "${key_id}" --vpc-uuid "${vpc_id}" | /usr/bin/jq -r '.[].id'`"
         /usr/local/bin/doctl compute firewall add-droplets ${firewall_id} --droplet-ids ${webserver_id}
 fi
 
