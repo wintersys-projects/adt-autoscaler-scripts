@@ -25,8 +25,7 @@ cloudhost="${2}"
 
 if ( [ -f ${HOME}/DROPLET ] || [ "${cloudhost}" = "digitalocean" ] )
 then
-	numberofservers="`/usr/local/bin/doctl compute droplet list | /bin/grep ${server_type} | /usr/bin/wc -l`"
-	/bin/echo ${numberofservers}
+        /usr/local/bin/doctl compute droplet list -o json | /usr/bin/jq -r '.[] | select (.name | contains("'${server_type}'")).id' | /usr/bin/wc -l
 fi
 
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
