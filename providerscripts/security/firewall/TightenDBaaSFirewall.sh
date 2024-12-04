@@ -64,6 +64,7 @@ fi
 
 if ( [ "${CLOUDHOST}" = "linode" ] )
 then
+        dbaas="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
         token="`/bin/grep token ${HOME}/.config/linode-cli | /usr/bin/awk '{print $NF}'`"
         label="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
         database_id="`/usr/local/bin/linode-cli --json databases mysql-list | /usr/bin/jq ".[] | select(.label | contains ("'${label}'")) | .id"`"
@@ -73,16 +74,9 @@ then
                 database_id="`/usr/local/bin/linode-cli --json databases postgresql-list | /usr/bin/jq ".[] | select(.label | contains ("'${label}'")) | .id"`"
         fi
 
-      #  autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "as-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
         webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
         database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "db-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
-
-      #  autoscaler_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "as-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
-      #  webserver_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
-      #  database_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "db-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
-
-        #ipaddresses="${autoscaler_ips} ${webserver_ips} ${database_ips} ${autoscaler_private_ips} ${webserver_private_ips} ${database_private_ips}"
-
+        
         ipaddresses="${webserver_ips} ${database_ips}"
 
         allow_list=" "
@@ -91,29 +85,21 @@ then
                 allow_list="${allow_list} --allow_list ${ipaddress}/32"
         done
 
-        for ipaddress in ${newips}
-        do
-                /usr/local/bin/linode-cli databases mysql-update ${database_id} ${allow_list}
-        done
+        if ( [ "`/bin/echo ${dbaas} | /bin/grep 'mysql'`" != "" ] )
+        then
+                for ipaddress in ${newips}
+                do
+                        /usr/local/bin/linode-cli databases mysql-update ${database_id} ${allow_list}
+                done
+        fi
 
-        for ipaddress in ${newips}
-        do
-                /usr/local/bin/linode-cli databases postgresql-update ${database_id} ${allow_list}
-        done
-      
-      
-      #  if ( [ "`/bin/echo ${ipaddresses} | /bin/grep ${ip}`" = "" ] )
-      #  then
-      #          ipaddresses=${newips}"\"${ip}/32\""
-      #  else
-      #          ipaddresses="`/bin/echo ${newips} | /bin/sed 's/,$//g'`"
-      #  fi
-
-        #if we are a mysql database, this will work
-       # /usr/bin/curl -H "Content-Type: application/json" -H "Authorization: Bearer ${token}" -X PUT -d "{ \"allow_list\": [ ${ipaddresses} ] }" https://api.linode.com/v4/databases/mysql/instances/${database_id}
-        #If we are a postgres database, this will work
-       # /usr/bin/curl -H "Content-Type: application/json" -H "Authorization: Bearer ${token}" -X PUT -d "{ \"allow_list\": [ ${ipaddresses} ] }" https://api.linode.com/v4/databases/postgresql/instances/${database_id}
-
+        if ( [ "`/bin/echo ${dbaas} | /bin/grep 'postgresql'`" != "" ] )
+        then        
+                for ipaddress in ${newips}
+                do
+                        /usr/local/bin/linode-cli databases postgresql-update ${database_id} ${allow_list}
+                done
+        fi
 fi
 
 #The vultr managed database should be in the same VPC as the webserver machines which means that the managed database can only be accessed from within that VPC
