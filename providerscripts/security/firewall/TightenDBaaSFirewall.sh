@@ -66,11 +66,11 @@ if ( [ "${CLOUDHOST}" = "linode" ] )
 then
         dbaas="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
         label="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped" | /usr/bin/awk '{print $7}'`"
-        database_id="`/usr/local/bin/linode-cli --json databases mysql-list | /usr/bin/jq ".[] | select(.label | contains ("'${label}'")) | .id"`"
+        database_id="`/usr/local/bin/linode-cli --json databases mysql-list | /usr/bin/jq '.[] | select(.label | contains ("'${label}'")) | .id'`"
    
         if ( [ "${database_id}" = "" ] )
         then
-                database_id="`/usr/local/bin/linode-cli --json databases postgresql-list | /usr/bin/jq ".[] | select(.label | contains ("'${label}'")) | .id"`"
+                database_id="`/usr/local/bin/linode-cli --json databases postgresql-list | /usr/bin/jq '.[] | select(.label | contains ("'${label}'")) | .id'`"
         fi
 
         webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
