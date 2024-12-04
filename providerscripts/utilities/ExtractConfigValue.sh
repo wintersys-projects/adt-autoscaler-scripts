@@ -1,7 +1,7 @@
 #!/bin/sh
 #########################################################################################
 #Description: This script will extract a particular configuration value being set for this
-#autoscaler machine
+#webserver machine
 #Author : Peter Winter
 #Date: 05/04/2017
 ##########################################################################################
@@ -23,5 +23,12 @@ export HOME="`/bin/cat /home/homedir.dat`"
 
 if ( [ "${1}" != "" ] )
 then
-	/bin/grep -a "^${1}:" ${HOME}/.ssh/autoscaler_configuration_settings.dat | /usr/bin/awk -F':' '{print $NF}'
+        delimiters=`/bin/grep -a "^${1}:" ${HOME}/.ssh/autoscaler_configuration_settings.dat | /bin/grep -o ':' | /bin/grep -c ':'`
+
+        if ( [ "${delimiters}" -gt "1" ] )
+        then
+                /bin/grep -a "^${1}:" ${HOME}/.ssh/autoscaler_configuration_settings.dat | /usr/bin/cut -d ":" -f2-
+        else
+                /bin/grep -a "^${1}:" ${HOME}/.ssh/autoscaler_configuration_settings.dat | /usr/bin/awk -F':' '{print $NF}'
+        fi
 fi
