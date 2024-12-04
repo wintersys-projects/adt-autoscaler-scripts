@@ -66,39 +66,48 @@ if ( [ "${CLOUDHOST}" = "linode" ] )
 then
         token="`/bin/grep token ${HOME}/.config/linode-cli | /usr/bin/awk '{print $NF}'`"
         label="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
-        database_id="`/usr/local/bin/linode-cli --json databases mysql-list | /usr/bin/jq ".[] | select(.[\\"label\\"] | contains (\\"${label}\\")) | .id"`"
+        database_id="`/usr/local/bin/linode-cli --json databases mysql-list | /usr/bin/jq ".[] | select(.label | contains ("'${label}'")) | .id"`"
    
-   if ( [ "${database_id}" = "" ] )
+        if ( [ "${database_id}" = "" ] )
         then
-                database_id="`/usr/local/bin/linode-cli --json databases postgresql-list | /usr/bin/jq ".[] | select(.[\\"label\\"] | contains (\\"${label}\\")) | .id"`"
+                database_id="`/usr/local/bin/linode-cli --json databases postgresql-list | /usr/bin/jq ".[] | select(.label | contains ("'${label}'")) | .id"`"
         fi
 
-        autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "as-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+      #  autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "as-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
         webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
         database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "db-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
 
-        autoscaler_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "as-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
-        webserver_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
-        database_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "db-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+      #  autoscaler_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "as-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+      #  webserver_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+      #  database_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "db-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
 
-        ipaddresses="${autoscaler_ips} ${webserver_ips} ${database_ips} ${autoscaler_private_ips} ${webserver_private_ips} ${database_private_ips}"
+        #ipaddresses="${autoscaler_ips} ${webserver_ips} ${database_ips} ${autoscaler_private_ips} ${webserver_private_ips} ${database_private_ips}"
 
+        ipaddresses="${webserver_ips} ${database_ips}"
+
+        allow_list=" "
         for ipaddress in ${ipaddresses}
         do
-                newips=${newips}"\"${ipaddress}/32\","
+                allow_list="${allow_list} --allow_list ${ipaddress}/32"
         done
 
-        if ( [ "`/bin/echo ${ipaddresses} | /bin/grep ${ip}`" = "" ] )
-        then
-                ipaddresses=${newips}"\"${ip}/32\""
-        else
-                ipaddresses="`/bin/echo ${newips} | /bin/sed 's/,$//g'`"
-        fi
+        for ipaddress in ${newips}
+        do
+                /usr/local/bin/linode-cli databases mysql-update ${database_id} ${allow_list}
+        done
+      
+      
+      #  if ( [ "`/bin/echo ${ipaddresses} | /bin/grep ${ip}`" = "" ] )
+      #  then
+      #          ipaddresses=${newips}"\"${ip}/32\""
+      #  else
+      #          ipaddresses="`/bin/echo ${newips} | /bin/sed 's/,$//g'`"
+      #  fi
 
         #if we are a mysql database, this will work
-        /usr/bin/curl -H "Content-Type: application/json" -H "Authorization: Bearer ${token}" -X PUT -d "{ \"allow_list\": [ ${ipaddresses} ] }" https://api.linode.com/v4/databases/mysql/instances/${database_id}
+       # /usr/bin/curl -H "Content-Type: application/json" -H "Authorization: Bearer ${token}" -X PUT -d "{ \"allow_list\": [ ${ipaddresses} ] }" https://api.linode.com/v4/databases/mysql/instances/${database_id}
         #If we are a postgres database, this will work
-        /usr/bin/curl -H "Content-Type: application/json" -H "Authorization: Bearer ${token}" -X PUT -d "{ \"allow_list\": [ ${ipaddresses} ] }" https://api.linode.com/v4/databases/postgresql/instances/${database_id}
+       # /usr/bin/curl -H "Content-Type: application/json" -H "Authorization: Bearer ${token}" -X PUT -d "{ \"allow_list\": [ ${ipaddresses} ] }" https://api.linode.com/v4/databases/postgresql/instances/${database_id}
 
 fi
 
