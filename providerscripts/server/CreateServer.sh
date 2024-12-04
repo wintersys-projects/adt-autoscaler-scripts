@@ -27,7 +27,7 @@
 export HOME="`/bin/cat /home/homedir.dat`"
 
 server_size="${1}"
-server_name="`/bin/echo ${2} | /usr/bin/cut -c -32`"
+server_name="${2}"
 
 CLOUDHOST="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOST'`"
 BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
