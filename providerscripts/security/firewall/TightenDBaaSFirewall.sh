@@ -95,6 +95,11 @@ then
         do
                 /usr/local/bin/linode-cli databases mysql-update ${database_id} ${allow_list}
         done
+
+        for ipaddress in ${newips}
+        do
+                /usr/local/bin/linode-cli databases postgresql-update ${database_id} ${allow_list}
+        done
       
       
       #  if ( [ "`/bin/echo ${ipaddresses} | /bin/grep ${ip}`" = "" ] )
