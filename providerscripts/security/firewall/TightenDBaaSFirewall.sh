@@ -39,17 +39,12 @@ fi
 if ( [ "${CLOUDHOST}" = "exoscale" ] )
 then
         dbaas="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
+        build_identifier="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "BUILDIDENTIFIER"`"
         zone="`/bin/echo ${dbaas} | /usr/bin/awk '{print $4}'`"
         database_name="`/bin/echo ${dbaas} | /usr/bin/awk '{print $6}'`"
 
-      #  autoscaler_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "as-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
-        webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
-        database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "db-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
-
-       # autoscaler_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "as-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
-       # webserver_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
-       # database_private_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "db-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
-
+        webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${zone}-${build_identifier}" ${CLOUDHOST}`"
+        database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "db-${zone}-${build_identifier}" ${CLOUDHOST}`"
         newips="${webserver_ips} ${database_ips} "
         newips="`/bin/echo ${newips} | /bin/sed 's/  / /g' | /bin/tr ' ' ',' | /bin/sed 's/,$//g'`"
 
