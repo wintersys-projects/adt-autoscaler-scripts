@@ -39,7 +39,7 @@ fi
 if ( [ "${CLOUDHOST}" = "exoscale" ] )
 then
         dbaas="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
-        build_identifier="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "BUILDIDENTIFIER"`"
+        build_identifier="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
         zone="`/bin/echo ${dbaas} | /usr/bin/awk '{print $4}'`"
         database_name="`/bin/echo ${dbaas} | /usr/bin/awk '{print $6}'`"
 
