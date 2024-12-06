@@ -50,7 +50,7 @@ then
         vpc_id="`/usr/local/bin/doctl vpcs list -o json | /usr/bin/jq -r '.[] | select (.region == "'${REGION}'") | select (.name == "adt-vpc").id'`"
         firewall_id="`/usr/local/bin/doctl -o json compute firewall list | /usr/bin/jq -r '.[] | select (.name == "adt-webserver-'${BUILD_IDENTIFIER}'" ).id'`"
         #Digital ocean supports snapshots so, we test to see if we want to use them
-        if ( [ "S{SNAPSHOT_ID}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
+        if ( [ "S{SNAPSHOT_ID}" != "" ] )
         then
                 #If we get to here, then we are building from a snapshot and we pass the SNAPSHOT_ID in as the oschoice parameter
                 OS_CHOICE="${SNAPSHOT_ID}"
@@ -65,7 +65,7 @@ fi
 
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${CLOUDHOST}" = "exoscale" ] )
 then
-        if ( [ "${SNAPSHOT_ID}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
+        if ( [ "${SNAPSHOT_ID}" != "" ] )
         then
                 OS_CHOICE="${SNAPSHOT_ID}"
         fi
@@ -97,7 +97,7 @@ then
         vpc_id="`/usr/local/bin/linode-cli --json vpcs list | /usr/bin/jq -r '.[] | select (.label == "adt-vpc").id'`"
         subnet_id="`/usr/local/bin/linode-cli --json vpcs subnets-list ${vpc_id} | /usr/bin/jq -r '.[] | select (.label == "adt-subnet").id'`"
  
-        if ( [ "${SNAPSHOT_ID}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
+        if ( [ "${SNAPSHOT_ID}" != "" ] )
         then
                 OS_CHOICE="private/${SNAPSHOT_ID}"
         fi
@@ -125,7 +125,7 @@ then
 
 
         #Vultr supports snapshots, so decide if we are building from a snapshot
-        if ( [ "${SNAPSHOT_ID}" != "" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
+        if ( [ "${SNAPSHOT_ID}" != "" ] )
         then
                 OS_CHOICE="${SNAPSHOT_ID}"
         fi
