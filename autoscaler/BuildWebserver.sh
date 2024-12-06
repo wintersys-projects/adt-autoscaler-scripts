@@ -349,6 +349,7 @@ then
 	failedintegritycheck="1"
 	${HOME}/providerscripts/email/SendEmail.sh "FAILED INTEGRITY CHECKS" "A webserver (${webserver_name}) being built on autoscaler (${autoscaler_name}) has failed its integrity checks" "ERROR"
 	/bin/echo "${0} `/bin/date`: Failed integrity checks for ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+ 	${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
 fi
 
 exit
@@ -370,7 +371,8 @@ then
 	then
 		${HOME}/providerscripts/email/SendEmail.sh "FAILED TO PERFORM POST PROCESSING" "Post Processing has failed to complete on autoscaler ${autoscaler_name} for webserver ${webserver_name}" "ERROR"
 		/bin/echo "${0} `/bin/date`: Post Processing has failed to complete on autoscaler ${autoscaler_name} for webserver ${webserver_name}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-	fi
+		${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
+ 	fi
 		
 	failedmountcheck="0"
 	if ( [ "${snapshot_build}" = "0" ] )
@@ -391,7 +393,8 @@ then
 			failedmountcheck="1"
 			${HOME}/providerscripts/email/SendEmail.sh "MOUNT CHECKS HAVE BEEN FAILED" "Mount checks have been failed on autoscaler ${autoscaler_name} for webserver ${webserver_name}" "ERROR"
 			/bin/echo "${0} `/bin/date`: Failed mount checks for ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log 
-		fi
+			${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
+  		fi
 	fi
 		
 	failedonlinecheck="1"
