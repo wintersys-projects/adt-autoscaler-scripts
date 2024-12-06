@@ -344,8 +344,6 @@ do
 	/bin/echo "${0} `/bin/date`: Doing build integrity checks for ${ip} attempt ${count}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 done
 
-exit
-
 if ( [ "${count}" = "10" ] )
 then
 	failedintegritycheck="1"
