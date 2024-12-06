@@ -30,11 +30,11 @@ IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'MYIP'`"
 
 if ( [ "`/usr/bin/hostname -I | /bin/grep ${IP}`" = "" ] )
 then
-    	IP="`/usr/bin/hostname -I | /usr/bin/awk '{print $2}'`"
- 	if ( [ "${IP}" = "" ] )
-  	then
-		IP="`/usr/bin/hostname -I | /usr/bin/awk '{print $1}'`"
-	fi
+	IP="`/usr/bin/hostname -I | /usr/bin/awk '{print $1}'`"
+ 	if ( [ "`/usr/bin/ip a | /bin/grep ${IP}`" = "" ] )
+	then
+ 		IP="`/usr/bin/ip route get 1.2.3.4 | awk '{print $7}' | /bin/sed "/^$/d"`"
+   	fi
 	${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh 'MYIP' "${IP}"
 fi
 
