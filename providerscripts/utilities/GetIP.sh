@@ -35,7 +35,7 @@ then
 	then
  		IP="`/usr/bin/ip route get 1.2.3.4 | awk '{print $7}' | /bin/sed "/^$/d"`"
    	fi
-	${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh 'MYIP' "${IP}"
+	${HOME}/providerscripts/utilities/StoreConfigValue.sh 'MYIP' "${IP}"
 fi
 
 /bin/echo ${IP}
