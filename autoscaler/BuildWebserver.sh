@@ -149,6 +149,8 @@ DB_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBPORT'`"
 BUILD_CLIENT_IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDCLIENTIP'`"
 PERSIST_ASSETS_TO_CLOUD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'PERSISTASSETSTOCLOUD'`"
 DIRECTORIES_TO_MOUNT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DIRECTORIESTOMOUNT'`"
+WEBSERVER_IMAGE_ID="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSERVERIMAGEID'`"
+
 
 BUILD_KEY="${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER}"
 
