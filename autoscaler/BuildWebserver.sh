@@ -351,6 +351,8 @@ then
 	/bin/echo "${0} `/bin/date`: Failed integrity checks for ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 fi
 
+exit
+
 if ( [ "${failedintegritycheck}" = "0" ] )
 then
 	count="0"
