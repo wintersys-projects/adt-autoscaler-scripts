@@ -344,6 +344,8 @@ do
 	/bin/echo "${0} `/bin/date`: Doing build integrity checks for ${ip} attempt ${count}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 done
 
+exit
+
 if ( [ "${count}" = "10" ] )
 then
 	failedintegritycheck="1"
@@ -351,8 +353,6 @@ then
 	/bin/echo "${0} `/bin/date`: Failed integrity checks for ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
  	${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
 fi
-
-exit
 
 if ( [ "${failedintegritycheck}" = "0" ] )
 then
