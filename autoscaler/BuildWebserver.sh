@@ -318,8 +318,11 @@ ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${HOME}/
 
 # Build our webserver
 
-/bin/echo "${0} `/bin/date`: Performing a regular style build for this webserver" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-. ${HOME}/autoscaler/buildmethods/RegularBuildMethod.sh
+if ( [ "${WEBSERVER_IMAGE_ID}" = "" ] )
+then
+	/bin/echo "${0} `/bin/date`: Performing a regular style build for this webserver" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+	. ${HOME}/autoscaler/buildmethods/RegularBuildMethod.sh
+fi
 
 /bin/echo "${0} `/bin/date`: The main build has completed now just have to check that it's been dun right" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 
