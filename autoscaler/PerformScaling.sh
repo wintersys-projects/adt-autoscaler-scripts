@@ -25,6 +25,7 @@
 #######################################################################################################
 #set -x
 
+
 logdate="`/usr/bin/date | /usr/bin/awk '{print $1 $2 $3 $NF}'`"
 logdir="scaling-events-`/usr/bin/date | /usr/bin/awk '{print $1,$2,$3}' | /bin/sed 's/ //g'`"
 
@@ -33,12 +34,14 @@ then
 	/bin/mkdir -p ${HOME}/logs/${logdir}
 fi
 
+WEBSERVER_IMAGE_ID="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSERVERIMAGEID'`"
+
 if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "SWITCHOFFSCALING"`" = "1" ] )
 then
 	exit
 fi
 
-if ( [ "`${HOME}/providerscripts/utilities/ExtractConfigValue.sh SNAPAUTOSCALE`" = "1" ] && [ ! -f ${HOME}/runtime/INITIAL_SCALING_PROCESSED ] )
+if ( [ "${WEBSERVER_IMAGE_ID}" != "" ] && [ ! -f ${HOME}/runtime/INITIAL_SCALING_PROCESSED ] )
 then
    /bin/echo "${0} `/bin/date`: Initial scaling process has completed and I am authorising scaling" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
    /bin/touch ${HOME}/runtime/INITIAL_SCALING_PROCESSED
@@ -103,8 +106,6 @@ ALGORITHM="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ALGORITHM'`
 SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSHPORT'`"
 SERVER_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSER'`"
 SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
-WEBSERVER_IMAGE_ID="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSERVERIMAGEID'`"
-
 
 SUDO=" DEBIAN_FRONTEND=noninteractive /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E "
 
