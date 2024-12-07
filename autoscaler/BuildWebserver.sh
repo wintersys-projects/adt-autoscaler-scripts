@@ -463,6 +463,8 @@ else
 	#to start serving requests
 	/bin/echo "${0} `/bin/date`: ${ip} is fully online and it's public ip is being added to the DNS provider" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 	/bin/echo "${0} `/bin/date`: Adding IP ${ip} to DNS system" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+
+ 	/bin/sleep 60 #sleep for 1 minute to give the machines time to settle down, they have been busy
 	
 	${HOME}/autoscaler/AddIPToDNS.sh ${ip}
 	
