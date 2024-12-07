@@ -230,7 +230,7 @@ then
 	do
 		loop="`/usr/bin/expr ${loop} + 1`"
 		/bin/touch ${HOME}/runtime/AUTOSCALINGMONITOR:${loop}
-		if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh SNAPAUTOSCALE:1`" = "1" ] )
+		if (  [ "${WEBSERVER_IMAGE_ID}" != "" ] )
 		then 
 			/bin/echo "${0} `/bin/date`: I have calculated that a webserver needs booting so am booting a new one from a snapshot" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 			newip="`${HOME}/autoscaler/BuildWebserver.sh ${loop} &`"
