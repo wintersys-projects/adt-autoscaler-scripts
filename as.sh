@@ -288,15 +288,6 @@ cd ${HOME}
 DEVELOPMENT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DEVELOPMENT'`"
 PRODUCTION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'PRODUCTION'`"
 
-snapshotid="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSERVERIMAGEID'`"
-
-if ( [ "${snapshotid}" = "" ] )
-then
-	${HOME}/providerscripts/utilities/StoreConfigValue.sh 'SNAPAUTOSCALE' '0'
-else
-	${HOME}/providerscripts/utilities/StoreConfigValue.sh 'SNAPAUTOSCALE' '1'
-fi
-
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 >&2 /bin/echo "${0} Initialising Cron"
 /bin/echo "${0} `/bin/date`: Initialising cron" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
