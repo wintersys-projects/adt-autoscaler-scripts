@@ -98,7 +98,6 @@ done
 
 #Mark this as an autoscaled machine as distinct from one built during the initial build
 ${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh "AUTOSCALED" "1"
-${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh "SNAPPED" "0"
 
 /usr/bin/scp -i ${BUILD_KEY} ${OPTIONS} ${HOME}/.ssh/webserver_configuration_settings.dat ${HOME}/.ssh/buildstyles.dat ${SERVER_USER}@${private_ip}:${HOME}/.ssh/
  
