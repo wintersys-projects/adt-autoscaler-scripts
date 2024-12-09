@@ -39,15 +39,30 @@ fi
 
 if ( [ "${2}" = "" ] )
 then
-	${datastore_tool} s3://${configbucket}/$1 /tmp
+	count="0"
+	while ( [ "`${datastore_tool} s3://${configbucket}/$1 /tmp /tmp 2>&1 >/dev/null | /bin/grep "ERROR"`" != "" ] && [ "${count}" -lt "5" ] )
+	do
+        	/bin/sleep 5
+        	count="`/usr/bin/expr ${count} + 1`"
+	done 	
 fi
 
 if ( [ "$2" != "" ] )
 then
-	${datastore_tool} s3://${configbucket}/$1 $2
+	count="0"
+	while ( [ "`${datastore_tool} s3://${configbucket}/$1 $2 /tmp /tmp 2>&1 >/dev/null | /bin/grep "ERROR"`" != "" ] && [ "${count}" -lt "5" ] )
+	do
+        	/bin/sleep 5
+        	count="`/usr/bin/expr ${count} + 1`"
+	done 
 fi
 
 if ( [ "$3" = "recursive" ] )
 then
-	${datastore_tool} --force --recursive get s3://${configbucket}/$1 $2 
+	count="0"
+	while ( [ "`${datastore_tool} --force --recursive get s3://${configbucket}/$1 $2 /tmp /tmp 2>&1 >/dev/null | /bin/grep "ERROR"`" != "" ] && [ "${count}" -lt "5" ] )
+	do
+        	/bin/sleep 5
+        	count="`/usr/bin/expr ${count} + 1`"
+	done 	 
 fi
