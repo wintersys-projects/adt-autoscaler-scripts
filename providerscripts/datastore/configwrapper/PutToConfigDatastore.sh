@@ -41,23 +41,48 @@ fi
 
 if ( [ "$3" = "recursive" ] )
 then
-	${datastore_tool_1} $1 s3://${configbucket}/$2
+	count="0"
+	while ( [ "`${datastore_tool_1} $1 s3://${configbucket}/$2 2>&1 >/dev/null | /bin/grep "ERROR"`" != "" ] && [ "${count}" -lt "5" ] )
+	do
+        	/bin/sleep 5
+        	count="`/usr/bin/expr ${count} + 1`"
+	done 
 else
 	if ( [ -f ${1} ] )
 	then
-		${datastore_tool} $1 s3://${configbucket}/$2
+ 		count="0"
+		while ( [ "`${datastore_tool} $1 s3://${configbucket}/$2 2>&1 >/dev/null | /bin/grep "ERROR"`" != "" ] && [ "${count}" -lt "5" ] )
+		do
+        		/bin/sleep 5
+        		count="`/usr/bin/expr ${count} + 1`"
+		done 
 	elif ( [ -f ./${1} ] )
 	then
-		${datastore_tool} ./$1 s3://${configbucket}/$2
+  		count="0"
+		while ( [ "`${datastore_tool} ./$1 s3://${configbucket}/$2 2>&1 >/dev/null | /bin/grep "ERROR"`" != "" ] && [ "${count}" -lt "5" ] )
+		do
+        		/bin/sleep 5
+        		count="`/usr/bin/expr ${count} + 1`"
+		done 
 		/bin/rm ./$1
 	elif ( [ -f /tmp/${1} ] )
 	then
-		${datastore_tool} /tmp/$1 s3://${configbucket}/$2
+  		count="0"
+		while ( [ "`${datastore_tool} /tmp/$1 s3://${configbucket}/$2 2>&1 >/dev/null | /bin/grep "ERROR"`" != "" ] && [ "${count}" -lt "5" ] )
+		do
+        		/bin/sleep 5
+        		count="`/usr/bin/expr ${count} + 1`"
+		done 
 	else
 		directory="`/bin/echo ${1} | /usr/bin/awk -F'/' 'NF{NF-=1};1' | /bin/sed 's/ /\//g'`"
 		/bin/mkdir -p /tmp/${directory}
 		/bin/touch /tmp/$1
-		${datastore_tool} /tmp/$1 s3://${configbucket}/$2
+    		count="0"
+		while ( [ "`${datastore_tool} /tmp/$1 s3://${configbucket}/$2 2>&1 >/dev/null | /bin/grep "ERROR"`" != "" ] && [ "${count}" -lt "5" ] )
+		do
+        		/bin/sleep 5
+        		count="`/usr/bin/expr ${count} + 1`"
+		done 
 		/bin/rm /tmp/$1
 	fi
 fi
