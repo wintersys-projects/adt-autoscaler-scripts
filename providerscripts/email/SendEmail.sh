@@ -28,17 +28,17 @@ to_address="$4"
 
 message="MESSSAGE TIMESTAMP: `/usr/bin/date` \n ${message}"
 
-FROM_ADDRESS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SYSTEMFROMEMAILADDRESS'`"
-TO_ADDRESS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SYSTEMTOEMAILADDRESS'`"
+FROM_ADDRESS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SYSTEMFROMEMAILADDRESS'`"
+TO_ADDRESS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SYSTEMTOEMAILADDRESS'`"
 
 if ( [ "${to_address}" != "" ] )
 then
 	TO_ADDRESS="${to_address}"
 fi
 
-USERNAME="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'EMAILUSERNAME'`"
-PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'EMAILPASSWORD'`"
-EMAIL_PROVIDER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'EMAILPROVIDER'`"
+USERNAME="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'EMAILUSERNAME'`"
+PASSWORD="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'EMAILPASSWORD'`"
+EMAIL_PROVIDER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'EMAILPROVIDER'`"
 
 if ( [ "${level}" != "MANDATORY" ] && [ "`${HOME}/providerscripts/utilities/config/CheckConfigValue.sh EMAILNOTIFICATIONLEVEL:ERROR`" = "1" ] && [ "${level}" != "ERROR" ] )
 then
