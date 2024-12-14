@@ -30,9 +30,13 @@
 export HOME="`/bin/cat /home/homedir.dat`"
 SERVER_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSER'`"
 
-if ( [ "`${HOME}/providerscripts/utilities/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
+if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
 then
         datastore_tool="/usr/bin/s3cmd"
+
+elif  ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ] )
+then
+	datastore_tool="/usr/bin/s5cmd"
 fi
 
 S3_ACCESS_KEY="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'S3ACCESSKEY'`"
