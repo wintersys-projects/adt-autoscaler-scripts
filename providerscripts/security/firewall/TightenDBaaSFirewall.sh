@@ -21,8 +21,8 @@
 ########################################################################################
 #set -x
 
-BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
-REGION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
+BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
+REGION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
 
 if ( [ "${CLOUDHOST}" = "digitalocean" ] )
 then
@@ -39,7 +39,7 @@ fi
 if ( [ "${CLOUDHOST}" = "exoscale" ] )
 then
         dbaas="`${HOME}/providerscripts/utilities/config/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
-        build_identifier="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
+        build_identifier="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
         zone="`/bin/echo ${dbaas} | /usr/bin/awk '{print $4}'`"
         database_name="`/bin/echo ${dbaas} | /usr/bin/awk '{print $6}'`"
 
@@ -112,7 +112,7 @@ then
     databaseids="`/usr/bin/vultr database list -o json | /usr/bin/jq -r '.databases[] | select (.label == "'${label}'").id'`"
     selected_databaseid=""
 
-    DBaaS_HOSTNAME="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBaaS_HOSTNAME'`"
+    DBaaS_HOSTNAME="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DBaaS_HOSTNAME'`"
 
     for databaseid in ${databaseids}
     do
@@ -124,7 +124,7 @@ then
 
     if ( [ "${selected_databaseid}" != "" ] )
     then
-        VPC_IP_RANGE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'VPCIPRANGE'`"
+        VPC_IP_RANGE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'VPCIPRANGE'`"
         /usr/bin/vultr database update ${selected_databaseid} --trusted-ips="${VPC_IP_RANGE}"
     fi
 fi
