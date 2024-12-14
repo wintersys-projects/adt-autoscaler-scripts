@@ -73,7 +73,7 @@ then
 	
 	if ( [ "${percentage_low_values}" -gt "25" ] )
 	then
-		${HOME}/providerscripts/email/SendEmail.sh "HIGH PERCENTAGE LOAD" "More than a quarter of samples had more than 90% load over the past hour on machine with IP address `${HOME}/providerscripts/utilities/GetPublicIP.sh`" "ERROR"
+		${HOME}/providerscripts/email/SendEmail.sh "HIGH PERCENTAGE LOAD" "More than a quarter of samples had more than 90% load over the past hour on machine with IP address `${HOME}/providerscripts/utilities/processing/GetPublicIP.sh`" "ERROR"
 	fi
 
 	/bin/rm ${HOME}/runtime/ATOP_RUNNING
