@@ -58,6 +58,6 @@ OLD_BUILD_CLIENT_IP="`${HOME}/providerscripts/utilities/config/ExtractConfigValu
 
 if ( [ "${OLD_BUILD_CLIENT_IP}" != "${BUILD_CLIENT_IP}" ] )
 then
-	${HOME}/providerscripts/utilities/StoreConfigValue.sh "BUILDCLIENTIP" "${BUILD_CLIENT_IP}"  
+	${HOME}/providerscripts/utilities/config/StoreConfigValue.sh "BUILDCLIENTIP" "${BUILD_CLIENT_IP}"  
 	/bin/touch ${HOME}/runtime/BUILDCLIENTUPDATED
 fi
