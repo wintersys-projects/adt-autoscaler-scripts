@@ -26,7 +26,7 @@ then
 	/usr/sbin/dhclient 1>/dev/null 2>/dev/null
 fi
 
-IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'MYIP'`"
+IP="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'MYIP'`"
 
 if ( [ "`/usr/bin/hostname -I | /bin/grep ${IP}`" = "" ] )
 then
