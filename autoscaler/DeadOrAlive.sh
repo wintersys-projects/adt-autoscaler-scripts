@@ -394,5 +394,5 @@ if ( [ "${too_old}" = "1" ] )
 then
 	/bin/echo "${0} `/bin/date`: This autoscaler has been rebooted for hygiene reasons because something seeemed to have gone stale" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
 	#This is necessary because if the processes above had a problem and might be hanging around indefinitely  we need to clean up and the shutdown process is the most comprehensive way to do that for us. 
-	${HOME}/providerscripts/utilities/ShutdownThisAutoscaler.sh "reboot"  
+	${HOME}/providerscripts/utilities/housekeeping/ShutdownThisAutoscaler.sh "reboot"  
 fi
