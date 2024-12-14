@@ -40,7 +40,7 @@ USERNAME="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'EMAILUSERNAM
 PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'EMAILPASSWORD'`"
 EMAIL_PROVIDER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'EMAILPROVIDER'`"
 
-if ( [ "${level}" != "MANDATORY" ] && [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh EMAILNOTIFICATIONLEVEL:ERROR`" = "1" ] && [ "${level}" != "ERROR" ] )
+if ( [ "${level}" != "MANDATORY" ] && [ "`${HOME}/providerscripts/utilities/config/CheckConfigValue.sh EMAILNOTIFICATIONLEVEL:ERROR`" = "1" ] && [ "${level}" != "ERROR" ] )
 then
    exit
 fi
