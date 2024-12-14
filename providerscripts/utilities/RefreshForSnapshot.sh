@@ -3,5 +3,5 @@ then
         exit
 fi
 
-${HOME}/providerscripts/utilities/UpdateSoftware.sh "SNAPPED"
+${HOME}/providerscripts/utilities/software/UpdateSoftware.sh "SNAPPED"
 /bin/touch ${HOME}/runtime/AUTOSCALER_UPDATED_FOR_SNAPSHOT
