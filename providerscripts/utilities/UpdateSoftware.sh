@@ -1,6 +1,6 @@
 set -x
 
-BUILDOS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOS'`"
+BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
 
 if ( [ "`${HOME}/providerscripts/utilities/config/CheckConfigValue.sh BUILDOS:ubuntu`" = "1" ] || [ "`${HOME}/providerscripts/utilities/config/CheckConfigValue.sh BUILDOS:debian`" = "1" ] )
 then
