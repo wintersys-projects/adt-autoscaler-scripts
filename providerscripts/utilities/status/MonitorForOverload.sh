@@ -35,7 +35,7 @@ then
    /bin/rm ${HOME}/runtime/LOW_DISK_ACKNOWLEDGED
 fi
 
-ip="`${HOME}/providerscripts/utilities/GetPublicIP.sh`"
+ip="`${HOME}/providerscripts/utilities/processing/GetPublicIP.sh`"
 
 if ( [ ! -f ${HOME}/runtime/CPU_OVERLOAD_ACKNOWLEDGED ] )
 then
