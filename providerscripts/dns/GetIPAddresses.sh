@@ -50,7 +50,7 @@ dns="${5}"
 
 if ( [ "${dns}" = "exoscale" ] )
 then
-	zone="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
+	zone="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
  	server_name="`/usr/bin/exo compute instance list --zone ${zone} -O json `"
 
 	/usr/bin/exo -O json dns show ${domainurl} --zone ${zone} | /usr/bin/jq -r '.[] | select (.name =="'${domainurl}'").content'
