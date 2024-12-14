@@ -30,12 +30,12 @@ export HOME="`/bin/cat /home/homedir.dat`"
 
 if ( [ "${WEBSITE_NAME}" = "" ] )
 then
-	WEBSITE_URL="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL'`"
+	WEBSITE_URL="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'WEBSITEURL'`"
 	WEBSITE_NAME="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{print $2}'`"
 fi
 if ( [ "${BUILDOS}" = "" ] )
 then
-	BUILDOS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOS'`"
+	BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
 fi
 
 # Set the hostname for the machine
