@@ -38,7 +38,7 @@ then
 fi
 
 scaling_mode="static"
-NO_WEBSERVERS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'NUMBERWS'`"
+NO_WEBSERVERS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'NUMBERWS'`"
 
 if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "scalingprofile/profile.cnf"`" = "0" ] )
 then
