@@ -58,7 +58,7 @@ SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/config/ExtractConfigVal
 SSH_PORT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SSHPORT'`"
 SUDO=" DEBIAN_FRONTEND=noninteractive /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E "
 
-autoscalerip="`${HOME}/providerscripts/utilities/GetPublicIP.sh`"
+autoscalerip="`${HOME}/providerscripts/utilities/processing/GetPublicIP.sh`"
 autoscaler_name="`${HOME}/providerscripts/server/GetServerName.sh ${autoscalerip} ${CLOUDHOST}`"
 if ( [ "${autoscaler_name}" != "" ] )
 then
