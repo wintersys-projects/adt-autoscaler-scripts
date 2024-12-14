@@ -32,7 +32,7 @@ then
 	IP="`/bin/hostname -I | /usr/bin/awk '{print $1}'`"
 fi
  
-${HOME}/providerscripts/utilities/StoreConfigValue.sh 'MYPUBLICIP' "${IP}"
+${HOME}/providerscripts/utilities/config/StoreConfigValue.sh 'MYPUBLICIP' "${IP}"
 /bin/echo ${IP}
 
 
