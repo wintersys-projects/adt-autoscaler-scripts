@@ -28,11 +28,11 @@
 
 export HOME="`/bin/cat /home/homedir.dat`"
 
-CLOUDHOST="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOST'`"
+CLOUDHOST="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
 
 if ( [ "${CLOUDHOST}" = "digitalocean" ] )
 then
-	TOKEN="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'TOKEN'`"
+	TOKEN="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'TOKEN'`"
 	
 	if ( [ -f ${HOME}/.config/doctl/config.yaml ] )
 	then
@@ -69,10 +69,10 @@ fi
 
 if ( [ "${CLOUDHOST}" = "exoscale" ] )
 then
-	CLOUDHOST_ACCOUNT_ID="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOSTACCOUNTID'`"
-	REGION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
-	ACCESS_KEY="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ACCESSKEY'`"
-	SECRET_KEY="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SECRETKEY'`"
+	CLOUDHOST_ACCOUNT_ID="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOUDHOSTACCOUNTID'`"
+	REGION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
+	ACCESS_KEY="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'ACCESSKEY'`"
+	SECRET_KEY="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SECRETKEY'`"
 	
 	if ( [ -f ${HOME}/.config/exoscale/exoscale.toml ] )
 	then
@@ -134,9 +134,9 @@ fi
 if ( [ "${CLOUDHOST}" = "linode" ] )
 then
 
-	CLOUDHOST_ACCOUNT_ID="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOSTACCOUNTID'`"
-	TOKEN="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'TOKEN'`"
-	REGION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
+	CLOUDHOST_ACCOUNT_ID="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOUDHOSTACCOUNTID'`"
+	TOKEN="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'TOKEN'`"
+	REGION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
 
 	if ( [ -f ${HOME}/.config/linode-cli ] )
 	then
@@ -189,7 +189,7 @@ fi
 
 if ( [ "${CLOUDHOST}" = "vultr" ] )
 then
-	TOKEN="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'TOKEN'`"
+	TOKEN="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'TOKEN'`"
 
 	if ( [ "${TOKEN}" != "" ] )
 	then
