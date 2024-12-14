@@ -33,7 +33,7 @@ fi
 
 if ( [ "${apt}" != "" ] )
 then
-	if ( [ "`${HOME}/providerscripts/utilities/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
+	if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
  	then
 		if ( [ "${BUILDOS}" = "ubuntu" ] )
 		then
@@ -44,7 +44,7 @@ then
 		then
 			DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install s3cmd	#####DEBIAN-S3CMD-REPO#####
 		fi
-	elif ( [ "`${HOME}/providerscripts/utilities/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ] )
+	elif ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ] )
  	then
   		if ( [ "${BUILDOS}" = "ubuntu" ] )
 		then
