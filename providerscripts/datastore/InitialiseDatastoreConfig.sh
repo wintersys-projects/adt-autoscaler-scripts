@@ -28,7 +28,7 @@
 #set -x
 
 export HOME="`/bin/cat /home/homedir.dat`"
-SERVER_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSER'`"
+SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
 
 if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
 then
@@ -39,10 +39,10 @@ then
 	datastore_tool="/usr/bin/s5cmd"
 fi
 
-S3_ACCESS_KEY="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'S3ACCESSKEY'`"
-S3_SECRET_KEY="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'S3SECRETKEY'`"
-S3_LOCATION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'S3LOCATION'`"
-S3_HOST_BASE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'S3HOSTBASE'`"
+S3_ACCESS_KEY="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'S3ACCESSKEY'`"
+S3_SECRET_KEY="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'S3SECRETKEY'`"
+S3_LOCATION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'S3LOCATION'`"
+S3_HOST_BASE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'S3HOSTBASE'`"
 
 if ( [ -f ${HOME}/.s3cfg ] )
 then
