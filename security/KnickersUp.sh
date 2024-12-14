@@ -21,7 +21,7 @@
 #######################################################################################################
 #set -x
 
-SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
+SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
 
 if ( [ ! -f ${HOME}/runtime/KNICKERS_ARE_UP ] )
 then
