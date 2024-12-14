@@ -20,9 +20,9 @@
 #######################################################################################################
 #set -x
 
-export DATABASE_IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBIP'`"
-export BUILD_CLIENT_IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDCLIENTIP'`"
-export WEBSERVER_IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WSIP'`"
+export DATABASE_IP="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DBIP'`"
+export BUILD_CLIENT_IP="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDCLIENTIP'`"
+export WEBSERVER_IP="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'WSIP'`"
 export AUTOSCALER_IP="`${HOME}/providerscripts/utilities/GetIP.sh`"
 
 
