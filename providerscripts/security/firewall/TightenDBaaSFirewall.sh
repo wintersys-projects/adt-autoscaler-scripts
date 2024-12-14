@@ -26,7 +26,7 @@ REGION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
 
 if ( [ "${CLOUDHOST}" = "digitalocean" ] )
 then
-        dbaas="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
+        dbaas="`${HOME}/providerscripts/utilities/config/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
         cluster_id="`/bin/echo ${dbaas} | /usr/bin/awk '{print $NF}'`"
         ip_addr="`/usr/local/bin/doctl vpcs list -o json | /usr/bin/jq -r '.[] | select (.name == "adt-vpc" ) | select (.region == "'${REGION}'").ip_range'`"
 
@@ -38,7 +38,7 @@ fi
 
 if ( [ "${CLOUDHOST}" = "exoscale" ] )
 then
-        dbaas="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
+        dbaas="`${HOME}/providerscripts/utilities/config/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
         build_identifier="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
         zone="`/bin/echo ${dbaas} | /usr/bin/awk '{print $4}'`"
         database_name="`/bin/echo ${dbaas} | /usr/bin/awk '{print $6}'`"
@@ -59,8 +59,8 @@ fi
 
 if ( [ "${CLOUDHOST}" = "linode" ] )
 then
-        dbaas="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
-        label="`${HOME}/providerscripts/utilities/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped" | /usr/bin/awk '{print $7}'`"
+        dbaas="`${HOME}/providerscripts/utilities/config/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
+        label="`${HOME}/providerscripts/utilities/config/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped" | /usr/bin/awk '{print $7}'`"
         database_id="`/usr/local/bin/linode-cli --json databases mysql-list | /usr/bin/jq '.[] | select(.label | contains ("'${label}'")) | .id'`"
    
         if ( [ "${database_id}" = "" ] )
