@@ -20,7 +20,7 @@
 #######################################################################################################
 #!/bin/sh
 
-SERVER_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSER'`"
+SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
 
 
 /bin/chmod -R 700 ${HOME}/.ssh/*
