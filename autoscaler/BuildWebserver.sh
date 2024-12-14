@@ -337,7 +337,7 @@ fi
 count="0"
 failedintegritycheck="0"
 /bin/echo "${0} `/bin/date`: Performing build integrity checks for" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-while ( [ "${count}" -lt "10" ] && [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/CheckServerAlive.sh"`" != "ALIVE" ] )
+while ( [ "${count}" -lt "10" ] && [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/status/CheckServerAlive.sh"`" != "ALIVE" ] )
 do
 	/bin/sleep 10
 	count="`/usr/bin/expr ${count} + 1`"
