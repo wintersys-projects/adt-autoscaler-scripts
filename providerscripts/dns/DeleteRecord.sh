@@ -33,7 +33,7 @@ then
 	/usr/bin/curl -X DELETE "https://api.cloudflare.com/client/v4/zones/${zoneid}/dns_records/${recordid}" -H "X-Auth-Email: ${email}"  -H "X-Auth-Key: ${authkey}" -H "Content-Type: application/json"
 fi
 
-domainurl="`${home}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL' | /usr/bin/cut -d'.' -f2-`"
+domainurl="`${home}/providerscripts/utilities/config/ExtractConfigValue.sh 'WEBSITEURL' | /usr/bin/cut -d'.' -f2-`"
 recordid="${2}"
 dns="${5}"
 
@@ -45,11 +45,11 @@ fi
 recordid="${2}"
 authkey="${4}"
 dns="${5}"
-domainurl="`${home}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL' | /usr/bin/cut -d'.' -f2-`"
+domainurl="`${home}/providerscripts/utilities/config/ExtractConfigValue.sh 'WEBSITEURL' | /usr/bin/cut -d'.' -f2-`"
 
 if ( [ "${dns}" = "exoscale" ] )
 then
-	zone="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
+	zone="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
 	/usr/bin/exo dns remove ${domainurl} ${recordid} -Q -f --zone ${zone}
    #Alternative
    # /usr/bin/curl  -H "X-DNS-Token: ${authkey}"  -H 'Accept: application/json' -X DELETE  https://api.exoscale.com/dns/v1/domains/${domainurl}/records/${recordid}
@@ -57,7 +57,7 @@ fi
 
 record_id="${2}"
 dns="${5}"
-domain_url="`${home}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL' | /usr/bin/cut -d'.' -f2-`"
+domain_url="`${home}/providerscripts/utilities/config/ExtractConfigValue.sh 'WEBSITEURL' | /usr/bin/cut -d'.' -f2-`"
 
 if ( [ "${dns}" = "linode" ] )
 then
