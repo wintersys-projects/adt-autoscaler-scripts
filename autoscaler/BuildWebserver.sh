@@ -50,7 +50,7 @@ buildno="${1}"
 trap "cleanup ${buildno}" TERM
 start=`/bin/date +%s`
 
-ASIP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ASIP'`"
+ASIP="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'ASIP'`"
 if ( [ "${ASIP}" = "" ] )
 then 
 	if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh autoscalerip/* | /usr/bin/tr '\n' ' ' | /usr/bin/wc -w`" = "1" ] )
@@ -61,7 +61,7 @@ then
 	fi
 fi
 
-AS_PUBLIC_IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ASPUBLICIP'`"
+AS_PUBLIC_IP="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'ASPUBLICIP'`"
 if ( [ "${AS_PUBLIC_IP}" = "" ] )
 then
 	if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh autoscalerpublicip/* | /usr/bin/tr '\n' ' ' | /usr/bin/wc -w`" = "1" ] )
@@ -72,9 +72,9 @@ then
 	fi
 fi
 
-SERVER_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSER'`"
-SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
-DEFAULT_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DEFAULTUSER'`"
+SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
+SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
+DEFAULT_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DEFAULTUSER'`"
 
 if ( [ "${DEFAULT_USER}" = "root" ] )
 then
@@ -113,43 +113,43 @@ fi
 ip=""
 
 #Pull the configuration into memory for easy access
-KEY_ID="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'KEYID'`"
-BUILD_CHOICE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDCHOICE'`"
-BUILDOS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDOS'`"
-REGION="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
-SIZE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SIZE'`"
-BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
-CLOUDHOST="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOST'`"
-ALGORITHM="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ALGORITHM'`"
-WEBSITE_URL="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL'`"
-DNS_CHOICE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DNSCHOICE'`"
+KEY_ID="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'KEYID'`"
+BUILD_CHOICE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDCHOICE'`"
+BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
+REGION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
+SIZE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SIZE'`"
+BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
+CLOUDHOST="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
+ALGORITHM="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'ALGORITHM'`"
+WEBSITE_URL="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'WEBSITEURL'`"
+DNS_CHOICE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DNSCHOICE'`"
 DNS_SECURITY_KEY="`${HOME}/providerscripts/utilities/config/ExtractConfigValues.sh 'DNSSECURITYKEY' stripped | /bin/sed 's/ /:/g'`"
-DNS_USERNAME="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DNSUSERNAME'`"
-GIT_USER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'GITUSER'`"
-GIT_EMAIL_ADDRESS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'GITEMAILADDRESS'`"
-INFRASTRUCTURE_REPOSITORY_PROVIDER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INFRASTRUCTUREREPOSITORYPROVIDER'`"
-INFRASTRUCTURE_REPOSITORY_USERNAME="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INFRASTRUCTUREREPOSITORYUSERNAME'`"
-INFRASTRUCTURE_REPOSITORY_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INFRASTRUCTUREREPOSITORYPASSWORD'`"
-INFRASTRUCTURE_REPOSITORY_OWNER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'INFRASTRUCTUREREPOSITORYOWNER'`"
-APPLICATION_REPOSITORY_PROVIDER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'APPLICATIONREPOSITORYPROVIDER'`"
-APPLICATION_REPOSITORY_OWNER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'APPLICATIONREPOSITORYOWNER'`"
-APPLICATION_REPOSITORY_USERNAME="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'APPLICATIONREPOSITORYUSERNAME'`"
-APPLICATION_REPOSITORY_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'APPLICATIONREPOSITORYPASSWORD'`"
-APPLICATION_REPOSITORY_TOKEN="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'APPLICATIONREPOSITORYTOKEN'`"
-CLOUDHOST_USERNAME="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOSTUSERNAME'`"
-CLOUDHOST_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'CLOUDHOSTPASSWORD'`"
-BUILD_ARCHIVE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDARCHIVECHOICE'`"
-DATASTORE_CHOICE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DATASTORECHOICE'`"
-WEBSERVER_CHOICE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSERVERCHOICE'`"
-APPLICATION_IDENTIFIER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'APPLICATIONIDENTIFIER'`"
-APPLICATION_LANGUAGE="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'APPLICATIONLANGUAGE'`"
-SOURCECODE_REPOSITORY="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'APPLICATIONBASELINESOURCECODEREPOSITORY'`"
-SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSHPORT'`"
-DB_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBPORT'`"
-BUILD_CLIENT_IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDCLIENTIP'`"
-PERSIST_ASSETS_TO_CLOUD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'PERSISTASSETSTOCLOUD'`"
-DIRECTORIES_TO_MOUNT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DIRECTORIESTOMOUNT'`"
-WEBSERVER_IMAGE_ID="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSERVERIMAGEID'`"
+DNS_USERNAME="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DNSUSERNAME'`"
+GIT_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'GITUSER'`"
+GIT_EMAIL_ADDRESS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'GITEMAILADDRESS'`"
+INFRASTRUCTURE_REPOSITORY_PROVIDER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'INFRASTRUCTUREREPOSITORYPROVIDER'`"
+INFRASTRUCTURE_REPOSITORY_USERNAME="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'INFRASTRUCTUREREPOSITORYUSERNAME'`"
+INFRASTRUCTURE_REPOSITORY_PASSWORD="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'INFRASTRUCTUREREPOSITORYPASSWORD'`"
+INFRASTRUCTURE_REPOSITORY_OWNER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'INFRASTRUCTUREREPOSITORYOWNER'`"
+APPLICATION_REPOSITORY_PROVIDER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'APPLICATIONREPOSITORYPROVIDER'`"
+APPLICATION_REPOSITORY_OWNER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'APPLICATIONREPOSITORYOWNER'`"
+APPLICATION_REPOSITORY_USERNAME="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'APPLICATIONREPOSITORYUSERNAME'`"
+APPLICATION_REPOSITORY_PASSWORD="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'APPLICATIONREPOSITORYPASSWORD'`"
+APPLICATION_REPOSITORY_TOKEN="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'APPLICATIONREPOSITORYTOKEN'`"
+CLOUDHOST_USERNAME="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOUDHOSTUSERNAME'`"
+CLOUDHOST_PASSWORD="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOUDHOSTPASSWORD'`"
+BUILD_ARCHIVE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDARCHIVECHOICE'`"
+DATASTORE_CHOICE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DATASTORECHOICE'`"
+WEBSERVER_CHOICE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'WEBSERVERCHOICE'`"
+APPLICATION_IDENTIFIER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'APPLICATIONIDENTIFIER'`"
+APPLICATION_LANGUAGE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'APPLICATIONLANGUAGE'`"
+SOURCECODE_REPOSITORY="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'APPLICATIONBASELINESOURCECODEREPOSITORY'`"
+SSH_PORT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SSHPORT'`"
+DB_PORT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DBPORT'`"
+BUILD_CLIENT_IP="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDCLIENTIP'`"
+PERSIST_ASSETS_TO_CLOUD="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'PERSISTASSETSTOCLOUD'`"
+DIRECTORIES_TO_MOUNT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DIRECTORIESTOMOUNT'`"
+WEBSERVER_IMAGE_ID="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'WEBSERVERIMAGEID'`"
 
 
 if ( [ ! -f ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ] )
@@ -161,21 +161,21 @@ fi
 
 BUILD_KEY="${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER}"
 
-DBIP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBIP'`"
+DBIP="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DBIP'`"
 
 if ( [ "${DBIP}" = "" ] )
 then
 	 DBIP="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh \"databaseip/*\"`"
 fi
 
-DB_PUBLIC_IP="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBPUBLICIP'`"
+DB_PUBLIC_IP="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DBPUBLICIP'`"
 
 if ( [ "${DB_PUBLIC_IP}" = "" ] )
 then
 	 DB_PUBLIC_IP="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh \"databasepublicip/*\"`"
 fi
 
-ASIPS="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ASIPS'`"
+ASIPS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'ASIPS'`"
 
 if ( [ "${ASIPS}" = "" ] )
 then
@@ -188,7 +188,7 @@ then
 	ASIPS="`/bin/echo ${ASIPS} | /bin/sed 's/^://g'`"
 fi
 
-ASIP_PRIVATES="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ASIP_PRIVATES'`"
+ASIP_PRIVATES="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'ASIP_PRIVATES'`"
 
 if ( [ "${ASIP_PRIVATES}" = "" ] )
 then
