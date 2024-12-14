@@ -24,5 +24,5 @@
 if ( [ "$?" != "0" ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "CRON COULD NOT BE LOADED" "Something must br wrong, cron is not loading which is a big problem I will reboot" "ERROR"
-	${HOME}/providerscripts/utilities/ShutdownThisAutoscaler.sh "reboot"
+	${HOME}/providerscripts/utilities/housekeeping/ShutdownThisAutoscaler.sh "reboot"
  fi
