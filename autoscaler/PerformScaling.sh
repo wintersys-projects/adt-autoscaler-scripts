@@ -109,7 +109,7 @@ SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/config/ExtractConfigVal
 
 SUDO=" DEBIAN_FRONTEND=noninteractive /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E "
 
-autoscalerip="`${HOME}/providerscripts/utilities/GetPublicIP.sh`"
+autoscalerip="`${HOME}/providerscripts/utilities/processing/GetPublicIP.sh`"
 /bin/echo "${0} `/bin/date`: This autoscaler's IP address is ${autoscalerip}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 
 #Make very sure we have got the autoscaler name
