@@ -27,7 +27,7 @@ publicip="`${HOME}/providerscripts/utilities/GetPublicIP.sh`"
 ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${publicip} autoscalerpublicip/${publicip}
 
 #Also record build client IP address - each machine has it but for uniformity of interface, we can record it here also
-ip="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDCLIENTIP'`"
+ip="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDCLIENTIP'`"
 
 ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} buildclientip/${ip}
 
