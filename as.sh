@@ -45,7 +45,7 @@ then
 	/bin/mkdir ${HOME}/super
 fi
 
-/bin/mv ${HOME}/providerscripts/utilities/Super.sh ${HOME}/super
+/bin/mv ${HOME}/providerscripts/utilities/security/Super.sh ${HOME}/super
 /bin/chmod 400 ${HOME}/super/Super.sh
 
 if ( [ -f ${HOME}/InstallGit.sh ] )
