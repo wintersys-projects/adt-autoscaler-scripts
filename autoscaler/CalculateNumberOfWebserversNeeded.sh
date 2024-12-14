@@ -72,7 +72,7 @@ fi
 
 if ( [ "${scaling_mode}" = "static" ] && [ "${NO_WEBSERVERS}" != "" ] )
 then
-	${HOME}/providerscripts/utilities/StoreConfigValue.sh 'NUMBERWS' "${NO_WEBSERVERS}"
+	${HOME}/providerscripts/utilities/config/StoreConfigValue.sh 'NUMBERWS' "${NO_WEBSERVERS}"
 fi
 
 #We don't want less than 2 webservers so, if somehow, webservers is set to less than 2 default it to 2 to be on the safe side. 
