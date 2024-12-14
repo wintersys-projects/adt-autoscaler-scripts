@@ -43,7 +43,7 @@
 /bin/echo "@hourly export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/LoadMonitoring.sh" >> /var/spool/cron/crontabs/root
 
 
-/bin/echo "22 4 * * *  export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/UpdateSoftware.sh" >> /var/spool/cron/crontabs/root
+/bin/echo "22 4 * * *  export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/software/UpdateSoftware.sh" >> /var/spool/cron/crontabs/root
 
 SERVER_TIMEZONE_CONTINENT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERTIMEZONECONTINENT'`"
 SERVER_TIMEZONE_CITY="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERTIMEZONECITY'`"
