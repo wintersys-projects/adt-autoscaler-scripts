@@ -59,7 +59,7 @@ then
  	then
   		if ( [ "`${HOME}/providerscripts/utilities/RunServiceCommand.sh netfilter-persistent status | /bin/grep active`" = "" ] || [ "`/usr/sbin/iptables --list-rules | /bin/grep '\-P INPUT DROP'`" = "" ] )
 		then
-  			${HOME}/providerscripts/email/SendEmail.sh "FIREWALL (iptables) INACTIVE" "Just so you know, your firewall is inactive on machine `${HOME}/providerscripts/utilities/GetPublicIP.sh`. The machine may still be initialsing after a reboot, which can take some minutes, but if these messages continue indefinitely, then you need to look into why the firewall is inactive." "ERROR"
+  			${HOME}/providerscripts/email/SendEmail.sh "FIREWALL (iptables) INACTIVE" "Just so you know, your firewall is inactive on machine `${HOME}/providerscripts/utilities/processing/GetPublicIP.sh`. The machine may still be initialsing after a reboot, which can take some minutes, but if these messages continue indefinitely, then you need to look into why the firewall is inactive." "ERROR"
 			/bin/rm ${HOME}/runtime/FIREWALL-ACTIVE
    		fi
 	fi
