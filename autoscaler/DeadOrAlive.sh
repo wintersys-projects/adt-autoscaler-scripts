@@ -91,7 +91,7 @@ endit ()
 			/bin/sleep 120
 			${HOME}/providerscripts/email/SendEmail.sh "A WEBSERVER IS BEING SHUTDOWN ${down_ip}" "${reason}" "INFO"
 			${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beenonline/${down_ip}"                
-			/usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${down_ip} "${SUDO} ${HOME}/providerscripts/utilities/config/ShutdownThisWebserver.sh"
+			/usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${down_ip} "${SUDO} ${HOME}/providerscripts/utilities/housekeeping/ShutdownThisWebserver.sh"
 			/bin/echo "${0} `/bin/date`: Webserver with ip address: ${down_ip}  has been shutdown" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
 			${HOME}/providerscripts/server/DestroyServer.sh ${public_ip_address} ${CLOUDHOST} ${down_ip}
 			/bin/echo "${0} `/bin/date`: Webserver with ip address: ${down_ip}  has been destroyed and its resources released" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
