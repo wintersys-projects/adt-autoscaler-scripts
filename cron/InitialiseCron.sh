@@ -64,7 +64,7 @@ then
 	/bin/echo "30 17 * * * export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/DailyScaledown.sh 2" >> /var/spool/cron/crontabs/root
 fi
 
-/bin/echo "30 3 * * *  export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/RemoveExpiredLogs.sh" >> /var/spool/cron/crontabs/root
+/bin/echo "30 3 * * *  export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/housekeeping/RemoveExpiredLogs.sh" >> /var/spool/cron/crontabs/root
 
 #Install our new crontab
 /usr/bin/crontab /var/spool/cron/crontabs/root
