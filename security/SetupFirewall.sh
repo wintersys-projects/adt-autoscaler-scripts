@@ -45,10 +45,10 @@ then
 fi
 
 firewall=""
-if ( [ "`${HOME}/providerscripts/utilities/ExtractBuildStyleValues.sh "FIREWALL" | /usr/bin/awk -F':' '{print $NF}'`" = "ufw" ] )
+if ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "FIREWALL" | /usr/bin/awk -F':' '{print $NF}'`" = "ufw" ] )
 then
         firewall="ufw"
-elif ( [ "`${HOME}/providerscripts/utilities/ExtractBuildStyleValues.sh "FIREWALL" | /usr/bin/awk -F':' '{print $NF}'`" = "iptables" ] )
+elif ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "FIREWALL" | /usr/bin/awk -F':' '{print $NF}'`" = "iptables" ] )
 then
         firewall="iptables"
 fi
