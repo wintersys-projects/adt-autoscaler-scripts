@@ -37,7 +37,7 @@ fi
 
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
-	zone="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
+	zone="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
 	server_name="`/usr/bin/exo compute private-network show adt_private_net_${zone} --zone ${zone} -O json | /usr/bin/jq -r '.leases[] | select(.ip_address=="'${ip}'") | .instance'`"
 	/usr/bin/exo compute instance list --zone ${zone} -O json | /usr/bin/jq -r '.[] | select (.name =="'${server_name}'").ip_address' 
 fi
