@@ -97,18 +97,18 @@ do
 done
 
 #Mark this as an autoscaled machine as distinct from one built during the initial build
-${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh "AUTOSCALED" "1"
+${HOME}/providerscripts/utilities/config/StoreConfigValueWebserver.sh "AUTOSCALED" "1"
 
 /usr/bin/scp -i ${BUILD_KEY} ${OPTIONS} ${HOME}/.ssh/webserver_configuration_settings.dat ${HOME}/.ssh/buildstyles.dat ${SERVER_USER}@${private_ip}:${HOME}/.ssh/
  
 #Configuration values
-${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh "MYPUBLICIP" "${ip}"
-${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh "MYIP" "${private_ip}"
-${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh "BUILDCLIENTIP" "${BUILD_CLIENT_IP}"
-${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh "ASIP" "${ASIP}"
-${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh "ASPUBLICIP" "${AS_PUBLIC_IP}"
-${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh "DBIP" "${DBIP}"
-${HOME}/providerscripts/utilities/StoreConfigValueWebserver.sh "DBPUBLICIP" "${DB_PUBLIC_IP}"
+${HOME}/providerscripts/utilities/config/StoreConfigValueWebserver.sh "MYPUBLICIP" "${ip}"
+${HOME}/providerscripts/utilities/config/StoreConfigValueWebserver.sh "MYIP" "${private_ip}"
+${HOME}/providerscripts/utilities/config/StoreConfigValueWebserver.sh "BUILDCLIENTIP" "${BUILD_CLIENT_IP}"
+${HOME}/providerscripts/utilities/config/StoreConfigValueWebserver.sh "ASIP" "${ASIP}"
+${HOME}/providerscripts/utilities/config/StoreConfigValueWebserver.sh "ASPUBLICIP" "${AS_PUBLIC_IP}"
+${HOME}/providerscripts/utilities/config/StoreConfigValueWebserver.sh "DBIP" "${DBIP}"
+${HOME}/providerscripts/utilities/config/StoreConfigValueWebserver.sh "DBPUBLICIP" "${DB_PUBLIC_IP}"
  
 /bin/echo "${0} `/bin/date`: Initiating the main build on webserver ${webserver_name}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 
