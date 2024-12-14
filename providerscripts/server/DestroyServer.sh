@@ -29,8 +29,8 @@ export HOME="`/bin/cat /home/homedir.dat`"
 
 server_ip="${1}"
 cloudhost="${2}"
-BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
-algorithm="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'ALGORITHM'`"
+BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
+algorithm="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'ALGORITHM'`"
 
 if ( [ "${3}" = "" ] )
 then
@@ -38,8 +38,8 @@ then
 else 
 	private_server_ip="${3}"
 fi
-SSH_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'SSHPORT'`"
-DB_PORT="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'DBPORT'`"
+SSH_PORT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SSHPORT'`"
+DB_PORT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DBPORT'`"
 
 
 if ( [ "`/bin/echo ${server_ip} | /bin/grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`" = "" ] )
@@ -72,7 +72,7 @@ if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
 	if ( [ "${server_ip}" != "" ] )
 	then
-		zone="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh 'REGION'`"
+		zone="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
 		server_name="`${HOME}/providerscripts/server/GetServerName.sh ${server_ip} ${cloudhost}`"
 		/bin/echo "Y" | /usr/bin/exo compute instance delete ${server_name} --zone ${zone} 
 
