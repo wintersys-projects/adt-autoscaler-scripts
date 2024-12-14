@@ -26,10 +26,10 @@ SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/ExtractConfigValue.sh '
 if ( [ ! -f ${HOME}/runtime/KNICKERS_ARE_UP ] )
 then
 	firewall=""
-	if ( [ "`${HOME}/providerscripts/utilities/ExtractBuildStyleValues.sh "FIREWALL" | /usr/bin/awk -F':' '{print $NF}'`" = "ufw" ] )
+	if ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "FIREWALL" | /usr/bin/awk -F':' '{print $NF}'`" = "ufw" ] )
 	then
 		firewall="ufw"
-	elif ( [ "`${HOME}/providerscripts/utilities/ExtractBuildStyleValues.sh "FIREWALL" | /usr/bin/awk -F':' '{print $NF}'`" = "iptables" ] )
+	elif ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "FIREWALL" | /usr/bin/awk -F':' '{print $NF}'`" = "iptables" ] )
 	then
  		firewall="iptables"
 	fi
