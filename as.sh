@@ -128,7 +128,7 @@ fi
 /usr/bin/git config --global pull.rebase false 
 
 #Set the hostname of this machine
-. ${HOME}/providerscripts/utilities/InitialiseHostname.sh
+. ${HOME}/providerscripts/utilities/housekeeping/InitialiseHostname.sh
 
 #Some kernel safeguards
 /bin/echo "vm.panic_on_oom=1
