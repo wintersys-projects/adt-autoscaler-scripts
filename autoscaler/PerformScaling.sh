@@ -85,7 +85,7 @@ then
 		/bin/echo "${0} `/bin/date`: Authorising post reboot scaling" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 		/bin/touch ${HOME}/runtime/AUTHORISED_TO_SCALE  
 		/bin/rm ${HOME}/runtime/NOT_AUTHORISED_TO_SCALE
-		${HOME}/providerscripts/utilities/ShutdownThisAutoscaler.sh "reboot"
+		${HOME}/providerscripts/utilities/housekeeping/ShutdownThisAutoscaler.sh "reboot"
 	fi
 fi
 
@@ -274,5 +274,5 @@ then
 	fi   
 		
 	/bin/echo "${0} `/bin/date`: Rebooting autoscaler before next scaling event for hygiene reasons" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-	${HOME}/providerscripts/utilities/ShutdownThisAutoscaler.sh "reboot"  
+	${HOME}/providerscripts/utilities/housekeeping/ShutdownThisAutoscaler.sh "reboot"  
 fi
