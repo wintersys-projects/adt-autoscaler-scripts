@@ -78,7 +78,7 @@ endit ()
    
 	if ( [ "`/bin/ls -l ${HOME}/runtime/INITIALLY_PROVISIONING* 2>/dev/null`" = "" ] )
 	then  
-		autoscalerip="`${HOME}/providerscripts/utilities/GetPublicIP.sh`"
+		autoscalerip="`${HOME}/providerscripts/utilities/processing/GetPublicIP.sh`"
 		if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beingbuiltips/*" | /bin/grep ${down_ip}`" = "" ] || [ "`/usr/bin/find ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${ip} -mmin +30`" != "" ] )
 		then
 			/bin/echo "Ending server with ip address ${down_ip}"
