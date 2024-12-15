@@ -24,7 +24,7 @@
 #############################################################################################
 #set -x
 
-if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh INSTALLMONITORINGGEAR:1`" = "1" ] )
+if ( [ "`${HOME}/providerscripts/utilities/config/CheckConfigValue.sh INSTALLMONITORINGGEAR:1`" = "1" ] )
 then
 
         CLOUDHOST="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
