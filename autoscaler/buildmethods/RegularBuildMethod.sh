@@ -87,7 +87,7 @@ fi
 
 /usr/bin/scp -i ${BUILD_KEY} ${OPTIONS} ${BUILD_KEY} ${SERVER_USER}@${private_ip}:/home/${SERVER_USER}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY
 /usr/bin/scp -i ${BUILD_KEY} ${OPTIONS} ${HOME}/providerscripts/git/GitRemoteInstall.sh ${SERVER_USER}@${private_ip}:/home/${SERVER_USER}
-git_provider_domain="`${HOME}/providerscripts/git/GitProviderDomain.sh`"
+git_provider_domain="`${HOME}/providerscripts/git/GitProviderDomain.sh ${INFRASTRUCTURE_REPOSITORY_PROVIDER}`"
 count="0"
 while ( [ "`/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} /bin/ls /home/${SERVER_USER}/ws.sh" 2>/dev/null`" = "" ] && [ "${count}" -lt "5" ] )
 do
