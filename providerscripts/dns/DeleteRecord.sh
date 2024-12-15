@@ -67,7 +67,7 @@ fi
 
 record_id="${2}"
 dns="${5}"
-domainurl="`${home}/providerscripts/utilities/ExtractConfigValue.sh 'WEBSITEURL' | /usr/bin/cut -d'.' -f2-`"
+domainurl="`${home}/providerscripts/utilities/config/ExtractConfigValue.sh 'WEBSITEURL' | /usr/bin/cut -d'.' -f2-`"
 
 if ( [ "${dns}" = "vultr" ] )
 then
