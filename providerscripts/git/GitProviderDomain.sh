@@ -1,3 +1,5 @@
+set -x
+
 if ( [ "${INFRASTRUCTURE_REPOSITORY_PROVIDER}" = "github" ] )
 then
     /bin/echo "github.com"
