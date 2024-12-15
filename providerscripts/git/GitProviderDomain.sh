@@ -1,14 +1,17 @@
 set -x
+infrastructure_repository_provider="${1}"
 
-if ( [ "${INFRASTRUCTURE_REPOSITORY_PROVIDER}" = "github" ] )
+if ( [ "${infrastructure_repository_provider}" = "github" ] )
 then
     /bin/echo "github.com"
 fi
-if ( [ "${INFRASTRUCTURE_REPOSITORY_PROVIDER}" = "bitbucket" ] )
+
+if ( [ "${infrastructure_repository_provider}" = "bitbucket" ] )
 then
     /bin/echo "bitbucket.org"
 fi
-if ( [ "${INFRASTRUCTURE_REPOSITORY_PROVIDER}" = "gitlab" ] )
+
+if ( [ "${infrastructure_repository_provider}" = "gitlab" ] )
 then
     /bin/echo "gitlab.com"
 fi
