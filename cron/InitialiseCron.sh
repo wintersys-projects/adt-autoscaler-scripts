@@ -33,7 +33,7 @@
 /bin/echo "*/1 * * * * export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/processing/RefreshAutoscalerForSnapshot.sh" >> /var/spool/cron/crontabs/root
 
 #These scripts are set to run every 5 minutes
-/bin/echo "*/5 * * * * export HOME="${HOMEDIR}" && ${HOME}/security/MonitorFirewall.sh" >> /var/spool/cron/crontabs/root
+/bin/echo "*/5 * * * * export HOME="${HOMEDIR}" && /bin/sleep 23 && ${HOME}/security/MonitorFirewall.sh" >> /var/spool/cron/crontabs/root
 /bin/echo "*/5 * * * * export HOME="${HOMEDIR}" && ${HOME}/autoscaler/RecordNumberOfWebserversRunning.sh" >> /var/spool/cron/crontabs/root
 
 #This script will run every 10 minutes
