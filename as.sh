@@ -134,8 +134,6 @@ fi
 /bin/echo "vm.panic_on_oom=1
 kernel.panic=10" >> /etc/sysctl.conf
 
-${HOME}/security/SetupFirewall.sh
-
 if ( [ "`/bin/grep '^#Port' /etc/ssh/sshd_config`" != "" ] || [ "`/bin/grep '^Port' /etc/ssh/sshd_config`" != "" ] )
 then
 	/bin/sed -i "s/^Port.*/Port ${SSH_PORT}/g" /etc/ssh/sshd_config
@@ -175,6 +173,8 @@ ClientAliveCountMax 10" >> /etc/ssh/sshd_config
 fi
 
 ${HOME}/providerscripts/utilities/processing/RunServiceCommand.sh ssh restart
+
+${HOME}/security/SetupFirewall.sh
 
 #Install the programs that we need to use when building the autoscaler
 
