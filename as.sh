@@ -174,8 +174,6 @@ fi
 
 ${HOME}/providerscripts/utilities/processing/RunServiceCommand.sh ssh restart
 
-${HOME}/security/SetupFirewall.sh
-
 #Install the programs that we need to use when building the autoscaler
 
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
