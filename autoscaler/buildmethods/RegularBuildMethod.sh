@@ -136,5 +136,5 @@ then
 	/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO}  ${HOME}/ws.sh 'bimonthly' ${SERVER_USER}"
 fi
 
-/usr/bin/ssh -i ${BUILD_KEY} -p ${SSH_PORT} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO}  /usr/sbin/shutdown -r now"
+#/usr/bin/ssh -i ${BUILD_KEY} -p ${SSH_PORT} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO}  /usr/sbin/shutdown -r now"
 
