@@ -22,12 +22,12 @@
 
 if ( [ -f ${HOME}/runtime/FIREWALL-ACTIVE ] )
 then
-	exit
+        exit
 fi
 
 if ( [ ! -d ${HOME}/logs/firewall ] )
 then
-	/bin/mkdir -p ${HOME}/logs/firewall
+        /bin/mkdir -p ${HOME}/logs/firewall
 fi
 
 #if ( [ ! -f ${HOME}/runtime/AUTOSCALER_READY ] )
@@ -41,7 +41,7 @@ fi
 
 if ( [ "`${HOME}/providerscripts/utilities/config/CheckConfigValue.sh ACTIVEFIREWALLS:1`" = "0" ] && [ "`${HOME}/providerscripts/utilities/config/CheckConfigValue.sh ACTIVEFIREWALLS:3`" = "0" ] )
 then
-	exit
+        exit
 fi
 
 firewall=""
@@ -55,11 +55,11 @@ fi
 
 if ( [ "${firewall}" = "ufw" ] && [ ! -f ${HOME}/runtime/FIREWALL-ACTIVE ] )
 then
-	/usr/sbin/ufw reset
-  	/usr/sbin/ufw delete allow 22/tcp
- 	/bin/sed -i "s/IPV6=yes/IPV6=no/g" /etc/default/ufw
+        /usr/bin/yes | /usr/sbin/ufw reset
+        /usr/sbin/ufw delete allow 22/tcp
+        /bin/sed -i "s/IPV6=yes/IPV6=no/g" /etc/default/ufw
         /usr/sbin/ufw logging off
-	/usr/sbin/ufw reload
+        /usr/sbin/ufw reload
 fi
 
 
@@ -67,7 +67,7 @@ SSH_PORT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SSHPO
 CLOUDHOST="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
 VPC_IP_RANGE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'VPCIPRANGE'`"
 
-. ${HOME}/providerscripts/utilities/SetupInfrastructureIPs.sh
+. ${HOME}/providerscripts/utilities/housekeeping/SetupInfrastructureIPs.sh
 
 SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
 
@@ -75,16 +75,16 @@ ${HOME}/security/KnickersUp.sh
 
 updated="0"
 
-if ( [ "`${HOME}/providerscripts/utilities/CheckConfigValue.sh BUILDMACHINEVPC:0`" = "1" ] )
+if ( [ "`${HOME}/providerscripts/utilities/config/CheckConfigValue.sh BUILDMACHINEVPC:0`" = "1" ] )
 then
-	if ( [ "${firewall}" = "ufw" ] )
-	then
-		if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${BUILD_CLIENT_IP} | /bin/grep ALLOW`" = "" ] )
-		then
-			/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${BUILD_CLIENT_IP} to any port ${SSH_PORT}
-			/bin/sleep 5
-			updated="1"
-		fi
+        if ( [ "${firewall}" = "ufw" ] )
+        then
+                if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${BUILD_CLIENT_IP} | /bin/grep ALLOW`" = "" ] )
+                then
+                        /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${BUILD_CLIENT_IP} to any port ${SSH_PORT}
+                        /bin/sleep 5
+                        updated="1"
+                fi
         elif ( [ "${firewall}" = "iptables" ] )
         then
                 if ( [ "`/usr/sbin/iptables --list-rules | /bin/grep ACCEPT | /bin/grep ${SSH_PORT} | /bin/grep ${BUILD_CLIENT_IP}`" = "" ] )
@@ -99,20 +99,20 @@ fi
 
 if ( [ "${firewall}" = "ufw" ] )
 then
-	if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep "${VPC_IP_RANGE}" | /bin/grep ALLOW`" = "" ] )
-   	then
-		/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${VPC_IP_RANGE} to any port ${SSH_PORT}
-		/bin/sleep 5
-		updated="1"
-	fi
+        if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep "${VPC_IP_RANGE}" | /bin/grep ALLOW`" = "" ] )
+        then
+                /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${VPC_IP_RANGE} to any port ${SSH_PORT}
+                /bin/sleep 5
+                updated="1"
+        fi
 elif ( [ "${firewall}" = "iptables" ] )
 then
-	if ( [ "`/usr/sbin/iptables --list-rules | /bin/grep ACCEPT | /bin/grep ${SSH_PORT} | /bin/grep ${VPC_IP_RANGE}`" = "" ] )
-	then
-		/usr/sbin/iptables -I INPUT -s ${VPC_IP_RANGE} -p tcp --dport ${SSH_PORT} -j ACCEPT
-		/usr/sbin/iptables -I INPUT -s ${VPC_IP_RANGE} -p ICMP --icmp-type 8 -j ACCEPT
-		updated="1"
-	fi
+        if ( [ "`/usr/sbin/iptables --list-rules | /bin/grep ACCEPT | /bin/grep ${SSH_PORT} | /bin/grep ${VPC_IP_RANGE}`" = "" ] )
+        then
+                /usr/sbin/iptables -I INPUT -s ${VPC_IP_RANGE} -p tcp --dport ${SSH_PORT} -j ACCEPT
+                /usr/sbin/iptables -I INPUT -s ${VPC_IP_RANGE} -p ICMP --icmp-type 8 -j ACCEPT
+                updated="1"
+        fi
 fi
 
 
@@ -128,14 +128,14 @@ fi
 
 #if ( [ "${CLOUDHOST}" = "digitalocean" ] )
 #then
-#	if ( [ "${firewall}" = "ufw" ] )
-#	then
-#   		if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep "10.116.0.0/24" | /bin/grep ALLOW`" = "" ] )
- #  		then
-#			/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from 10.116.0.0/24 to any port ${SSH_PORT}
-#			/bin/sleep 5
-#			updated="1"
-#		fi
+#       if ( [ "${firewall}" = "ufw" ] )
+#       then
+#               if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep "10.116.0.0/24" | /bin/grep ALLOW`" = "" ] )
+ #              then
+#                       /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from 10.116.0.0/24 to any port ${SSH_PORT}
+#                       /bin/sleep 5
+#                       updated="1"
+#               fi
  #       elif ( [ "${firewall}" = "iptables" ] )
   #      then
   #              if ( [ "`/usr/sbin/iptables --list-rules | /bin/grep ACCEPT | /bin/grep ${SSH_PORT} | /bin/grep 10.116.0.0`" = "" ] )
@@ -149,14 +149,14 @@ fi
 
 #if ( [ "${CLOUDHOST}" = "exoscale" ] )
 #then
-#	if ( [ "${firewall}" = "ufw" ] )
-#	then
- #  		if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep "10.0.0.0/24" | /bin/grep ALLOW`" = "" ] )
-  # 		then
-#			/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from 10.0.0.0/24 to any port ${SSH_PORT}
-#			/bin/sleep 5
-#			updated="1"
-#		fi
+#       if ( [ "${firewall}" = "ufw" ] )
+#       then
+ #              if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep "10.0.0.0/24" | /bin/grep ALLOW`" = "" ] )
+  #             then
+#                       /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from 10.0.0.0/24 to any port ${SSH_PORT}
+#                       /bin/sleep 5
+#                       updated="1"
+#               fi
  #       elif ( [ "${firewall}" = "iptables" ] )
   #      then
    #             if ( [ "`/usr/sbin/iptables --list-rules | /bin/grep ACCEPT | /bin/grep ${SSH_PORT} | /bin/grep 10.0.0.0`" = "" ] )
@@ -170,14 +170,14 @@ fi
 
 #if ( [ "${CLOUDHOST}" = "linode" ] )
 #then
-#	if ( [ "${firewall}" = "ufw" ] )
-#	then
- #  		if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep "10.0.1.0/24" | /bin/grep ALLOW`" = "" ] )
-  # 		then
-#			/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from 10.0.1.0/24 to any port ${SSH_PORT}
-#			/bin/sleep 5
-#			updated="1"
-#		fi
+#       if ( [ "${firewall}" = "ufw" ] )
+#       then
+ #              if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep "10.0.1.0/24" | /bin/grep ALLOW`" = "" ] )
+  #             then
+#                       /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from 10.0.1.0/24 to any port ${SSH_PORT}
+#                       /bin/sleep 5
+#                       updated="1"
+#               fi
  #       elif ( [ "${firewall}" = "iptables" ] )
   #      then
    #             if ( [ "`/usr/sbin/iptables --list-rules | /bin/grep ACCEPT | /bin/grep ${SSH_PORT} | /bin/grep 10.0.1.0`" = "" ] )
@@ -191,14 +191,14 @@ fi
 
 #if ( [ "${CLOUDHOST}" = "vultr" ] )
 #then
-#	if ( [ "${firewall}" = "ufw" ] )
-#	then
-#		if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep "192.168.0.0/16" | /bin/grep ALLOW`" = "" ] )
-#		then
-#			/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from 192.168.0.0/16 to any port ${SSH_PORT}
-#			/bin/sleep 5
-#			updated="1"
-#		fi
+#       if ( [ "${firewall}" = "ufw" ] )
+#       then
+#               if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep "192.168.0.0/16" | /bin/grep ALLOW`" = "" ] )
+#               then
+#                       /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from 192.168.0.0/16 to any port ${SSH_PORT}
+#                       /bin/sleep 5
+#                       updated="1"
+#               fi
  #       elif ( [ "${firewall}" = "iptables" ] )
   #      then
    #             if ( [ "`/usr/sbin/iptables --list-rules | /bin/grep ACCEPT | /bin/grep ${SSH_PORT} | /bin/grep 192.168.0.0`" = "" ] )
@@ -216,7 +216,7 @@ then
         then
                 /usr/sbin/ufw -f enable
                 /usr/sbin/ufw reload
-		${HOME}/providerscripts/utilities/processing/RunServiceCommand.sh networking restart
+                ${HOME}/providerscripts/utilities/processing/RunServiceCommand.sh networking restart
         elif ( [ "${firewall}" = "iptables" ] )
         then
                 ${HOME}/providerscripts/utilities/processing/RunServiceCommand.sh netfilter-persistent save
