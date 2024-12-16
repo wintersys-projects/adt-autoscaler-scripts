@@ -307,4 +307,4 @@ ${HOME}/providerscripts/email/SendEmail.sh "A NEW AUTOSCALER HAS BEEN SUCCESSFUL
 
 /bin/touch ${HOME}/runtime/AUTOSCALER_READY
 
-/usr/sbin/shutdown -r now
+#/usr/sbin/shutdown -r now
