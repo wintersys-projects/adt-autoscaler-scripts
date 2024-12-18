@@ -18,6 +18,8 @@ ${HOME}/installscripts/InstallCurl.sh ${BUILDOS}
 ${HOME}/installscripts/InstallSSHPass.sh ${BUILDOS}
 >&2 /bin/echo "${0} InstallBC.sh"
 ${HOME}/installscripts/InstallBC.sh ${BUILDOS}
+>&2 /bin/echo "${0} InstallNetworkManager.sh"
+${HOME}/installscripts/InstallNetworkManager.sh ${BUILDOS}
 >&2 /bin/echo "${0} InstallJQ.sh"
 ${HOME}/installscripts/InstallJQ.sh ${BUILDOS}
 >&2 /bin/echo "${0} InstallSendEmail.sh"
