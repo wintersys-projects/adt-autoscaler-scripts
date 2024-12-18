@@ -27,8 +27,8 @@ then
 
         if ( [ "${delimiters}" -gt "1" ] )
         then
-                /bin/grep -a "^${1}:" ${HOME}/.ssh/autoscaler_configuration_settings.dat | /usr/bin/cut -d ":" -f2-
+                /bin/grep -a "^${1}:" ${HOME}/.ssh/autoscaler_configuration_settings.dat | /usr/bin/cut -d ":" -f2- | /bin/sed '/^$/d'
         else
-                /bin/grep -a "^${1}:" ${HOME}/.ssh/autoscaler_configuration_settings.dat | /usr/bin/awk -F':' '{print $NF}'
+                /bin/grep -a "^${1}:" ${HOME}/.ssh/autoscaler_configuration_settings.dat | /usr/bin/awk -F':' '{print $NF}'  | /bin/sed '/^$/d'
         fi
 fi
