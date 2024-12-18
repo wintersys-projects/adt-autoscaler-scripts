@@ -24,6 +24,9 @@
 USER_HOME="`/usr/bin/awk -F: '{ print $1}' /etc/passwd | /bin/grep "X*X"`"
 export HOME="/home/${USER_HOME}" | /usr/bin/tee -a ~/.bashrc
 
+/bin/echo "set mouse=r
+syntax on" > /root/.vimrc
+
 #Set the permissions as we want for all the autoscaler infrastructure scripts that we are using
 /usr/bin/find ${HOME} -not -path '*/\.*' -type d -print0 | xargs -0 chmod 0755 # for directories
 /usr/bin/find ${HOME} -not -path '*/\.*' -type f -print0 | xargs -0 chmod 0500 # for files
