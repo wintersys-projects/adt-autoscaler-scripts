@@ -26,17 +26,7 @@ then
 	/usr/sbin/dhclient 1>/dev/null 2>/dev/null
 fi
 
-IP="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'MYIP'`"
-
-if ( [ "`/usr/bin/hostname -I | /bin/grep ${IP}`" = "" ] )
-then
-	IP="`/usr/bin/hostname -I | /usr/bin/awk '{print $1}'`"
- 	if ( [ "`/usr/bin/ip a | /bin/grep ${IP}`" = "" ] )
-	then
- 		IP="`/usr/bin/ip route get 1.2.3.4 | awk '{print $7}' | /bin/sed "/^$/d"`"
-   	fi
-	${HOME}/providerscripts/utilities/config/StoreConfigValue.sh 'MYIP' "${IP}"
-fi
-
-/bin/echo ${IP}
+private_ip_anchor="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'VPCIPRANGE' | /usr/bin/awk -F'.' '{print $1}'`"
+/usr/bin/nmcli -p device show | grep "IP4\.ADDRESS\[1\]" | /usr/bin/awk '{print $NF}' | /bin/grep "^${private_ip_anchor}\." | /bin/sed "s,/.*,," 
+${HOME}/providerscripts/utilities/config/StoreConfigValue.sh 'MYIP' "${IP}"
 
