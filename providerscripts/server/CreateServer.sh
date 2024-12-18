@@ -31,7 +31,6 @@ server_name="${2}"
 
 CLOUDHOST="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
 BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
-SNAPSHOT_ID=""
 SNAPSHOT_ID="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'WEBSERVERIMAGEID'`"
 BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
 BUILDOS_VERSION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOSVERSION'`"
@@ -53,7 +52,7 @@ then
         vpc_id="`/usr/local/bin/doctl vpcs list -o json | /usr/bin/jq -r '.[] | select (.region == "'${REGION}'") | select (.name == "adt-vpc").id'`"
         firewall_id="`/usr/local/bin/doctl -o json compute firewall list | /usr/bin/jq -r '.[] | select (.name == "adt-webserver-'${BUILD_IDENTIFIER}'" ).id'`"
         #Digital ocean supports snapshots so, we test to see if we want to use them
-        if ( [ "S{SNAPSHOT_ID}" != "" ] )
+        if ( [ "${SNAPSHOT_ID}" != "" ] )
         then
                 #If we get to here, then we are building from a snapshot and we pass the SNAPSHOT_ID in as the oschoice parameter
                 OS_CHOICE="${SNAPSHOT_ID}"
