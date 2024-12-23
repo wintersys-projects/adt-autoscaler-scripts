@@ -22,7 +22,7 @@
 
 export HOME="`/bin/cat /home/homedir.dat`"
 
-key_value="`/bin/grep -a "^${1}" ${HOME}/.ssh/buildstyles.dat`"
+key_value="`/bin/grep -a "^${1}" ${HOME}/runtime/buildstyles.dat`"
 
 if ( [ "${key_value}" != "" ] )
 then
