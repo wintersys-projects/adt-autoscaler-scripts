@@ -21,12 +21,12 @@
 
 export HOME="`/bin/cat /home/homedir.dat`"
 
-if ( [ ! -f ${HOME}/.ssh/autoscaler_configuration_settings.dat ] )
+if ( [ ! -f ${HOME}/runtime/autoscaler_configuration_settings.dat ] )
 then
    exit
 fi
 
-/bin/sed -i '/:/!d' ${HOME}/.ssh/autoscaler_configuration_settings.dat
+/bin/sed -i '/:/!d' ${HOME}/runtime/autoscaler_configuration_settings.dat
 
 if ( [ "${1}" != "" ] && [ "${2}" != "" ] )
 then
