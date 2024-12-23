@@ -23,12 +23,12 @@ export HOME="`/bin/cat /home/homedir.dat`"
 
 if ( [ "${1}" != "" ] )
 then
-        delimiters=`/bin/grep -a "^${1}:" ${HOME}/.ssh/autoscaler_configuration_settings.dat | /bin/grep -o ':' | /bin/grep -c ':'`
+        delimiters=`/bin/grep -a "^${1}:" ${HOME}/runtime/autoscaler_configuration_settings.dat | /bin/grep -o ':' | /bin/grep -c ':'`
 
         if ( [ "${delimiters}" -gt "1" ] )
         then
-                /bin/grep -a "^${1}:" ${HOME}/.ssh/autoscaler_configuration_settings.dat | /usr/bin/cut -d ":" -f2- | /bin/sed '/^$/d'
+                /bin/grep -a "^${1}:" ${HOME}/runtime/autoscaler_configuration_settings.dat | /usr/bin/cut -d ":" -f2- | /bin/sed '/^$/d'
         else
-                /bin/grep -a "^${1}:" ${HOME}/.ssh/autoscaler_configuration_settings.dat | /usr/bin/awk -F':' '{print $NF}'  | /bin/sed '/^$/d'
+                /bin/grep -a "^${1}:" ${HOME}/runtime/autoscaler_configuration_settings.dat | /usr/bin/awk -F':' '{print $NF}'  | /bin/sed '/^$/d'
         fi
 fi
