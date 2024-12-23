@@ -25,8 +25,8 @@ export HOME="`/bin/cat /home/homedir.dat`"
 
 if ( [ "${1}" != "" ] && [ "${2}" = "stripped" ] )
 then
-	/bin/grep -a "^${1}:" ${HOME}/.ssh/buildstyles.dat | /usr/bin/awk -F':' '{$1=""; print $0}' | /bin/sed 's/^ //g' | /bin/sed 's/ $//g'
+	/bin/grep -a "^${1}:" ${HOME}/runtime/buildstyles.dat | /usr/bin/awk -F':' '{$1=""; print $0}' | /bin/sed 's/^ //g' | /bin/sed 's/ $//g'
 elif ( [ "${1}" != "" ] && [ "${2}" != "stripped" ] )
 then 
-	/bin/grep -a "^${1}:" ${HOME}/.ssh/buildstyles.dat
+	/bin/grep -a "^${1}:" ${HOME}/runtime/buildstyles.dat
 fi
