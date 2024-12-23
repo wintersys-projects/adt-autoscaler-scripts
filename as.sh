@@ -95,7 +95,7 @@ if ( [ -f ${HOME}/.ssh/webserver_configuration_settings.dat ] )
 then
 	/bin/cp ${HOME}/.ssh/webserver_configuration_settings.dat ${HOME}/runtime/webserver_configuration_settings.dat
  	/bin/chown root:root ${HOME}/runtime/webserver_configuration_settings.dat
- 	/bin/chmod 400 ${HOME}/runtime/webserver_configuration_settings.dat
+ 	/bin/chmod 640 ${HOME}/runtime/webserver_configuration_settings.dat
   	/bin/mv ${HOME}/.ssh/webserver_configuration_settings.dat ${HOME}/.ssh/webserver_configuration_settings.dat.original
 fi
 
@@ -103,7 +103,7 @@ if ( [ -f ${HOME}/.ssh/buildstyles.dat ] )
 then
 	/bin/cp ${HOME}/.ssh/buildstyles.dat ${HOME}/runtime/buildstyles.dat
  	/bin/chown root:root ${HOME}/runtime/buildstyles.dat
- 	/bin/chmod 400 ${HOME}/runtime/buildstyles.dat
+ 	/bin/chmod 540 ${HOME}/runtime/buildstyles.dat
   	/bin/mv ${HOME}/.ssh/buildstyles.dat ${HOME}/.ssh/buildstyles.dat.original
 fi
 
