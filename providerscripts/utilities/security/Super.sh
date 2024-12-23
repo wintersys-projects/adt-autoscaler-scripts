@@ -20,7 +20,7 @@
 #############################################################################################
 export HOME="`/bin/cat /home/homedir.dat`"
 
-/bin/grep SERVERUSERPASSWORD ${HOME}/.ssh/autoscaler_configuration_settings.dat | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/sudo -S /bin/echo "Going Super hold on to your hat" 
+/bin/grep SERVERUSERPASSWORD ${HOME}/runtime/autoscaler_configuration_settings.dat | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/sudo -S /bin/echo "Going Super hold on to your hat" 
 
 /bin/echo
 /bin/echo
