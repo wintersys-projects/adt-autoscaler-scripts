@@ -88,6 +88,15 @@ then
 	/bin/cp ${HOME}/.ssh/autoscaler_configuration_settings.dat ${HOME}/runtime/autoscaler_configuration_settings.dat
  	/bin/chown root:root ${HOME}/runtime/autoscaler_configuration_settings.dat
  	/bin/chmod 400 ${HOME}/runtime/autoscaler_configuration_settings.dat
+  	/bin/mv ${HOME}/.ssh/autoscaler_configuration_settings.dat ${HOME}/.ssh/autoscaler_configuration_settings.dat.original
+fi
+
+if ( [ -f ${HOME}/.ssh/webserver_configuration_settings.dat ] )
+then
+	/bin/cp ${HOME}/.ssh/webserver_configuration_settings.dat ${HOME}/runtime/webserver_configuration_settings.dat
+ 	/bin/chown root:root ${HOME}/runtime/webserver_configuration_settings.dat
+ 	/bin/chmod 400 ${HOME}/runtime/webserver_configuration_settings.dat
+  	/bin/mv ${HOME}/.ssh/webserver_configuration_settings.dat ${HOME}/.ssh/webserver_configuration_settings.dat.original
 fi
 #Load the parts of the configuration that we need into memory
 WEBSITE_URL="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'WEBSITEURL'`"
