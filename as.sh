@@ -104,7 +104,7 @@ then
 	/bin/cp ${HOME}/.ssh/buildstyles.dat ${HOME}/runtime/buildstyles.dat
  	/bin/chown root:root ${HOME}/runtime/buildstyles.dat
  	/bin/chmod 400 ${HOME}/runtime/buildstyles.dat
-  	/bin/mv ${HOME}/.ssh/buildstyles.dat ${HOME}/runtime/buildstyles.dat
+  	/bin/mv ${HOME}/.ssh/buildstyles.dat ${HOME}/.ssh/buildstyles.dat.original
 fi
 
 #Load the parts of the configuration that we need into memory
