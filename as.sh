@@ -68,6 +68,27 @@ exec 2>>${HOME}/logs/${err_file}
 /bin/echo "${0} `/bin/date`: Setting up the build parameters" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 
+
+#Create the config directories, these will be mounted from the autoscaler to the other server types - DB, WS and Images Servers
+if ( [ ! -d ${HOME}/.ssh ] )
+then
+	/bin/mkdir ${HOME}/.ssh
+	/bin/chmod 700 ${HOME}/.ssh
+fi
+
+if ( [ ! -d ${HOME}/runtime ] )
+then
+	/bin/mkdir -p ${HOME}/runtime
+	/bin/chown ${SERVER_USER}:${SERVER_USER} ${HOME}/runtime
+	/bin/chmod 755 ${HOME}/runtime
+fi
+
+if ( [ -f ${HOME}/.ssh/autoscaler_configuration_settings.dat ] )
+then
+	/bin/cp ${HOME}/.ssh/autoscaler_configuration_settings.dat ${HOME}/runtime/autoscaler_configuration_settings.dat
+ 	/bin/chown root:root ${HOME}/runtime/autoscaler_configuration_settings.dat
+ 	/bin/chmod 400 ${HOME}/runtime/autoscaler_configuration_settings.dat
+fi
 #Load the parts of the configuration that we need into memory
 WEBSITE_URL="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'WEBSITEURL'`"
 CLOUDHOST="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
@@ -110,19 +131,6 @@ WEBSITE_NAME="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{print $2}'`"
 /bin/echo "DNS_SECURITY_KEY:${DNS_SECURITY_KEY}" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 /bin/echo "##################BUILD ENVIRONMENT SETTINGS#######################" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 
-#Create the config directories, these will be mounted from the autoscaler to the other server types - DB, WS and Images Servers
-if ( [ ! -d ${HOME}/.ssh ] )
-then
-	/bin/mkdir ${HOME}/.ssh
-	/bin/chmod 700 ${HOME}/.ssh
-fi
-
-if ( [ ! -d ${HOME}/runtime ] )
-then
-	/bin/mkdir -p ${HOME}/runtime
-	/bin/chown ${SERVER_USER}:${SERVER_USER} ${HOME}/runtime
-	/bin/chmod 755 ${HOME}/runtime
-fi
 
 #Initialise Git
 /usr/bin/git config --global user.name "${GIT_USER}"
