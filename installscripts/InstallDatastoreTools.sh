@@ -1,8 +1,9 @@
 #!/bin/sh
-####################################################################################
-# Description: Install the tools for manipulating the Datastores
+###################################################################################
+# Description: This script installs the CLI database client for our database. This
+# enables scripts to connect to the database from the command line as they need to.
 # Author: Peter Winter
-# Date :  9/4/2016
+# Date: 08/01/2017
 ###################################################################################
 # License Agreement:
 # This file is part of The Agile Deployment Toolkit.
@@ -16,84 +17,18 @@
 # GNU General Public License for more details.
 # You should have received a copy of the GNU General Public License
 # along with The Agile Deployment Toolkit.  If not, see <http://www.gnu.org/licenses/>.
-####################################################################################
-####################################################################################
+###################################################################################
+###################################################################################
 #set -x
 
 BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
 
-apt=""
-if ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt" ] )
+if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
 then
-	apt="/usr/bin/apt-get"
-elif ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt-fast" ] )
-then
-	apt="/usr/sbin/apt-fast"
+	${HOME}/installscripts/InstallS3CMD.sh ${BUILDOS}
 fi
 
-if ( [ "${apt}" != "" ] )
+if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ] )
 then
-	if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
- 	then
-		if ( [ "${BUILDOS}" = "ubuntu" ] )
-		then
-			DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install s3cmd	#####UBUNTU-S3CMD-REPO#####
-		fi
-
-		if ( [ "${BUILDOS}" = "debian" ] )
-		then
-			DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install s3cmd	#####DEBIAN-S3CMD-REPO#####
-		fi
-	elif ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ] )
- 	then
-  		if ( [ "${BUILDOS}" = "ubuntu" ] )
-		then
-  			if ( [ -d /root/scratch ] )								#####UBUNTU-S5CMD-REPO#####
-			then											#####UBUNTU-S5CMD-REPO#####
-        			/bin/rm -r /root/scratch/*							#####UBUNTU-S5CMD-REPO#####
-			else											#####UBUNTU-S5CMD-REPO#####
-        			/bin/mkdir /root/scratch							#####UBUNTU-S5CMD-REPO#####
-			fi											#####UBUNTU-S5CMD-REPO#####
-
-                        GOBIN=/root/scratch /usr/bin/go install github.com/peak/s5cmd/v2@latest                 #####UBUNTU-S5CMD-REPO#####
-			
-                        if ( [ -f /root/scratch/s5cmd ] )                                                       #####UBUNTU-S5CMD-REPO#####
-                        then                                                                                    #####UBUNTU-S5CMD-REPO#####
-                                /bin/mv /root/scratch/s5cmd /usr/bin/s5cmd                                      #####UBUNTU-S5CMD-REPO#####
-                        fi  											#####UBUNTU-S5CMD-REPO#####
-			
-     		  	if ( [ -d /root/scratch ] )								#####UBUNTU-S5CMD-REPO#####
-    			then											#####UBUNTU-S5CMD-REPO#####
-      				/bin/rm -r /root/scratch							#####UBUNTU-S5CMD-REPO#####
-	 		fi											#####UBUNTU-S5CMD-REPO#####
-       		fi	
-
-     		if ( [ "${BUILDOS}" = "debian" ] )
-		then
-  			if ( [ -d /root/scratch ] )			#####DEBIAN-S5CMD-REPO#####
-			then						#####DEBIAN-S5CMD-REPO#####
-        			/bin/rm -r /root/scratch/*		#####DEBIAN-S5CMD-REPO#####
-			else						#####DEBIAN-S5CMD-REPO#####
-        			/bin/mkdir /root/scratch		#####DEBIAN-S5CMD-REPO#####
-			fi						#####DEBIAN-S5CMD-REPO#####
-
-                        GOBIN=/root/scratch /usr/bin/go install github.com/peak/s5cmd/v2@latest                 #####DEBIAN-S5CMD-REPO#####
-			
-                        if ( [ -f /root/scratch/s5cmd ] )                                                       #####DEBIAN-S5CMD-REPO#####
-                        then                                                                                    #####DEBIAN-S5CMD-REPO#####
-                                /bin/mv /root/scratch/s5cmd /usr/bin/s5cmd                                      #####DEBIAN-S5CMD-REPO#####
-                        fi 											#####DEBIAN-S5CMD-REPO#####
-			
-		  	if ( [ -d /root/scratch ] )								#####DEBIAN-S5CMD-REPO#####
-    			then											#####DEBIAN-S5CMD-REPO#####
-      				/bin/rm -r /root/scratch							#####DEBIAN-S5CMD-REPO#####
-	 		fi											#####DEBIAN-S5CMD-REPO#####
-  		fi	
-  	fi
-    	/bin/touch ${HOME}/runtime/installedsoftware/InstallDatastoreTools.sh	
-fi
-   
-if ( [ -f ${HOME}/.s3cfg ] )
-then
-	/bin/cp ${HOME}/.s3cfg /root
+	${HOME}/installscripts/InstallS5CMD.sh ${BUILDOS}
 fi
