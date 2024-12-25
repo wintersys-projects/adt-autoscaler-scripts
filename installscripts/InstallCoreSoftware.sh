@@ -43,4 +43,4 @@ ${HOME}/installscripts/InstallCloudhostTools.sh
 >&2 /bin/echo "${0} Installing Datastore tools"
 /bin/echo "${0} `/bin/date`: Installing Datastore tools" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 #Install the S3 compatible service we are using
-. ${HOME}/installscripts/InstallDatastoreTools.sh
+${HOME}/installscripts/InstallDatastoreTools.sh ${BUILDOS}
