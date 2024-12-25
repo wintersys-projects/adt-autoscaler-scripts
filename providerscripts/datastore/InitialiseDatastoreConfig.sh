@@ -115,7 +115,6 @@ then
 
         /bin/chown ${SERVER_USER}:${SERVER_USER} ${HOME}/.s5cfg
         /bin/cp ${HOME}/.s5cfg /root/.s5cfg
-      fi
 fi
 
 ${datastore_tool} mb s3://1$$agile 3>&1 2>/dev/null
