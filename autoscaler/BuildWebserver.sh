@@ -50,10 +50,12 @@ buildno="${1}"
 trap "cleanup ${buildno}" TERM
 start=`/bin/date +%s`
 
+SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
+
 if ( [ -f ${HOME}/.ssh/webserver_configuration_settings.dat ] && [ ! -f ${HOME}/runtime/webserver_configuration_settings.dat ] )
 then
 	/bin/cp ${HOME}/.ssh/webserver_configuration_settings.dat ${HOME}/runtime/webserver_configuration_settings.dat
- 	/bin/chown root:root ${HOME}/runtime/webserver_configuration_settings.dat
+ 	/bin/chown root:${SERVER_USER} ${HOME}/runtime/webserver_configuration_settings.dat
  	/bin/chmod 640 ${HOME}/runtime/webserver_configuration_settings.dat
   	/bin/mv ${HOME}/.ssh/webserver_configuration_settings.dat ${HOME}/.ssh/webserver_configuration_settings.dat.original
 fi
@@ -80,7 +82,6 @@ then
 	fi
 fi
 
-SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
 SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
 DEFAULT_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DEFAULTUSER'`"
 
