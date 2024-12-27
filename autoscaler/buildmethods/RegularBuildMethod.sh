@@ -99,7 +99,7 @@ done
 #Mark this as an autoscaled machine as distinct from one built during the initial build
 ${HOME}/providerscripts/utilities/config/StoreConfigValueWebserver.sh "AUTOSCALED" "1"
 
-/usr/bin/scp -i ${BUILD_KEY} ${OPTIONS} ${HOME}/.ssh/webserver_configuration_settings.dat ${HOME}/.ssh/buildstyles.dat ${SERVER_USER}@${private_ip}:${HOME}/.ssh/
+/usr/bin/scp -i ${BUILD_KEY} ${OPTIONS} ${HOME}/runtime/webserver_configuration_settings.dat ${HOME}/runtime/buildstyles.dat ${SERVER_USER}@${private_ip}:${HOME}/.ssh/
  
 #Configuration values
 ${HOME}/providerscripts/utilities/config/StoreConfigValueWebserver.sh "MYPUBLICIP" "${ip}"
