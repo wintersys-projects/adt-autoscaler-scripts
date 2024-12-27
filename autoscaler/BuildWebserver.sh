@@ -50,6 +50,14 @@ buildno="${1}"
 trap "cleanup ${buildno}" TERM
 start=`/bin/date +%s`
 
+if ( [ -f ${HOME}/.ssh/webserver_configuration_settings.dat ] && [ ! -f ${HOME}/runtime/webserver_configuration_settings.dat ] )
+then
+	/bin/cp ${HOME}/.ssh/webserver_configuration_settings.dat ${HOME}/runtime/webserver_configuration_settings.dat
+ 	/bin/chown root:root ${HOME}/runtime/webserver_configuration_settings.dat
+ 	/bin/chmod 640 ${HOME}/runtime/webserver_configuration_settings.dat
+  	/bin/mv ${HOME}/.ssh/webserver_configuration_settings.dat ${HOME}/.ssh/webserver_configuration_settings.dat.original
+fi
+
 ASIP="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'ASIP'`"
 if ( [ "${ASIP}" = "" ] )
 then 
