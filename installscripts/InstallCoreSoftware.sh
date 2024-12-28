@@ -9,37 +9,37 @@ fi
 >&2 /bin/echo "${0} UpdateAndUpgrade.sh"
 ${HOME}/installscripts/UpdateAndUpgrade.sh ${BUILDOS}
 >&2 /bin/echo "${0} InstallGo.sh"
-${HOME}/installscripts/InstallGo.sh ${BUILDOS}
+${HOME}/installscripts/InstallGo.sh ${BUILDOS} &
 >&2 /bin/echo "${0} InstallFirewall.sh"
-${HOME}/installscripts/InstallFirewall.sh ${BUILDOS}
+${HOME}/installscripts/InstallFirewall.sh ${BUILDOS} &
 >&2 /bin/echo "${0} InstallCurl.sh"
-${HOME}/installscripts/InstallCurl.sh ${BUILDOS}
+${HOME}/installscripts/InstallCurl.sh ${BUILDOS} &
 >&2 /bin/echo "${0} InstallSSHPass.sh"
-${HOME}/installscripts/InstallSSHPass.sh ${BUILDOS}
+${HOME}/installscripts/InstallSSHPass.sh ${BUILDOS} &
 >&2 /bin/echo "${0} InstallBC.sh"
-${HOME}/installscripts/InstallBC.sh ${BUILDOS}
+${HOME}/installscripts/InstallBC.sh ${BUILDOS} &
 >&2 /bin/echo "${0} InstallNetworkManager.sh"
-${HOME}/installscripts/InstallNetworkManager.sh ${BUILDOS}
+${HOME}/installscripts/InstallNetworkManager.sh ${BUILDOS} &
 >&2 /bin/echo "${0} InstallJQ.sh"
-${HOME}/installscripts/InstallJQ.sh ${BUILDOS}
+${HOME}/installscripts/InstallJQ.sh ${BUILDOS} &
 >&2 /bin/echo "${0} InstallSendEmail.sh"
-${HOME}/installscripts/InstallSendEmail.sh ${BUILDOS}
+${HOME}/installscripts/InstallSendEmail.sh ${BUILDOS} &
 >&2 /bin/echo "${0} InstallLibioSocket.sh"
-${HOME}/installscripts/InstallLibioSocket.sh ${BUILDOS}
+${HOME}/installscripts/InstallLibioSocket.sh ${BUILDOS} &
 >&2 /bin/echo "${0} InstallLibnetSsleay.sh"
-${HOME}/installscripts/InstallLibnetSsleay.sh ${BUILDOS}
+${HOME}/installscripts/InstallLibnetSsleay.sh ${BUILDOS} &
 >&2 /bin/echo "${0} InstallSysStat.sh"
-${HOME}/installscripts/InstallSysStat.sh ${BUILDOS}
+${HOME}/installscripts/InstallSysStat.sh ${BUILDOS} &
 >&2 /bin/echo "${0} InstallRsync.sh"
-${HOME}/installscripts/InstallRsync.sh ${BUILDOS}
+${HOME}/installscripts/InstallRsync.sh ${BUILDOS} &
 >&2 /bin/echo "${0} InstallCron.sh"
-${HOME}/installscripts/InstallCron.sh ${BUILDOS}
+${HOME}/installscripts/InstallCron.sh ${BUILDOS} &
 >&2 /bin/echo "${0} Install Monitoring Gear"
-${HOME}/installscripts/InstallMonitoringGear.sh
+${HOME}/installscripts/InstallMonitoringGear.sh &
 >&2 /bin/echo "${0} Installing cloudtools"
 /bin/echo "${0} `/bin/date`: Installing cloudtools" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 #Install the tools for our particular cloudhost provider
-${HOME}/installscripts/InstallCloudhostTools.sh
+${HOME}/installscripts/InstallCloudhostTools.sh &
 >&2 /bin/echo "${0} Installing Datastore tools"
 /bin/echo "${0} `/bin/date`: Installing Datastore tools" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 #Install the S3 compatible service we are using
