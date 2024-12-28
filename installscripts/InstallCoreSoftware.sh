@@ -11,8 +11,8 @@ ${HOME}/installscripts/UpdateAndUpgrade.sh ${BUILDOS}
 
 if ( [ "${1}" = "preinstall" ] )
 then
-  scripts="`/bin/cat InstallCore* | /bin/grep BUILDOS | /bin/grep -v "Up.*" | /usr/bin/awk '{print $1}'`"
-
+  scripts="`/bin/cat ${HOME}/installscripts/InstallCoreSoftware.sh | /bin/grep BUILDOS | /bin/grep -v "Up.*" | /usr/bin/awk '{print $1}'`"
+  
   package_names=""
 
   for script in ${scripts}
