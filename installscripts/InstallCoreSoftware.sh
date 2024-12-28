@@ -79,9 +79,4 @@ ${HOME}/installscripts/InstallCloudhostTools.sh
 >&2 /bin/echo "${0} Installing Datastore tools"
 #Install the S3 compatible service we are using
 ${HOME}/installscripts/InstallDatastoreTools.sh ${BUILDOS}
-pids="${pids} $!"
 
-for pid in ${pids}
-do
-        wait ${pid}
-done
