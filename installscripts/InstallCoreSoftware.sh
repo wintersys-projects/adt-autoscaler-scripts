@@ -4,6 +4,8 @@ then
   /bin/mkdir -p ${HOME}/runtime/installedsoftware
 fi
 
+BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
+
 if ( [ "${1}" = "preinstall" ] )
 then
   scripts="`/bin/cat InstallCore* | /bin/grep BUILDOS | /bin/grep -v "Up.*" | /usr/bin/awk '{print $1}'`"
