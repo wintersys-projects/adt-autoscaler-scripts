@@ -6,6 +6,9 @@ fi
 
 BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
 
+>&2 /bin/echo "${0} UpdateAndUpgrade.sh"
+${HOME}/installscripts/UpdateAndUpgrade.sh ${BUILDOS}
+
 if ( [ "${1}" = "preinstall" ] )
 then
   scripts="`/bin/cat InstallCore* | /bin/grep BUILDOS | /bin/grep -v "Up.*" | /usr/bin/awk '{print $1}'`"
@@ -41,8 +44,7 @@ then
 fi
 #Install the programs that we need to use when building the autoscaler
 >&2 /bin/echo "${0} Installing software packages "
->&2 /bin/echo "${0} UpdateAndUpgrade.sh"
-${HOME}/installscripts/UpdateAndUpgrade.sh ${BUILDOS}
+
 >&2 /bin/echo "${0} InstallGo.sh"
 ${HOME}/installscripts/InstallGo.sh ${BUILDOS} 
 >&2 /bin/echo "${0} InstallFirewall.sh"
