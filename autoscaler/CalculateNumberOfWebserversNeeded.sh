@@ -31,10 +31,10 @@
 # Wait for 5 minutes after first installation before we allow scaling to start  
 if ( [ -f ${HOME}/runtime/INITIALBUILDCOMPLETED ] )
 then
-	if test "`/usr/bin/find ${HOME}/runtime/INITIALBUILDCOMPLETED -mmin -5`"
-	then
-		exit
-	fi
+        if test "`/usr/bin/find ${HOME}/runtime/INITIALBUILDCOMPLETED -mmin -5`"
+        then
+                exit
+        fi
 fi
 
 scaling_mode="static"
@@ -42,50 +42,49 @@ NO_WEBSERVERS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh '
 
 if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "scalingprofile/profile.cnf"`" = "0" ] )
 then
-	/bin/echo  "SCALING_MODE=${scaling_mode}" > /tmp/profile.cnf
-	/bin/echo  "NO_WEBSERVERS=${NO_WEBSERVERS}" >> /tmp/profile.cnf  
-	${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh /tmp/profile.cnf "scalingprofile/profile.cnf"
+        /bin/echo  "SCALING_MODE=${scaling_mode}" > /tmp/profile.cnf
+        /bin/echo  "NO_WEBSERVERS=${NO_WEBSERVERS}" >> /tmp/profile.cnf  
+        ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh /tmp/profile.cnf "scalingprofile/profile.cnf"
 fi
 
 if ( [ -f /tmp/profile.cnf ] )
 then
-	/bin/rm /tmp/profile.cnf
+        /bin/rm /tmp/profile.cnf
 fi
 
 if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "INSTALLEDSUCCESSFULLY"`" = "0" ] )
 then
-	exit
+        exit
 fi
 
 # Get the scaling profile from the Datastore so we can see how many webservers we need to have online
 ${HOME}/providerscripts/datastore/configwrapper/GetFromConfigDatastore.sh "scalingprofile/profile.cnf"
 
-if ( [ -f /tmp/profile.cnf ] && [ "`/bin/cat /tmp/profile.cnf`" != "" ] )
+if ( [ -f ./profile.cnf ] && [ "`/bin/cat ./profile.cnf`" != "" ] )
 then
-	scaling_mode="`/bin/grep -a "SCALING_MODE" /tmp/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
-	NO_WEBSERVERS="`/bin/grep -a "NO_WEBSERVERS" /tmp/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
+        scaling_mode="`/bin/grep -a "SCALING_MODE" /tmp/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
+        NO_WEBSERVERS="`/bin/grep -a "NO_WEBSERVERS" /tmp/profile.cnf | /usr/bin/awk -F'=' '{print $NF}'`"
 else
-	/bin/echo  "SCALING_MODE=${scaling_mode}" > /tmp/profile.cnf
-	/bin/echo  "NO_WEBSERVERS=${NO_WEBSERVERS}" >> /tmp/profile.cnf
-	${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh /tmp/profile.cnf "scalingprofile/profile.cnf"
+        /bin/echo  "SCALING_MODE=${scaling_mode}" > /tmp/profile.cnf
+        /bin/echo  "NO_WEBSERVERS=${NO_WEBSERVERS}" >> /tmp/profile.cnf
+        ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh /tmp/profile.cnf "scalingprofile/profile.cnf"
 fi
 
 if ( [ "${scaling_mode}" = "static" ] && [ "${NO_WEBSERVERS}" != "" ] )
 then
-	${HOME}/providerscripts/utilities/config/StoreConfigValue.sh 'NUMBERWS' "${NO_WEBSERVERS}"
+        ${HOME}/providerscripts/utilities/config/StoreConfigValue.sh 'NUMBERWS' "${NO_WEBSERVERS}"
 fi
 
 #We don't want less than 2 webservers so, if somehow, webservers is set to less than 2 default it to 2 to be on the safe side. 
 if ( [ "${NO_WEBSERVERS}" -lt "2" ] || [ ! -n "${NO_WEBSERVERS}" ] )
 then
-	NO_WEBSERVERS="2"
- 	/bin/echo  "SCALING_MODE=${scaling_mode}" > /tmp/profile.cnf
-	/bin/echo  "NO_WEBSERVERS=${NO_WEBSERVERS}" >> /tmp/profile.cnf  
-	${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh /tmp/profile.cnf "scalingprofile/profile.cnf"
- 	if ( [ -f /tmp/profile.cnf ] )
-	then
-		/bin/rm /tmp/profile.cnf
-	fi
+        NO_WEBSERVERS="2"
+        /bin/echo  "SCALING_MODE=${scaling_mode}" > /tmp/profile.cnf
+        /bin/echo  "NO_WEBSERVERS=${NO_WEBSERVERS}" >> /tmp/profile.cnf  
+        ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh /tmp/profile.cnf "scalingprofile/profile.cnf"
+        if ( [ -f /tmp/profile.cnf ] )
+        then
+                /bin/rm /tmp/profile.cnf
+        fi
 fi
-
 
