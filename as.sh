@@ -321,8 +321,7 @@ PRODUCTION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'PRO
 /bin/echo "${0} `/bin/date`: Rebooting the autoscaler post installation" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 
-#${HOME}/security/SetupFirewall.sh
-
+${HOME}/providerscripts/utilities/processing/UpdateIPs.sh
 ${HOME}/providerscripts/utilities/housekeeping/CleanupAfterBuild.sh
 
 ${HOME}/providerscripts/email/SendEmail.sh "A NEW AUTOSCALER HAS BEEN SUCCESSFULLY BUILT" "A new autoscaler machine has been built and is now going to reboot before coming available" "INFO"
