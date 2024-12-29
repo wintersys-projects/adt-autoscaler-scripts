@@ -46,51 +46,80 @@ if ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "PA
 then
 	if ( [ "${buildos}" = "ubuntu" ] )
 	then
-		/usr/bin/yes | /usr/bin/dpkg --configure -a
-		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -y -qq apt-utils 
-  		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y install snapd
-		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages  
-                if ( [ ! -d /usr/local/apt-fast ] )
-                then
-                        /bin/mkdir /usr/local/apt-fast
-                else
-                        /bin/rm -r /usr/local/apt-fast/*
-                        /bin/rm -r /usr/local/apt-fast/.*
-                fi
-                /usr/bin/git clone https://github.com/ilikenwf/apt-fast.git /usr/local/apt-fast
-                /bin/ln -s /usr/local/apt-fast/apt-fast /usr/sbin/apt-fast
-                /bin/chmod +x /usr/sbin/apt-fast
-                /bin/ln -s /usr/local/apt-fast/apt-fast.conf /etc/apt-fast.conf
-                /bin/chown root:root /etc/apt-fast.conf
-                /bin/chown root:root /usr/sbin/apt-fast
-                /usr/bin/snap install aria2c  
-		mirrors="`/bin/grep "^deb" /etc/apt/sources.list | /bin/grep -Po 'http.* ' | /usr/bin/awk '{print $1}' | /usr/bin/sort -u | /usr/bin/uniq | /usr/bin/tr '\n' ',' | /bin/sed -e 's/,$//' -e 's#/,#,#' -e 's,/$,,'`" 
-        	/bin/echo "MIRRORS=( '${mirrors}' )" >> /etc/apt-fast.conf
+                DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -y -qq software-properties-common
+                DEBIAN_FRONTEND=noninteractive /usr/bin/add-apt-repository ppa:apt-fast/stable -y
+                DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
+                DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -y -qq apt-fast
+                DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -y -qq aria2
+		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y install snapd
+                DEBIAN_FRONTEND=noninteractive /usr/bin/apt-fast -o DPkg::Lock::Timeout=-1 -qq -y update
+                DEBIAN_FRONTEND=noninteractive /usr/bin/apt-fast -o DPkg::Lock::Timeout=-1 -qq -y upgrade
+                /usr/bin/snap install aria2c 
+		mirrors="`/bin/grep "^deb" /etc/apt/sources.list | /bin/grep -Po 'http.* ' | /usr/bin/awk '{print $1}' | /usr/bin/sort -u | /usr/bin/uniq | /usr/bin/tr '\n' ',' | /bin/sed 's/,$//'`" 
+		/bin/echo "MIRRORS=( '${mirrors}' )" >> /etc/apt-fast.conf
+  		/bin/echo 'DOWNLOADBELOW="aria2c -c -s ${_MAXNUM} -x ${_MAXNUM} -k 1M -q --file-allocation=none"' >> /etc/apt-fast.conf
+    		/bin/ln -s /usr/bin/apt-fast /usr/sbin/apt-fast
+
+ 
+	#	/usr/bin/yes | /usr/bin/dpkg --configure -a
+#		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -y -qq apt-utils 
+ # 		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y install snapd
+#		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages  
+ #               if ( [ ! -d /usr/local/apt-fast ] )
+  #              then
+   #                     /bin/mkdir /usr/local/apt-fast
+    #            else
+     #                   /bin/rm -r /usr/local/apt-fast/*
+      #                  /bin/rm -r /usr/local/apt-fast/.*
+       #         fi
+        #        /usr/bin/git clone https://github.com/ilikenwf/apt-fast.git /usr/local/apt-fast
+         #       /bin/ln -s /usr/local/apt-fast/apt-fast /usr/sbin/apt-fast
+#                /bin/chmod +x /usr/sbin/apt-fast
+ #               /bin/ln -s /usr/local/apt-fast/apt-fast.conf /etc/apt-fast.conf
+  #              /bin/chown root:root /etc/apt-fast.conf
+   #             /bin/chown root:root /usr/sbin/apt-fast
+    #            /usr/bin/snap install aria2c  
+	#	mirrors="`/bin/grep "^deb" /etc/apt/sources.list | /bin/grep -Po 'http.* ' | /usr/bin/awk '{print $1}' | /usr/bin/sort -u | /usr/bin/uniq | /usr/bin/tr '\n' ',' | /bin/sed -e 's/,$//' -e 's#/,#,#' -e 's,/$,,'`" 
+        #	/bin/echo "MIRRORS=( '${mirrors}' )" >> /etc/apt-fast.conf
 	fi
 	
 	if ( [ "${buildos}" = "debian" ] )
 	then
-		/usr/bin/yes | /usr/bin/dpkg --configure -a
-		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -y -qq apt-utils 
-  		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y install snapd
-		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -y -qq aria2 
-		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages  
-                if ( [ ! -d /usr/local/apt-fast ] )
-                then
-                        /bin/mkdir /usr/local/apt-fast
-                else
-                        /bin/rm -r /usr/local/apt-fast/*
-                        /bin/rm -r /usr/local/apt-fast/.*
-                fi
-                /usr/bin/git clone https://github.com/ilikenwf/apt-fast.git /usr/local/apt-fast
-                /bin/ln -s /usr/local/apt-fast/apt-fast /usr/sbin/apt-fast
-                /bin/chmod +x /usr/sbin/apt-fast
-                /bin/ln -s /usr/local/apt-fast/apt-fast.conf /etc/apt-fast.conf
-                /bin/chown root:root /etc/apt-fast.conf
-                /bin/chown root:root /usr/sbin/apt-fast
-                /usr/bin/snap install aria2c  
+                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -y -qq software-properties-common
+                DEBIAN_FRONTEND=noninteractive /usr/bin/add-apt-repository ppa:apt-fast/stable -y
+                DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
+                DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -y -qq apt-fast
+                DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -y -qq aria2
+		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y install snapd
+                DEBIAN_FRONTEND=noninteractive /usr/bin/apt-fast -o DPkg::Lock::Timeout=-1 -qq -y update
+                DEBIAN_FRONTEND=noninteractive /usr/bin/apt-fast -o DPkg::Lock::Timeout=-1 -qq -y upgrade
+                /usr/bin/snap install aria2c 
 		mirrors="`/bin/grep "^deb" /etc/apt/sources.list | /bin/grep -Po 'http.* ' | /usr/bin/awk '{print $1}' | /usr/bin/sort -u | /usr/bin/uniq | /usr/bin/tr '\n' ',' | /bin/sed 's/,$//'`" 
 		/bin/echo "MIRRORS=( '${mirrors}' )" >> /etc/apt-fast.conf
+  		/bin/echo 'DOWNLOADBELOW="aria2c -c -s ${_MAXNUM} -x ${_MAXNUM} -k 1M -q --file-allocation=none"' >> /etc/apt-fast.conf
+    		/bin/ln -s /usr/bin/apt-fast /usr/sbin/apt-fast
+      
+#		/usr/bin/yes | /usr/bin/dpkg --configure -a
+#		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -y -qq apt-utils 
+ # 		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y install snapd
+#		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -y -qq aria2 
+#		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages  
+ #               if ( [ ! -d /usr/local/apt-fast ] )
+  #              then
+   #                     /bin/mkdir /usr/local/apt-fast
+    #            else
+     #                   /bin/rm -r /usr/local/apt-fast/*
+      #                  /bin/rm -r /usr/local/apt-fast/.*
+       #         fi
+        #        /usr/bin/git clone https://github.com/ilikenwf/apt-fast.git /usr/local/apt-fast
+         #       /bin/ln -s /usr/local/apt-fast/apt-fast /usr/sbin/apt-fast
+          #      /bin/chmod +x /usr/sbin/apt-fast
+           #     /bin/ln -s /usr/local/apt-fast/apt-fast.conf /etc/apt-fast.conf
+            #    /bin/chown root:root /etc/apt-fast.conf
+             #   /bin/chown root:root /usr/sbin/apt-fast
+              #  /usr/bin/snap install aria2c  
+	#	mirrors="`/bin/grep "^deb" /etc/apt/sources.list | /bin/grep -Po 'http.* ' | /usr/bin/awk '{print $1}' | /usr/bin/sort -u | /usr/bin/uniq | /usr/bin/tr '\n' ',' | /bin/sed 's/,$//'`" 
+	#	/bin/echo "MIRRORS=( '${mirrors}' )" >> /etc/apt-fast.conf
 	fi   
 fi
 
