@@ -31,7 +31,7 @@ then
     then
         /usr/bin/systemctl daemon-reload
     fi
-    /usr/bin/systemctl ${service_type} ${service_function}
+    /usr/bin/systemctl ${service_function} ${service_type} 
 fi
 
 if ( [ "${buildos}" = "debian" ] )
@@ -40,5 +40,5 @@ then
     then
         /usr/bin/systemctl daemon-reload
     fi
-    /usr/bin/systemctl ${service_type} ${service_function}
+    /usr/bin/systemctl ${service_function} ${service_type} 
 fi
