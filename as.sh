@@ -206,6 +206,11 @@ ${HOME}/providerscripts/utilities/processing/RunServiceCommand.sh ssh restart
 
 ${HOME}/installscripts/InstallCoreSoftware.sh &
 
+while ( [ ! -f /usr/bin/s3cmd ] )
+do
+	/bin/sleep 5
+done
+
 ${HOME}/security/SetupFirewall.sh
 
 
