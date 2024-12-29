@@ -8,12 +8,13 @@ BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDO
 
 >&2 /bin/echo "${0} UpdateAndUpgrade.sh"
 ${HOME}/installscripts/UpdateAndUpgrade.sh ${BUILDOS}
-
+>&2 /bin/echo "${0} InstallFirewall.sh"
+${HOME}/installscripts/InstallFirewall.sh ${BUILDOS} 
+>&2 /bin/echo "${0} Installing Datastore tools"
+${HOME}/installscripts/InstallDatastoreTools.sh ${BUILDOS}
 
 >&2 /bin/echo "${0} InstallGo.sh"
 ${HOME}/installscripts/InstallGo.sh ${BUILDOS} 
->&2 /bin/echo "${0} InstallFirewall.sh"
-${HOME}/installscripts/InstallFirewall.sh ${BUILDOS} 
 >&2 /bin/echo "${0} InstallCurl.sh"
 ${HOME}/installscripts/InstallCurl.sh ${BUILDOS} 
 >&2 /bin/echo "${0} InstallSSHPass.sh"
@@ -39,9 +40,6 @@ ${HOME}/installscripts/InstallCron.sh ${BUILDOS}
 >&2 /bin/echo "${0} Install Monitoring Gear"
 ${HOME}/installscripts/InstallMonitoringGear.sh 
 >&2 /bin/echo "${0} Installing cloudtools"
-#Install the tools for our particular cloudhost provider
 ${HOME}/installscripts/InstallCloudhostTools.sh 
->&2 /bin/echo "${0} Installing Datastore tools"
-#Install the S3 compatible service we are using
-${HOME}/installscripts/InstallDatastoreTools.sh ${BUILDOS}
+
 
