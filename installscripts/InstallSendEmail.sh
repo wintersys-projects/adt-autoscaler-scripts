@@ -37,12 +37,12 @@ if ( [ "${apt}" != "" ] )
 then
 	if ( [ "${buildos}" = "ubuntu" ] )
 	then
-		DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1  -qq install sendemail		#####UBUNTU-SENDEMAIL-REPO#####
+		DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install sendemail		#####UBUNTU-SENDEMAIL-REPO#####
 	fi
 
 	if ( [ "${buildos}" = "debian" ] )
 	then
-		DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1  -qq install sendemail		#####DEBIAN-SENDEMAIL-REPO#####
+		DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install sendemail		#####DEBIAN-SENDEMAIL-REPO#####
 	fi
      	/bin/touch ${HOME}/runtime/installedsoftware/InstallSendEmail.sh	
 fi
