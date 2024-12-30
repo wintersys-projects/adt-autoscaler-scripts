@@ -346,14 +346,14 @@ fi
 count="0"
 failedintegritycheck="0"
 /bin/echo "${0} `/bin/date`: Performing build integrity checks for" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-while ( [ "${count}" -lt "10" ] && [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/status/CheckServerAlive.sh"`" != "ALIVE" ] )
+while ( [ "${count}" -lt "30" ] && [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/status/CheckServerAlive.sh"`" != "ALIVE" ] )
 do
-	/bin/sleep 10
+	/bin/sleep 5
 	count="`/usr/bin/expr ${count} + 1`"
 	/bin/echo "${0} `/bin/date`: Doing build integrity checks for ${ip} attempt ${count}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 done
 
-if ( [ "${count}" = "10" ] )
+if ( [ "${count}" = "30" ] )
 then
 	failedintegritycheck="1"
 	${HOME}/providerscripts/email/SendEmail.sh "FAILED INTEGRITY CHECKS" "A webserver (${webserver_name}) being built on autoscaler (${autoscaler_name}) has failed its integrity checks" "ERROR"
@@ -366,15 +366,15 @@ then
 	count="0"
 	/bin/echo "${0} `/bin/date`:  Performing post processing for ip address ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 	/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/application/processing/PerformPostProcessingByApplication.sh ${SERVER_USER} autoscaled"
-	if ( [ "$?" != "0" ] && [ "${count}" -lt "10" ] )
+	if ( [ "$?" != "0" ] && [ "${count}" -lt "30" ] )
 	then
-		/bin/sleep 10
+		/bin/sleep 5
 		count="`/usr/bin/expr ${count} + 1`"
 		/bin/echo "${0} `/bin/date`: Performing post processing for  ${ip} attempt ${count}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 		/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/application/processing/PerformPostProcessingByApplication.sh ${SERVER_USER} autoscaled"
 	fi
 
-	if ( [ "${count}" = "10" ] )
+	if ( [ "${count}" = "30" ] )
 	then
 		${HOME}/providerscripts/email/SendEmail.sh "FAILED TO PERFORM POST PROCESSING" "Post Processing has failed to complete on autoscaler ${autoscaler_name} for webserver ${webserver_name}" "ERROR"
 		/bin/echo "${0} `/bin/date`: Post Processing has failed to complete on autoscaler ${autoscaler_name} for webserver ${webserver_name}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
@@ -387,15 +387,15 @@ then
 		count="0"
 		/bin/echo "${0} `/bin/date`: Performing mount checks for ip address ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 		/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/datastore/SetupAssetsStore.sh"
-		while ( [ "${count}" -lt "10" ] &&  [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/status/AreAssetsMounted.sh"`" != "MOUNTED" ] )
+		while ( [ "${count}" -lt "30" ] &&  [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/status/AreAssetsMounted.sh"`" != "MOUNTED" ] )
 		do
 			count="`/usr/bin/expr ${count} + 1`"
-			/bin/sleep 10
+			/bin/sleep 5
 			/bin/echo "${0} `/bin/date`: Doing mount checks for ${ip} attempt ${count}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 			/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/datastore/SetupAssetsStore.sh"
 		done
 
-		if ( [ "${count}" = "10" ] )
+		if ( [ "${count}" = "30" ] )
 		then
 			failedmountcheck="1"
 			${HOME}/providerscripts/email/SendEmail.sh "MOUNT CHECKS HAVE BEEN FAILED" "Mount checks have been failed on autoscaler ${autoscaler_name} for webserver ${webserver_name}" "ERROR"
@@ -409,7 +409,7 @@ then
 	then
 	   #Do a check, as best we can to make sure that the website application is actually running correctly
 	   count="0"
-	   while ( [ "${count}" -lt "10" ] && [ "${failedonlinecheck}" != "0" ] )
+	   while ( [ "${count}" -lt "30" ] && [ "${failedonlinecheck}" != "0" ] )
 	   do
 			. ${HOME}/autoscaler/SelectHeadFile.sh
 
@@ -422,7 +422,7 @@ then
 					/bin/echo "${0} `/bin/date`: Expecting ${private_ip} to be online, but can't reach it with curl yet...." >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 					count="`/usr/bin/expr ${count} + 1`"
 					/bin/echo "${0} `/bin/date`: Doing webserver/application online check for ${ip} attempt ${count}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-					/bin/sleep 20
+					/bin/sleep 5
 				else
 					/bin/echo "${0} `/bin/date`:  ${ip} is online that's wicked..." >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 					failedonlinecheck="0"
@@ -430,7 +430,7 @@ then
 			fi
 		done
 		
-		if ( [ "${count}" = "10" ] )
+		if ( [ "${count}" = "30" ] )
 		then
 			${HOME}/providerscripts/email/SendEmail.sh "WEBSERVER FAILED TO COME ONLINE" "Online checks have been failed on autoscaler ${autoscaler_name} for webserver ${webserver_name}" "ERROR"
 			/bin/echo "${0} `/bin/date`: ${ip} failed to come online" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
