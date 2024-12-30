@@ -38,7 +38,12 @@ then
         datastore_tool="/usr/bin/s5cmd --credentials-file /root/.s5cfg --endpoint-url https://${host_base} cp "
 fi
 
-command="${datastore_tool} $1 s3://${configbucket}/$2"
+if ( [ "${2}" != "" ] )
+then
+        command="${datastore_tool} $1 s3://${configbucket}/$2"
+else
+        command="${datastore_tool} $1 s3://${configbucket}"
+fi
 
 count="0"
 satisfied="0"
