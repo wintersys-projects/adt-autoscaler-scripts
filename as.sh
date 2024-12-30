@@ -121,7 +121,7 @@ SSH_PORT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SSHPO
 
 #Non standard variable assignments
 ROOT_DOMAIN="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{$1=""}1' | /bin/sed 's/^ //g' | /bin/sed 's/ /./g'`"
-GIT_USER="`${HOME}/providerscripts/utilities/config/config/ExtractConfigValue.sh 'GITUSER'  | /bin/sed 's/#/ /g'` "
+GIT_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'GITUSER'  | /bin/sed 's/#/ /g'` "
 WEBSITE_NAME="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{print $2}'`"
 
 #Record what everything has actually been set to in case there is a problem...
