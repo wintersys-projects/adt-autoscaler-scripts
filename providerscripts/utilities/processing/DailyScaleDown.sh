@@ -25,9 +25,18 @@ then
 	exit
 fi
 
-/bin/echo "${0} `/bin/date`: Running daily scaledown. Scaling down to ..... $1 servers" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
+new_scale_value="${1}"
 
-${HOME}/providerscripts/datastore/configwrapper/GetFromConfigDatastore.sh "scalingprofile/profile.cnf"
-/bin/sed -i "/^NO_WEBSERVERS=/c\NO_WEBSERVERS=$1" /tmp/profile.cnf 
-${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh /tmp/profile.cnf "scalingprofile/profile.cnf"
+/bin/echo "${0} `/bin/date`: Running daily scaledown. Scaling down to ..... ${new_scale_value} servers" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
+
+${HOME}/providerscripts/datastore/configwrapper/MultiDeleteConfigDatastore.sh STATIC_SCALE:
+if ( [ -f ${HOME}/runtime/STATIC_SCALE:* ] )
+then
+        /bin/rm ${HOME}/runtime/STATIC_SCALE:*
+fi
+/bin/touch ${HOME}/runtime/STATIC_SCALE:${new_scale_value}
+${BUILD_HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${HOME}/runtime/STATIC_SCALE:${new_scale_value} STATIC_SCALE:${new_scale_value}
+
+
+
 
