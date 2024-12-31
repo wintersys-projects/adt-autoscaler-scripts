@@ -35,7 +35,7 @@ then
         /bin/rm ${HOME}/runtime/STATIC_SCALE:*
 fi
 /bin/touch ${HOME}/runtime/STATIC_SCALE:${new_scale_value}
-${BUILD_HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${HOME}/runtime/STATIC_SCALE:${new_scale_value} STATIC_SCALE:${new_scale_value}
+${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${HOME}/runtime/STATIC_SCALE:${new_scale_value} STATIC_SCALE:${new_scale_value}
 
 
 
