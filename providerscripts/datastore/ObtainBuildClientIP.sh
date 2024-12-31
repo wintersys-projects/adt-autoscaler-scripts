@@ -25,7 +25,7 @@ then
 	/bin/mkdir ${HOME}/runtime/BUILDCLIENTIP
 fi
 
-if ( [ "`/bin/ls ${HOME}/runtime/BUILDCLIENTIP/*`" != "" ] && [ -f ${HOME}/runtime/BUILDCLIENTUPDATED ] )
+if ( [ "`/bin/ls ${HOME}/runtime/BUILDCLIENTIP/*`" != "" ] && [ -f ${HOME}/runtime/BUILD_CLIENT_UPDATED ] )
 then
 	exit
 fi
@@ -59,5 +59,5 @@ OLD_BUILD_CLIENT_IP="`${HOME}/providerscripts/utilities/config/ExtractConfigValu
 if ( [ "${OLD_BUILD_CLIENT_IP}" != "${BUILD_CLIENT_IP}" ] )
 then
 	${HOME}/providerscripts/utilities/config/StoreConfigValue.sh "BUILDCLIENTIP" "${BUILD_CLIENT_IP}"  
-	/bin/touch ${HOME}/runtime/BUILDCLIENTUPDATED
+	/bin/touch ${HOME}/runtime/BUILD_CLIENT_UPDATED
 fi
