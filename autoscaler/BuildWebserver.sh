@@ -342,6 +342,23 @@ fi
 
 /bin/echo "${0} `/bin/date`: The main build has completed now just have to check that it's been dun right" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 
+webserver_installed="`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "/bin/ls /home/${SERVER_USER}/runtime/WEBSERVER_INSTALLED"`" >&3
+
+while ( [ "${webserver_installed}" = "" ] )
+do
+	/bin/sleep 1
+	webserver_installed="`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/bin/ls /home/${SERVER_USER}/runtime/WEBSERVER_INSTALLED"`" 2>&1 > /dev/null
+done
+
+application_language_installed="`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "/bin/ls /home/${SERVER_USER}/runtime/APPLICATION_LANGUAGE_INSTALLED"`" >&3
+
+while ( [ "${application_language_installed}" = "" ] )
+do
+	/bin/sleep 1
+	application_language_installed="`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "/bin/ls /home/${SERVER_USER}/runtime/APPLICATION_LANGUAGE_INSTALLED"`" 2>&1 > /dev/null
+done
+
+
 #Do some checks to make sure the machine has come online and so on
 count="0"
 failedintegritycheck="0"
