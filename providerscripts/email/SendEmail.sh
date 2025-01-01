@@ -29,6 +29,7 @@ to_address="$4"
 message="MESSSAGE TIMESTAMP: `/usr/bin/date` \n ${message}"
 
 FROM_ADDRESS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SYSTEMFROMEMAILADDRESS'`"
+FROM_NAME="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'WEBSITEDISPLAYNAME'`"
 TO_ADDRESS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SYSTEMTOEMAILADDRESS'`"
 
 if ( [ "${to_address}" != "" ] )
@@ -67,7 +68,7 @@ then
   	fi
       	if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'EMAILUTIL:mail'`" = "1" ] )
     	then
-        	/bin/echo "${message}" | /usr/bin/mail -s "${subject}" -a "From: SenderName <${FROM_ADDRESS}>" "${TO_ADDRESS}" 
+        	/bin/echo "${message}" | /usr/bin/mail -s "${subject}" -a "From: ${FROM_NAME} <${FROM_ADDRESS}>" "${TO_ADDRESS}" 
     	fi
 else
 	/bin/echo "${0} `/bin/date`:Email not sent because of missing parameter(s)" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
