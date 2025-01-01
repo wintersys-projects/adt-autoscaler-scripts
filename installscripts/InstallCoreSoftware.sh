@@ -25,8 +25,8 @@ ${HOME}/installscripts/InstallBC.sh ${BUILDOS}
 ${HOME}/installscripts/InstallNetworkManager.sh ${BUILDOS} 
 >&2 /bin/echo "${0} InstallJQ.sh"
 ${HOME}/installscripts/InstallJQ.sh ${BUILDOS} 
->&2 /bin/echo "${0} InstallSendEmail.sh"
-${HOME}/installscripts/InstallSendEmail.sh ${BUILDOS} 
+>&2 /bin/echo "${0} InstallEmailUtil.sh"
+${HOME}/installscripts/InstallEmailUtil.sh ${BUILDOS} 
 >&2 /bin/echo "${0} InstallLibioSocket.sh"
 ${HOME}/installscripts/InstallLibioSocket.sh ${BUILDOS} 
 >&2 /bin/echo "${0} InstallLibnetSsleay.sh"
