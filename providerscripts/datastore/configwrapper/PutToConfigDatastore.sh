@@ -42,8 +42,15 @@ fi
 
 if ( [ ! -f ${file_to_put} ] )
 then
-        /bin/touch /tmp/${file_to_put}
-        file_to_put="/tmp/${file_to_put}"
+        path_to_file="`/bin/echo ${file_to_put} | sed 's:/[^/]*$::' | /bin/sed 's,^/,,'`"
+        file="`/bin/echo "${file_to_put}" | /bin/grep "/" | /usr/bin/awk -F'/' '{print $NF}'`"
+
+        if ( [ "`/bin/echo ${file_to_put} | /bin/grep "/"`" = "" ] )
+        then
+                file_to_put="/tmp/${file_to_put}"
+        else
+                file_to_put="/tmp/${path_to_file}/${file}"
+        fi
 fi
         
 
