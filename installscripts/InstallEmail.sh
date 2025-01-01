@@ -23,12 +23,12 @@
 
 BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
 
-if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
+if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'EMAILUTIL:sendemail'`" = "1" ] )
 then
-	${HOME}/installscripts/InstallS3CMD.sh ${BUILDOS}
+	${HOME}/installscripts/InstallSendEmail.sh ${BUILDOS}
 fi
 
-if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ] )
+if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'EMAILUTIL:mail'`" = "1" ] )
 then
-	${HOME}/installscripts/InstallS5CMD.sh ${BUILDOS}
+	${HOME}/installscripts/InstallMail.sh ${BUILDOS}
 fi
