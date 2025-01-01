@@ -53,7 +53,7 @@ then
                 dir="`/bin/echo ${file_to_put} | /bin/sed 's:/[^/]*$::'`"
                 if ( [ ! -d ${dir} ] )
                 then
-                        /bin/rm -r ${dir}
+                        /bin/mv ${dir} ${dir}.$$
                         /bin/mkdir -p "${dir}"
                 fi
         fi
