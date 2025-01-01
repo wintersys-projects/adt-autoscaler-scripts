@@ -47,7 +47,7 @@ fi
 
 if ( [ "${FROM_ADDRESS}" != "" ] && [ "${TO_ADDRESS}" != "" ] && [ "${USERNAME}" != "" ] && [ "${PASSWORD}" != "" ] && [ "${subject}" != "" ] && [ "${message}" != "" ] )
 then
-      	if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'EMAILUTIL:sendemail'`" = "1" ] )	
+	if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'EMAILUTIL:sendemail'`" = "1" ] )	
 	then
 		if ( [ "${EMAIL_PROVIDER}" = "1" ] )
 		then
