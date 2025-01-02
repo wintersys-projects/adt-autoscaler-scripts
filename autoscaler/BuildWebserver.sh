@@ -368,7 +368,7 @@ done
 
 
 /bin/echo "${0} `/bin/date`: Checking webserver is up" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "/bin/ls /home/${SERVER_USER}/providerscripts/webserver/RestartWebserver.sh"
+/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "${SUDO} /home/${SERVER_USER}/providerscripts/webserver/RestartWebserver.sh"
 
 #Do some checks to make sure the machine has come online and so on
 count="0"
