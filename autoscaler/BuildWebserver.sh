@@ -366,6 +366,9 @@ do
 	core_software_installed="`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "/bin/ls /home/${SERVER_USER}/runtime/ALL_CORE_SOFTWARE_INSTALLED"`" 
 done
 
+/bin/echo "${0} `/bin/date`: Setting up application configuration" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "${CUSTOM_USER_SUDO} /home/${SERVER_USER}/providerscripts/application/configuration/SetApplicationConfiguration.sh" 
+
 
 /bin/echo "${0} `/bin/date`: Checking webserver is up" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 /usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "${CUSTOM_USER_SUDO} /home/${SERVER_USER}/providerscripts/webserver/RestartWebserver.sh"
