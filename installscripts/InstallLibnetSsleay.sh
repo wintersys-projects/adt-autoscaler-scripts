@@ -33,16 +33,19 @@ then
 	apt="/usr/sbin/apt-fast"
 fi
 
+export DEBIAN_FRONTEND=noninteractive
+install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y install " 
+
 if ( [ "${apt}" != "" ] )
 then
 	if ( [ "${buildos}" = "ubuntu" ] )
 	then
-		DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1  -qq -y install libnet-ssleay-perl #####UBUNTU-LIBNETSSL-REPO#####
+		${install_command} libnet-ssleay-perl 
 	fi
 
 	if ( [ "${buildos}" = "debian" ] )
 	then
-		DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1  -qq -y install libnet-ssleay-perl	 #####DEBIAN-LIBNETSSL-REPO#####
+		${install_command} libnet-ssleay-perl 
 	fi
    	 /bin/touch ${HOME}/runtime/installedsoftware/InstallLibnetSsleay.sh	
 fi
