@@ -28,30 +28,42 @@ then
 	buildos="${1}"
 fi
 
+apt=""
+if ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt" ] )
+then
+	apt="/usr/bin/apt-get"
+elif ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt-fast" ] )
+then
+	apt="/usr/sbin/apt-fast"
+fi
+
+export DEBIAN_FRONTEND=noninteractive
+install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y install " 
+
 if ( [ "${buildos}" = "ubuntu" ] )
 then
-	DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y install pipx		#####UBUNTU-LINODECLIL-REPO#####
-	if ( [ -f /usr/local/bin/linode-cli ] )									#####UBUNTU-LINODECLIL-REPO#####
-	then													#####UBUNTU-LINODECLIL-REPO#####
-		/usr/bin/pipx upgrade linode-cli 								#####UBUNTU-LINODECLIL-REPO#####
-	else													#####UBUNTU-LINODECLIL-REPO#####
-		/usr/bin/pipx install linode-cli 								#####UBUNTU-LINODECLIL-REPO#####
-  		/bin/rm /usr/local/bin/linode-cli								#####UBUNTU-LINODECLIL-REPO#####
-		/usr/bin/ln -s ${HOME}/.local/bin/linode-cli /usr/local/bin/linode-cli				#####UBUNTU-LINODECLIL-REPO#####
-	fi													#####UBUNTU-LINODECLIL-REPO#####
+	${install_command} pipx		
+	if ( [ -f /usr/local/bin/linode-cli ] )									
+	then													
+		/usr/bin/pipx upgrade linode-cli 								
+	else													
+		/usr/bin/pipx install linode-cli 								
+  		/bin/rm /usr/local/bin/linode-cli								
+		/usr/bin/ln -s ${HOME}/.local/bin/linode-cli /usr/local/bin/linode-cli				
+	fi													
 fi
 
 if ( [ "${buildos}" = "debian" ] )
 then
-	DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y install pipx		#####DEBIAN-LINODECLIL-REPO#####
-	if ( [ -f /usr/local/bin/linode-cli ] )									#####DEBIAN-LINODECLIL-REPO#####
-	then													#####DEBIAN-LINODECLIL-REPO#####
-		/usr/bin/pipx upgrade linode-cli 								#####DEBIAN-LINODECLIL-REPO#####
-	else													#####DEBIAN-LINODECLIL-REPO#####
-		/usr/bin/pipx install linode-cli 								#####DEBIAN-LINODECLIL-REPO#####
-		/bin/rm /usr/local/bin/linode-cli								#####DEBIAN-LINODECLIL-REPO#####
-		/usr/bin/ln -s ${HOME}/.local/bin/linode-cli /usr/local/bin/linode-cli				#####DEBIAN-LINODECLIL-REPO#####
-	fi													#####DEBIAN-LINODECLIL-REPO#####
+	${install_command} pipx		
+	if ( [ -f /usr/local/bin/linode-cli ] )									
+	then													
+		/usr/bin/pipx upgrade linode-cli 								
+	else													
+		/usr/bin/pipx install linode-cli 								
+		/bin/rm /usr/local/bin/linode-cli								
+		/usr/bin/ln -s ${HOME}/.local/bin/linode-cli /usr/local/bin/linode-cli				
+	fi													
 fi
 /bin/touch ${HOME}/runtime/installedsoftware/InstallLinodeCLI.sh	
 
