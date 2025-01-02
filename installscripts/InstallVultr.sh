@@ -27,18 +27,18 @@ fi
 
 if ( [ "${buildos}" = "ubuntu" ] )
 then 
-        vultr_cli_version="`/usr/bin/curl -L https://api.github.com/repos/vultr/vultr-cli/releases/latest | /usr/bin/jq -r '.name'`"        #####UBUNTU-VULTR-BINARY#####
-        /usr/bin/wget -c https://github.com/vultr/vultr-cli/releases/download/${vultr_cli_version}/vultr-cli_${vultr_cli_version}_linux_amd64.tar.gz -O - | /usr/bin/tar -xz -C /usr/bin   #####UBUNTU-VULTR-BINARY-SKIP#####
-        /bin/mv /usr/bin/vultr-cli /usr/bin/vultr                         #####UBUNTU-VULTR-BINARY#####
-        /bin/chown root:root /usr/bin/vultr                                #####UBUNTU-VULTR-BINARY#####
+        vultr_cli_version="`/usr/bin/curl -L https://api.github.com/repos/vultr/vultr-cli/releases/latest | /usr/bin/jq -r '.name'`"       
+        /usr/bin/wget -c https://github.com/vultr/vultr-cli/releases/download/${vultr_cli_version}/vultr-cli_${vultr_cli_version}_linux_amd64.tar.gz -O - | /usr/bin/tar -xz -C /usr/bin  
+        /bin/mv /usr/bin/vultr-cli /usr/bin/vultr                         
+        /bin/chown root:root /usr/bin/vultr                              
 fi
 
 if ( [ "${buildos}" = "debian" ] )
 then
-        vultr_cli_version="`/usr/bin/curl -L https://api.github.com/repos/vultr/vultr-cli/releases/latest | /usr/bin/jq -r '.name'`"        #####DEBIAN-VULTR-BINARY#####
-        /usr/bin/wget -c https://github.com/vultr/vultr-cli/releases/download/${vultr_cli_version}/vultr-cli_${vultr_cli_version}_linux_amd64.tar.gz -O - | /usr/bin/tar -xz -C /usr/bin #####DEBIAN-VULTR-BINARY-SKIP####
-        /bin/mv /usr/bin/vultr-cli /usr/bin/vultr        #####DEBIAN-VULTR-BINARY####
-        /bin/chown root:root /usr/bin/vultr              #####DEBIAN-VULTR-BINARY####
+        vultr_cli_version="`/usr/bin/curl -L https://api.github.com/repos/vultr/vultr-cli/releases/latest | /usr/bin/jq -r '.name'`"       
+        /usr/bin/wget -c https://github.com/vultr/vultr-cli/releases/download/${vultr_cli_version}/vultr-cli_${vultr_cli_version}_linux_amd64.tar.gz -O - | /usr/bin/tar -xz -C /usr/bin 
+        /bin/mv /usr/bin/vultr-cli /usr/bin/vultr        
+        /bin/chown root:root /usr/bin/vultr              
 fi
 
 /bin/touch ${HOME}/runtime/installedsoftware/InstallVultr.sh	
