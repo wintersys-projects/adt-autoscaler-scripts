@@ -33,17 +33,20 @@ then
 	apt="/usr/sbin/apt-fast"
 fi
 
+export DEBIAN_FRONTEND=noninteractive
+install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y install " 
+
 if ( [ "${apt}" != "" ] )
 then
 	if ( [ "${buildos}" = "ubuntu" ] )
 	then
-		DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install curl	#####UBUNTU-CURL-REPO#####
+		${install_command} curl	
 	fi
 
 	if ( [ "${buildos}" = "debian" ] )
 	then
-		DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install curl	#####DEBIAN-CURL-REPO#####
-	fi
+		${install_command} curl	
+  	fi
  	/bin/touch ${HOME}/runtime/installedsoftware/InstallCurl.sh	
 fi
 
