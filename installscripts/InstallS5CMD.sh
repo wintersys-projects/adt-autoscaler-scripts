@@ -26,42 +26,42 @@ if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORET
 then
   if ( [ "${BUILDOS}" = "ubuntu" ] )
   then
-    if ( [ -d /root/scratch ] )			#####UBUNTU-S5CMD-REPO#####
-    then						#####UBUNTU-S5CMD-REPO#####
-      /bin/rm -r /root/scratch/*		#####UBUNTU-S5CMD-REPO#####
-    else						#####UBUNTU-S5CMD-REPO#####
-      /bin/mkdir /root/scratch		#####UBUNTU-S5CMD-REPO#####
-		fi						#####UBUNTU-S5CMD-REPO#####
+    if ( [ -d /root/scratch ] )			
+    then						
+      /bin/rm -r /root/scratch/*		
+    else						
+      /bin/mkdir /root/scratch		
+		fi						
 
-    GOBIN=/root/scratch /usr/bin/go install github.com/peak/s5cmd/v2@latest                 #####UBUNTU-S5CMD-REPO#####
-    if ( [ -f /root/scratch/s5cmd ] )                                                       #####UBUNTU-S5CMD-REPO#####
-    then                                                                                    #####UBUNTU-S5CMD-REPO#####
-      /bin/mv /root/scratch/s5cmd /usr/bin/s5cmd                                      #####UBUNTU-S5CMD-REPO#####
-    fi  											#####UBUNTU-S5CMD-REPO#####
-    if ( [ -d /root/scratch ] )								#####UBUNTU-S5CMD-REPO#####
-    then											#####UBUNTU-S5CMD-REPO#####
-      /bin/rm -r /root/scratch							#####UBUNTU-S5CMD-REPO#####
-	 	fi											#####UBUNTU-S5CMD-REPO#####
+    GOBIN=/root/scratch /usr/bin/go install github.com/peak/s5cmd/v2@latest                
+    if ( [ -f /root/scratch/s5cmd ] )                                                      
+    then                                                                                    
+      /bin/mv /root/scratch/s5cmd /usr/bin/s5cmd                                     
+    fi  											
+    if ( [ -d /root/scratch ] )								
+    then											
+      /bin/rm -r /root/scratch							
+	 	fi											
  fi	
 
  if ( [ "${BUILDOS}" = "debian" ] )
  then
-    if ( [ -d /root/scratch ] )			#####DEBIAN-S5CMD-REPO#####
-		then						#####DEBIAN-S5CMD-REPO#####
-      /bin/rm -r /root/scratch/*		#####DEBIAN-S5CMD-REPO#####
-		else						#####DEBIAN-S5CMD-REPO#####
-      /bin/mkdir /root/scratch		#####DEBIAN-S5CMD-REPO#####
-		fi						#####DEBIAN-S5CMD-REPO#####
+    if ( [ -d /root/scratch ] )			
+		then						
+      /bin/rm -r /root/scratch/*		
+		else						
+      /bin/mkdir /root/scratch		
+		fi						
 
-    GOBIN=/root/scratch /usr/bin/go install github.com/peak/s5cmd/v2@latest                 #####DEBIAN-S5CMD-REPO#####
-    if ( [ -f /root/scratch/s5cmd ] )                                                       #####DEBIAN-S5CMD-REPO#####
-    then                                                                                    #####DEBIAN-S5CMD-REPO#####
-      /bin/mv /root/scratch/s5cmd /usr/bin/s5cmd                                      #####DEBIAN-S5CMD-REPO#####
-    fi 											#####DEBIAN-S5CMD-REPO#####
-    if ( [ -d /root/scratch ] )								#####DEBIAN-S5CMD-REPO#####
-    then											#####DEBIAN-S5CMD-REPO#####
-      /bin/rm -r /root/scratch							#####DEBIAN-S5CMD-REPO#####
-    fi #####DEBIAN-S5CMD-REPO#####
+    GOBIN=/root/scratch /usr/bin/go install github.com/peak/s5cmd/v2@latest               
+    if ( [ -f /root/scratch/s5cmd ] )                                                      
+    then                                                                                  
+      /bin/mv /root/scratch/s5cmd /usr/bin/s5cmd                                      
+    fi 											
+    if ( [ -d /root/scratch ] )								
+    then											
+      /bin/rm -r /root/scratch							
+    fi 
   fi
   /bin/touch ${HOME}/runtime/installedsoftware/InstallS5CMD.sh				
 fi 
