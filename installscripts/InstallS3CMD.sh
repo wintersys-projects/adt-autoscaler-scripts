@@ -31,18 +31,21 @@ then
 	apt="/usr/sbin/apt-fast"
 fi
 
+export DEBIAN_FRONTEND=noninteractive
+install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y install " 
+
 if ( [ "${apt}" != "" ] )
 then
 	if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
  	then
 		if ( [ "${BUILDOS}" = "ubuntu" ] )
 		then
-			DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install s3cmd	#####UBUNTU-S3CMD-REPO#####
+			${install_command} s3cmd	
 		fi
 
 		if ( [ "${BUILDOS}" = "debian" ] )
 		then
-			DEBIAN_FRONTEND=noninteractive ${apt} -o DPkg::Lock::Timeout=-1 -qq -y install s3cmd	#####DEBIAN-S3CMD-REPO#####
+			${install_command} s3cmd	
 		fi
   	fi
     	/bin/touch ${HOME}/runtime/installedsoftware/InstallS3CMD.sh				
