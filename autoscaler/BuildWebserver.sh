@@ -337,8 +337,10 @@ ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${HOME}/
 if ( [ "${WEBSERVER_IMAGE_ID}" = "" ] )
 then
 	/bin/echo "${0} `/bin/date`: Performing a regular style build for this webserver" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-	. ${HOME}/autoscaler/buildmethods/RegularBuildMethod.sh
+#	. ${HOME}/autoscaler/buildmethods/RegularBuildMethod.sh
 fi
+
+/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@10.0.1.4  ${HOME}/providerscripts/utilities/housekeeping/RsyncEntireMachine.sh ${private_ip}
 
 /bin/echo "${0} `/bin/date`: The main build has completed now just have to check that it's been dun right" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 
