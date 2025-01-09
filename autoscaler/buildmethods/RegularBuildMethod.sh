@@ -115,25 +115,25 @@ ${HOME}/providerscripts/utilities/config/StoreConfigValueWebserver.sh "DBPUBLICI
 #We have lots of backup choices to build from, hourly, daily and so on, so this will pick which backup we want to build from
 if ( [ "${BUILD_CHOICE}" = "0" ] )
 then
-	/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/ws.sh 'virgin' ${SERVER_USER}"
+	/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/ws.sh 'virgin' ${SERVER_USER} ${chosen_webserver_ip}"
 elif ( [ "${BUILD_CHOICE}" = "1" ] )
 then
-	/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/ws.sh 'baseline' ${SERVER_USER}"
+	/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/ws.sh 'baseline' ${SERVER_USER}  ${chosen_webserver_ip}"
 elif ( [ "${BUILD_CHOICE}" = "2" ] )
 then
-	/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO}  ${HOME}/ws.sh 'hourly' ${SERVER_USER}"
+	/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO}  ${HOME}/ws.sh 'hourly' ${SERVER_USER}  ${chosen_webserver_ip}"
 elif ( [ "${BUILD_CHOICE}" = "3" ] )
 then
-	/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO}  ${HOME}/ws.sh 'daily' ${SERVER_USER}"
+	/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO}  ${HOME}/ws.sh 'daily' ${SERVER_USER}  ${chosen_webserver_ip}"
 elif ( [ "${BUILD_CHOICE}" = "4" ] )
 then
-	/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO}  ${HOME}/ws.sh 'weekly' ${SERVER_USER}"
+	/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO}  ${HOME}/ws.sh 'weekly' ${SERVER_USER}  ${chosen_webserver_ip}"
 elif ( [ "${BUILD_CHOICE}" = "5" ] )
 then
-	/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO}  ${HOME}/ws.sh 'monthly' ${SERVER_USER}"
+	/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO}  ${HOME}/ws.sh 'monthly' ${SERVER_USER}  ${chosen_webserver_ip}"
 elif ( [ "${BUILD_CHOICE}" = "6" ] )
 then
-	/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO}  ${HOME}/ws.sh 'bimonthly' ${SERVER_USER}"
+	/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO}  ${HOME}/ws.sh 'bimonthly' ${SERVER_USER}  ${chosen_webserver_ip}"
 fi
 
 #/usr/bin/ssh -i ${BUILD_KEY} -p ${SSH_PORT} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO}  /usr/sbin/shutdown -r now"
