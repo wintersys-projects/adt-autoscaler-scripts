@@ -333,13 +333,66 @@ ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${HOME}/
 
 . ${HOME}/providerscripts/security/firewall/TightenDBaaSFirewall.sh
 
-# Build our webserver
+snapshot_build="0"
+#If we are here, then we are not building from a snapshot
+webserver_name="${server_instance_name}"
+#Test to see if our server can be accessed using our build key
+count="0"
+connected="0"
+sshpass="0"
 
-if ( [ "${WEBSERVER_IMAGE_ID}" = "" ] )
+while ( [ "${count}" -lt "10" ] && [ "${connected}" = "0" ] )
+do
+	count="`/usr/bin/expr ${count} + 1`"
+	/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS1} -o "PasswordAuthentication no" ${DEFAULT_USER}@${private_ip} "/bin/touch /tmp/alive.$$"
+
+	if ( [ "`/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS1} ${DEFAULT_USER}@${private_ip} "/bin/ls /tmp/alive.$$"`" != "" ] )
+	then
+		connected="1"
+	fi
+		
+	if ( [ "${connected}" = "0" ] && [ "${CLOUDHOST_PASSWORD}" != "" ] )
+	then
+		if ( [ ! -f /usr/bin/sshpass ] )
+		then
+			if ( [ "${BUILDOS}" = "ubuntu" ] || [ "${BUILDOS}" = "debian" ] )
+			then
+				DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq install sshpass
+			fi
+		fi
+			
+		/usr/bin/sshpass -p ${CLOUDHOST_PASSWORD} /usr/bin/ssh ${OPTIONS} ${DEFAULT_USER}@${private_ip} "/bin/touch /tmp/alive1.$$"
+			
+		if ( [ "$?" = "0" ] )
+		then
+			/bin/echo "${0} `/bin/date`: Doing an sshpass style initiation of our new webserver (${server_instance_name}) with ip address ${private_ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+			sshpass="1"
+			connected="1"
+		fi
+	
+	fi
+	if ( [ "${connected}" = "0" ] )
+	then
+		/bin/sleep 30
+	fi
+done
+
+if ( [ "${connected}" = "0" ] && [ "${count}" = "10" ] )
 then
-	/bin/echo "${0} `/bin/date`: Performing a regular style build for this webserver" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-	. ${HOME}/autoscaler/buildmethods/RegularBuildMethod.sh
+	${HOME}/providerscripts/email/SendEmail.sh "FAILED TO BUILD/PROVISION A WEBSERVER" "For some reason, autoscaler provisioned webserver with ip ${ip} failed to provision. At the very least, the clouhost_password wasn't set when it was needed" "ERROR"
+	/bin/echo "${0} `/bin/date`: Failed to build initiate a new webserver I will have to destroy it and try again" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+	${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
+	exit    
 fi
+
+if ( [ "${sshpass}" = "1" ] )
+then
+	/usr/bin/sshpass -p ${CLOUDHOST_PASSWORD} /usr/bin/scp ${OPTIONS} ${BUILD_KEY}.pub ${CLOUDHOST_USERNAME}@${private_ip}:/root/.ssh/authorized_keys
+fi
+ 
+/bin/echo "${0} `/bin/date`: Initiating the main build on webserver ${webserver_name}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+
+/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/ws.sh ${chosen_webserver_ip}"
 
 if ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "/bin/ls /home/${SERVER_USER}/runtime/SUCCESSFULLY_RSYNC_BUILT"`" != "" ] )
 then
