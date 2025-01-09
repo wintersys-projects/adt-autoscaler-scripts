@@ -403,6 +403,7 @@ do
 	/bin/sleep 5
 	count="`/usr/bin/expr ${count} + 1`"
 done
+/usr/bin/scp -i ${BUILD_KEY} ${OPTIONS} ${HOME}/runtime/webserver_configuration_settings.dat ${HOME}/runtime/buildstyles.dat ${SERVER_USER}@${private_ip}:${HOME}/.ssh/
 /usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/ws.sh ${chosen_webserver_ip} ${WS_PUBLIC_IP} ${WSIP}"
 
 if ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "/bin/ls /home/${SERVER_USER}/runtime/SUCCESSFULLY_RSYNC_BUILT"`" != "" ] )
