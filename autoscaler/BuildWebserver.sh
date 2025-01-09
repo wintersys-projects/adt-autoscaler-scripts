@@ -47,6 +47,7 @@ then
 fi
 
 buildno="${1}"
+chosen_webserver_ip="${2}"
 trap "cleanup ${buildno}" TERM
 start=`/bin/date +%s`
 
