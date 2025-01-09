@@ -218,7 +218,7 @@ then
 
 	/bin/echo "${0} `/bin/date`: A scaling cycle has been initiated, additional new scaling events will not be processed until this scaling cycle is complete" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 
-	active_webserver_ips="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh webserverips/*` 111.111.111.111"
+	active_webserver_ips="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh webserverips/*` "
 	no_active_webservers="`/bin/echo ${active_webserver_ips} | /usr/bin/wc -w`"
 	
  	while ( [ "${loop}" -le "`/usr/bin/expr ${no_needed_here} - 1`" ] )
