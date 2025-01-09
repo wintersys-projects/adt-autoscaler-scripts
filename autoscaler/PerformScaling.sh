@@ -218,7 +218,10 @@ then
 
 	/bin/echo "${0} `/bin/date`: A scaling cycle has been initiated, additional new scaling events will not be processed until this scaling cycle is complete" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 
-	while ( [ "${loop}" -le "`/usr/bin/expr ${no_needed_here} - 1`" ] )
+	active_webserver_ips="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh webserverips/*` 111.111.111.111"
+	no_active_webservers="`/bin/echo ${active_webserver_ips} | /usr/bin/wc -w`"
+	
+ 	while ( [ "${loop}" -le "`/usr/bin/expr ${no_needed_here} - 1`" ] )
 	do
 		loop="`/usr/bin/expr ${loop} + 1`"
 		/bin/touch ${HOME}/runtime/AUTOSCALINGMONITOR:${loop}
@@ -228,7 +231,9 @@ then
 			newip="`${HOME}/autoscaler/BuildWebserver.sh ${loop} &`"
 		else
 			/bin/echo "${0} `/bin/date`: I have calculated that a webserver needs booting so am booting a new one as a regular build (not a snapshot)" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-			newip="`${HOME}/autoscaler/BuildWebserver.sh ${loop} &`"
+			no_chosen_one="`/usr/bin/shuf -i 1-${no_active_webservers} -n 1`"
+   			chosen_webserver_ip="`/bin/echo "${active_webserver_ips}" | /usr/bin/cut -d " " -f ${no_chosen_one}`"
+   			newip="`${HOME}/autoscaler/BuildWebserver.sh ${loop} ${chosen_webserver_ip} &`"
 		fi
 	done
 
