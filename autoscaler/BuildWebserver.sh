@@ -392,7 +392,7 @@ fi
  
 /bin/echo "${0} `/bin/date`: Initiating the main build on webserver ${webserver_name}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 
-/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/ws.sh ${chosen_webserver_ip}"
+/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/ws.sh ${chosen_webserver_ip} ${WS_PUBLIC_IP} ${WSIP}"
 
 if ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "/bin/ls /home/${SERVER_USER}/runtime/SUCCESSFULLY_RSYNC_BUILT"`" != "" ] )
 then
