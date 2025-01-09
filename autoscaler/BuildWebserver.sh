@@ -342,174 +342,181 @@ fi
 
 /bin/echo "${0} `/bin/date`: The main build has completed now just have to check that it's been dun right" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 
-application_language_installed="`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "/bin/ls /home/${SERVER_USER}/runtime/APPLICATION_LANGUAGE_INSTALLED"`" 
-
-while ( [ "${application_language_installed}" = "" ] )
-do
-	/bin/sleep 1
+if ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "/bin/ls /home/${SERVER_USER}/runtime/SUCCESSFULLY_RSYNC_BUILT"`" = "" ] )
+then
 	application_language_installed="`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "/bin/ls /home/${SERVER_USER}/runtime/APPLICATION_LANGUAGE_INSTALLED"`" 
-done
 
-webserver_installed="`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "/bin/ls /home/${SERVER_USER}/runtime/WEBSERVER_INSTALLED"`"
+	while ( [ "${application_language_installed}" = "" ] )
+	do
+		/bin/sleep 1
+		application_language_installed="`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "/bin/ls /home/${SERVER_USER}/runtime/APPLICATION_LANGUAGE_INSTALLED"`" 
+	done
 
-while ( [ "${webserver_installed}" = "" ] )
-do
-	/bin/sleep 1
-	webserver_installed="`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/bin/ls /home/${SERVER_USER}/runtime/WEBSERVER_INSTALLED"`"
-done
+	webserver_installed="`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "/bin/ls /home/${SERVER_USER}/runtime/WEBSERVER_INSTALLED"`"
 
-core_software_installed="`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "/bin/ls /home/${SERVER_USER}/runtime/ALL_CORE_SOFTWARE_INSTALLED"`" 
+	while ( [ "${webserver_installed}" = "" ] )
+	do
+		/bin/sleep 1
+		webserver_installed="`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/bin/ls /home/${SERVER_USER}/runtime/WEBSERVER_INSTALLED"`"
+	done
 
-while ( [ "${core_software_installed}" = "" ] )
-do
-	/bin/sleep 1
 	core_software_installed="`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "/bin/ls /home/${SERVER_USER}/runtime/ALL_CORE_SOFTWARE_INSTALLED"`" 
-done
 
-/bin/echo "${0} `/bin/date`: Setting up application configuration" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "${CUSTOM_USER_SUDO} /home/${SERVER_USER}/providerscripts/application/configuration/SetApplicationConfiguration.sh" 
+	while ( [ "${core_software_installed}" = "" ] )
+	do
+		/bin/sleep 1
+		core_software_installed="`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "/bin/ls /home/${SERVER_USER}/runtime/ALL_CORE_SOFTWARE_INSTALLED"`" 
+	done
+
+	/bin/echo "${0} `/bin/date`: Setting up application configuration" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+	/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "${CUSTOM_USER_SUDO} /home/${SERVER_USER}/providerscripts/application/configuration/SetApplicationConfiguration.sh" 
 
 
-/bin/echo "${0} `/bin/date`: Checking webserver is up" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "${CUSTOM_USER_SUDO} /home/${SERVER_USER}/providerscripts/webserver/RestartWebserver.sh"
+	/bin/echo "${0} `/bin/date`: Checking webserver is up" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+	/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "${CUSTOM_USER_SUDO} /home/${SERVER_USER}/providerscripts/webserver/RestartWebserver.sh"
 
-#Do some checks to make sure the machine has come online and so on
-count="0"
-failedintegritycheck="0"
-/bin/echo "${0} `/bin/date`: Performing build integrity checks for" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-while ( [ "${count}" -lt "71" ] && [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/status/CheckServerAlive.sh"`" != "ALIVE" ] )
-do
-	/bin/sleep 5
-	count="`/usr/bin/expr ${count} + 1`"
-	/bin/echo "${0} `/bin/date`: Doing build integrity checks for ${ip} attempt ${count}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-done
-
-if ( [ "${count}" = "71" ] )
-then
-	failedintegritycheck="1"
-	${HOME}/providerscripts/email/SendEmail.sh "FAILED INTEGRITY CHECKS" "A webserver (${webserver_name}) being built on autoscaler (${autoscaler_name}) has failed its integrity checks" "ERROR"
-	/bin/echo "${0} `/bin/date`: Failed integrity checks for ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
- 	${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
-fi
-
-if ( [ "${failedintegritycheck}" = "0" ] )
-then
+	#Do some checks to make sure the machine has come online and so on
 	count="0"
-	/bin/echo "${0} `/bin/date`:  Performing post processing for ip address ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-	/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/application/processing/PerformPostProcessingByApplication.sh ${SERVER_USER} autoscaled"
-	if ( [ "$?" != "0" ] && [ "${count}" -lt "71" ] )
-	then
+	failedintegritycheck="0"
+	/bin/echo "${0} `/bin/date`: Performing build integrity checks for" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+	while ( [ "${count}" -lt "71" ] && [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/status/CheckServerAlive.sh"`" != "ALIVE" ] )
+	do
 		/bin/sleep 5
 		count="`/usr/bin/expr ${count} + 1`"
-		/bin/echo "${0} `/bin/date`: Performing post processing for  ${ip} attempt ${count}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-		/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/application/processing/PerformPostProcessingByApplication.sh ${SERVER_USER} autoscaled"
-	fi
+		/bin/echo "${0} `/bin/date`: Doing build integrity checks for ${ip} attempt ${count}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+	done
 
 	if ( [ "${count}" = "71" ] )
 	then
-		${HOME}/providerscripts/email/SendEmail.sh "FAILED TO PERFORM POST PROCESSING" "Post Processing has failed to complete on autoscaler ${autoscaler_name} for webserver ${webserver_name}" "ERROR"
-		/bin/echo "${0} `/bin/date`: Post Processing has failed to complete on autoscaler ${autoscaler_name} for webserver ${webserver_name}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-		${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
- 	fi
-		
-	failedmountcheck="0"
-	if ( [ "${snapshot_build}" = "0" ] )
+		failedintegritycheck="1"
+		${HOME}/providerscripts/email/SendEmail.sh "FAILED INTEGRITY CHECKS" "A webserver (${webserver_name}) being built on autoscaler (${autoscaler_name}) has failed its integrity checks" "ERROR"
+		/bin/echo "${0} `/bin/date`: Failed integrity checks for ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+ 		${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
+	fi
+
+	if ( [ "${failedintegritycheck}" = "0" ] )
 	then
 		count="0"
-		/bin/echo "${0} `/bin/date`: Performing mount checks for ip address ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-		/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/datastore/SetupAssetsStore.sh"
-		while ( [ "${count}" -lt "71" ] &&  [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/status/AreAssetsMounted.sh"`" != "MOUNTED" ] )
-		do
-			count="`/usr/bin/expr ${count} + 1`"
+		/bin/echo "${0} `/bin/date`:  Performing post processing for ip address ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+		/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/application/processing/PerformPostProcessingByApplication.sh ${SERVER_USER} autoscaled"
+	
+ 		if ( [ "$?" != "0" ] && [ "${count}" -lt "71" ] )
+		then
 			/bin/sleep 5
-			/bin/echo "${0} `/bin/date`: Doing mount checks for ${ip} attempt ${count}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-			/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/datastore/SetupAssetsStore.sh"
-		done
+			count="`/usr/bin/expr ${count} + 1`"
+			/bin/echo "${0} `/bin/date`: Performing post processing for  ${ip} attempt ${count}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+			/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/application/processing/PerformPostProcessingByApplication.sh ${SERVER_USER} autoscaled"
+		fi
 
 		if ( [ "${count}" = "71" ] )
 		then
-			failedmountcheck="1"
-			${HOME}/providerscripts/email/SendEmail.sh "MOUNT CHECKS HAVE BEEN FAILED" "Mount checks have been failed on autoscaler ${autoscaler_name} for webserver ${webserver_name}" "ERROR"
-			/bin/echo "${0} `/bin/date`: Failed mount checks for ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log 
+			${HOME}/providerscripts/email/SendEmail.sh "FAILED TO PERFORM POST PROCESSING" "Post Processing has failed to complete on autoscaler ${autoscaler_name} for webserver ${webserver_name}" "ERROR"
+			/bin/echo "${0} `/bin/date`: Post Processing has failed to complete on autoscaler ${autoscaler_name} for webserver ${webserver_name}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 			${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
-  		fi
-	fi
+ 		fi
 		
-	failedonlinecheck="1"
-	if ( [ "${failedmountcheck}" = "0" ] && [ "${failedintegritycheck}" = "0" ] )
-	then
-	   #Do a check, as best we can to make sure that the website application is actually running correctly
-	   count="0"
-	   while ( [ "${count}" -lt "71" ] && [ "${failedonlinecheck}" != "0" ] )
-	   do
-			. ${HOME}/autoscaler/SelectHeadFile.sh
-
-			if ( [ "${failedonlinecheck}" = "1" ] )
-			then
-				/bin/echo "${0} `/bin/date`: Peforming online checks for ip address ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-				if ( [ "`/usr/bin/curl -I --max-time 60 --insecure https://${private_ip}:443/${headfile} | /bin/grep -E 'HTTP/2 200|HTTP/2 301|HTTP/2 302|HTTP/2 303|200 OK|302 Found|301 Moved Permanently'`" = "" ] )
-				then
-					/bin/echo "/usr/bin/curl -I --max-time 60 --insecure https://${private_ip}:443/${headfile} | /bin/grep -E 'HTTP/2 200|HTTP/2 301|HTTP/2 302|HTTP/2 303|200 OK|302 Found|301 Moved Permanently"
-					/bin/echo "${0} `/bin/date`: Expecting ${private_ip} to be online, but can't reach it with curl yet...." >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-					count="`/usr/bin/expr ${count} + 1`"
-					/bin/echo "${0} `/bin/date`: Doing webserver/application online check for ${ip} attempt ${count}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-					/bin/sleep 5
-				else
-					/bin/echo "${0} `/bin/date`:  ${ip} is online that's wicked..." >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-					failedonlinecheck="0"
-				fi
-			fi
-		done
-		
-		if ( [ "${count}" = "71" ] )
+		failedmountcheck="0"
+		if ( [ "${snapshot_build}" = "0" ] )
 		then
-			${HOME}/providerscripts/email/SendEmail.sh "WEBSERVER FAILED TO COME ONLINE" "Online checks have been failed on autoscaler ${autoscaler_name} for webserver ${webserver_name}" "ERROR"
-			/bin/echo "${0} `/bin/date`: ${ip} failed to come online" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-			failedonlinecheck="1"
+			count="0"
+			/bin/echo "${0} `/bin/date`: Performing mount checks for ip address ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+			/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/datastore/SetupAssetsStore.sh"
+			while ( [ "${count}" -lt "71" ] &&  [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/status/AreAssetsMounted.sh"`" != "MOUNTED" ] )
+			do
+				count="`/usr/bin/expr ${count} + 1`"
+				/bin/sleep 5
+				/bin/echo "${0} `/bin/date`: Doing mount checks for ${ip} attempt ${count}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+				/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/datastore/SetupAssetsStore.sh"
+			done
+
+			if ( [ "${count}" = "71" ] )
+			then
+				failedmountcheck="1"
+				${HOME}/providerscripts/email/SendEmail.sh "MOUNT CHECKS HAVE BEEN FAILED" "Mount checks have been failed on autoscaler ${autoscaler_name} for webserver ${webserver_name}" "ERROR"
+				/bin/echo "${0} `/bin/date`: Failed mount checks for ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log 
+				${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
+  			fi
+		fi
+		
+		failedonlinecheck="1"
+		if ( [ "${failedmountcheck}" = "0" ] && [ "${failedintegritycheck}" = "0" ] )
+		then
+	   		#Do a check, as best we can to make sure that the website application is actually running correctly
+	   		count="0"
+	   		while ( [ "${count}" -lt "71" ] && [ "${failedonlinecheck}" != "0" ] )
+	   		do
+				. ${HOME}/autoscaler/SelectHeadFile.sh
+
+				if ( [ "${failedonlinecheck}" = "1" ] )
+				then
+					/bin/echo "${0} `/bin/date`: Peforming online checks for ip address ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+					if ( [ "`/usr/bin/curl -I --max-time 60 --insecure https://${private_ip}:443/${headfile} | /bin/grep -E 'HTTP/2 200|HTTP/2 301|HTTP/2 302|HTTP/2 303|200 OK|302 Found|301 Moved Permanently'`" = "" ] )
+					then
+						/bin/echo "/usr/bin/curl -I --max-time 60 --insecure https://${private_ip}:443/${headfile} | /bin/grep -E 'HTTP/2 200|HTTP/2 301|HTTP/2 302|HTTP/2 303|200 OK|302 Found|301 Moved Permanently"
+						/bin/echo "${0} `/bin/date`: Expecting ${private_ip} to be online, but can't reach it with curl yet...." >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+						count="`/usr/bin/expr ${count} + 1`"
+						/bin/echo "${0} `/bin/date`: Doing webserver/application online check for ${ip} attempt ${count}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+						/bin/sleep 5
+					else
+						/bin/echo "${0} `/bin/date`:  ${ip} is online that's wicked..." >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+						failedonlinecheck="0"
+					fi
+				fi
+			done
+		
+			if ( [ "${count}" = "71" ] )
+			then
+				${HOME}/providerscripts/email/SendEmail.sh "WEBSERVER FAILED TO COME ONLINE" "Online checks have been failed on autoscaler ${autoscaler_name} for webserver ${webserver_name}" "ERROR"
+				/bin/echo "${0} `/bin/date`: ${ip} failed to come online" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+				failedonlinecheck="1"
+			fi
 		fi
 	fi
-fi
 
-if ( [ "${failedintegritycheck}" = "1" ] || [ "${failedmountcheck}" = "1" ] || [ "${failedonlinecheck}" = "1" ] )
-then 
-	#If any of these are true, then somehow the machine/application didn't come online and so we need to destroy the machine
-	if ( [ "${failedintegritycheck}" = "1" ] )
-	then
-		/bin/echo "${0} `/bin/date`: ${ip} failed its integrity check" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-	fi
-	if ( [ "${failedmountcheck}" = "1" ] )
-	then
-		/bin/echo "${0} `/bin/date`: ${ip} failed its mount check" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+	if ( [ "${failedintegritycheck}" = "1" ] || [ "${failedmountcheck}" = "1" ] || [ "${failedonlinecheck}" = "1" ] )
+	then 
+		#If any of these are true, then somehow the machine/application didn't come online and so we need to destroy the machine
+		if ( [ "${failedintegritycheck}" = "1" ] )
+		then
+			/bin/echo "${0} `/bin/date`: ${ip} failed its integrity check" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+		fi
+		if ( [ "${failedmountcheck}" = "1" ] )
+		then
+			/bin/echo "${0} `/bin/date`: ${ip} failed its mount check" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 		
+		fi
+		if ( [ "${failedonlinetcheck}" = "1" ] )
+		then
+			/bin/echo "${0} `/bin/date`: ${ip} failed its online check" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+		fi	
+
+		/bin/echo "${0} `/bin/date`: ${ip} is being destroyed because it failed one or more validation checks" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+	
+		${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
+		
+		/bin/echo "${0} `/bin/date`: The webserver ${ip} being built in response to a scaling event has failed to build and has had its resources released" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+		${HOME}/providerscripts/email/SendEmail.sh "A WEBSERVER HAS FAILED TO COME ONLINE" "For some reason, autoscaler provisioned webserver with ip ${ip} failed to provision. You will need to check your logs..." "ERROR"
+		/usr/bin/kill -TERM $$
+  
+	else
+		/bin/echo "${0} `/bin/date`: All checks passed for ip address ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+	#	. ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
+
+		#If we got to here then we are a successful build as as best as we can tell, everything is online
+		#So, we add the ip address of our new machine to our DNS provider and that machine is then ready
+		#to start serving requests
+		/bin/echo "${0} `/bin/date`: ${ip} is fully online and it's public ip is being added to the DNS provider" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+		/bin/echo "${0} `/bin/date`: Adding IP ${ip} to DNS system" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+
+ 		#/bin/sleep 60 #sleep for 1 minute to give the machines time to settle down, they have been busy
+	
+		${HOME}/autoscaler/AddIPToDNS.sh ${ip}
+	
+		/bin/echo "${0} `/bin/date`: The webserver ${ip} has had all its software built and its IP address added to the DNS system ready for use" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+		/bin/echo "${ip}"
 	fi
-	if ( [ "${failedonlinetcheck}" = "1" ] )
-	then
-		/bin/echo "${0} `/bin/date`: ${ip} failed its online check" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-	fi
-
-	/bin/echo "${0} `/bin/date`: ${ip} is being destroyed because it failed one or more validation checks" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-	
-	${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
-	
-	/bin/echo "${0} `/bin/date`: The webserver ${ip} being built in response to a scaling event has failed to build and has had its resources released" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-	${HOME}/providerscripts/email/SendEmail.sh "A WEBSERVER HAS FAILED TO COME ONLINE" "For some reason, autoscaler provisioned webserver with ip ${ip} failed to provision. You will need to check your logs..." "ERROR"
-	/usr/bin/kill -TERM $$
-else
-	/bin/echo "${0} `/bin/date`: All checks passed for ip address ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-#	. ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
-
-	#If we got to here then we are a successful build as as best as we can tell, everything is online
-	#So, we add the ip address of our new machine to our DNS provider and that machine is then ready
-	#to start serving requests
-	/bin/echo "${0} `/bin/date`: ${ip} is fully online and it's public ip is being added to the DNS provider" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-	/bin/echo "${0} `/bin/date`: Adding IP ${ip} to DNS system" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-
- 	#/bin/sleep 60 #sleep for 1 minute to give the machines time to settle down, they have been busy
-	
+else 
 	${HOME}/autoscaler/AddIPToDNS.sh ${ip}
-	
-	/bin/echo "${0} `/bin/date`: The webserver ${ip} has had all its software built and its IP address added to the DNS system ready for use" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-	/bin/echo "${ip}"
 fi
 
 /usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} /bin/touch ${HOME}/runtime/AUTOSCALED_WEBSERVER_ONLINE"
