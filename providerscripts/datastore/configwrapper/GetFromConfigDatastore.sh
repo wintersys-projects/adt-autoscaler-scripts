@@ -37,19 +37,9 @@ then
         datastore_tool="/usr/bin/s5cmd --credentials-file /root/.s5cfg --endpoint-url https://${host_base} cp "
 fi
 
-if ( [ "${2}" = "" ] )
-then
-	count="0"
-	while ( [ "`${datastore_tool} s3://${configbucket}/$1 2>&1 >/dev/null | /bin/grep "ERROR"`" != "" ] && [ "${count}" -lt "5" ] )
-	do
-         	/bin/echo "An error has occured `/usr/bin/expr ${count} + 1` times in script ${0}"
-        	/bin/sleep 5
-        	count="`/usr/bin/expr ${count} + 1`"
-	done 	
-fi
 
-if ( [ "$2" != "" ] )
-then
+#if ( [ "$2" != "" ] )
+#then
 	count="0"
 	while ( [ "`${datastore_tool} s3://${configbucket}/$1 $2 2>&1 >/dev/null | /bin/grep "ERROR"`" != "" ] && [ "${count}" -lt "5" ] )
 	do
@@ -57,15 +47,15 @@ then
         	/bin/sleep 5
         	count="`/usr/bin/expr ${count} + 1`"
 	done 
-fi
+#fi
 
-if ( [ "$3" = "recursive" ] )
-then
-	count="0"
-	while ( [ "`${datastore_tool} --force --recursive get s3://${configbucket}/$1 $2 2>&1 >/dev/null | /bin/grep "ERROR"`" != "" ] && [ "${count}" -lt "5" ] )
-	do
-         	/bin/echo "An error has occured `/usr/bin/expr ${count} + 1` times in script ${0}"
-        	/bin/sleep 5
-        	count="`/usr/bin/expr ${count} + 1`"
-	done 	 
-fi
+#if ( [ "$3" = "recursive" ] )
+#then
+#	count="0"#
+#	while ( [ "`${datastore_tool} --force --recursive get s3://${configbucket}/$1 $2 2>&1 >/dev/null | /bin/grep "ERROR"`" != "" ] && [ "${count}" -lt "5" ] )
+#	do
+ #        	/bin/echo "An error has occured `/usr/bin/expr ${count} + 1` times in script ${0}"
+ #       	/bin/sleep 5
+ #       	count="`/usr/bin/expr ${count} + 1`"#
+#	done 	 
+#fi
