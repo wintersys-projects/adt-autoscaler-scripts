@@ -16,7 +16,7 @@ ${HOME}/installscripts/InstallFirewall.sh ${BUILDOS}
 ${HOME}/installscripts/InstallDatastoreTools.sh ${BUILDOS}
 
 >&2 /bin/echo "${0} InstallGo.sh"
-${HOME}/installscripts/InstallGo.sh ${BUILDOS} 
+${HOME}/installscripts/InstallGo.sh ${BUILDOS} &
 #>&2 /bin/echo "${0} InstallCurl.sh"
 #${HOME}/installscripts/InstallCurl.sh ${BUILDOS} 
 #>&2 /bin/echo "${0} InstallSSHPass.sh"
