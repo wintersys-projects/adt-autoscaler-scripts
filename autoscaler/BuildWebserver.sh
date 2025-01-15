@@ -247,6 +247,22 @@ ostype="`${HOME}/providerscripts/cloudhost/GetOperatingSystemVersion.sh ${SIZE} 
 
 /bin/touch ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock
 
+count="0"
+while ( [ "`/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${chosen_webserver_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/status/IsWebserverFullyBuilt.sh"`" = "0" ] && [ "${count}" -lt "5" ] )
+do
+	active_webserver_ips="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh webserverips/*` "
+	no_active_webservers="`/bin/echo ${active_webserver_ips} | /usr/bin/wc -w`"
+	no_chosen_one="`/usr/bin/shuf -i 1-${no_active_webservers} -n 1`"
+   	chosen_webserver_ip="`/bin/echo "${active_webserver_ips}" | /usr/bin/cut -d " " -f ${no_chosen_one}`"
+    	/bin/sleep 5
+     	count="`/usr/bin/expr ${count} + 1`"
+done
+
+if ( [ "${count}" -eq "5" ] )
+then
+	/bin/echo "${0} `/bin/date`: Couldn't find a fully build webserver to sync with after 5 attempts" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+fi
+
 /bin/echo "${0} `/bin/date`: Spinning up a new webserver with name ${webserver_name}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 
 count="0"
