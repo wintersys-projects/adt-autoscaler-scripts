@@ -260,7 +260,9 @@ done
 
 if ( [ "${count}" -eq "5" ] )
 then
+        ${HOME}/providerscripts/email/SendEmail.sh "COULDN'T FIND A FULLY BUILT WEBSERVER TO SYNC FROM" "Couldn't find a fully build webserver to sync with after 5 attempts" "ERROR"
 	/bin/echo "${0} `/bin/date`: Couldn't find a fully build webserver to sync with after 5 attempts" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+	exit
 fi
 
 /bin/echo "${0} `/bin/date`: Spinning up a new webserver with name ${webserver_name}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
