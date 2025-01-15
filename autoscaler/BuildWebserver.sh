@@ -436,7 +436,7 @@ then
 fi
 
 /usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} /bin/touch ${HOME}/runtime/AUTOSCALED_WEBSERVER_ONLINE"
-/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} /bin/rm ${HOME}/runtime/BUILD_IN_PROGRESS"
+/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} /bin/rm ${HOME}/runtime/INITIAL_BUILD_WEBSERVER_ONLINE" 2>/dev/null
 
 ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh  beingbuiltips/${private_ip}
 
