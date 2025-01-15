@@ -279,7 +279,7 @@ do
         WS_PUBLIC_IP="${ip}"
         ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} webserverpublicips/${ip}
         private_ip="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh ${server_instance_name} ${CLOUDHOST}`"
-        WSIP="${private_ip}"
+        WS_PRIVATE_IP="${private_ip}"
         ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${private_ip} webserverips/${private_ip}
         count="`/usr/bin/expr ${count} + 1`"
 done
@@ -395,6 +395,7 @@ fi
 
 /usr/bin/scp -i ${BUILD_KEY} ${OPTIONS} ${BUILD_KEY} ${SERVER_USER}@${private_ip}:/home/${SERVER_USER}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY
 /usr/bin/scp -i ${BUILD_KEY} ${OPTIONS} ${HOME}/providerscripts/git/GitRemoteInstall.sh ${SERVER_USER}@${private_ip}:/home/${SERVER_USER}
+
 git_provider_domain="`${HOME}/providerscripts/git/GitProviderDomain.sh ${INFRASTRUCTURE_REPOSITORY_PROVIDER}`"
 count="0"
 while ( [ "`/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} /bin/ls /home/${SERVER_USER}/ws.sh" 2>/dev/null`" = "" ] && [ "${count}" -lt "5" ] )
@@ -403,8 +404,9 @@ do
 	/bin/sleep 5
 	count="`/usr/bin/expr ${count} + 1`"
 done
+
 /usr/bin/scp -i ${BUILD_KEY} ${OPTIONS} ${HOME}/runtime/webserver_configuration_settings.dat ${HOME}/runtime/buildstyles.dat ${SERVER_USER}@${private_ip}:${HOME}/.ssh/
-/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/ws.sh ${chosen_webserver_ip} ${WS_PUBLIC_IP} ${WSIP}"
+/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/ws.sh ${chosen_webserver_ip} ${WS_PUBLIC_IP} ${WS_PRIVATE_IP}"
 
 if ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "/bin/ls /home/${SERVER_USER}/runtime/SUCCESSFULLY_RSYNC_BUILT"`" != "" ] )
 then
