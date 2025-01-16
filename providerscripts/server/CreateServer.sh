@@ -40,22 +40,13 @@ VPC_IP_RANGE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'V
 KEY_ID="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'KEYID'`"
 BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
 ACTIVE_FIREWALL="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'ACTIVEFIREWALLS'`"
-
-if ( [ "${SNAPSHOT_ID}" = "" ] )
-then
-        OS_CHOICE="`${HOME}/providerscripts/cloudhost/GetOperatingSystemVersion.sh`"
-fi
+OS_CHOICE="`${HOME}/providerscripts/cloudhost/GetOperatingSystemVersion.sh`"
 
 if ( [ -f ${HOME}/DROPLET ] || [ "${CLOUDHOST}" = "digitalocean" ] )
 then
         vpc_id="`/usr/local/bin/doctl vpcs list -o json | /usr/bin/jq -r '.[] | select (.region == "'${REGION}'") | select (.name | contains ("'adt-vpc'")).id'`"
         firewall_id="`/usr/local/bin/doctl -o json compute firewall list | /usr/bin/jq -r '.[] | select (.name == "adt-webserver-'${BUILD_IDENTIFIER}'" ).id'`"
-        #Digital ocean supports snapshots so, we test to see if we want to use them
-        if ( [ "${SNAPSHOT_ID}" != "" ] )
-        then
-                #If we get to here, then we are building from a snapshot and we pass the SNAPSHOT_ID in as the oschoice parameter
-                OS_CHOICE="${SNAPSHOT_ID}"
-        fi
+
         webserver_id="`/usr/local/bin/doctl compute droplet create "${server_name}" -o json --size "${server_size}" --image "${OS_CHOICE}"  --region "${REGION}" --ssh-keys "${KEY_ID}" --vpc-uuid "${vpc_id}" | /usr/bin/jq -r '.[].id'`"
        
         if ( [ "${ACTIVE_FIREWALL}" = "2" ] || [ "${ACTIVE_FIREWALL}" = "3" ] )
@@ -67,12 +58,6 @@ fi
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${CLOUDHOST}" = "exoscale" ] )
 then
         template_visibility=" --template-visibility public "
-        
-        if ( [ "${SNAPSHOT_ID}" != "" ] )
-        then
-                OS_CHOICE="${SNAPSHOT_ID}"
-                template_visibilty=" --template-visibility private "
-        fi
 
         if ( [ "${ACTIVE_FIREWALL}" = "2" ] || [ "${ACTIVE_FIREWALL}" = "3" ] )
         then
@@ -101,10 +86,6 @@ then
         vpc_id="`/usr/local/bin/linode-cli --json vpcs list | /usr/bin/jq -r '.[] | select (.label == "adt-vpc").id'`"
         subnet_id="`/usr/local/bin/linode-cli --json vpcs subnets-list ${vpc_id} | /usr/bin/jq -r '.[] | select (.label == "adt-subnet").id'`"
  
-        if ( [ "${SNAPSHOT_ID}" != "" ] )
-        then
-                OS_CHOICE="private/${SNAPSHOT_ID}"
-        fi
 
         if ( [ "${ACTIVE_FIREWALL}" = "2" ] || [ "${ACTIVE_FIREWALL}" = "3" ] )
         then
@@ -129,12 +110,6 @@ then
         vpc_id="`/usr/bin/vultr vpc2 list -o json | /usr/bin/jq -r '.vpcs[] | select (.description == "adt-vpc").id'`"
 
 
-        #Vultr supports snapshots, so decide if we are building from a snapshot
-        if ( [ "${SNAPSHOT_ID}" != "" ] )
-        then
-                OS_CHOICE="${SNAPSHOT_ID}"
-        fi
-
         user_data=`/bin/cat ${HOME}/providerscripts/server/cloud-init/vultr.dat`
 
         firewall_id="`/usr/bin/vultr firewall group list -o json | /usr/bin/jq -r '.firewall_groups[] | select (.description == "adt-autoscaler-'${BUILD_IDENTIFIER}'").id'`"
@@ -144,23 +119,14 @@ then
         then
                 ddos="true"
         fi
-        if ( [ "${SNAPSHOT_ID}" = "" ] )
+
+        if ( [ "${ACTIVE_FIREWALL}" = "2" ] || [ "${ACTIVE_FIREWALL}" = "3" ] )
         then
-                if ( [ "${ACTIVE_FIREWALL}" = "2" ] || [ "${ACTIVE_FIREWALL}" = "3" ] )
-                then
-                        /usr/bin/vultr instance create --label="${server_name}" --region="${REGION}" --plan="${server_size}" --ipv6=false -s ${KEY_ID} --os="${OS_CHOICE}" --ddos="${ddos}" --userdata="${user_data}" --firewall-group="${firewall_id}"
-                else
-                        /usr/bin/vultr instance create --label="${server_name}" --region="${REGION}" --plan="${server_size}" --ipv6=false -s ${KEY_ID} --os="${OS_CHOICE}" --ddos="${ddos}" --userdata="${user_data}" 
-                fi
+                /usr/bin/vultr instance create --label="${server_name}" --region="${REGION}" --plan="${server_size}" --ipv6=false -s ${KEY_ID} --os="${OS_CHOICE}" --ddos="${ddos}" --userdata="${user_data}" --firewall-group="${firewall_id}"
         else
-                if ( [ "${ACTIVE_FIREWALL}" = "2" ] || [ "${ACTIVE_FIREWALL}" = "3" ] )
-                then
-                        /usr/bin/vultr instance create --label="${server_name}" --region="${REGION}" --plan="${server_size}" --ipv6=false -s ${KEY_ID} --snapshot="${OS_CHOICE}" --ddos="${ddos}" --userdata="${user_data}" --firewall-group="${firewall_id}"
-                else
-                        /usr/bin/vultr instance create --label="${server_name}" --region="${REGION}" --plan="${server_size}" --ipv6=false -s ${KEY_ID} --snapshot="${OS_CHOICE}" --ddos="${ddos}" --userdata="${user_data}"
-                fi 
+                /usr/bin/vultr instance create --label="${server_name}" --region="${REGION}" --plan="${server_size}" --ipv6=false -s ${KEY_ID} --os="${OS_CHOICE}" --ddos="${ddos}" --userdata="${user_data}" 
         fi
- 
+
         machine_id=""
         count="0"
         while ( [ "${machine_id}" = "" ] && [ "${count}" -lt "10" ] )
