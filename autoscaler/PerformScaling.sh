@@ -39,9 +39,9 @@ then
 	exit
 fi
 
-if ( [ -f ${HOME}/runtime/INITIAL_BUILD_COMPLETED ] )
+if ( [ -f ${HOME}/runtime/INITIAL_BUILD_COMPLETED ] || [ ! -f ${HOME}/runtime/AUTHORISED_TO_SCALE ] )
 then
-   /bin/echo "${0} `/bin/date`: Initial scaling process has completed and I am authorising scaling" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+   /bin/echo "${0} `/bin/date`: Initialisation process has completed and I am authorising scaling" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
    /bin/touch ${HOME}/runtime/AUTHORISED_TO_SCALE  
    if ( [ -f ${HOME}/runtime/NOT_AUTHORISED_TO_SCALE ] )
    then
