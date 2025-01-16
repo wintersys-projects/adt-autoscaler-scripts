@@ -223,16 +223,10 @@ then
 	do
 		loop="`/usr/bin/expr ${loop} + 1`"
 		/bin/touch ${HOME}/runtime/AUTOSCALINGMONITOR:${loop}
-		if (  [ "${WEBSERVER_IMAGE_ID}" != "" ] )
-		then 
-			/bin/echo "${0} `/bin/date`: I have calculated that a webserver needs booting so am booting a new one from a snapshot" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-			newip="`${HOME}/autoscaler/BuildWebserver.sh ${loop} &`"
-		else
-			/bin/echo "${0} `/bin/date`: I have calculated that a webserver needs booting so am booting a new one as a regular build (not a snapshot)" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-			no_chosen_one="`/usr/bin/shuf -i 1-${no_active_webservers} -n 1`"
-   			chosen_webserver_ip="`/bin/echo "${active_webserver_ips}" | /usr/bin/cut -d " " -f ${no_chosen_one}`"
-   			newip="`${HOME}/autoscaler/BuildWebserver.sh ${loop} ${chosen_webserver_ip} &`"
-		fi
+		/bin/echo "${0} `/bin/date`: I have calculated that a webserver needs booting so am booting a new one as a regular build (not a snapshot)" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+		no_chosen_one="`/usr/bin/shuf -i 1-${no_active_webservers} -n 1`"
+   		chosen_webserver_ip="`/bin/echo "${active_webserver_ips}" | /usr/bin/cut -d " " -f ${no_chosen_one}`"
+   		newip="`${HOME}/autoscaler/BuildWebserver.sh ${loop} ${chosen_webserver_ip} &`"
 	done
 
 	/bin/echo "${0} `/bin/date`: This autoscaler is now waiting for the new webservers to build and will continue after they have all completed" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
