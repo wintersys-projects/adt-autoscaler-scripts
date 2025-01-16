@@ -47,7 +47,6 @@ then
    then
 	   /bin/rm ${HOME}/runtime/NOT_AUTHORISED_TO_SCALE
    fi
-   exit
 fi
 
 #if ( [ -f ${HOME}/runtime/INITIALBUILDCOMPLETED ] )
