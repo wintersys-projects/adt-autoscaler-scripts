@@ -34,8 +34,6 @@ then
 	/bin/mkdir -p ${HOME}/logs/${logdir}
 fi
 
-WEBSERVER_IMAGE_ID="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'WEBSERVERIMAGEID'`"
-
 if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "SWITCHOFFSCALING"`" = "1" ] )
 then
 	exit
