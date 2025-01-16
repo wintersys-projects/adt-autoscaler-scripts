@@ -214,7 +214,7 @@ then
 	do
 		loop="`/usr/bin/expr ${loop} + 1`"
 		/bin/touch ${HOME}/runtime/AUTOSCALINGMONITOR:${loop}
-		/bin/echo "${0} `/bin/date`: I have calculated that a webserver needs booting so am booting a new one as a regular build (not a snapshot)" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+		/bin/echo "${0} `/bin/date`: I have calculated that a webserver needs booting so am booting a new one by rsyncing from an existing webserver" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 		no_chosen_one="`/usr/bin/shuf -i 1-${no_active_webservers} -n 1`"
    		chosen_webserver_ip="`/bin/echo "${active_webserver_ips}" | /usr/bin/cut -d " " -f ${no_chosen_one}`"
    		newip="`${HOME}/autoscaler/BuildWebserver.sh ${loop} ${chosen_webserver_ip} &`"
