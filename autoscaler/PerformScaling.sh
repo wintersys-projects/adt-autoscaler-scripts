@@ -39,7 +39,7 @@ then
 	exit
 fi
 
-if ( [ "${WEBSERVER_IMAGE_ID}" != "" ] && [ ! -f ${HOME}/runtime/INITIAL_SCALING_PROCESSED ] )
+if ( [ ! -f ${HOME}/runtime/INITIAL_SCALING_PROCESSED ] )
 then
    /bin/echo "${0} `/bin/date`: Initial scaling process has completed and I am authorising scaling" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
    /bin/touch ${HOME}/runtime/AUTHORISED_TO_SCALE  
