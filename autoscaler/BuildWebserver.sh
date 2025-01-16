@@ -430,7 +430,8 @@ then
 	/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/ws.sh ${chosen_webserver_ip} ${WS_PUBLIC_IP} ${WS_PRIVATE_IP}"
 else 
         /bin/echo "${0} `/bin/date`: Failed to build new webserver, couldn't contact an existing webserver to rsync from, destroyng the machine that was set aside for the installation" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-	${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
+	${HOME}/providerscripts/email/SendEmail.sh "FAILED TO SYNC NEW MACHINE" "Wasn't able to rsync a new machine (ip address:${ip}) from an existing webserver" "ERROR"
+ 	${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
 
 fi
 if ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "/bin/ls /home/${SERVER_USER}/runtime/SUCCESSFULLY_RSYNC_BUILT"`" != "" ] )
