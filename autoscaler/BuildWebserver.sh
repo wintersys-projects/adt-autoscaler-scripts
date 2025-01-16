@@ -424,7 +424,7 @@ do
 	count="`/usr/bin/expr ${count} + 1`"
 done
 
-if ( [ "`/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${chosen_webserver_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/status/IsWebserverFullyBuilt.sh"`" = "0" ] )
+if ( [ "`/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${chosen_webserver_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/status/IsWebserverFullyBuilt.sh"`" = "0" ] )
 then
 :
 fi
