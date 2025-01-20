@@ -28,7 +28,7 @@ SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SE
 S3_ACCESS_KEY="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'S3ACCESSKEY'`"
 S3_SECRET_KEY="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'S3SECRETKEY'`"
 S3_LOCATION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'S3LOCATION'`"
-S3_HOST_BASE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'S3HOSTBASE'`"
+S3_HOST_BASE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'S3HOSTBASE' | /usr/bin/awk -F':' '{print $1}'`"
 
 if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
 then
