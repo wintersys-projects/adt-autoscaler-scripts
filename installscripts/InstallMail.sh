@@ -40,12 +40,12 @@ if ( [ "${apt}" != "" ] )
 then
 	if ( [ "${buildos}" = "ubuntu" ] )
 	then
-		${install_command} mailutils		
+		eval ${install_command} mailutils		
 	fi
 
 	if ( [ "${buildos}" = "debian" ] )
 	then
-		${install_command} mailutils		
+		eval ${install_command} mailutils		
 	fi
      	/bin/touch ${HOME}/runtime/installedsoftware/InstallMail.sh	
 fi
