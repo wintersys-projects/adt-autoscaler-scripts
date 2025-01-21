@@ -24,8 +24,8 @@ ${HOME}/installscripts/InstallGo.sh ${BUILDOS} &
 >&2 /bin/echo "${0} InstallBC.sh"
 ${HOME}/installscripts/InstallBC.sh ${BUILDOS} 
 
-#>&2 /bin/echo "${0} InstallJQ.sh"
-#${HOME}/installscripts/InstallJQ.sh ${BUILDOS} 
+>&2 /bin/echo "${0} InstallJQ.sh"
+${HOME}/installscripts/InstallJQ.sh ${BUILDOS} 
 >&2 /bin/echo "${0} InstallEmailUtil.sh"
 ${HOME}/installscripts/InstallEmailUtil.sh ${BUILDOS} 
 #>&2 /bin/echo "${0} InstallLibioSocket.sh"
@@ -34,10 +34,10 @@ ${HOME}/installscripts/InstallEmailUtil.sh ${BUILDOS}
 #${HOME}/installscripts/InstallLibnetSsleay.sh ${BUILDOS} 
 #>&2 /bin/echo "${0} InstallSysStat.sh"
 #${HOME}/installscripts/InstallSysStat.sh ${BUILDOS} 
-#>&2 /bin/echo "${0} InstallRsync.sh"
-#${HOME}/installscripts/InstallRsync.sh ${BUILDOS} 
-#>&2 /bin/echo "${0} InstallCron.sh"
-#${HOME}/installscripts/InstallCron.sh ${BUILDOS} 
+>&2 /bin/echo "${0} InstallRsync.sh"
+${HOME}/installscripts/InstallRsync.sh ${BUILDOS} 
+>&2 /bin/echo "${0} InstallCron.sh"
+${HOME}/installscripts/InstallCron.sh ${BUILDOS} 
 #>&2 /bin/echo "${0} Install Monitoring Gear"
 #${HOME}/installscripts/InstallMonitoringGear.sh 
 >&2 /bin/echo "${0} Installing cloudtools"
