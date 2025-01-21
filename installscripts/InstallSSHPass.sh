@@ -40,12 +40,12 @@ if ( [ "${apt}" != "" ] )
 then
 	if ( [ "${buildos}" = "ubuntu" ] )
 	then
-		${install_command} sshpass	
+		eval ${install_command} sshpass	
 	fi
 
 	if ( [ "${buildos}" = "debian" ] )
 	then
-		${install_command} sshpass	
+		eval ${install_command} sshpass	
 	fi
     	/bin/touch ${HOME}/runtime/installedsoftware/InstallSSHPass.sh	
 fi
