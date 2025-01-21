@@ -40,12 +40,12 @@ if ( [ "${apt}" != "" ] )
 then
 	if ( [ "${buildos}" = "ubuntu" ] )
 	then
-		${install_command} sendemail		
+		eval ${install_command} sendemail		
 	fi
 
 	if ( [ "${buildos}" = "debian" ] )
 	then
-		${install_command} sendemail		
+		eval ${install_command} sendemail		
 	fi
      	/bin/touch ${HOME}/runtime/installedsoftware/InstallSendEmail.sh	
 fi
