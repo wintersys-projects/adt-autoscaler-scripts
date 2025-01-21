@@ -40,12 +40,12 @@ if ( [ "${apt}" != "" ] )
 then
 	if ( [ "${buildos}" = "ubuntu" ] )
 	then
-		${install_command} libnet-ssleay-perl 
+		eval ${install_command} libnet-ssleay-perl 
 	fi
 
 	if ( [ "${buildos}" = "debian" ] )
 	then
-		${install_command} libnet-ssleay-perl 
+		eval ${install_command} libnet-ssleay-perl 
 	fi
    	 /bin/touch ${HOME}/runtime/installedsoftware/InstallLibnetSsleay.sh	
 fi
