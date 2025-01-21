@@ -40,12 +40,12 @@ if ( [ "${apt}" != "" ] )
 then
 	if ( [ "${buildos}" = "ubuntu" ] )
 	then
-		${install_command} curl	
+		eval ${install_command} curl	
 	fi
 
 	if ( [ "${buildos}" = "debian" ] )
 	then
-		${install_command} curl	
+		eval ${install_command} curl	
   	fi
  	/bin/touch ${HOME}/runtime/installedsoftware/InstallCurl.sh	
 fi
