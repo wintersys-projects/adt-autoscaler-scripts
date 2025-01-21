@@ -41,12 +41,12 @@ if ( [ "${apt}" != "" ] )
 then
 	if ( [ "${buildos}" = "ubuntu" ] )
 	then
-		${install_command} cron		
+		eval ${install_command} cron		
 	fi
 
 	if ( [ "${buildos}" = "debian" ] )
 	then
-		${install_command} cron		
+		eval ${install_command} cron		
 	fi
 	/bin/touch ${HOME}/runtime/installedsoftware/InstallCron.sh	
 fi
