@@ -41,12 +41,12 @@ if ( [ "${apt}" != "" ] )
 then
     if ( [ "${buildos}" = "ubuntu" ] )
     then
-        ${install_command} network-manager   
+        eval ${install_command} network-manager   
     fi
 
     if ( [ "${buildos}" = "debian" ] )
     then
-        ${install_command} network-manager   
+        eval ${install_command} network-manager   
     fi
     /bin/touch ${HOME}/runtime/installedsoftware/InstallNetworkManager.sh				
 fi
