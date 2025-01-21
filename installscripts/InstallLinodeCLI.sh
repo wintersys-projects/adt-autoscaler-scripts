@@ -42,7 +42,7 @@ install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y inst
 
 if ( [ "${buildos}" = "ubuntu" ] )
 then
-	${install_command} pipx		
+	eval ${install_command} pipx		
 	if ( [ -f /usr/local/bin/linode-cli ] )									
 	then													
 		/usr/bin/pipx upgrade linode-cli 								
@@ -55,7 +55,7 @@ fi
 
 if ( [ "${buildos}" = "debian" ] )
 then
-	${install_command} pipx		
+	eval ${install_command} pipx		
 	if ( [ -f /usr/local/bin/linode-cli ] )									
 	then													
 		/usr/bin/pipx upgrade linode-cli 								
