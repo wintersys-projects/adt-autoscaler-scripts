@@ -40,12 +40,12 @@ if ( [ "${apt}" != "" ] )
 then
 	if ( [ "${buildos}" = "ubuntu" ] )
 	then
-		${install_command} rsync	
+		eval ${install_command} rsync	
 	fi
 
 	if ( [ "${buildos}" = "debian" ] )
 	then
-		${install_command} rsync	
+		eval ${install_command} rsync	
 	fi
   	/bin/touch ${HOME}/runtime/installedsoftware/InstallRsync.sh	
 
