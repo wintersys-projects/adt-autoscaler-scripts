@@ -38,8 +38,8 @@ ${HOME}/installscripts/InstallEmailUtil.sh ${BUILDOS}
 #${HOME}/installscripts/InstallRsync.sh ${BUILDOS} 
 #>&2 /bin/echo "${0} InstallCron.sh"
 #${HOME}/installscripts/InstallCron.sh ${BUILDOS} 
->&2 /bin/echo "${0} Install Monitoring Gear"
-${HOME}/installscripts/InstallMonitoringGear.sh 
+#>&2 /bin/echo "${0} Install Monitoring Gear"
+#${HOME}/installscripts/InstallMonitoringGear.sh 
 >&2 /bin/echo "${0} Installing cloudtools"
 ${HOME}/installscripts/InstallCloudhostTools.sh 
 
