@@ -48,13 +48,13 @@ then
                         /usr/sbin/ufw disable                                                                          
                 fi                                                                                                    
 
-                ${install_command} iptables               
+                eval ${install_command} iptables               
 
                 /bin/echo iptables-persistent iptables-persistent/autosave_v4 boolean true | /usr/bin/sudo debconf-set-selections
                 /bin/echo iptables-persistent iptables-persistent/autosave_v4 boolean true | /usr/bin/sudo debconf-set-selections 
 
-                ${install_command}  netfilter-persistent     
-                ${install_command}  iptables-persistent     
+                eval ${install_command}  netfilter-persistent     
+                eval ${install_command}  iptables-persistent     
         fi
 
         if ( [ "${buildos}" = "debian" ] )
@@ -64,13 +64,13 @@ then
                         /usr/sbin/ufw disable                                                                           
                 fi        
 		
-                ${install_command} iptables               
+                eval ${install_command} iptables               
 
                 /bin/echo iptables-persistent iptables-persistent/autosave_v4 boolean true | /usr/bin/sudo debconf-set-selections
                 /bin/echo iptables-persistent iptables-persistent/autosave_v4 boolean true | /usr/bin/sudo debconf-set-selections 
 
-                ${install_command}  netfilter-persistent     
-                ${install_command}  iptables-persistent     
+                eval ${install_command}  netfilter-persistent     
+                eval ${install_command}  iptables-persistent     
         fi
 	 /bin/touch ${HOME}/runtime/installedsoftware/InstallIPTables.sh	
 fi
