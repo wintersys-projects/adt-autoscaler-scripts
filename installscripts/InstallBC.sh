@@ -40,12 +40,12 @@ if ( [ "${apt}" != "" ] )
 then
 	if ( [ "${buildos}" = "ubuntu" ] )
 	then
-		${install_command} bc	
+		eval ${install_command} bc	
 	fi
 
 	if ( [ "${buildos}" = "debian" ] )
 	then
-		${install_command} bc	
+		eval ${install_command} bc	
 	fi
        	/bin/touch ${HOME}/runtime/installedsoftware/InstallBC.sh	
 fi
