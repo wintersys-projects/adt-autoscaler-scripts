@@ -29,7 +29,7 @@ install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y inst
 
 if ( [ "${buildos}" = "ubuntu" ] )
 then
-	 ${install_command} snapd	
+	 eval ${install_command} snapd	
 	 snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"		
 	 ${snap} install doctl											
 	 /usr/bin/ln -s /snap/bin/doctl /usr/local/bin/doctl							
@@ -40,7 +40,7 @@ fi
 
 if ( [ "${buildos}" = "debian" ] )
 then
-	 ${install_command} snapd	
+	 eval ${install_command} snapd	
 	 snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"		
 	 ${snap} install doctl											
 	 /usr/bin/ln -s /snap/bin/doctl /usr/local/bin/doctl							
