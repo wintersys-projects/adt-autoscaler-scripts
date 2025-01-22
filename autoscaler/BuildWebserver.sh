@@ -435,6 +435,7 @@ else
 
 fi
 
+failed_mount_check="0"
 count="0"
 /bin/echo "${0} `/bin/date`: Performing mount checks for ip address ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 /usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/datastore/SetupAssetsStore.sh"
@@ -448,14 +449,44 @@ done
 
 if ( [ "${count}" = "71" ] )
 then
+	failed_mount_check="1"
 	${HOME}/providerscripts/email/SendEmail.sh "MOUNT CHECKS HAVE BEEN FAILED" "Mount checks have been failed on autoscaler ${autoscaler_name} for webserver ${webserver_name}" "ERROR"
 	/bin/echo "${0} `/bin/date`: Failed mount checks for ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log 
 	${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
 fi
 
-if ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "/bin/ls /home/${SERVER_USER}/runtime/SUCCESSFULLY_RSYNC_BUILT"`" != "" ] )
+failed_online_check="0"
+count="0"
+while ( [ "${count}" -lt "71" ] && [ "${failed_online_check}" != "0" ] )
+do
+	. ${HOME}/autoscaler/SelectHeadFile.sh
+
+	/bin/echo "${0} `/bin/date`: Peforming online checks for ip address ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+	if ( [ "`/usr/bin/curl -I --max-time 60 --insecure https://${private_ip}:443/${headfile} | /bin/grep -E 'HTTP/2 200|HTTP/2 301|HTTP/2 302|HTTP/2 303|200 OK|302 Found|301 Moved Permanently'`" = "" ] )
+	then
+		/bin/echo "/usr/bin/curl -I --max-time 60 --insecure https://${private_ip}:443/${headfile} | /bin/grep -E 'HTTP/2 200|HTTP/2 301|HTTP/2 302|HTTP/2 303|200 OK|302 Found|301 Moved Permanently"
+		/bin/echo "${0} `/bin/date`: Expecting ${private_ip} to be online, but can't reach it with curl yet...." >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+		count="`/usr/bin/expr ${count} + 1`"
+		/bin/echo "${0} `/bin/date`: Doing webserver/application online check for ${ip} attempt ${count}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+		/bin/sleep 5
+	else
+		/bin/echo "${0} `/bin/date`:  ${ip} is online that's wicked..." >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+	fi
+done
+		
+if ( [ "${count}" = "71" ] )
 then
-  ${HOME}/autoscaler/AddIPToDNS.sh ${ip}
+	failed_online_check="1"
+	${HOME}/providerscripts/email/SendEmail.sh "WEBSERVER FAILED TO COME ONLINE" "Online checks have been failed on autoscaler ${autoscaler_name} for webserver ${webserver_name}" "ERROR"
+	/bin/echo "${0} `/bin/date`: ${ip} failed to come online" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+fi
+
+if ( [ "${failed_mount_check}" = "0" ] && [ "${failed_online_check}" = "0" ] )
+then
+	if ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "/bin/ls /home/${SERVER_USER}/runtime/SUCCESSFULLY_RSYNC_BUILT"`" != "" ] )
+	then
+  		${HOME}/autoscaler/AddIPToDNS.sh ${ip}
+	fi
 fi
 
 /usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} /bin/touch ${HOME}/runtime/AUTOSCALED_WEBSERVER_ONLINE"
