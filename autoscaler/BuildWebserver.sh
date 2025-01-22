@@ -434,6 +434,25 @@ else
  	${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
 
 fi
+
+count="0"
+/bin/echo "${0} `/bin/date`: Performing mount checks for ip address ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/datastore/SetupAssetsStore.sh"
+while ( [ "${count}" -lt "71" ] &&  [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/status/AreAssetsMounted.sh"`" != "MOUNTED" ] )
+do
+	count="`/usr/bin/expr ${count} + 1`"
+	/bin/sleep 5
+	/bin/echo "${0} `/bin/date`: Doing mount checks for ${ip} attempt ${count}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+	/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/datastore/SetupAssetsStore.sh"
+done
+
+if ( [ "${count}" = "71" ] )
+then
+	${HOME}/providerscripts/email/SendEmail.sh "MOUNT CHECKS HAVE BEEN FAILED" "Mount checks have been failed on autoscaler ${autoscaler_name} for webserver ${webserver_name}" "ERROR"
+	/bin/echo "${0} `/bin/date`: Failed mount checks for ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log 
+	${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
+fi
+
 if ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "/bin/ls /home/${SERVER_USER}/runtime/SUCCESSFULLY_RSYNC_BUILT"`" != "" ] )
 then
   ${HOME}/autoscaler/AddIPToDNS.sh ${ip}
