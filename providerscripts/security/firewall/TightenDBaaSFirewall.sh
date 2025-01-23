@@ -112,7 +112,7 @@ then
     databaseids="`/usr/bin/vultr database list -o json | /usr/bin/jq -r '.databases[] | select (.label == "'${label}'").id'`"
     selected_databaseid=""
 
-    DBaaS_HOSTNAME="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DBaaS_HOSTNAME'`"
+    DB_IDENTIFIER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DB_IDENTIFIER'`"
 
     for databaseid in ${databaseids}
     do
