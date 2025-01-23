@@ -116,7 +116,7 @@ then
 
     for databaseid in ${databaseids}
     do
-        if ( [ "`/usr/bin/vultr database get ${databaseid} -o json | /usr/bin/jq -r '.database | select (.dbname == "'${DBaaS_HOSTNAME}'").id'`" != "" ] )
+        if ( [ "`/usr/bin/vultr database get ${databaseid} -o json | /usr/bin/jq -r '.database | select (.dbname == "'${DB_IDENTIFIER}'").id'`" != "" ] )
         then
              selected_databaseid="${databaseid}"
         fi
