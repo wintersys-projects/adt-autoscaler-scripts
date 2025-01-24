@@ -152,17 +152,13 @@ probe_by_curl()
 	  fi
 }
 
-if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "MAINTENANCE_MODE"`" != "" ] )
+
+if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh STATIC_SCALE:*`" = "" ] )
 then
-	NO_WEBSERVERS="1"
+	/bin/echo "${0} `/bin/date`: Failed to get valid number of webservers to scale to the value I got was: ${NO_WEBSERVERS}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+        ${HOME}/providerscripts/email/SendEmail.sh "COULDN'T GET SCALING VALUE" "I failed to get a valid scaling value the value I got was {${NO_WEBSERVERS}). I am making no alteration to the scaling setting." "ERROR"
 else
-        if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh STATIC_SCALE:*`" = "" ] )
-        then
-                /bin/echo "${0} `/bin/date`: Failed to get valid number of webservers to scale to the value I got was: ${NO_WEBSERVERS}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-                ${HOME}/providerscripts/email/SendEmail.sh "COULDN'T GET SCALING VALUE" "I failed to get a valid scaling value the value I got was {${NO_WEBSERVERS}). I am making no alteration to the scaling setting." "ERROR"
-        else
-                NO_WEBSERVERS="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh STATIC_SCALE:* | /usr/bin/awk -F':' '{print $NF}'`"
-        fi
+	NO_WEBSERVERS="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh STATIC_SCALE:* | /usr/bin/awk -F':' '{print $NF}'`"
 fi
 
 noactivewebservers="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST} | /usr/bin/tr '\n' ' ' | /usr/bin/wc -w`"
