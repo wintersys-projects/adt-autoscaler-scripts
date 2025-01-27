@@ -82,7 +82,7 @@ endit ()
 		if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beingbuiltips/*" | /bin/grep ${down_ip}`" = "" ] || [ "`/usr/bin/find ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${ip} -mmin +30`" != "" ] )
 		then
 			/bin/echo "Ending server with ip address ${down_ip}"
-			/bin/echo "${0} `/bin/date`: Webserver with ip address: ${down_ip} is having it's ip address removed from the DNS system" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
+			/bin/echo "${0} `/bin/date`: Webserver with ip address: ${down_ip} is having it's ip address removed from the DNS system" 
 			public_ip_address="`${HOME}/providerscripts/server/GetServerPublicIPAddressByIP.sh ${down_ip} ${CLOUDHOST}`"
 			${HOME}/autoscaler/RemoveIPFromDNS.sh ${public_ip_address}
 			#Be aware that the time to live is 120 seconds and so we have removed a DNS record now, but, it will still be served for up to 120 seconds after we remove it
@@ -97,9 +97,9 @@ endit ()
     			fi
        
 			/usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${down_ip} "${SUDO} ${HOME}/providerscripts/utilities/housekeeping/ShutdownThisWebserver.sh"
-			/bin/echo "${0} `/bin/date`: Webserver with ip address: ${down_ip}  has been shutdown" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
+			/bin/echo "${0} `/bin/date`: Webserver with ip address: ${down_ip}  has been shutdown" 
 			${HOME}/providerscripts/server/DestroyServer.sh ${public_ip_address} ${CLOUDHOST} ${down_ip}
-			/bin/echo "${0} `/bin/date`: Webserver with ip address: ${down_ip}  has been destroyed and its resources released" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
+			/bin/echo "${0} `/bin/date`: Webserver with ip address: ${down_ip}  has been destroyed and its resources released"
 			if ( [ -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${ip} ] )
 			then
 				/bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${ip}
@@ -128,7 +128,7 @@ probe_by_ssh ()
 	   
 	   if ( [ "${connectable}" = "0" ] )
 	   then
-			/bin/echo "${0} `/bin/date`: Webserver ${ip} was found to be offline because it couldn't be contacted over SSH" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
+			/bin/echo "${0} `/bin/date`: Webserver ${ip} was found to be offline because it couldn't be contacted over SSH" 
 			/bin/echo "${ip}" >> ${HOME}/runtime/probed_ips/failed_probe_ssh_ips.dat
 		fi
 }
@@ -152,7 +152,7 @@ probe_by_curl()
 
 	 if ( [ "${status}" = "down" ] )
 	 then
-			/bin/echo "${0} `/bin/date`: Webserver ${ip} was found to be offline because it couldn't be contacted using curl" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
+			/bin/echo "${0} `/bin/date`: Webserver ${ip} was found to be offline because it couldn't be contacted using curl" 
 			/bin/echo "${ip}" >> ${HOME}/runtime/probed_ips/failed_probe_curl_ips.dat
 	  fi
 }
@@ -206,7 +206,7 @@ for ip in ${online_ips}
 do
 	if ( [ -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${ip} ] && [ "`/usr/bin/find ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${ip} -mmin +30`" != "" ] )
 	then
-		/bin/echo "${0} `/bin/date`: Webserver ${ip} was found to be offline because it looked like a stalled build" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
+		/bin/echo "${0} `/bin/date`: Webserver ${ip} was found to be offline because it looked like a stalled build" 
 		/bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${ip}
 		online_ips="`/bin/echo ${online_ips} | /bin/sed "s/${ip}//g"`"
 	fi
@@ -301,7 +301,7 @@ for ip in ${online_ips}
 do
 	if ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY -o ConnectTimeout=5 -o ConnectionAttempts=2 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "/usr/bin/find ${HOME}/runtime/BUILD_IN_PROGRESS -mmin +30 2>/dev/null"`" != "" ] )
 	then
-	   /bin/echo "${0} `/bin/date`: Webserver ${ip} was found to be offline because it looks as if the build process failed to progress" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
+	   /bin/echo "${0} `/bin/date`: Webserver ${ip} was found to be offline because it looks as if the build process failed to progress"
 	   online_ips="`/bin/echo ${online_ips} | /bin/sed "s/${ip}//g"`"
 	fi
 done
@@ -333,7 +333,7 @@ then
 	do
 		if ( [ -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${ip} ] && [ "`/usr/bin/find ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${ip} -mmin +30`" != "" ] )
 		then
-			/bin/echo "${0} `/bin/date`: Ending webserver with ip:${ip} because it is considered a stalled build" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
+			/bin/echo "${0} `/bin/date`: Ending webserver with ip:${ip} because it is considered a stalled build" 
 			endit ${ip} "Webserver (${ip}) is being shutdown because it has been considered as a stalled build"
 		elif ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beenonline/${ip}"`" != "" ] )
 		then
@@ -376,7 +376,7 @@ for pid in ${pids}
 do
 	if ( [ "${pid}" != "" ] && [ "`/usr/bin/ps -o etime= -p "${pid}" | /usr/bin/awk -F':' '{print $1}' | /bin/sed 's/ //g'`" -ge "30" ] )
 	then
-		/bin/echo "${0} `/bin/date`: Killed BuildWebserver process ${pid} because it seemed to have stalled (been running for more than 30 minutes)" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
+		/bin/echo "${0} `/bin/date`: Killed BuildWebserver process ${pid} because it seemed to have stalled (been running for more than 30 minutes)" 
 	   /bin/kill ${pid}
 	   /bin/kill -KILL ${pid}
 		too_old="1"
@@ -389,7 +389,7 @@ for pid in ${pids}
 do
 	if ( [ "${pid}" != "" ] && [ "`/usr/bin/ps -o etime= -p "${pid}" | /usr/bin/awk -F':' '{print $1}' | /bin/sed 's/ //g'`" -ge "30" ] )
 	then
-		/bin/echo "${0} `/bin/date`: Killed PerformScaling process ${pid} because it seemed to have stalled (been running for more than 30 minutes)" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
+		/bin/echo "${0} `/bin/date`: Killed PerformScaling process ${pid} because it seemed to have stalled (been running for more than 30 minutes)" 
 		/bin/kill ${pid}
 		/bin/kill -KILL ${pid}
 		/bin/rm ${HOME}/runtime/autoscalelock.file
@@ -399,7 +399,7 @@ done
 
 if ( [ "${too_old}" = "1" ] )
 then
-	/bin/echo "${0} `/bin/date`: This autoscaler has been rebooted for hygiene reasons because something seeemed to have gone stale" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
+	/bin/echo "${0} `/bin/date`: This autoscaler has been rebooted for hygiene reasons because something seeemed to have gone stale" 
 	#This is necessary because if the processes above had a problem and might be hanging around indefinitely  we need to clean up and the shutdown process is the most comprehensive way to do that for us. 
 	${HOME}/providerscripts/utilities/housekeeping/ShutdownThisAutoscaler.sh "reboot"  
 fi
