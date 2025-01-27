@@ -68,5 +68,5 @@ then
         	/bin/echo "${message}" | /usr/bin/mail -s "${subject}" -a "From: ${FROM_NAME} <${FROM_ADDRESS}>" "${TO_ADDRESS}" 
     	fi
 else
-	/bin/echo "${0} `/bin/date`:Email not sent because of missing parameter(s)" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
+	/bin/echo "${0} `/bin/date`:Email not sent because of missing parameter(s)" 
 fi
