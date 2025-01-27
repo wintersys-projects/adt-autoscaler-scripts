@@ -26,7 +26,7 @@
 /bin/echo "Shutting down an autoscaler instance. Please wait whilst I clean the place first."
 /bin/echo "#######################################################################"
 /bin/echo ""
-/bin/echo "${0} `/bin/date`: Shutting down the autoscaler" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
+
 
 if ( [ -f ${HOME}/runtime/NOT_AUTHORISED_TO_SCALE ] )
 then
