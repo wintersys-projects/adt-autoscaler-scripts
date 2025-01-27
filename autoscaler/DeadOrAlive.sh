@@ -340,13 +340,13 @@ then
 			if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beingbuilt/${ip}"`" = "" ] )
 			then
 				/bin/echo "${ip}" >> ${HOME}/runtime/potentialenders/listofipstoend.dat
-				/bin/echo "${0} `/bin/date`: Added IP ${ip} to list of ips to potentially get ended. This is its `/bin/grep ${ip} ${HOME}/runtime/potentialenders/listofipstoend.dat | /usr/bin/wc -l` chance gone out of 2 chances granted" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
+				/bin/echo "${0} `/bin/date`: Added IP ${ip} to list of ips to potentially get ended. This is its `/bin/grep ${ip} ${HOME}/runtime/potentialenders/listofipstoend.dat | /usr/bin/wc -l` chance gone out of 2 chances granted"
 				public_ip="`${HOME}/providerscripts/server/GetServerPublicIPAddressByIP.sh ${ip} ${CLOUDHOST}`"
 				${HOME}/autoscaler/RemoveIPFromDNS.sh ${public_ip}
 				if ( [ "`/bin/grep ${ip} ${HOME}/runtime/potentialenders/listofipstoend.dat | /usr/bin/wc -l`" -ge "2" ] )
 				then
 					 /bin/sed -i "s/${ip}//g" ${HOME}/runtime/potentialenders/listofipstoend.dat
-					 endit ${ip} "Webserver was found to be offline please check your logs (${HOME}/logs/OPERATIONAL_MONITORING.log) and (${HOME}/logs/deadoralive${logdate}/*) for the more detailed reason"
+					 endit ${ip} "Webserver was found to be offline please check your logs (${HOME}/logs/deadoralive${logdate}/*) for the more detailed reason"
 				fi
 			fi
 		fi
