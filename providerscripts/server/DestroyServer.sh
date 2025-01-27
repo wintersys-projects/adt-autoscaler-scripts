@@ -75,8 +75,6 @@ then
 		zone="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
 		server_name="`${HOME}/providerscripts/server/GetServerName.sh ${server_ip} ${cloudhost}`"
 		/bin/echo "Y" | /usr/bin/exo compute instance delete ${server_name} --zone ${zone} 
-
-		/bin/echo "${0} `/bin/date`: Destroyed a server with name ${server_name}" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
 		
 		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverips/${private_server_ip}"
 		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverpublicips/${server_ip}"
@@ -99,7 +97,6 @@ then
   		server_id="`/usr/local/bin/linode-cli --json linodes list | /usr/bin/jq -r '.[] | select (.label == "'${server_to_delete}'").id'`"
 		/usr/local/bin/linode-cli linodes shutdown ${server_id}
 		/usr/local/bin/linode-cli linodes delete ${server_id}
-		/bin/echo "${0} `/bin/date`: Destroyed a server with name ${server_to_delete}" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
 		
 		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverips/${private_server_ip}"
 		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverpublicips/${server_ip}"
@@ -130,7 +127,6 @@ then
   
   		/usr/bin/vultr instance delete ${server_id}
 
-		/bin/echo "${0} `/bin/date`: Destroyed a server with id ${server_id}" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
 		
 		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverips/${private_server_ip}"
 		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverpublicips/${server_ip}"
