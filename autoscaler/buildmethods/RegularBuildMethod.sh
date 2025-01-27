@@ -23,7 +23,7 @@
 #######################################################################################################
 #set -x
 
-/bin/echo "${0} `/bin/date`: Building a new machine using the regular build method ${webserver_name}" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
+/bin/echo "${0} `/bin/date`: Building a new machine using the regular build method ${webserver_name}" 
 
 snapshot_build="0"
 #If we are here, then we are not building from a snapshot
