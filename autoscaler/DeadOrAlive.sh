@@ -346,7 +346,7 @@ then
 				if ( [ "`/bin/grep ${ip} ${HOME}/runtime/potentialenders/listofipstoend.dat | /usr/bin/wc -l`" -ge "2" ] )
 				then
 					 /bin/sed -i "s/${ip}//g" ${HOME}/runtime/potentialenders/listofipstoend.dat
-					 endit ${ip} "Webserver was found to be offline please check your logs (${HOME}/logs/deadoralive${logdate}/*) for the more detailed reason"
+					 endit ${ip} "Webserver was found to be offline please check your logs (${HOME}/logs/deadoralive${logdate}) for the more detailed reason"
 				fi
 			fi
 		fi
