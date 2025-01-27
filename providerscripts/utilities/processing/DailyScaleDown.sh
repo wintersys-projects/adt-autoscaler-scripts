@@ -27,8 +27,6 @@ fi
 
 new_scale_value="${1}"
 
-/bin/echo "${0} `/bin/date`: Running daily scaledown. Scaling down to ..... ${new_scale_value} servers" >> ${HOME}/logs/OPERATIONAL_MONITORING.log
-
 ${HOME}/providerscripts/datastore/configwrapper/MultiDeleteConfigDatastore.sh STATIC_SCALE:
 if ( [ -f ${HOME}/runtime/STATIC_SCALE:* ] )
 then
