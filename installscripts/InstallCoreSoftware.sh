@@ -8,6 +8,9 @@ BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDO
 
 #>&2 /bin/echo "${0} UpdateAndUpgrade.sh"
 #${HOME}/installscripts/UpdateAndUpgrade.sh ${BUILDOS}
+
+>&2 /bin/echo "${0} Update.sh"
+${HOME}/installscripts/Update.sh ${BUILDOS}
 >&2 /bin/echo "${0} InstallNetworkManager.sh"
 ${HOME}/installscripts/InstallNetworkManager.sh ${BUILDOS} 
 >&2 /bin/echo "${0} InstallFirewall.sh"
