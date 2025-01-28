@@ -10,6 +10,8 @@ BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDO
 #${HOME}/installscripts/UpdateAndUpgrade.sh ${BUILDOS}
 
 /bin/sed -i "s/mirrors.linode.com/mirror.katapult.io/g" /etc/apt/sources.list
+/bin/sed -i "s/mirrors.digitalocean.com/mirror.katapult.io/g" /etc/apt/mirrors/debian.list
+
 >&2 /bin/echo "${0} Update.sh"
 ${HOME}/installscripts/Update.sh ${BUILDOS}
 >&2 /bin/echo "${0} InstallNetworkManager.sh"
