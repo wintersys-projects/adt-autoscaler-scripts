@@ -84,7 +84,7 @@ then
            #     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y upgrade
                 /usr/bin/snap install aria2c 
             #    mirrors="`/bin/grep "^deb" /etc/apt/sources.list | /bin/grep -Po 'http.* ' | /usr/bin/awk '{print $1}' | /usr/bin/sort -u | /usr/bin/uniq | /usr/bin/tr '\n' ',' | /bin/sed 's/,$//'`" 
-            #    /bin/echo "MIRRORS=( '${mirrors}' )" >> /etc/apt-fast.conf
+               /bin/echo "MIRRORS=( 'mirror.katapult.io' )" >> /etc/apt-fast.conf
                 /bin/echo 'DOWNLOADBELOW="aria2c -c -s ${_MAXNUM} -x ${_MAXNUM} -k 1M -q --file-allocation=none"' >> /etc/apt-fast.conf
 	fi 
     done
