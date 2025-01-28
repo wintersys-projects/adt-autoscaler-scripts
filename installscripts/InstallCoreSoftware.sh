@@ -15,6 +15,8 @@ ${HOME}/installscripts/InstallFirewall.sh ${BUILDOS}
 >&2 /bin/echo "${0} Installing Datastore tools"
 ${HOME}/installscripts/InstallDatastoreTools.sh ${BUILDOS}
 
+>&2 /bin/echo "${0} InstallJQ.sh"
+${HOME}/installscripts/InstallJQ.sh ${BUILDOS} 
 >&2 /bin/echo "${0} InstallGo.sh"
 ${HOME}/installscripts/InstallGo.sh ${BUILDOS} &
 #>&2 /bin/echo "${0} InstallCurl.sh"
@@ -23,9 +25,6 @@ ${HOME}/installscripts/InstallGo.sh ${BUILDOS} &
 #${HOME}/installscripts/InstallSSHPass.sh ${BUILDOS} 
 >&2 /bin/echo "${0} InstallBC.sh"
 ${HOME}/installscripts/InstallBC.sh ${BUILDOS} 
-
->&2 /bin/echo "${0} InstallJQ.sh"
-${HOME}/installscripts/InstallJQ.sh ${BUILDOS} 
 >&2 /bin/echo "${0} InstallEmailUtil.sh"
 ${HOME}/installscripts/InstallEmailUtil.sh ${BUILDOS} 
 #>&2 /bin/echo "${0} InstallLibioSocket.sh"
