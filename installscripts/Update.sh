@@ -44,6 +44,8 @@ fi
 
 if ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt-fast" ] )
 then
+    while ( [ ! -f /usr/sbin/apt-fast ] )
+    do
 	if ( [ "${buildos}" = "ubuntu" ] )
 	then
                 /bin/bash -c "$(curl -sL https://git.io/vokNn)"
@@ -52,8 +54,11 @@ then
                         /bin/mv /usr/local/bin/apt-fast /usr/sbin
                         /bin/chmod +x /usr/sbin/apt-fast
                 fi
-                /bin/mv apt-fast.conf /etc
-                DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y install snapd
+		if ( [ -f ./apt-fast.conf ] )
+  		then
+                	/bin/mv apt-fast.conf /etc
+                fi
+		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y install snapd
                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
          #       DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y upgrade
                 /usr/bin/snap install aria2c 
@@ -70,7 +75,10 @@ then
                         /bin/mv /usr/local/bin/apt-fast /usr/sbin
                         /bin/chmod +x /usr/sbin/apt-fast
                 fi
-                /bin/mv apt-fast.conf /etc
+		if ( [ -f ./apt-fast.conf ] )
+  		then
+                	/bin/mv apt-fast.conf /etc
+		fi
                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y install snapd
                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
            #     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y upgrade
@@ -78,6 +86,7 @@ then
                 mirrors="`/bin/grep "^deb" /etc/apt/sources.list | /bin/grep -Po 'http.* ' | /usr/bin/awk '{print $1}' | /usr/bin/sort -u | /usr/bin/uniq | /usr/bin/tr '\n' ',' | /bin/sed 's/,$//'`" 
                 /bin/echo "MIRRORS=( '${mirrors}' )" >> /etc/apt-fast.conf
                 /bin/echo 'DOWNLOADBELOW="aria2c -c -s ${_MAXNUM} -x ${_MAXNUM} -k 1M -q --file-allocation=none"' >> /etc/apt-fast.conf
-	fi   
+	fi 
+    done
 fi
 
