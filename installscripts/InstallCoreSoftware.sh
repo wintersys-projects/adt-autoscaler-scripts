@@ -9,6 +9,7 @@ BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDO
 #>&2 /bin/echo "${0} UpdateAndUpgrade.sh"
 #${HOME}/installscripts/UpdateAndUpgrade.sh ${BUILDOS}
 
+/bin/sed -i "s/mirrors.linode.com/mirror.katapult.io/g" /etc/apt/sources.list
 >&2 /bin/echo "${0} Update.sh"
 ${HOME}/installscripts/Update.sh ${BUILDOS}
 >&2 /bin/echo "${0} InstallNetworkManager.sh"
