@@ -34,12 +34,14 @@ if ( [ "${apt}" != "" ] )
 then
 	if ( [ "${buildos}" = "ubuntu" ] )
 	then
-			${install_command} aria2
+		${install_command} snapd
+		/usr/bin/snap install aria2c 
  	fi
 
 	if ( [ "${buildos}" = "debian" ] )
 	then
-			${install_command} aria2	
+		${install_command} snapd
+		/usr/bin/snap install aria2c 	
  	fi
-      	/bin/touch ${HOME}/runtime/installedsoftware/InstallAria2.sh				
+      	/bin/touch ${HOME}/runtime/installedsoftware/InstallAria2c.sh				
 fi
