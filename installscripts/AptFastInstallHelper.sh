@@ -13,10 +13,10 @@ if [ "$userid" -ne 0 ]; then
   type sudo >/dev/null 2>&1 || { echo "sudo not installed, change into root context" >&2; exit 1; }
 fi
 
-if ! type aria2c >/dev/null 2>&1; then
-  run_cmd apt-get update
-  run_cmd apt-get install -y aria2
-fi
+#if ! type aria2c >/dev/null 2>&1; then
+#  run_cmd apt-get update
+#  run_cmd apt-get install -y aria2
+#fi
 
 # remove apt-fast from old location
 run_cmd rm -f /usr/local/sbin/apt-fast
