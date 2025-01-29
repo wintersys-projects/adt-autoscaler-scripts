@@ -50,6 +50,8 @@ then
 	then
  		${HOME}/installscripts/AptFastInstallHelper.sh
        		/usr/bin/ln -s /usr/local/bin/apt-fast /usr/sbin/apt-fast
+		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
+
 
 
     #            /bin/bash -c "$(curl -sL https://git.io/vokNn)"
@@ -75,6 +77,8 @@ then
 	then
 		${HOME}/installscripts/AptFastInstallHelper.sh
     		/usr/bin/ln -s /usr/local/bin/apt-fast /usr/sbin/apt-fast
+		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
+
 
  
   #              /bin/bash -c "$(curl -sL https://git.io/vokNn)"
