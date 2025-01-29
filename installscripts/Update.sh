@@ -53,7 +53,7 @@ then
 		#DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
 
     		##############TESTING ONLY####################
-  		/bin/sed -i "s/digitalocean/linode/g" /etc/apt/mirrors/debian.list
+  		/bin/sed -i "s/digitalocean/linode/g" /etc/apt/sources.list.d/ubuntu.sources
 
 
 
