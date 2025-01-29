@@ -86,6 +86,8 @@ then
 
       		##############TESTING ONLY####################
   		/bin/sed -i "s/digitalocean/linode/g" /etc/apt/mirrors/debian.list
+            DEBIAN_FRONTEND=noninteractive /usr/sbin/apt-fast -o DPkg::Lock::Timeout=-1 -qq -y update
+
 
 
  
