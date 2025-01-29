@@ -86,6 +86,7 @@ then
                     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
                 done               
                 ${HOME}/installscripts/InstallAria2.sh "ubuntu"
+                /bin/touch /tmp/apt-fast.list
 
         fi
     
@@ -121,6 +122,7 @@ then
                     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
                 done
                 ${HOME}/installscripts/InstallAria2.sh "debian"
+                /bin/touch /tmp/apt-fast.list
 
                      #  /bin/echo "MIRRORS=( 'mirrors.linode.com' )" >> /etc/apt-fast.conf
 
