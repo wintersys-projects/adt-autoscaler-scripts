@@ -36,12 +36,14 @@ then
 	then
 		${install_command} snapd
 		/usr/bin/snap install aria2c 
+    		/bin/ln -s /snap/bin/aria2c /usr/sbin/aria2c 
  	fi
 
 	if ( [ "${buildos}" = "debian" ] )
 	then
 		${install_command} snapd
-		/usr/bin/snap install aria2c 	
+		/usr/bin/snap install aria2c 
+  		/bin/ln -s /snap/bin/aria2c /usr/sbin/aria2c 
  	fi
       	/bin/touch ${HOME}/runtime/installedsoftware/InstallAria2c.sh				
 fi
