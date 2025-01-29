@@ -50,9 +50,9 @@ then
     do
         if ( [ "${buildos}" = "ubuntu" ] )
         then
-         	#	${HOME}/installscripts/AptFastInstallHelper.sh
-            #   	/usr/bin/ln -s /usr/local/bin/apt-fast /usr/sbin/apt-fast
-             #   DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
+         		${HOME}/installscripts/AptFastInstallHelper.sh
+               	/usr/bin/ln -s /usr/local/bin/apt-fast /usr/sbin/apt-fast
+                DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
 
                   		##############TESTING ONLY####################
   		#/bin/sed -i "s/digitalocean/linode/g" /etc/apt/sources.list.d/ubuntu.sources
@@ -61,51 +61,51 @@ then
 
 
 
-                /bin/bash -c "$(curl -sL https://git.io/vokNn)"
-                if ( [ -f /usr/local/bin/apt-fast ] )
-                then
-                        /bin/mv /usr/local/bin/apt-fast /usr/sbin
-                        /bin/chmod +x /usr/sbin/apt-fast
-                fi
-                if ( [ -f ./apt-fast.conf ] )
-                then
-                    /bin/mv apt-fast.conf /etc
-                fi
-                DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y install snapd
-                DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
-             #   DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y upgrade
-                /usr/bin/snap install aria2c 
-             #   mirrors="`/bin/grep "^deb" /etc/apt/sources.list | /bin/grep -Po 'http.* ' | /usr/bin/awk '{print $1}' | /usr/bin/sort -u | /usr/bin/uniq | /usr/bin/tr '\n' ',' | /bin/sed 's/,$//'`" 
-             #   /bin/echo "MIRRORS=( '${mirrors}' )" >> /etc/apt-fast.conf
-             #   /bin/echo 'DOWNLOADBELOW="aria2c -c -s ${_MAXNUM} -x ${_MAXNUM} -k 1M -q --file-allocation=none"' >> /etc/apt-fast.conf
+ #               /bin/bash -c "$(curl -sL https://git.io/vokNn)"
+ #               if ( [ -f /usr/local/bin/apt-fast ] )
+ #               then
+ #                       /bin/mv /usr/local/bin/apt-fast /usr/sbin
+ #                       /bin/chmod +x /usr/sbin/apt-fast
+ #               fi
+ #               if ( [ -f ./apt-fast.conf ] )
+ #               then
+ #                   /bin/mv apt-fast.conf /etc
+ #               fi
+ #               DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y install snapd
+ #               DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
+ #            #   DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y upgrade
+ #               /usr/bin/snap install aria2c 
+ #            #   mirrors="`/bin/grep "^deb" /etc/apt/sources.list | /bin/grep -Po 'http.* ' | /usr/bin/awk '{print $1}' | /usr/bin/sort -u | /usr/bin/uniq | /usr/bin/tr '\n' ',' | /bin/sed 's/,$//'`" 
+ #            #   /bin/echo "MIRRORS=( '${mirrors}' )" >> /etc/apt-fast.conf
+ #            #   /bin/echo 'DOWNLOADBELOW="aria2c -c -s ${_MAXNUM} -x ${_MAXNUM} -k 1M -q --file-allocation=none"' >> /etc/apt-fast.conf
   		        /bin/sed -i "s/digitalocean/linode/g" /etc/apt/sources.list.d/ubuntu.sources
                 DEBIAN_FRONTEND=noninteractive /usr/sbin/apt-fast -o DPkg::Lock::Timeout=-1 -qq -y update
         fi
     
         if ( [ "${buildos}" = "debian" ] )
         then
-         	#	${HOME}/installscripts/AptFastInstallHelper.sh
-           # 	/usr/bin/ln -s /usr/local/bin/apt-fast /usr/sbin/apt-fast
-            #    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
-
-                /bin/bash -c "$(curl -sL https://git.io/vokNn)"
-                if ( [ -f /usr/local/bin/apt-fast ] )
-                then
-                        /bin/mv /usr/local/bin/apt-fast /usr/sbin
-                        /bin/chmod +x /usr/sbin/apt-fast
-                fi
-                if ( [ -f ./apt-fast.conf ] )
-                then
-                    /bin/mv apt-fast.conf /etc
-                fi
-                DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y install snapd
+         		${HOME}/installscripts/AptFastInstallHelper.sh
+            	/usr/bin/ln -s /usr/local/bin/apt-fast /usr/sbin/apt-fast
                 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
-           #     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y upgrade
-                /usr/bin/snap install aria2c 
-             #   mirrors="`/bin/grep "^deb" /etc/apt/sources.list | /bin/grep -Po 'http.* ' | /usr/bin/awk '{print $1}' | /usr/bin/sort -u | /usr/bin/uniq | /usr/bin/tr '\n' ',' | /bin/sed 's/,$//'`" 
-              # /bin/echo "MIRRORS=( 'mirrors.linode.com' )" >> /etc/apt-fast.conf
-              #  /bin/echo 'DOWNLOADBELOW="aria2c -c -s ${_MAXNUM} -x ${_MAXNUM} -k 1M -q --file-allocation=none"' >> /etc/apt-fast.conf
-           		##############TESTING ONLY####################
+
+ #               /bin/bash -c "$(curl -sL https://git.io/vokNn)"
+ #               if ( [ -f /usr/local/bin/apt-fast ] )
+ #               then
+ #                       /bin/mv /usr/local/bin/apt-fast /usr/sbin
+ #                       /bin/chmod +x /usr/sbin/apt-fast
+ #               fi
+ #               if ( [ -f ./apt-fast.conf ] )
+ #               then
+ #                   /bin/mv apt-fast.conf /etc
+ #               fi
+ #               DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y install snapd
+ #               DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
+ #          #     DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y upgrade
+ #               /usr/bin/snap install aria2c 
+ #            #   mirrors="`/bin/grep "^deb" /etc/apt/sources.list | /bin/grep -Po 'http.* ' | /usr/bin/awk '{print $1}' | /usr/bin/sort -u | /usr/bin/uniq | /usr/bin/tr '\n' ',' | /bin/sed 's/,$//'`" 
+ #             # /bin/echo "MIRRORS=( 'mirrors.linode.com' )" >> /etc/apt-fast.conf
+ #             #  /bin/echo 'DOWNLOADBELOW="aria2c -c -s ${_MAXNUM} -x ${_MAXNUM} -k 1M -q --file-allocation=none"' >> /etc/apt-fast.conf
+ #          		##############TESTING ONLY####################
   		/bin/sed -i "s/digitalocean/linode/g" /etc/apt/mirrors/debian.list
         DEBIAN_FRONTEND=noninteractive /usr/sbin/apt-fast -o DPkg::Lock::Timeout=-1 -qq -y update
                      #  /bin/echo "MIRRORS=( 'mirrors.linode.com' )" >> /etc/apt-fast.conf
