@@ -82,6 +82,9 @@ then
     		/usr/bin/ln -s /usr/local/bin/apt-fast /usr/sbin/apt-fast
 		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
 
+      		##############TESTING ONLY####################
+  		/bin/sed -i "s/digitalocean/linode/g" /etc/apt/mirrors/debian.list
+
 
  
   #              /bin/bash -c "$(curl -sL https://git.io/vokNn)"
