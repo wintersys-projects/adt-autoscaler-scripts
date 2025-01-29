@@ -44,7 +44,7 @@ fi
 
 if ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt-fast" ] )
 then
-    while ( [ ! -f /usr/sbin/apt-fast ] )
+    while ( [ ! -s /usr/sbin/apt-fast ] )
     do
 	if ( [ "${buildos}" = "ubuntu" ] )
 	then
