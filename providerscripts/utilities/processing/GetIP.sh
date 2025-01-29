@@ -27,6 +27,6 @@ then
 fi
 
 private_ip_anchor="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'VPCIPRANGE' | /usr/bin/awk -F'.' '{print $1}'`"
-/usr/bin/nmcli -p device show | grep "IP4\.ADDRESS\[1\]" | /usr/bin/awk '{print $NF}' | /bin/grep "^${private_ip_anchor}\." | /bin/sed "s,/.*,," 
+/usr/bin/nmcli -p device show | grep "IP4\.ADDRESS\[1\]" | /usr/bin/awk '{print $NF}' | /bin/grep "^${private_ip_anchor}\." | /bin/sed "s,/.*,," | /usr/bin/tail -1
 ${HOME}/providerscripts/utilities/config/StoreConfigValue.sh 'MYIP' "${IP}"
 
