@@ -19,10 +19,12 @@
 ################################################################################################
 ################################################################################################
 
-if ( [ "${1}" != "" ] )
-then
-	buildos="${1}"
-fi
+#if ( [ "${1}" != "" ] )
+#then
+#	buildos="${1}"
+#fi
+
+BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
 
 apt=""
 if ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt" ] )
@@ -36,7 +38,7 @@ fi
 export DEBIAN_FRONTEND=noninteractive
 install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y install " 
 
-if ( [ "${buildos}" = "ubuntu" ] )
+if ( [ "${BUILDOS}" = "ubuntu" ] )
 then
 	 eval ${install_command} snapd	
 	 snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"		
@@ -47,7 +49,7 @@ then
 	 /bin/chmod 400 ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml			
 fi
 
-if ( [ "${buildos}" = "debian" ] )
+if ( [ "${BUILDOS}" = "debian" ] )
 then
 	 eval ${install_command} snapd	
 	 snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"		
