@@ -20,11 +20,12 @@
 #######################################################################################################
 #set -x
 
-if ( [ "${1}" != "" ] )
-then
-	buildos="${1}"
-fi
+#if ( [ "${1}" != "" ] )
+#then
+#	buildos="${1}"
+#fi
 
+BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
 apt="/usr/bin/apt-get"
 
 export DEBIAN_FRONTEND=noninteractive
@@ -32,14 +33,14 @@ install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y inst
 
 if ( [ "${apt}" != "" ] )
 then
-	if ( [ "${buildos}" = "ubuntu" ] )
+	if ( [ "${BUILDOS}" = "ubuntu" ] )
 	then
 		${install_command} snapd
 		/usr/bin/snap install aria2c 
     		/bin/ln -s /snap/bin/aria2c /usr/sbin/aria2c 
  	fi
 
-	if ( [ "${buildos}" = "debian" ] )
+	if ( [ "${BUILDOS}" = "debian" ] )
 	then
 		${install_command} snapd
 		/usr/bin/snap install aria2c 
