@@ -20,11 +20,11 @@
 #######################################################################################################
 #set -x
 
-if ( [ "${1}" != "" ] )
-then
-    buildos="${1}"
-fi
-
+#if ( [ "${1}" != "" ] )
+#then
+ #   buildos="${1}"
+#fi
+BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
 apt=""
 if ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt" ] )
 then
@@ -39,12 +39,12 @@ update_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y updat
 
 if ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt" ] )
 then
-    if ( [ "${buildos}" = "ubuntu" ] )
+    if ( [ "${BUILDOS}" = "ubuntu" ] )
     then
 	eval ${update_command}
     fi
 
-    if ( [ "${buildos}" = "debian" ] )
+    if ( [ "${BUILDOS}" = "debian" ] )
     then
 	eval ${update_command}
     fi
@@ -52,12 +52,12 @@ fi
 
 if ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt-fast" ] )
 then
-    if ( [ "${buildos}" = "ubuntu" ] )
+    if ( [ "${BUILDOS}" = "ubuntu" ] )
     then
 	eval ${update_command}
     fi
     
-    if ( [ "${buildos}" = "debian" ] )
+    if ( [ "${BUILDOS}" = "debian" ] )
     then
 	eval ${update_command}
     fi
