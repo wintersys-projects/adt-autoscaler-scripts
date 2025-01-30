@@ -66,9 +66,11 @@ then
             /usr/bin/wget "$apt_fast_url"/apt-fast.conf -O /etc/apt-fast.conf
         fi
                 
-        /usr/bin/ln -s /usr/local/bin/apt-fast /usr/sbin/apt-fast
-        /bin/sed -i "s/digitalocean/linode/g" /etc/apt/sources.list.d/ubuntu.sources
-
+        if ( [ -f /etc/apt/sources.list.d/ubuntu.sources ] )
+        then
+            /bin/sed -i "s/digitalocean/linode/g" /etc/apt/sources.list.d/ubuntu.sources
+        fi
+        
         DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
 
         while ( [ "$?" != "0" ] )
@@ -107,9 +109,11 @@ then
             /usr/bin/wget "$apt_fast_url"/apt-fast.conf -O /etc/apt-fast.conf
         fi
                 
-        /usr/bin/ln -s /usr/local/bin/apt-fast /usr/sbin/apt-fast
-        /bin/sed -i "s/digitalocean/linode/g" /etc/apt/mirrors/debian.list
-
+        if ( [ -f /etc/apt/mirrors/debian.list ] )
+        then
+            /bin/sed -i "s/digitalocean/linode/g" /etc/apt/mirrors/debian.list
+        fi
+        
         DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
 
         while ( [ "$?" != "0" ] )
