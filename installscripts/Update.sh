@@ -41,12 +41,12 @@ if ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "PA
 then
     if ( [ "${buildos}" = "ubuntu" ] )
     then
-        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages 
+	eval ${update_command}
     fi
 
     if ( [ "${buildos}" = "debian" ] )
     then
-        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages  
+	eval ${update_command}
     fi
 fi
 
@@ -54,12 +54,12 @@ if ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "PA
 then
     if ( [ "${buildos}" = "ubuntu" ] )
     then
-        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-fast -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages 
+	eval ${update_command}
     fi
     
     if ( [ "${buildos}" = "debian" ] )
     then
-        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-fast -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages 
+	eval ${update_command}
     fi
 fi
 
