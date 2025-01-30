@@ -59,7 +59,7 @@ then
         fi
 
         /usr/bin/wget "${apt_fast_url}"/apt-fast -O /usr/sbin/apt-fast
-        /bin/chmod +x /usr/local/bin/apt-fast
+        /bin/chmod +x /usr/sbin/apt-fast
 
         if ( [ ! -f /etc/apt-fast.conf ] )
         then
@@ -102,7 +102,7 @@ then
         fi
 
         /usr/bin/wget "${apt_fast_url}"/apt-fast -O /usr/sbin/apt-fast
-        /bin/chmod +x /usr/local/bin/apt-fast
+        /bin/chmod +x /usr/sbin/apt-fast
 
         if ( [ ! -f /etc/apt-fast.conf ] )
         then
