@@ -21,14 +21,14 @@
 ###################################################################################
 #set -x
 
-BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
+#BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
 
 if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'EMAILUTIL:sendemail'`" = "1" ] )
 then
-	${HOME}/installscripts/InstallSendEmail.sh ${BUILDOS}
+	${HOME}/installscripts/InstallSendEmail.sh 
 fi
 
 if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'EMAILUTIL:mail'`" = "1" ] )
 then
-	${HOME}/installscripts/InstallMail.sh ${BUILDOS}
+	${HOME}/installscripts/InstallMail.sh 
 fi
