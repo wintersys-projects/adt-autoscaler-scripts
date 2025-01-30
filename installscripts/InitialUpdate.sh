@@ -49,61 +49,86 @@ fi
 
 if ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt-fast" ] )
 then
-    while ( [ ! -h /usr/sbin/apt-fast ] )
-    do
-        if ( [ "${BUILDOS}" = "ubuntu" ] )
+    if ( [ "${BUILDOS}" = "ubuntu" ] )
+    then
+        apt_fast_url='https://raw.githubusercontent.com/ilikenwf/apt-fast/master'
+
+        if ( [ -f /usr/local/sbin/apt-fast ] )
         then
-                ${HOME}/installscripts/AptFastInstallHelper.sh
-                /usr/bin/ln -s /usr/local/bin/apt-fast /usr/sbin/apt-fast
-                /bin/sed -i "s/digitalocean/linode/g" /etc/apt/sources.list.d/ubuntu.sources
-
-                DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
-
-                while ( [ "$?" != "0" ] )
-                do
-                    /bin/sleep 5
-                    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
-                done
-
-                ${HOME}/installscripts/InstallAria2.sh "ubuntu"
-                /bin/touch /tmp/apt-fast.list
-                /bin/sed -i 's/^#DOWNLOADBEFORE/DOWNLOADBEFORE/g' /etc/apt-fast.conf
-                if ( [ "${CLOUDHOST}" = "digitalocean" ] )
-                then
-                    /bin/echo "MIRRORS=( 'mirrors.linode.com' )" >> /etc/apt-fast.conf
-                fi
-                if ( [ "${CLOUDHOST}" = "linode" ] )
-                then
-                    /bin/echo "MIRRORS=( 'mirrors.linode.com' )" >> /etc/apt-fast.conf
-                fi
+            /bin/rm -f /usr/local/sbin/apt-fast
         fi
+
+        /usr/bin/wget "${apt_fast_url}"/apt-fast -O /usr/sbin/apt-fast
+        /bin/chmod +x /usr/local/bin/apt-fast
+
+        if ( [ ! -f /etc/apt-fast.conf ] )
+        then
+            /usr/bin/wget "$apt_fast_url"/apt-fast.conf -O /etc/apt-fast.conf
+        fi
+                
+        /usr/bin/ln -s /usr/local/bin/apt-fast /usr/sbin/apt-fast
+        /bin/sed -i "s/digitalocean/linode/g" /etc/apt/sources.list.d/ubuntu.sources
+
+        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
+
+        while ( [ "$?" != "0" ] )
+        do
+            /bin/sleep 5
+            DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
+        done
+
+        ${HOME}/installscripts/InstallAria2.sh "ubuntu"
+        /bin/touch /tmp/apt-fast.list
+        /bin/sed -i 's/^#DOWNLOADBEFORE/DOWNLOADBEFORE/g' /etc/apt-fast.conf
+        if ( [ "${CLOUDHOST}" = "digitalocean" ] )
+        then
+            /bin/echo "MIRRORS=( 'mirrors.linode.com' )" >> /etc/apt-fast.conf
+        fi
+        if ( [ "${CLOUDHOST}" = "linode" ] )
+        then
+            /bin/echo "MIRRORS=( 'mirrors.linode.com' )" >> /etc/apt-fast.conf
+        fi
+    fi
     
-        if ( [ "${BUILDOS}" = "debian" ] )
+    if ( [ "${BUILDOS}" = "debian" ] )
+    then
+        apt_fast_url='https://raw.githubusercontent.com/ilikenwf/apt-fast/master'
+
+        if ( [ -f /usr/local/sbin/apt-fast ] )
         then
-                ${HOME}/installscripts/AptFastInstallHelper.sh
-                /usr/bin/ln -s /usr/local/bin/apt-fast /usr/sbin/apt-fast
-                /bin/sed -i "s/digitalocean/linode/g" /etc/apt/mirrors/debian.list
-
-                DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
-
-                while ( [ "$?" != "0" ] )
-                do
-                    /bin/sleep 5
-                    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
-                done                 
-
-                ${HOME}/installscripts/InstallAria2.sh "debian"
-
-                /bin/touch /tmp/apt-fast.list
-                /bin/sed -i 's/^#DOWNLOADBEFORE/DOWNLOADBEFORE/g' /etc/apt-fast.conf
-                if ( [ "${CLOUDHOST}" = "digitalocean" ] )
-                then
-                    /bin/echo "MIRRORS=( 'mirrors.linode.com' )" >> /etc/apt-fast.conf
-                fi
-                if ( [ "${CLOUDHOST}" = "linode" ] )
-                then
-                    /bin/echo "MIRRORS=( 'mirrors.linode.com' )" >> /etc/apt-fast.conf
-                fi
+            /bin/rm -f /usr/local/sbin/apt-fast
         fi
-    done
+
+        /usr/bin/wget "${apt_fast_url}"/apt-fast -O /usr/sbin/apt-fast
+        /bin/chmod +x /usr/local/bin/apt-fast
+
+        if ( [ ! -f /etc/apt-fast.conf ] )
+        then
+            /usr/bin/wget "$apt_fast_url"/apt-fast.conf -O /etc/apt-fast.conf
+        fi
+                
+        /usr/bin/ln -s /usr/local/bin/apt-fast /usr/sbin/apt-fast
+        /bin/sed -i "s/digitalocean/linode/g" /etc/apt/mirrors/debian.list
+
+        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
+
+        while ( [ "$?" != "0" ] )
+        do
+            /bin/sleep 5
+            DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
+        done                 
+
+        ${HOME}/installscripts/InstallAria2.sh "debian"
+
+        /bin/touch /tmp/apt-fast.list
+        /bin/sed -i 's/^#DOWNLOADBEFORE/DOWNLOADBEFORE/g' /etc/apt-fast.conf
+        if ( [ "${CLOUDHOST}" = "digitalocean" ] )
+        then
+            /bin/echo "MIRRORS=( 'mirrors.linode.com' )" >> /etc/apt-fast.conf
+        fi
+        if ( [ "${CLOUDHOST}" = "linode" ] )
+        then
+            /bin/echo "MIRRORS=( 'mirrors.linode.com' )" >> /etc/apt-fast.conf
+        fi
 fi
+
