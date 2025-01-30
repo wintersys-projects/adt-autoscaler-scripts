@@ -20,11 +20,11 @@
 ####################################################################################
 #set -x
 
-if ( [ "${1}" != "" ] )
-then
-	buildos="${1}"
-fi
-
+#if ( [ "${1}" != "" ] )
+#then
+#	buildos="${1}"
+#fi
+BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
 apt=""
 if ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt" ] )
 then
@@ -36,12 +36,12 @@ fi
 
 if ( [ "${apt}" != "" ] )
 then
-	if ( [ "${buildos}" = "ubuntu" ] )
+	if ( [ "${BUILDOS}" = "ubuntu" ] )
 	then
 		DEBIAN_FRONTEND=noninteractive ${apt} -qq upgrade  -o DPkg::Lock::Timeout=-1 -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef -y --allow-downgrades --allow-remove-essential --allow-change-held-packages
 	fi
 
-	if ( [ "${buildos}" = "debian" ] )
+	if ( [ "${BUILDOS}" = "debian" ] )
 	then
 		DEBIAN_FRONTEND=noninteractive ${apt} -qq upgrade  -o DPkg::Lock::Timeout=-1 -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef -y --allow-downgrades --allow-remove-essential --allow-change-held-packages  
 	fi
