@@ -130,5 +130,6 @@ then
         then
             /bin/echo "MIRRORS=( 'mirrors.linode.com' )" >> /etc/apt-fast.conf
         fi
+    fi
 fi
 
