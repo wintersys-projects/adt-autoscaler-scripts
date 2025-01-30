@@ -19,10 +19,10 @@
 ################################################################################################
 ################################################################################################
 
-if ( [ "${1}" != "" ] )
-then
-	buildos="${1}"
-fi
+#if ( [ "${1}" != "" ] )
+#then
+#	buildos="${1}"
+#fi
 
 HOME="`/bin/cat /home/homedir.dat`"
 
@@ -37,9 +37,9 @@ fi
 
 if ( [ "${firewall}" = "ufw" ] )
 then
-	${HOME}/installscripts/InstallUFW.sh ${buildos}
+	${HOME}/installscripts/InstallUFW.sh 
 fi
 if ( [ "${firewall}" = "iptables" ] )
 then
-	${HOME}/installscripts/InstallIPTables.sh ${buildos}
+	${HOME}/installscripts/InstallIPTables.sh 
 fi
