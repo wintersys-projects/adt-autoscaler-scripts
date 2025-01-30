@@ -23,10 +23,12 @@
 USER_HOME="`/usr/bin/awk -F: '{ print $1}' /etc/passwd | /bin/grep "X*X"`"
 export HOME="/home/${USER_HOME}" | /usr/bin/tee -a ~/.bashrc
 
-if ( [ "${1}" != "" ] )
-then
-	buildos="${1}"
-fi
+#if ( [ "${1}" != "" ] )
+#then
+#	buildos="${1}"
+#fi
+
+BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
 
 apt=""
 if ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt" ] )
@@ -40,7 +42,7 @@ fi
 export DEBIAN_FRONTEND=noninteractive
 install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y install " 
 
-if ( [ "${buildos}" = "ubuntu" ] )
+if ( [ "${BUILDOS}" = "ubuntu" ] )
 then
 	eval ${install_command} pipx		
 	if ( [ -f /usr/local/bin/linode-cli ] )									
@@ -53,7 +55,7 @@ then
 	fi													
 fi
 
-if ( [ "${buildos}" = "debian" ] )
+if ( [ "${BUILDOS}" = "debian" ] )
 then
 	eval ${install_command} pipx		
 	if ( [ -f /usr/local/bin/linode-cli ] )									
