@@ -20,19 +20,20 @@
 #######################################################################################################
 #set -x
 
-if ( [ "${1}" != "" ] )
-then
-	buildos="${1}"
-fi
+#if ( [ "${1}" != "" ] )
+#then
+#	buildos="${1}"
+#fi
 
+BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
 export DEBIAN_FRONTEND=noninteractive
 
-if ( [ "${buildos}" = "ubuntu" ] )
+if ( [ "${BUILDOS}" = "ubuntu" ] )
 then
 	/usr/bin/curl -fsSL https://raw.githubusercontent.com/exoscale/cli/master/install-latest.sh | /bin/sh	
 fi
 
-if ( [ "${buildos}" = "debian" ] )
+if ( [ "${BUILDOS}" = "debian" ] )
 then
 	/usr/bin/curl -fsSL https://raw.githubusercontent.com/exoscale/cli/master/install-latest.sh | /bin/sh 	
 fi
