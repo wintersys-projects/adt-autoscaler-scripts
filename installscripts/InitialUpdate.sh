@@ -20,16 +20,17 @@
 #######################################################################################################
 set -x
 
-if ( [ "${1}" != "" ] )
-then
-    buildos="${1}"
-fi
+#if ( [ "${1}" != "" ] )
+#then
+#    buildos="${1}"
+#fi
 
+BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
 CLOUDHOST="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
 
 if ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt" ] )
 then
-    if ( [ "${buildos}" = "ubuntu" ] )
+    if ( [ "${BUILDOS}" = "ubuntu" ] )
     then
         /usr/bin/yes | /usr/bin/dpkg --configure -a
         DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -y -qq apt-utils
@@ -37,7 +38,7 @@ then
         DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages 
     fi
 
-    if ( [ "${buildos}" = "debian" ] )
+    if ( [ "${BUILDOS}" = "debian" ] )
     then
         /usr/bin/yes | /usr/bin/dpkg --configure -a
         DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -y -qq apt-utils
@@ -50,7 +51,7 @@ if ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "PA
 then
     while ( [ ! -h /usr/sbin/apt-fast ] )
     do
-        if ( [ "${buildos}" = "ubuntu" ] )
+        if ( [ "${BUILDOS}" = "ubuntu" ] )
         then
                 ${HOME}/installscripts/AptFastInstallHelper.sh
                 /usr/bin/ln -s /usr/local/bin/apt-fast /usr/sbin/apt-fast
@@ -77,7 +78,7 @@ then
                 fi
         fi
     
-        if ( [ "${buildos}" = "debian" ] )
+        if ( [ "${BUILDOS}" = "debian" ] )
         then
                 ${HOME}/installscripts/AptFastInstallHelper.sh
                 /usr/bin/ln -s /usr/local/bin/apt-fast /usr/sbin/apt-fast
