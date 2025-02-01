@@ -21,14 +21,24 @@
 ###################################################################################
 #set -x
 
-#BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
+if ( [ "${1}" != "" ] )
+then
+    buildos="${1}"
+fi
+
+if ( [ "${buildos}" = "" ] )
+then
+    BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
+else 
+    BUILDOS="${buildos}"
+fi
 
 if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
 then
-	${HOME}/installscripts/InstallS3CMD.sh 
+	${HOME}/installscripts/InstallS3CMD.sh ${BUILDOS}
 fi
 
 if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ] )
 then
-	${HOME}/installscripts/InstallS5CMD.sh 
+	${HOME}/installscripts/InstallS5CMD.sh ${BUILDOS}
 fi
