@@ -25,12 +25,24 @@
 #Configure the machine for the current provider. Each new provider that is added will need a config process like these to be added
 #here
 
+if ( [ "${1}" != "" ] )
+then
+    buildos="${1}"
+fi
+
+if ( [ "${buildos}" = "" ] )
+then
+    BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
+else 
+    BUILDOS="${buildos}"
+fi
+
 CLOUDHOST="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
 
 if ( [ "${CLOUDHOST}" = "digitalocean" ] )
 then
 	/bin/echo "${0} `/bin/date`: Building for the Digital Ocean provider" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
-	${HOME}/installscripts/InstallDoctl.sh 
+	${HOME}/installscripts/InstallDoctl.sh ${BUILDOS}
 	/bin/chmod 400 {HOME}/.config/doctl/config.yaml
 	/usr/bin/touch ${HOME}/DROPLET
 fi
@@ -38,8 +50,8 @@ fi
 if ( [ "${CLOUDHOST}" = "exoscale" ] )
 then
 	/bin/echo "${0} `/bin/date`: Building for the Exoscale provider" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
-	${HOME}/installscripts/InstallExo.sh 
-	/bin/chmod 400 ${HOME}/.config/exoscale/exoscale.toml
+	${HOME}/installscripts/InstallExo.sh ${BUILDOS}
+	/bin/chmod 400 ${HOME}/.config/exoscale/exoscale.toml 
 	/usr/bin/touch ${HOME}/EXOSCALE
 fi
 
@@ -48,15 +60,15 @@ if ( [ "${CLOUDHOST}" = "linode" ] )
 then
 	/bin/echo "${0} `/bin/date`: Building for the Linode provider" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
   #  ${HOME}/installscripts/Update.sh "${BUILDOS}"
-	${HOME}/installscripts/InstallLinodeCLI.sh
-	/bin/chmod 400 ${HOME}/.config/linode-cli
+	${HOME}/installscripts/InstallLinodeCLI.sh ${BUILDOS}
+	/bin/chmod 400 ${HOME}/.config/linode-cli 
 	/usr/bin/touch ${HOME}/LINODE
 fi
 
 if ( [ "${CLOUDHOST}" = "vultr" ] )
 then
 	/bin/echo "${0} `/bin/date`: Building for the Vultr provider" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
-	${HOME}/installscripts/InstallGo.sh 
-	${HOME}/installscripts/InstallVultr.sh 
+	${HOME}/installscripts/InstallGo.sh ${BUILDOS}
+	${HOME}/installscripts/InstallVultr.sh ${BUILDOS}
 	/usr/bin/touch ${HOME}/VULTR
 fi
