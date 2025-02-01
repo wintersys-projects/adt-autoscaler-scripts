@@ -23,12 +23,17 @@
 USER_HOME="`/usr/bin/awk -F: '{ print $1}' /etc/passwd | /bin/grep "X*X"`"
 export HOME="/home/${USER_HOME}" | /usr/bin/tee -a ~/.bashrc
 
-#if ( [ "${1}" != "" ] )
-#then
-#	buildos="${1}"
-#fi
+if ( [ "${1}" != "" ] )
+then
+    buildos="${1}"
+fi
 
-BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
+if ( [ "${buildos}" = "" ] )
+then
+    BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
+else 
+    BUILDOS="${buildos}"
+fi
 
 apt=""
 if ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt" ] )
