@@ -19,12 +19,18 @@
 ################################################################################################
 ################################################################################################
 
-#if ( [ "${1}" != "" ] )
-#then
-#	buildos="${1}"
-#fi
+if ( [ "${1}" != "" ] )
+then
+    buildos="${1}"
+fi
 
-BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
+if ( [ "${buildos}" = "" ] )
+then
+    BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
+else 
+    BUILDOS="${buildos}"
+fi
+
 HOME="`/bin/cat /home/homedir.dat`"
 
 apt=""
