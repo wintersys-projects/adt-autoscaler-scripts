@@ -96,6 +96,7 @@ then
         then
             /bin/echo "MIRRORS=( 'mirrors.linode.com' )" >> /etc/apt-fast.conf
         fi
+        /bin/echo "DLLIST=" >> /etc/apt-fast.conf
     fi
     
     if ( [ "${BUILDOS}" = "debian" ] )
@@ -139,6 +140,7 @@ then
         then
             /bin/echo "MIRRORS=( 'mirrors.linode.com' )" >> /etc/apt-fast.conf
         fi
+        /bin/echo "DLLIST=" >> /etc/apt-fast.conf
     fi
 fi
 
