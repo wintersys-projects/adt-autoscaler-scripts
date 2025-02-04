@@ -8,5 +8,6 @@ runcmd:
   - '/bin/mv /home/XXXXSERVER_USERXXXX/clone/* /home/XXXXSERVER_USERXXXX && /bin/rm -r /home/XXXXSERVER_USERXXXX/clone'
   - '/usr/bin/find /home/XXXXSERVER_USERXXXX/ -type d -exec chmod 755 {} \;' 
   - '/usr/bin/find /home/XXXXSERVER_USERXXXX/ -type f -exec chmod 644 {} \;'
-  - '/usr/bin/chown -R XXXXSERVER_USERXXXX:XXXXSERVER_USERXXXX /home/XXXXSERVER_USERXXXX'
+ # - '/usr/bin/chown -R XXXXSERVER_USERXXXX:XXXXSERVER_USERXXXX /home/XXXXSERVER_USERXXXX'
+  - '/usr/bin/chmod 777 /home/XXXXSERVER_USERXXXX/ws-rsync.sh'
   - 'export HOME=/home/XXXXSERVER_USERXXXX && ${HOME}/ws-rsync.sh XXXXWEBSERVER_IPXXXX'
