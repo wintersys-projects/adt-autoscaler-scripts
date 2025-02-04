@@ -69,7 +69,7 @@ git_provider_domain="github.com"
 /bin/sed -i "s/XXXXALGORITHMXXXX/${ALGORITHM}/g" ${HOME}/runtime/cloud-init/linode.dat
 /bin/sed -i "s/XXXXPERSIST_ASSETS_TO_CLOUDXXXX/${PERSIST_ASSETS_TO_CLOUD}/g" ${HOME}/runtime/cloud-init/linode.dat
 /bin/sed -i "s/XXXXDIRECTORIES_TO_MOUNTXXXX/${DIRECTORIES_TO_MOUNT}/g" ${HOME}/runtime/cloud-init/linode.dat
-
+/bin/sed -i "s;XXXXSSH_PRIVATE_KEYXXXX;${SSH_PRIVATE_KEY_TRIMMED};g" ${HOME}/runtime/cloud-init/linode.dat
 
 ###########################ADDED##############################
 
