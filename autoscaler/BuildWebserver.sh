@@ -109,3 +109,10 @@ then
         /usr/bin/kill -TERM $$
 fi
 
+
+
+
+
+
+${HOME}/autoscaler/AddIPToDNS.sh ${ip}
+
