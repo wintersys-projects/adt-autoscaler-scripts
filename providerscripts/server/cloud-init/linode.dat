@@ -1,4 +1,4 @@
-
+#cloud-config
 
 runcmd:
   - '/usr/bin/gzip -d /home/XXXXSERVER_USERXXXX/.ssh/webserver_configuration_settings.dat.gz'
