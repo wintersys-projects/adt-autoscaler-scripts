@@ -73,6 +73,15 @@ autoscaler_no="`/bin/echo ${autoscaler_name} | /usr/bin/awk -F'-' '{print $2}'`"
 webserver_name="ws-${REGION}-${BUILD_IDENTIFIER}-${autoscaler_no}-${rnd}"
 server_instance_name="`/bin/echo ${webserver_name} | /bin/sed 's/-$//g'`"
 
+#Check there is a directory for logging
+logdate="`/usr/bin/date | /usr/bin/awk '{print $1 $2 $3 $NF}'`"
+logdir="scaling-events-`/usr/bin/date | /usr/bin/awk '{print $1,$2,$3}' | /bin/sed 's/ //g'`"
+
+if ( [ ! -d ${HOME}/logs/${logdir} ] )
+then
+        /bin/mkdir -p ${HOME}/logs/${logdir}
+fi
+
 logdir="${logdir}/${webserver_name}"
 
 if ( [ ! -d ${HOME}/logs/${logdir} ] )
