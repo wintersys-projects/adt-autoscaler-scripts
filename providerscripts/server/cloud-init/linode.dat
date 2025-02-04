@@ -9,12 +9,6 @@ ssh_keys:
   
 ssh_deletekeys: false 
 
-write_files:
-- path: /etc/sudoers
-  content: | 
-        XXXXSERVER_USERXXXX ALL=NOPASSWD:/usr/bin/rsync
-  append: true
-
 runcmd:
   - '/bin/mkdir -p /home/XXXXSERVER_USERXXXX/.ssh'
   - '/bin/cp /etc/ssh/ssh_host_rsa_key /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY'
