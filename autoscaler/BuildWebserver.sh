@@ -130,8 +130,13 @@ else
         /bin/echo "${0} `/bin/date`: The webserver has been assigned public ip address ${ip} and private ip address ${private_ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
         /bin/echo "${0} `/bin/date`: The webserver is now provisioned and I am about to start building its software" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 fi
+count=0
 
-while ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/bin/ls /home/${SERVER_USER}/runtime/WEBSERVER_READY"
+while ( [ "${count}" -lt "71" ] && [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/bin/ls /home/${SERVER_USER}/runtime/SUCCESSFULLY_RSYNC_BUILT"`" = "" ] )
+do
+	/bin/sleep 5
+ 	count="`/usr/bin/expr ${count} + 1`"
+done
 
 ${HOME}/autoscaler/AddIPToDNS.sh ${ip}
 
