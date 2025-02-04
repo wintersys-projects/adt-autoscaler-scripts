@@ -106,7 +106,7 @@ done
 if ( [ "${count}" = "10" ] )
 then
         /bin/echo "${0} `/bin/date`: Failed to build webserver with name ${server_instance_name} - this is most likely an issue with your provider (${CLOUDHOST}) check their status page" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-        /usr/bin/kill -TERM $$
+	exit
 fi
 
 count="0"
