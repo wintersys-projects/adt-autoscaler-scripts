@@ -48,19 +48,17 @@ fi
 
 buildno="${1}"
 chosen_webserver_ip="${2}"
-trap "cleanup ${buildno}" TERM
-start=`/bin/date +%s`
 
 SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
 INFRASTRUCTURE_REPOSITORY_OWNER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'INFRASTRUCTUREREPOSITORYOWNER'`"
 REGION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
 BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
 CLOUDHOST="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
-
+SIZE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SIZE'`"
 
 if ( [ ! -d ${HOME}/runtime/cloud-init ] )
 then
-	/bin/mkdir ${HOME}/runtime/cloud-init
+	/bin/mkdir -p ${HOME}/runtime/cloud-init
 fi
 
 git_provider_domain="github.com"
