@@ -48,6 +48,7 @@ PERSIST_ASSETS_TO_CLOUD="`${HOME}/providerscripts/utilities/config/ExtractConfig
 DIRECTORIES_TO_MOUNT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DIRECTORIESTOMOUNT'`"
 OPTIONS=" -o ConnectTimeout=10 -o ConnectionAttempts=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "
 BUILD_KEY="${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY"
+SSH_PRIVATE_KEY_TRIMMED="`/bin/cat  ${HOME}/.ssh/id_rsa_AGILE_DEPLOYMENT_BUILD_KEY | /bin/grep -v '^----' | /usr/bin/tr -d '\n'`"
 
 
 if ( [ ! -d ${HOME}/runtime/cloud-init ] )
