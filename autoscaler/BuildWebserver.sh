@@ -109,10 +109,27 @@ then
         /usr/bin/kill -TERM $$
 fi
 
+count="0"
+while ( [ "`/bin/echo ${ip} | /bin/grep -E "^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$"`" = "" ] && [ "${count}" -lt "15" ] || [ "${ip}" = "0.0.0.0" ] )
+do
+        /bin/sleep 20
+        ip="`${HOME}/providerscripts/server/GetServerIPAddresses.sh ${server_instance_name} ${CLOUDHOST}`"
+        ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} webserverpublicips/${ip}
+        private_ip="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh ${server_instance_name} ${CLOUDHOST}`"
+        ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${private_ip} webserverips/${private_ip}
+        count="`/usr/bin/expr ${count} + 1`"
+done
 
-
-
-
+if ( [ "${ip}" = "" ] )
+then
+        #This should never happen, and I am not sure what to do about it if it does. If we don't have an ip address, how can
+        #we destroy the machine? I simply exit, therefore.
+        /bin/echo "${0} `/bin/date`: The weberver didn't come online" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+	exit
+else
+        /bin/echo "${0} `/bin/date`: The webserver has been assigned public ip address ${ip} and private ip address ${private_ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+        /bin/echo "${0} `/bin/date`: The webserver is now provisioned and I am about to start building its software" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+fi
 
 ${HOME}/autoscaler/AddIPToDNS.sh ${ip}
 
