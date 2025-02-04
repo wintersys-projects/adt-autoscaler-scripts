@@ -1,0 +1,13 @@
+
+
+runcmd:
+  - '/usr/bin/gzip -d /home/XXXXSERVER_USERXXXX/.ssh/webserver_configuration_settings.dat.gz'
+  - '/usr/bin/gzip -d /home/XXXXSERVER_USERXXXX/.ssh/buildstyles.dat.gz'
+  - '/usr/bin/apt-get -qq -y update'
+  - '/usr/bin/apt-get -qq -y upgrade'
+  - '/usr/bin/apt-get -qq -y install git'
+  - '/usr/bin/git clone https://XXXXGIT_PROVIDER_DOMAINXXXX/XXXXINFRASTRUCTURE_REPOSITORY_OWNERXXXX/adt-webserver-scripts.git /home/XXXXSERVER_USERXXXX/clone'
+  - '/bin/mv /home/XXXXSERVER_USERXXXX/clone/* /home/XXXXSERVER_USERXXXX && /bin/rm -r /home/XXXXSERVER_USERXXXX/clone'
+  - '/usr/bin/find /home/XXXXSERVER_USERXXXX/ -type d -exec chmod 755 {} \;' 
+  - '/usr/bin/find /home/XXXXSERVER_USERXXXX/ -type f -exec chmod 644 {} \;'
+  - '/usr/bin/chown -R XXXXSERVER_USERXXXX:XXXXSERVER_USERXXXX /home/XXXXSERVER_USERXXXX'
