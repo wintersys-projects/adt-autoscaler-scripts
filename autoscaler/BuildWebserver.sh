@@ -36,6 +36,7 @@ buildno="${1}"
 chosen_webserver_ip="${2}"
 
 SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
+SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
 INFRASTRUCTURE_REPOSITORY_OWNER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'INFRASTRUCTUREREPOSITORYOWNER'`"
 REGION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
 BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
@@ -43,13 +44,15 @@ SSH_PORT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SSHPO
 ALGORITHM="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'ALGORITHM'`"
 CLOUDHOST="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
 SIZE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SIZE'`"
+PERSIST_ASSETS_TO_CLOUD="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'PERSISTASSETSTOCLOUD'`"
+DIRECTORIES_TO_MOUNT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DIRECTORIESTOMOUNT'`"
 OPTIONS=" -o ConnectTimeout=10 -o ConnectionAttempts=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "
 BUILD_KEY="${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY"
 
 
 if ( [ ! -d ${HOME}/runtime/cloud-init ] )
 then
-	/bin/mkdir -p ${HOME}/runtime/cloud-init
+        /bin/mkdir -p ${HOME}/runtime/cloud-init
 fi
 
 git_provider_domain="github.com"
@@ -57,9 +60,15 @@ git_provider_domain="github.com"
 /bin/cp ${HOME}/providerscripts/server/cloud-init/linode.dat ${HOME}/runtime/cloud-init/linode.dat
 
 /bin/sed -i "s/XXXXSERVER_USERXXXX/${SERVER_USER}/g" ${HOME}/runtime/cloud-init/linode.dat
+/bin/sed -i "s/XXXXSERVER_USER_PASSWORDXXXX/${SERVER_USER_PASSWORD}/g" ${HOME}/runtime/cloud-init/linode.dat
 /bin/sed -i "s/XXXXGIT_PROVIDER_DOMAINXXXX/${git_provider_domain}/g" ${HOME}/runtime/cloud-init/linode.dat
 /bin/sed -i "s/XXXXINFRASTRUCTURE_REPOSITORY_OWNERXXXX/${INFRASTRUCTURE_REPOSITORY_OWNER}/g" ${HOME}/runtime/cloud-init/linode.dat
 /bin/sed -i "s/XXXXWEBSERVER_IPXXXX/${chosen_webserver_ip}/g" ${HOME}/runtime/cloud-init/linode.dat
+/bin/sed -i "s/XXXXSSH_PORTXXXX/${SSH_PORT}/g" ${HOME}/runtime/cloud-init/linode.dat
+/bin/sed -i "s/XXXXALGORITHMXXXX/${ALGORITHM}/g" ${HOME}/runtime/cloud-init/linode.dat
+/bin/sed -i "s/XXXXPERSIST_ASSETS_TO_CLOUDXXXX/${PERSIST_ASSETS_TO_CLOUD}/g" ${HOME}/runtime/cloud-init/linode.dat
+/bin/sed -i "s/XXXXDIRECTORIES_TO_MOUNTXXXX/${DIRECTORIES_TO_MOUNT}/g" ${HOME}/runtime/cloud-init/linode.dat
+
 
 ###########################ADDED##############################
 
@@ -118,7 +127,7 @@ done
 if ( [ "${count}" = "10" ] )
 then
         /bin/echo "${0} `/bin/date`: Failed to build webserver with name ${server_instance_name} - this is most likely an issue with your provider (${CLOUDHOST}) check their status page" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-	exit
+        exit
 fi
 
 count="0"
@@ -137,7 +146,7 @@ then
         #This should never happen, and I am not sure what to do about it if it does. If we don't have an ip address, how can
         #we destroy the machine? I simply exit, therefore.
         /bin/echo "${0} `/bin/date`: The weberver didn't come online" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-	exit
+        exit
 else
         /bin/echo "${0} `/bin/date`: The webserver has been assigned public ip address ${ip} and private ip address ${private_ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
         /bin/echo "${0} `/bin/date`: The webserver is now provisioned and I am about to start building its software" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
@@ -146,8 +155,8 @@ count=0
 
 while ( [ "${count}" -lt "71" ] && [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/bin/ls /home/${SERVER_USER}/runtime/SUCCESSFULLY_RSYNC_BUILT"`" = "" ] )
 do
-	/bin/sleep 5
- 	count="`/usr/bin/expr ${count} + 1`"
+        /bin/sleep 5
+        count="`/usr/bin/expr ${count} + 1`"
 done
 
 ${HOME}/autoscaler/AddIPToDNS.sh ${ip}
