@@ -25,20 +25,6 @@
 #############################################################################################
 set -x
 
-cleanup() {
-
-        if ( [ -f ${HOME}/runtime/AUTOSCALINGMONITOR:${1} ] )
-        then
-                if ( [ "${2}" = "successfully" ] )
-                then
-                        /bin/echo "${0} `/bin/date`: Build no ${1} has been completed ${2}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-                else
-                        /bin/echo "${0} `/bin/date`: Build no ${1} has been completed unsuccessfully - due to a raised trap condition" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-                fi
-                /bin/rm ${HOME}/runtime/AUTOSCALINGMONITOR:${1}
-        fi
- 
-}
 
 #If we are trying to build a webserver before the toolkit has been fully installed, we don't want to do anything, so exit
 if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "INSTALLED_SUCCESSFULLY"`" = "0" ] )
@@ -68,6 +54,7 @@ git_provider_domain="github.com"
 /bin/sed -i "s/XXXXSERVER_USERXXXX/${SERVER_USER}/g" ${HOME}/runtime/cloud-init/linode.dat
 /bin/sed -i "s/XXXXGIT_PROVIDER_DOMAINXXXX/${git_provider_domain}/g" ${HOME}/runtime/cloud-init/linode.dat
 /bin/sed -i "s/XXXXINFRASTRUCTURE_REPOSITORY_OWNERXXXX/${INFRASTRUCTURE_REPOSITORY_OWNER}/g" ${HOME}/runtime/cloud-init/linode.dat
+/bin/sed -i "s/XXXXWEBSERVER_IPXXXX/${chosen_webserver_ip}/g" ${HOME}/runtime/cloud-init/linode.dat
 
 ###########################ADDED##############################
 
