@@ -161,6 +161,16 @@ PERSIST_ASSETS_TO_CLOUD="`${HOME}/providerscripts/utilities/config/ExtractConfig
 DIRECTORIES_TO_MOUNT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DIRECTORIESTOMOUNT'`"
 
 
+if ( [ ! -d ${HOME}/runtime/cloud-init ] )
+then
+	/bin/mkdir ${HOME}/runtime/cloud-init
+fi
+
+/bin/cp ${HOME}/providerscripts/server/cloud-init/linode.dat ${HOME}/runtime/cloud-init/linode.dat
+
+
+
+
 if ( [ ! -f ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} ] )
 then
         original_build_identifier="`/bin/echo ${BUILD_IDENTIFIER} | /bin/sed 's/s-//g'`"
