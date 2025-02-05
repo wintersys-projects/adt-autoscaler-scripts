@@ -421,25 +421,25 @@ then
         exit    
 fi
 
-if ( [ "${sshpass}" = "1" ] )
-then
-	/usr/bin/sshpass -p ${CLOUDHOST_PASSWORD} /usr/bin/scp ${OPTIONS} ${BUILD_KEY}.pub ${CLOUDHOST_USERNAME}@${private_ip}:/root/.ssh/authorized_keys
-fi
+#if ( [ "${sshpass}" = "1" ] )
+#then
+#	/usr/bin/sshpass -p ${CLOUDHOST_PASSWORD} /usr/bin/scp ${OPTIONS} ${BUILD_KEY}.pub ${CLOUDHOST_USERNAME}@${private_ip}:/root/.ssh/authorized_keys
+#fi
 
-/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${DEFAULT_USER}@${private_ip} "${SUDO} /usr/sbin/useradd ${SERVER_USER} 2>&1 >/dev/null ; /bin/echo ${SERVER_USER}:${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/chpasswd ; ${SUDO} /usr/bin/gpasswd -a ${SERVER_USER} sudo"
-/bin/cat ${BUILD_KEY}.pub | /usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${DEFAULT_USER}@${private_ip} "${SUDO} /bin/mkdir -p /home/${SERVER_USER}/.ssh ; ${SUDO} /bin/chown -R ${DEFAULT_USER}:${DEFAULT_USER} /home/${SERVER_USER}/.ssh ; /bin/cat - >> /home/${SERVER_USER}/.ssh/authorized_keys ; ${SUDO} /bin/sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config ; ${SUDO} /bin/sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config ; ${SUDO} /bin/sed -i 's/KbdInteractiveAuthentication yes/KbdInteractiveAuthentication no/g' /etc/ssh/sshd_config ; ${SUDO} /bin/sed -i 's/ChallengeResponseAuthentication yes/ChallengeResponseAuthentication no/g' ; ${SUDO} /etc/init.d/ssh reload ; ${SUDO} /bin/chown -R ${SERVER_USER}:${SERVER_USER} /home/${SERVER_USER}"
+#/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${DEFAULT_USER}@${private_ip} "${SUDO} /usr/sbin/useradd ${SERVER_USER} 2>&1 >/dev/null ; /bin/echo ${SERVER_USER}:${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/chpasswd ; ${SUDO} /usr/bin/gpasswd -a ${SERVER_USER} sudo"
+#/bin/cat ${BUILD_KEY}.pub | /usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${DEFAULT_USER}@${private_ip} "${SUDO} /bin/mkdir -p /home/${SERVER_USER}/.ssh ; ${SUDO} /bin/chown -R ${DEFAULT_USER}:${DEFAULT_USER} /home/${SERVER_USER}/.ssh ; /bin/cat - >> /home/${SERVER_USER}/.ssh/authorized_keys ; ${SUDO} /bin/sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config ; ${SUDO} /bin/sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config ; ${SUDO} /bin/sed -i 's/KbdInteractiveAuthentication yes/KbdInteractiveAuthentication no/g' /etc/ssh/sshd_config ; ${SUDO} /bin/sed -i 's/ChallengeResponseAuthentication yes/ChallengeResponseAuthentication no/g' ; ${SUDO} /etc/init.d/ssh reload ; ${SUDO} /bin/chown -R ${SERVER_USER}:${SERVER_USER} /home/${SERVER_USER}"
 
-/usr/bin/scp -i ${BUILD_KEY} ${OPTIONS} ${BUILD_KEY} ${SERVER_USER}@${private_ip}:/home/${SERVER_USER}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY
-/usr/bin/scp -i ${BUILD_KEY} ${OPTIONS} ${HOME}/providerscripts/git/GitRemoteInstall.sh ${SERVER_USER}@${private_ip}:/home/${SERVER_USER}
+#/usr/bin/scp -i ${BUILD_KEY} ${OPTIONS} ${BUILD_KEY} ${SERVER_USER}@${private_ip}:/home/${SERVER_USER}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY
+#/usr/bin/scp -i ${BUILD_KEY} ${OPTIONS} ${HOME}/providerscripts/git/GitRemoteInstall.sh ${SERVER_USER}@${private_ip}:/home/${SERVER_USER}
 
-git_provider_domain="`${HOME}/providerscripts/git/GitProviderDomain.sh ${INFRASTRUCTURE_REPOSITORY_PROVIDER}`"
-count="0"
-while ( [ "`/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} /bin/ls /home/${SERVER_USER}/ws.sh" 2>/dev/null`" = "" ] && [ "${count}" -lt "5" ] )
-do
-	/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} /home/${SERVER_USER}/GitRemoteInstall.sh ; cd /home/${SERVER_USER}; /usr/bin/git clone https://${git_provider_domain}/${INFRASTRUCTURE_REPOSITORY_OWNER}/adt-webserver-scripts.git; /bin/cp -r ./adt-webserver-scripts/* .; /bin/rm -r ./adt-webserver-scripts; /bin/chown -R ${SERVER_USER}:${SERVER_USER} /home/${SERVER_USER}/*; /bin/chmod 500 /home/${SERVER_USER}/ws.sh "
-	/bin/sleep 5
-	count="`/usr/bin/expr ${count} + 1`"
-done
+#git_provider_domain="`${HOME}/providerscripts/git/GitProviderDomain.sh ${INFRASTRUCTURE_REPOSITORY_PROVIDER}`"
+#count="0"
+#while ( [ "`/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} /bin/ls /home/${SERVER_USER}/ws.sh" 2>/dev/null`" = "" ] && [ "${count}" -lt "5" ] )
+#do
+#	/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} /home/${SERVER_USER}/GitRemoteInstall.sh ; cd /home/${SERVER_USER}; /usr/bin/git clone https://${git_provider_domain}/${INFRASTRUCTURE_REPOSITORY_OWNER}/adt-webserver-scripts.git; /bin/cp -r ./adt-webserver-scripts/* .; /bin/rm -r ./adt-webserver-scripts; /bin/chown -R ${SERVER_USER}:${SERVER_USER} /home/${SERVER_USER}/*; /bin/chmod 500 /home/${SERVER_USER}/ws.sh "
+#	/bin/sleep 5
+#	count="`/usr/bin/expr ${count} + 1`"
+#done
 
 if ( [ "`/usr/bin/ssh -i ${BUILD_KEY_1} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${chosen_webserver_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/status/IsWebserverFullyBuilt.sh"`" = "1" ] )
 then
