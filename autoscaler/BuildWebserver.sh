@@ -249,7 +249,7 @@ ostype="`${HOME}/providerscripts/cloudhost/GetOperatingSystemVersion.sh ${SIZE} 
 /bin/touch ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock
 
 count="0"
-while ( [ "`/usr/bin/ssh -i ${BUILD_KEY_1} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${chosen_webserver_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/status/IsWebserverFullyBuilt.sh"`" = "0" ] && [ "${count}" -lt "5" ] )
+while ( [ "`/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${chosen_webserver_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/status/IsWebserverFullyBuilt.sh"`" = "0" ] && [ "${count}" -lt "5" ] )
 do
         active_webserver_ips="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh webserverips/*` "
         no_active_webservers="`/bin/echo ${active_webserver_ips} | /usr/bin/wc -w`"
