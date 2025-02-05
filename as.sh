@@ -136,7 +136,7 @@ then
 	fi
  	if ( [ -f /etc/ssh/ssh_host_rsa_key.pub ] )
  	then
-  		/bin/cp /etc/ssh/ssh_host_rsa_key ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER}.pub
+  		/bin/cp /etc/ssh/ssh_host_rsa_key.pub ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER}.pub
 		/bin/chmod 600 ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER}.pub
 	fi
 fi
