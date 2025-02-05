@@ -25,6 +25,10 @@ SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SE
 /usr/bin/find /home/${SERVER_USER} -type d -exec chmod 755 {} \;
 /usr/bin/find /home/${SERVER_USER} -type d -exec chmod 640 {} \;
 /usr/bin/find /home/${SERVER_USER} -type d -exec chown ${SERVER_USER}:root {} \;
+/bin/chmod 700 /home/${SERVER_USER}/.ssh
+/bin/chmod 644 /home/${SERVER_USER}/.ssh/authorized_keys
+/bin/chmod 600 /home/${SERVER_USER}/id_*
+/bin/chmod 644 /home/${SERVER_USER}/id_*pub
 
 
 #/bin/chmod -R 640 ${HOME}/.ssh/*
