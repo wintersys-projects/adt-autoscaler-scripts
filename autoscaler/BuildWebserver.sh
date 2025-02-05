@@ -4,6 +4,8 @@ SIZE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SIZE'`"
 REGION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
 BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
 SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
+SSH_PORT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SSHPORT'`"
+
 
 
 
@@ -60,5 +62,13 @@ else
         /bin/echo "${0} `/bin/date`: The webserver has been assigned public ip address ${ip} and private ip address ${private_ip}" 
         /bin/echo "${0} `/bin/date`: The webserver is now provisioned and I am about to start building its software"
 fi
+
+count=0
+
+while ( [ "${count}" -lt "71" ] && [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/bin/ls /home/${SERVER_USER}/runtime/SUCCESSFULLY_RSYNC_BUILT"`" = "" ] )
+do
+        /bin/sleep 5
+        count="`/usr/bin/expr ${count} + 1`"
+done
 
 
