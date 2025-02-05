@@ -25,8 +25,7 @@ HOME="`/bin/cat /home/homedir.dat`"
 SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
 
 /usr/bin/find ${HOME} -type d -exec chmod 755 {} \;
-/usr/bin/find ${HOME} -type f -exec chmod 640 {} \;
-/usr/bin/find ${HOME} -name "*.sh" -type f -exec chmod ug+x {} \;
+/usr/bin/find ${HOME} -type f -exec chmod 750 {} \;
 /usr/bin/find ${HOME} -type f -exec chown ${SERVER_USER}:root {} \;
 /usr/bin/find ${HOME} -type d -exec chown ${SERVER_USER}:root {} \;
 /bin/chmod 700 ${HOME}/.ssh
