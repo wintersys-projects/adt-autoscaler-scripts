@@ -36,7 +36,7 @@ then
 fi
 
 count="0"
-
+ip=""
 # There is a delay between the server being created and started and it "coming online". The way we can tell it is online is when
 # It returns an ip address, so try, several times to retrieve the ip address of the server
 # We are prepared to wait a total of 300 seconds for the machine to come online
