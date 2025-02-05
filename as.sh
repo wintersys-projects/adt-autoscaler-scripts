@@ -27,15 +27,16 @@ export HOME="/home/${USER_HOME}" | /usr/bin/tee -a ~/.bashrc
 /bin/echo "set mouse=r" > /root/.vimrc
 
 #Set the permissions as we want for all the autoscaler infrastructure scripts that we are using
-/usr/bin/find ${HOME} -not -path '*/\.*' -type d -print0 | xargs -0 chmod 0755 # for directories
-/usr/bin/find ${HOME} -not -path '*/\.*' -type f -print0 | xargs -0 chmod 0500 # for files
-/bin/chown ${SERVER_USER}:root ${HOME}/.ssh
-/bin/chmod 750 ${HOME}/.ssh
+#/usr/bin/find ${HOME} -not -path '*/\.*' -type d -print0 | xargs -0 chmod 0755 # for directories
+#/usr/bin/find ${HOME} -not -path '*/\.*' -type f -print0 | xargs -0 chmod 0500 # for files
+#/bin/chown ${SERVER_USER}:root ${HOME}/.ssh
+#/bin/chmod 750 ${HOME}/.ssh
 
 export HOMEDIR=${HOME}
 /bin/echo "${HOMEDIR}" > /home/homedir.dat
 /bin/echo 'export HOME=`/bin/cat /home/homedir.dat` && /bin/sh ${1} ${2} ${3} ${4} ${5} ${6}' > /usr/bin/run
-/bin/chmod 755 /usr/bin/run
+/bin/chown ${SERVER_USER}:root /usr/bin/run
+/bin/chmod 750 /usr/bin/run
 
 if ( [ ! -d ${HOME}/logs/initialbuild ] )
 then
