@@ -333,13 +333,13 @@ PRODUCTION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'PRO
 ${HOME}/providerscripts/utilities/processing/UpdateIPs.sh
 ${HOME}/providerscripts/utilities/housekeeping/CleanupAfterBuild.sh
 
-${HOME}/providerscripts/utilities/security/EnforcePermissions.sh
-
 ${HOME}/providerscripts/email/SendEmail.sh "A NEW AUTOSCALER HAS BEEN SUCCESSFULLY BUILT" "A new autoscaler machine has been built and is now going to reboot before coming available" "INFO"
 
 /bin/touch ${HOME}/runtime/DONT_MESS_WITH_THESE_FILES-SYSTEM_BREAK
 
 /bin/touch ${HOME}/runtime/AUTOSCALER_READY
+
+${HOME}/providerscripts/utilities/security/EnforcePermissions.sh
 
 ${HOME}/installscripts/UpdateAndUpgrade.sh ${BUILDOS} &
 
