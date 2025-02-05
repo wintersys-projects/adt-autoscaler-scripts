@@ -11,7 +11,8 @@ ssh_deletekeys: false
 
 runcmd:
   - '/bin/mkdir -p /home/XXXXSERVER_USERXXXX/.ssh'
-  - '/bin/cp /etc/ssh/ssh_host_rsa_key /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY'
+  - '/bin/cp /etc/ssh/ssh_host_rsa_key /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY_XXXXBUILD_IDENTIFIERXXXX'
+  - '/bin/cp /etc/ssh/ssh_host_rsa_key.pub /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY_XXXXBUILD_IDENTIFIER_XXXX.pub'
   - '/usr/bin/apt-get -qq -y update'
   - '/usr/bin/apt-get -qq -y upgrade'
   - '/usr/bin/apt-get -qq -y install git'
@@ -19,7 +20,8 @@ runcmd:
   - '/bin/mv /home/XXXXSERVER_USERXXXX/clone/* /home/XXXXSERVER_USERXXXX && /bin/rm -r /home/XXXXSERVER_USERXXXX/clone'
   - '/usr/bin/find /home/XXXXSERVER_USERXXXX/ -type d -exec chmod 755 {} \;' 
   - '/usr/bin/find /home/XXXXSERVER_USERXXXX/ -type f -exec chmod 644 {} \;'
-  - '/bin/chmod 600 /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY'
+  - '/bin/chmod 600 /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY_XXXXBUILD_IDENTIFIERXXXX'
+  - '/bin/chmod 600 /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY_XXXXBUILD_IDENTIFIERXXXX.pub'
   - '/usr/bin/chown -R XXXXSERVER_USERXXXX:XXXXSERVER_USERXXXX /home/XXXXSERVER_USERXXXX'
 #  - '/usr/bin/chmod 777 /home/XXXXSERVER_USERXXXX/ws-rsync.sh && /bin/chmod 777 /home/XXXXSERVER_USERXXXX/providerscripts/utilities/housekeeping/RsyncEntireMachine.sh'
 #  - 'export HOME=/home/XXXXSERVER_USERXXXX && ${HOME}/ws-rsync.sh XXXXWEBSERVER_IPXXXX XXXXSERVER_USERXXXX XXXXSERVER_USER_PASSWORDXXXX XXXXSSH_PORTXXXX XXXXALGORITHMXXXX XXXXPERSIST_ASSSETS_TO_CLOUDXXXX XXXXDIRECTORIES_TO_MOUNTXXXX'
