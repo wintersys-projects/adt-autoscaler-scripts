@@ -22,7 +22,7 @@
 
 HOME="`/bin/cat /home/homedir.dat`"
 
-SERVER_USER="`/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
+SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
 
 /usr/bin/find ${HOME} -type d -exec chmod 755 {} \;
 /usr/bin/find ${HOME} -type d -exec chmod 640 {} \;
