@@ -299,7 +299,7 @@ done
 
 for ip in ${online_ips}
 do
-	if ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY -o ConnectTimeout=5 -o ConnectionAttempts=2 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "/usr/bin/find ${HOME}/runtime/BUILD_IN_PROGRESS -mmin +30 2>/dev/null"`" != "" ] )
+	if ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=5 -o ConnectionAttempts=2 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "/usr/bin/find ${HOME}/runtime/BUILD_IN_PROGRESS -mmin +30 2>/dev/null"`" != "" ] )
 	then
 	   /bin/echo "${0} `/bin/date`: Webserver ${ip} was found to be offline because it looks as if the build process failed to progress"
 	   online_ips="`/bin/echo ${online_ips} | /bin/sed "s/${ip}//g"`"
