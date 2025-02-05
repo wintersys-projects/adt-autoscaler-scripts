@@ -72,4 +72,9 @@ do
         count="`/usr/bin/expr ${count} + 1`"
 done
 
+if ( [ "${count}" != "71" ] )
+then
+        ${HOME}/autoscaler/AddIPToDNS.sh ${ip}
+fi
+
 
