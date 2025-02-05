@@ -82,37 +82,37 @@ then
 	/bin/chmod 755 ${HOME}/runtime
 fi
 
+SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
+
 if ( [ -f ${HOME}/.ssh/autoscaler_configuration_settings.dat ] )
 then
 	/bin/cp ${HOME}/.ssh/autoscaler_configuration_settings.dat ${HOME}/runtime/autoscaler_configuration_settings.dat
- 	/bin/chown root:root ${HOME}/runtime/autoscaler_configuration_settings.dat
- 	/bin/chmod 640 ${HOME}/runtime/autoscaler_configuration_settings.dat
-  	/bin/mv ${HOME}/.ssh/autoscaler_configuration_settings.dat ${HOME}/.ssh/autoscaler_configuration_settings.dat.original
+ 	/bin/mv ${HOME}/.ssh/autoscaler_configuration_settings.dat ${HOME}/.ssh/autoscaler_configuration_settings.dat.original
+  	/bin/chown root:root ${HOME}/.ssh/autoscaler_configuration_settings.dat.original
+   	/bin/chown 400 ${HOME}/.ssh/autoscaler_configuration_settings.dat.original
+	/bin/chown root:${SERVER_USER} ${HOME}/runtime/autoscaler_configuration_settings.dat
+	/bin/chmod 640 ${HOME}/runtime/autoscaler_configuration_settings.dat
 fi
 
 if ( [ -f ${HOME}/.ssh/webserver_configuration_settings.dat ] )
 then
 	/bin/cp ${HOME}/.ssh/webserver_configuration_settings.dat ${HOME}/runtime/webserver_configuration_settings.dat
- 	/bin/chown root:root ${HOME}/runtime/webserver_configuration_settings.dat
- 	/bin/chmod 640 ${HOME}/runtime/webserver_configuration_settings.dat
-  	/bin/mv ${HOME}/.ssh/webserver_configuration_settings.dat ${HOME}/.ssh/webserver_configuration_settings.dat.original
+ 	/bin/mv ${HOME}/.ssh/webserver_configuration_settings.dat ${HOME}/.ssh/webserver_configuration_settings.dat.original
+  	/bin/chown root:root ${HOME}/.ssh/webserver_configuration_settings.dat.original
+   	/bin/chown 400 ${HOME}/.ssh/webserver_configuration_settings.dat.original
+	/bin/chown root:${SERVER_USER} ${HOME}/runtime/webserver_configuration_settings.dat
+	/bin/chmod 640 ${HOME}/runtime/webserver_configuration_settings.dat
 fi
 
 if ( [ -f ${HOME}/.ssh/buildstyles.dat ] )
 then
 	/bin/cp ${HOME}/.ssh/buildstyles.dat ${HOME}/runtime/buildstyles.dat
- 	/bin/chown root:root ${HOME}/runtime/buildstyles.dat
- 	/bin/chmod 640 ${HOME}/runtime/buildstyles.dat
-  	/bin/mv ${HOME}/.ssh/buildstyles.dat ${HOME}/.ssh/buildstyles.dat.original
+ 	/bin/mv ${HOME}/.ssh/buildstyles.dat ${HOME}/.ssh/buildstyles.dat.original
+    	/bin/chown root:root ${HOME}/.ssh/buildstyles.dat.original
+   	/bin/chown 400 ${HOME}/.ssh/buildstyles.dat.original
+	/bin/chown root:${SERVER_USER} ${HOME}/runtime/buildstyles.dat
+	/bin/chmod 640 ${HOME}/runtime/buildstyles.dat
 fi
-
-
-
-SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
-/bin/chown root:${SERVER_USER} ${HOME}/runtime/buildstyles.dat
-/bin/chmod 640 ${HOME}/runtime/buildstyles.dat
-/bin/chown root:${SERVER_USER} ${HOME}/runtime/autoscaler_configuration_settings.dat
-/bin/chmod 640 ${HOME}/runtime/autoscaler_configuration_settings.dat
 
 
 #Load the parts of the configuration that we need into memory
