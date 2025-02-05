@@ -23,6 +23,11 @@
 SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
 
 
-/bin/chmod -R 700 ${HOME}/.ssh/*
-/bin/chown ${SERVER_USER}:root ${HOME}/.ssh
-/bin/chmod 400 ${HOME}/super/Super.sh
+/bin/chmod -R 640 ${HOME}/.ssh/*
+/bin/chown -R ${SERVER_USER}:root ${HOME}/.ssh
+/bin/chmod 640 ${HOME}/super/Super.sh
+/bin/chown ${SERVER_USER}:root ${HOME}/super/Super.sh
+/bin/chmod -R 640 ${HOME}/runtime
+/bin/chown ${SERVER_USER}:root ${HOME}/runtime
+
+
