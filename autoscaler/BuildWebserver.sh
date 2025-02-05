@@ -2,8 +2,8 @@
 
 SIZE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SIZE'`"
 REGION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
-BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILD_IDENTIFIER'`"
-SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVER_USER'`"
+BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
+SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
 
 
 
