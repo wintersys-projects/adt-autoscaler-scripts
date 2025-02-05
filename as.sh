@@ -89,8 +89,8 @@ then
 	/bin/cp ${HOME}/.ssh/autoscaler_configuration_settings.dat ${HOME}/runtime/autoscaler_configuration_settings.dat
  	/bin/mv ${HOME}/.ssh/autoscaler_configuration_settings.dat ${HOME}/.ssh/autoscaler_configuration_settings.dat.original
   	/bin/chown root:root ${HOME}/.ssh/autoscaler_configuration_settings.dat.original
-   	/bin/chown 400 ${HOME}/.ssh/autoscaler_configuration_settings.dat.original
-	/bin/chown root:${SERVER_USER} ${HOME}/runtime/autoscaler_configuration_settings.dat
+   	/bin/chmod 400 ${HOME}/.ssh/autoscaler_configuration_settings.dat.original
+	/bin/chown ${SERVER_USER}:root ${HOME}/runtime/autoscaler_configuration_settings.dat
 	/bin/chmod 640 ${HOME}/runtime/autoscaler_configuration_settings.dat
 fi
 
@@ -98,9 +98,9 @@ if ( [ -f ${HOME}/.ssh/webserver_configuration_settings.dat ] )
 then
 	/bin/cp ${HOME}/.ssh/webserver_configuration_settings.dat ${HOME}/runtime/webserver_configuration_settings.dat
  	/bin/mv ${HOME}/.ssh/webserver_configuration_settings.dat ${HOME}/.ssh/webserver_configuration_settings.dat.original
-  	/bin/chown root:root ${HOME}/.ssh/webserver_configuration_settings.dat.original
-   	/bin/chown 400 ${HOME}/.ssh/webserver_configuration_settings.dat.original
-	/bin/chown root:${SERVER_USER} ${HOME}/runtime/webserver_configuration_settings.dat
+  	/bin/chown ${SERVER_USER}:root ${HOME}/.ssh/webserver_configuration_settings.dat.original
+   	/bin/chmod 400 ${HOME}/.ssh/webserver_configuration_settings.dat.original
+	/bin/chown ${SERVER_USER}:root ${HOME}/runtime/webserver_configuration_settings.dat
 	/bin/chmod 640 ${HOME}/runtime/webserver_configuration_settings.dat
 fi
 
@@ -108,9 +108,9 @@ if ( [ -f ${HOME}/.ssh/buildstyles.dat ] )
 then
 	/bin/cp ${HOME}/.ssh/buildstyles.dat ${HOME}/runtime/buildstyles.dat
  	/bin/mv ${HOME}/.ssh/buildstyles.dat ${HOME}/.ssh/buildstyles.dat.original
-    	/bin/chown root:root ${HOME}/.ssh/buildstyles.dat.original
-   	/bin/chown 400 ${HOME}/.ssh/buildstyles.dat.original
-	/bin/chown root:${SERVER_USER} ${HOME}/runtime/buildstyles.dat
+    	/bin/chown ${SERVER_USER}:root ${HOME}/.ssh/buildstyles.dat.original
+   	/bin/chmod 400 ${HOME}/.ssh/buildstyles.dat.original
+	/bin/chown ${SERVER_USER}:root ${HOME}/runtime/buildstyles.dat
 	/bin/chmod 640 ${HOME}/runtime/buildstyles.dat
 fi
 
