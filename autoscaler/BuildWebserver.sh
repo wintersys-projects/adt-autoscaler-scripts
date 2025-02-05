@@ -438,13 +438,13 @@ fi
 failed_mount_check="0"
 count="0"
 /bin/echo "${0} `/bin/date`: Performing mount checks for ip address ${ip}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/datastore/SetupAssetsStore.sh"
+/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/datastore/config/SetupAssetsStore.sh"
 while ( [ "${count}" -lt "71" ] &&  [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/status/AreAssetsMounted.sh"`" != "MOUNTED" ] )
 do
         count="`/usr/bin/expr ${count} + 1`"
         /bin/sleep 5
         /bin/echo "${0} `/bin/date`: Doing mount checks for ${ip} attempt ${count}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-        /usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/datastore/SetupAssetsStore.sh"
+        /usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/datastore/config/SetupAssetsStore.sh"
 done
 
 if ( [ "${count}" = "71" ] )
