@@ -1,0 +1,59 @@
+#cloud-config
+
+users:
+  - name: XXXXSERVER_USERXXXX
+    passwd: XXXXSERVER_USER_PASSWORDXXXX
+    groups: [ sudo ]
+    shell: /bin/bash
+    lock_passwd: false
+
+    ssh_authorized_keys:
+      - 'XXXXSSH_PUBLIC_KEYXXXX'
+
+ssh_pwauth: false
+
+ssh_keys:
+  XXXXALGORITHMXXXX_private: |
+      -----BEGIN OPENSSH PRIVATE KEY-----
+      XXXXSSH_PRIVATE_KEYXXXX
+      -----END OPENSSH PRIVATE KEY-----
+
+write_files:
+- encoding: b64
+  content: XXXXWEBSERVER_CONFIGURATIONXXXX
+  owner: root:root
+  path: /home/XXXXSERVER_USERXXXX/.ssh/webserver_configuration_settings.dat.gz
+  permissions: '0644'
+- encoding: b64
+  content: XXXXBUILDSTYLES_SETTINGSXXXX
+  owner: root:root
+  path: /home/XXXXSERVER_USERXXXX/.ssh/buildstyles.dat.gz
+  permissions: '0644'
+
+runcmd:
+  - '/usr/bin/gzip -d /home/XXXXSERVER_USERXXXX/.ssh/webserver_configuration_settings.dat.gz'
+  - '/usr/bin/gzip -d /home/XXXXSERVER_USERXXXX/.ssh/buildstyles.dat.gz'
+  - '/usr/bin/apt-get -qq -y update'
+  - '/usr/bin/apt-get -qq -y upgrade'
+  - '/usr/bin/apt-get -qq -y install git'
+  - '/bin/cp /etc/ssh/ssh_host_rsa_key /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY_XXXXBUILD_IDENTIFIERXXXX'
+  - '/bin/cp /etc/ssh/ssh_host_rsa_key.pub /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY_XXXXBUILD_IDENTIFIERXXXX.pub'  
+  - '/usr/bin/git clone https://XXXXGIT_PROVIDER_DOMAINXXXX/XXXXINFRASTRUCTURE_REPOSITORY_OWNERXXXX/adt-webserver-scripts.git /home/XXXXSERVER_USERXXXX/clone'
+  - '/bin/mv /home/XXXXSERVER_USERXXXX/clone/* /home/XXXXSERVER_USERXXXX && /bin/rm -r /home/XXXXSERVER_USERXXXX/clone'
+  - '/usr/bin/find /home/XXXXSERVER_USERXXXX/ -type d -exec chmod 755 {} \;' 
+  - '/usr/bin/find /home/XXXXSERVER_USERXXXX/ -type f -exec chmod 644 {} \;'
+  - '/bin/chmod 600 /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY_XXXXBUILD_IDENTIFIERXXXX'
+  - '/bin/chmod 600 /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY_XXXXBUILD_IDENTIFIERXXXX.pub'
+  - '/usr/bin/chown -R XXXXSERVER_USERXXXX:XXXXSERVER_USERXXXX /home/XXXXSERVER_USERXXXX'
+  - '/bin/sed -i "s/^PasswordAuthentication.*/PasswordAuthentication no/g" /etc/ssh/sshd_config'
+  - '/bin/sed -i "s/^#PasswordAuthentication.*/PasswordAuthentication no/g" /etc/ssh/sshd_config'
+  - '/bin/sed -i "s/^PermitRootLogin.*/PermitRootLogin no/g" /etc/ssh/sshd_config'
+  - '/bin/sed -i "s/^#PermitRootLogin.*/PermitRootLogin no/g" /etc/ssh/sshd_config'
+  - '/bin/sed -i "s/^KbdInteractiveAuthentication.*/KbdInteractiveAuthentication no/g" /etc/ssh/sshd_config'
+  - '/bin/sed -i "s/^#KbdInteractiveAuthentication.*/KbdInteractiveAuthentication no/g" /etc/ssh/sshd_config'
+  - '/bin/sed -i "s/^ChallengeResponseAuthentication.*/ChallengeResponseAuthentication no/g" /etc/ssh/sshd_config'
+  - '/bin/sed -i "s/^#ChallengeResponseAuthentication.*/ChallengeResponseAuthentication no/g" /etc/ssh/sshd_config'
+  - '/bin/sed -i "s/^AddressFamily.*/AddressFamily inet/g" /etc/ssh/sshd_config'
+  - '/bin/sed -i "s/^#AddressFamily.*/AddressFamily inet/g" /etc/ssh/sshd_config'
+  - '/usr/bin/systemctl restart ssh'
+  - 'export HOME=/home/XXXXSERVER_USERXXXX && /bin/sh ${HOME}/ws.sh'
