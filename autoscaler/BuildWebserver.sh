@@ -169,7 +169,7 @@ then
 fi
 
 BUILD_KEY="${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER}"
-BUILD_KEY_1="${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY"
+#BUILD_KEY_1="${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY"
 
 
 DBIP="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DBIP'`"
@@ -424,7 +424,7 @@ do
         count="`/usr/bin/expr ${count} + 1`"
 done
 
-if ( [ "`/usr/bin/ssh -i ${BUILD_KEY_1} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${chosen_webserver_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/status/IsWebserverFullyBuilt.sh"`" = "1" ] )
+if ( [ "`/usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} -p ${SSH_PORT} ${SERVER_USER}@${chosen_webserver_ip} "${CUSTOM_USER_SUDO} ${HOME}/providerscripts/utilities/status/IsWebserverFullyBuilt.sh"`" = "1" ] )
 then
         /usr/bin/scp -i ${BUILD_KEY} ${OPTIONS} ${HOME}/runtime/webserver_configuration_settings.dat ${HOME}/runtime/buildstyles.dat ${SERVER_USER}@${private_ip}:${HOME}/.ssh/
         /usr/bin/ssh -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${CUSTOM_USER_SUDO} ${HOME}/ws.sh ${chosen_webserver_ip} ${WS_PUBLIC_IP} ${WS_PRIVATE_IP}"
