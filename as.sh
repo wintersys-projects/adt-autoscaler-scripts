@@ -110,7 +110,10 @@ fi
 
 SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
 /bin/chown root:${SERVER_USER} ${HOME}/runtime/buildstyles.dat
+/bin/chmod 640 ${HOME}/runtime/buildstyles.dat
 /bin/chown root:${SERVER_USER} ${HOME}/runtime/autoscaler_configuration_settings.dat
+/bin/chmod 640 ${HOME}/runtime/autoscaler_configuration_settings.dat
+
 
 #Load the parts of the configuration that we need into memory
 WEBSITE_URL="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'WEBSITEURL'`"
