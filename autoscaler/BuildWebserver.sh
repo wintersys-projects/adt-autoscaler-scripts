@@ -52,6 +52,40 @@ trap "cleanup ${buildno}" TERM
 start=`/bin/date +%s`
 
 SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
+SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
+INFRASTRUCTURE_REPOSITORY_OWNER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'INFRASTRUCTUREREPOSITORYOWNER'`"
+REGION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
+BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
+SSH_PORT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SSHPORT'`"
+ALGORITHM="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'ALGORITHM'`"
+CLOUDHOST="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
+SIZE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SIZE'`"
+PERSIST_ASSETS_TO_CLOUD="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'PERSISTASSETSTOCLOUD'`"
+DIRECTORIES_TO_MOUNT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DIRECTORIESTOMOUNT'`"
+OPTIONS=" -o ConnectTimeout=10 -o ConnectionAttempts=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "
+BUILD_KEY="${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY"
+SSH_PRIVATE_KEY_TRIMMED="`/bin/cat  ${HOME}/.ssh/id_rsa_AGILE_DEPLOYMENT_BUILD_KEY | /bin/grep -v '^----' | /usr/bin/tr -d '\n'`"
+
+
+if ( [ ! -d ${HOME}/runtime/cloud-init ] )
+then
+        /bin/mkdir -p ${HOME}/runtime/cloud-init
+fi
+
+git_provider_domain="github.com"
+
+/bin/cp ${HOME}/providerscripts/server/cloud-init/linode.dat ${HOME}/runtime/cloud-init/linode.dat
+
+/bin/sed -i "s/XXXXSERVER_USERXXXX/${SERVER_USER}/g" ${HOME}/runtime/cloud-init/linode.dat
+/bin/sed -i "s/XXXXSERVER_USER_PASSWORDXXXX/${SERVER_USER_PASSWORD}/g" ${HOME}/runtime/cloud-init/linode.dat
+/bin/sed -i "s/XXXXGIT_PROVIDER_DOMAINXXXX/${git_provider_domain}/g" ${HOME}/runtime/cloud-init/linode.dat
+/bin/sed -i "s/XXXXINFRASTRUCTURE_REPOSITORY_OWNERXXXX/${INFRASTRUCTURE_REPOSITORY_OWNER}/g" ${HOME}/runtime/cloud-init/linode.dat
+/bin/sed -i "s/XXXXWEBSERVER_IPXXXX/${chosen_webserver_ip}/g" ${HOME}/runtime/cloud-init/linode.dat
+/bin/sed -i "s/XXXXSSH_PORTXXXX/${SSH_PORT}/g" ${HOME}/runtime/cloud-init/linode.dat
+/bin/sed -i "s/XXXXALGORITHMXXXX/${ALGORITHM}/g" ${HOME}/runtime/cloud-init/linode.dat
+/bin/sed -i "s/XXXXPERSIST_ASSETS_TO_CLOUDXXXX/${PERSIST_ASSETS_TO_CLOUD}/g" ${HOME}/runtime/cloud-init/linode.dat
+/bin/sed -i "s/XXXXDIRECTORIES_TO_MOUNTXXXX/${DIRECTORIES_TO_MOUNT}/g" ${HOME}/runtime/cloud-init/linode.dat
+/bin/sed -i "s;XXXXSSH_PRIVATE_KEYXXXX;${SSH_PRIVATE_KEY_TRIMMED};g" ${HOME}/runtime/cloud-init/linode.dat
 
 if ( [ -f ${HOME}/.ssh/webserver_configuration_settings.dat ] && [ ! -f ${HOME}/runtime/webserver_configuration_settings.dat ] )
 then
