@@ -22,14 +22,18 @@
 
 SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
 
+/usr/bin/find /home/${SERVER_USER} -type d -exec chmod 755 {} \;
+/usr/bin/find /home/${SERVER_USER} -type d -exec chmod 640 {} \;
+/usr/bin/find /home/${SERVER_USER} -type d -exec chown ${SERVER_USER}:root {} \;
 
-/bin/chmod -R 640 ${HOME}/.ssh/*
-/bin/chown -R ${SERVER_USER}:root ${HOME}/.ssh
-/bin/chmod 640 ${HOME}/super/Super.sh
-/bin/chown ${SERVER_USER}:root ${HOME}/super/Super.sh
-/bin/chmod -R 640 ${HOME}/runtime
-/bin/chown ${SERVER_USER}:root ${HOME}/runtime
-/bin/chmod 644 ${HOME}/runtime/AUTOSCALER_READY
+
+#/bin/chmod -R 640 ${HOME}/.ssh/*
+#/bin/chown -R ${SERVER_USER}:root ${HOME}/.ssh
+#/bin/chmod 640 ${HOME}/super/Super.sh
+#/bin/chown ${SERVER_USER}:root ${HOME}/super/Super.sh
+#/bin/chmod -R 640 ${HOME}/runtime
+#/bin/chown ${SERVER_USER}:root ${HOME}/runtime
+#/bin/chmod 644 ${HOME}/runtime/AUTOSCALER_READY
 
 
 
