@@ -66,7 +66,7 @@ fi
 
 count=0
 
-while ( [ "${count}" -lt "71" ] && [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/bin/ls /home/${SERVER_USER}/runtime/SUCCESSFULLY_RSYNC_BUILT"`" = "" ] )
+while ( [ "${count}" -lt "71" ] && [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/bin/ls /home/${SERVER_USER}/runtime/WEBSERVER_READY"`" = "" ] )
 do
         /bin/sleep 5
         count="`/usr/bin/expr ${count} + 1`"
