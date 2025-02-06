@@ -342,7 +342,7 @@ ${HOME}/providerscripts/email/SendEmail.sh "A NEW AUTOSCALER HAS BEEN SUCCESSFUL
 
 ${HOME}/providerscripts/utilities/security/EnforcePermissions.sh
 
-${HOME}/installscripts/UpdateAndUpgrade.sh ${BUILDOS} &
+#${HOME}/installscripts/UpdateAndUpgrade.sh ${BUILDOS} &
 
 
 #/usr/sbin/shutdown -r now
