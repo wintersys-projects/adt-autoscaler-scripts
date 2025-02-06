@@ -40,16 +40,16 @@ then
     then
         /usr/bin/yes | /usr/bin/dpkg --configure -a
         DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -y -qq apt-utils
-        /bin/sed -i "s/digitalocean/linode/g" /etc/apt/sources.list.d/ubuntu.sources
-        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages 
+     #   /bin/sed -i "s/digitalocean/linode/g" /etc/apt/sources.list.d/ubuntu.sources
+     #   DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages 
     fi
 
     if ( [ "${BUILDOS}" = "debian" ] )
     then
         /usr/bin/yes | /usr/bin/dpkg --configure -a
         DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -y -qq apt-utils
-        /bin/sed -i "s/digitalocean/linode/g" /etc/apt/mirrors/debian.list
-        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages  
+     #   /bin/sed -i "s/digitalocean/linode/g" /etc/apt/mirrors/debian.list
+     #   DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update --allow-change-held-packages  
     fi
 fi
 
