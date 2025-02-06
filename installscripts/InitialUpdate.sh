@@ -77,13 +77,13 @@ then
             /bin/sed -i "s/digitalocean/linode/g" /etc/apt/sources.list.d/ubuntu.sources
         fi
         
-        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
-
-        while ( [ "$?" != "0" ] )
-        do
-            /bin/sleep 5
-            DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
-        done
+ #       DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
+#
+#        while ( [ "$?" != "0" ] )
+#        do
+#            /bin/sleep 5
+#            DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
+#        done
 
         ${HOME}/installscripts/InstallAria2.sh "ubuntu"
         /bin/echo 'DOWNLOADBELOW="aria2c -c -s ${_MAXNUM} -x ${_MAXNUM} -k 1M -q --file-allocation=none"' >> /etc/apt-fast.conf
@@ -121,13 +121,13 @@ then
             /bin/sed -i "s/digitalocean/linode/g" /etc/apt/mirrors/debian.list
         fi
         
-        DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
-
-        while ( [ "$?" != "0" ] )
-        do
-            /bin/sleep 5
-            DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
-        done                 
+    #    DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
+#
+ #       while ( [ "$?" != "0" ] )
+  #      do
+   #         /bin/sleep 5
+   #         DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 -qq -y update
+   #     done                 
 
         ${HOME}/installscripts/InstallAria2.sh "debian"
         /bin/echo 'DOWNLOADBELOW="aria2c -c -s ${_MAXNUM} -x ${_MAXNUM} -k 1M -q --file-allocation=none"' >> /etc/apt-fast.conf
