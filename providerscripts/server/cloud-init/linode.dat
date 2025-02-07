@@ -18,7 +18,7 @@ ssh_keys:
       XXXXSSH_PRIVATE_KEYXXXX
       -----END OPENSSH PRIVATE KEY-----
 
-timezone: 'XXXTIMEZONEXXXX'
+timezone: 'XXXXTIMEZONEXXXX'
 hostname: Autoscaled_Webserver
 
 write_files:
