@@ -18,6 +18,9 @@ ssh_keys:
       XXXXSSH_PRIVATE_KEYXXXX
       -----END OPENSSH PRIVATE KEY-----
 
+timezone: 'XXXTIMEZONEXXXX'
+hostname: Autoscaled_Webserver
+
 write_files:
 - encoding: b64
   content: XXXXWEBSERVER_CONFIGURATIONXXXX
