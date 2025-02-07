@@ -77,4 +77,6 @@ then
         ${HOME}/autoscaler/AddIPToDNS.sh ${ip}
 fi
 
+#Put in check that website is online and responsive
+
 
