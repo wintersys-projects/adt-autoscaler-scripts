@@ -20,7 +20,7 @@ fi
 
 if ( [ "${CLOUDHOST}" = "linode" ] )
 then
-        /bin/cp ${HOME}/providerscripts/server/cloud-init/linode-webserver.yaml ${HOME}/runtime/cloud-init/webserver.yaml
+        /bin/cp ${HOME}/providerscripts/server/cloud-init/linode.yaml ${HOME}/runtime/cloud-init/webserver.yaml
 fi
 
 git_provider_domain="github.com"
