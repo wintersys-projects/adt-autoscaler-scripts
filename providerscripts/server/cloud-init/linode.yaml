@@ -22,8 +22,7 @@ timezone: 'XXXXTIMEZONEXXXX'
 hostname: XXXXWEBSERVER_HOSTNAMEXXXX
 manage_etc_hosts: true
 
-locale: en_GB.UTF-8
-locale_configfile: /etc/default/locale
+locale: en_GB
 keyboard:
   layout: gb
 
