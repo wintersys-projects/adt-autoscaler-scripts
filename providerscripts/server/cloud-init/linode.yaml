@@ -77,6 +77,7 @@ runcmd:
   - '/bin/sed -i "s/^AddressFamily.*/AddressFamily inet/g" /etc/ssh/sshd_config'
   - '/bin/sed -i "s/^#AddressFamily.*/AddressFamily inet/g" /etc/ssh/sshd_config'
   - '/usr/bin/systemctl restart ssh'
+  - '/bin/sed -i "s/^127.0.0.1.*localhost.*/127.0.0.1\tlocalhost\Database/" /etc/hosts'
   - 'export HOME=/home/XXXXSERVER_USERXXXX && /bin/sh ${HOME}/installscripts/InstallPackageManager.sh' 
   - 'export HOME=/home/XXXXSERVER_USERXXXX && /bin/sh ${HOME}/installscripts/InstallFirewall.sh'
   - 'export HOME=/home/XXXXSERVER_USERXXXX && /bin/sh ${HOME}/installscripts/InstallDatastoreTools.sh'
