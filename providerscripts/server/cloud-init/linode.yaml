@@ -25,7 +25,7 @@ manage_etc_hosts: true
 locale: en_GB.UTF-8
 locale_configfile: /etc/default/locale
 keyboard:
-layout: gb
+  layout: gb
 
 write_files:
 - encoding: b64
