@@ -20,6 +20,7 @@ ssh_keys:
 
 timezone: 'XXXXTIMEZONEXXXX'
 hostname: Autoscaled_Webserver
+manage_etc_hosts: true
 
 write_files:
 - encoding: b64
