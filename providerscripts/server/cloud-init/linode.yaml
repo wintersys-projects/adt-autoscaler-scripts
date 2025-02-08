@@ -22,6 +22,11 @@ timezone: 'XXXXTIMEZONEXXXX'
 hostname: Autoscaled_Webserver
 manage_etc_hosts: true
 
+locale: en_GB.UTF-8
+locale_configfile: /etc/default/locale
+keyboard:
+layout: gb
+
 write_files:
 - encoding: b64
   content: XXXXWEBSERVER_CONFIGURATIONXXXX
