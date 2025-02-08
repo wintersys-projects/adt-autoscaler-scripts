@@ -160,7 +160,7 @@ WEBSITE_NAME="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{print $2}'`"
 /usr/bin/git config --global pull.rebase false 
 
 #Set the hostname of this machine
-. ${HOME}/providerscripts/utilities/housekeeping/InitialiseHostname.sh
+#. ${HOME}/providerscripts/utilities/housekeeping/InitialiseHostname.sh
 
 #Some kernel safeguards
 /bin/echo "vm.panic_on_oom=1
