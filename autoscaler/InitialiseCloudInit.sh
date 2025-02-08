@@ -20,14 +20,12 @@ fi
 
 if ( [ "${CLOUDHOST}" = "linode" ] )
 then
-        /bin/cp ${HOME}/providerscripts/server//cloud-init/linode-webserver.yaml ${HOME}/runtime/cloud-init/webserver.yaml
+        /bin/cp ${HOME}/providerscripts/server/cloud-init/linode-webserver.yaml ${HOME}/runtime/cloud-init/webserver.yaml
 fi
 
 git_provider_domain="github.com"
 
 /bin/sed -i "s;XXXXTIMEZONEXXXX;${TIMEZONE};g" ${HOME}/runtime/cloud-init/webserver.yaml
-/bin/sed -i "s;XXXXTIMEZONEXXXX;${TIMEZONE};g" ${HOME}/runtime/cloud-init/webserver.yaml 
-/bin/sed -i "s;XXXXTIMEZONEXXXX;${TIMEZONE};g" ${HOME}/runtime/cloud-init/webserver.yaml 
 /bin/sed -i "s/XXXXALGORITHMXXXX/${ALGORITHM}/g" ${HOME}/runtime/cloud-init/webserver.yaml 
 /bin/sed -i "s/XXXXSERVER_USERXXXX/${SERVER_USER}/g" ${HOME}/runtime/cloud-init/webserver.yaml 
 /bin/sed -i "s;XXXXSERVER_USER_PASSWORDXXXX;${SERVER_USER_PASSWORD_HASHED};g" ${HOME}/runtime/cloud-init/webserver.yaml 
