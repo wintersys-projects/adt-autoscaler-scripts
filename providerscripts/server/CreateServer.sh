@@ -85,7 +85,7 @@ then
         vpc_id="`/usr/local/bin/linode-cli --json vpcs list | /usr/bin/jq -r '.[] | select (.label == "adt-vpc").id'`"
         subnet_id="`/usr/local/bin/linode-cli --json vpcs subnets-list ${vpc_id} | /usr/bin/jq -r '.[] | select (.label == "adt-subnet").id'`"
  
-        cloud_config="`/bin/cat ${HOME}/runtime/cloud-init/linode.dat | /usr/bin/base64 -w 0`"
+        cloud_config="`/bin/cat ${HOME}/runtime/cloud-init/linode.yaml | /usr/bin/base64 -w 0`"
 
         if ( [ "${ACTIVE_FIREWALL}" = "2" ] || [ "${ACTIVE_FIREWALL}" = "3" ] )
         then
