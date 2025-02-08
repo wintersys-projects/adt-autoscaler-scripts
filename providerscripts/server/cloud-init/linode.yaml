@@ -21,6 +21,8 @@ ssh_keys:
 timezone: 'XXXXTIMEZONEXXXX'
 hostname: Autoscaled_Webserver
 
+byobu_by_default: system
+
 write_files:
 - encoding: b64
   content: XXXXWEBSERVER_CONFIGURATIONXXXX
