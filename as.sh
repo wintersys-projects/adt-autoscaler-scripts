@@ -83,37 +83,37 @@ then
 	/bin/chmod 755 ${HOME}/runtime
 fi
 
-SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
+#SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
+#
+#if ( [ -f ${HOME}/.ssh/autoscaler_configuration_settings.dat ] )
+#then#
+#	/bin/cp ${HOME}/.ssh/autoscaler_configuration_settings.dat ${HOME}/runtime/autoscaler_configuration_settings.dat
+# 	/bin/mv ${HOME}/.ssh/autoscaler_configuration_settings.dat ${HOME}/.ssh/autoscaler_configuration_settings.dat.original
+#  	/bin/chown root:root ${HOME}/.ssh/autoscaler_configuration_settings.dat.original
+#   	/bin/chmod 400 ${HOME}/.ssh/autoscaler_configuration_settings.dat.original#
+#	/bin/chown ${SERVER_USER}:root ${HOME}/runtime/autoscaler_configuration_settings.dat
+#	/bin/chmod 640 ${HOME}/runtime/autoscaler_configuration_settings.dat
+#fi
 
-if ( [ -f ${HOME}/.ssh/autoscaler_configuration_settings.dat ] )
-then
-	/bin/cp ${HOME}/.ssh/autoscaler_configuration_settings.dat ${HOME}/runtime/autoscaler_configuration_settings.dat
- 	/bin/mv ${HOME}/.ssh/autoscaler_configuration_settings.dat ${HOME}/.ssh/autoscaler_configuration_settings.dat.original
-  	/bin/chown root:root ${HOME}/.ssh/autoscaler_configuration_settings.dat.original
-   	/bin/chmod 400 ${HOME}/.ssh/autoscaler_configuration_settings.dat.original
-	/bin/chown ${SERVER_USER}:root ${HOME}/runtime/autoscaler_configuration_settings.dat
-	/bin/chmod 640 ${HOME}/runtime/autoscaler_configuration_settings.dat
-fi
+#if ( [ -f ${HOME}/.ssh/webserver_configuration_settings.dat ] )
+#then
+#	/bin/cp ${HOME}/.ssh/webserver_configuration_settings.dat ${HOME}/runtime/webserver_configuration_settings.dat
+ #	/bin/mv ${HOME}/.ssh/webserver_configuration_settings.dat ${HOME}/.ssh/webserver_configuration_settings.dat.original
+  #	/bin/chown ${SERVER_USER}:root ${HOME}/.ssh/webserver_configuration_settings.dat.original
+  # 	/bin/chmod 400 ${HOME}/.ssh/webserver_configuration_settings.dat.original
+#	/bin/chown ${SERVER_USER}:root ${HOME}/runtime/webserver_configuration_settings.dat
+#	/bin/chmod 640 ${HOME}/runtime/webserver_configuration_settings.dat
+#fi
 
-if ( [ -f ${HOME}/.ssh/webserver_configuration_settings.dat ] )
-then
-	/bin/cp ${HOME}/.ssh/webserver_configuration_settings.dat ${HOME}/runtime/webserver_configuration_settings.dat
- 	/bin/mv ${HOME}/.ssh/webserver_configuration_settings.dat ${HOME}/.ssh/webserver_configuration_settings.dat.original
-  	/bin/chown ${SERVER_USER}:root ${HOME}/.ssh/webserver_configuration_settings.dat.original
-   	/bin/chmod 400 ${HOME}/.ssh/webserver_configuration_settings.dat.original
-	/bin/chown ${SERVER_USER}:root ${HOME}/runtime/webserver_configuration_settings.dat
-	/bin/chmod 640 ${HOME}/runtime/webserver_configuration_settings.dat
-fi
-
-if ( [ -f ${HOME}/.ssh/buildstyles.dat ] )
-then
-	/bin/cp ${HOME}/.ssh/buildstyles.dat ${HOME}/runtime/buildstyles.dat
- 	/bin/mv ${HOME}/.ssh/buildstyles.dat ${HOME}/.ssh/buildstyles.dat.original
-    	/bin/chown ${SERVER_USER}:root ${HOME}/.ssh/buildstyles.dat.original
-   	/bin/chmod 400 ${HOME}/.ssh/buildstyles.dat.original
-	/bin/chown ${SERVER_USER}:root ${HOME}/runtime/buildstyles.dat
-	/bin/chmod 640 ${HOME}/runtime/buildstyles.dat
-fi
+#if ( [ -f ${HOME}/.ssh/buildstyles.dat ] )
+#then
+#	/bin/cp ${HOME}/.ssh/buildstyles.dat ${HOME}/runtime/buildstyles.dat
+ #	/bin/mv ${HOME}/.ssh/buildstyles.dat ${HOME}/.ssh/buildstyles.dat.original
+ #   	/bin/chown ${SERVER_USER}:root ${HOME}/.ssh/buildstyles.dat.original
+ #  	/bin/chmod 400 ${HOME}/.ssh/buildstyles.dat.original#
+#	/bin/chown ${SERVER_USER}:root ${HOME}/runtime/buildstyles.dat
+#	/bin/chmod 640 ${HOME}/runtime/buildstyles.dat
+#fi
 
 
 #Load the parts of the configuration that we need into memory
@@ -212,9 +212,9 @@ ${HOME}/providerscripts/utilities/processing/RunServiceCommand.sh ssh restart
 >&2 /bin/echo "${0} Installing software packages "
 /bin/echo "${0} `/bin/date`: Installing Software packages" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 
-${HOME}/installscripts/InstallCoreSoftware.sh &
+#${HOME}/installscripts/InstallCoreSoftware.sh &
 
-${HOME}/providerscripts/datastore/EssentialToolsAvailable.sh
+#${HOME}/providerscripts/datastore/EssentialToolsAvailable.sh
 
 ${HOME}/security/SetupFirewall.sh
 
@@ -255,13 +255,13 @@ ${HOME}/security/SetupFirewall.sh
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 
 #Set the time on the machine
-if ( [ "`/usr/bin/timedatectl list-timezones | /bin/grep ${SERVER_TIMEZONE_CONTINENT} | /bin/grep ${SERVER_TIMEZONE_CITY}`" != "" ] )
-then
-	/usr/bin/timedatectl set-timezone ${SERVER_TIMEZONE_CONTINENT}/${SERVER_TIMEZONE_CITY}
-	${HOME}/providerscripts/utilities/config/StoreConfigValue.sh "SERVERTIMEZONECONTINENT" "${SERVER_TIMEZONE_CONTINENT}"
-	${HOME}/providerscripts/utilities/config/StoreConfigValue.sh "SERVERTIMEZONECITY" "${SERVER_TIMEZONE_CITY}"
-	export TZ=":${SERVER_TIMEZONE_CONTINENT}/${SERVER_TIMEZONE_CITY}"
-fi
+#if ( [ "`/usr/bin/timedatectl list-timezones | /bin/grep ${SERVER_TIMEZONE_CONTINENT} | /bin/grep ${SERVER_TIMEZONE_CITY}`" != "" ] )
+#then
+#	/usr/bin/timedatectl set-timezone ${SERVER_TIMEZONE_CONTINENT}/${SERVER_TIMEZONE_CITY}
+#	${HOME}/providerscripts/utilities/config/StoreConfigValue.sh "SERVERTIMEZONECONTINENT" "${SERVER_TIMEZONE_CONTINENT}"
+#	${HOME}/providerscripts/utilities/config/StoreConfigValue.sh "SERVERTIMEZONECITY" "${SERVER_TIMEZONE_CITY}"
+#	export TZ=":${SERVER_TIMEZONE_CONTINENT}/${SERVER_TIMEZONE_CITY}"
+#fi
 
 
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
