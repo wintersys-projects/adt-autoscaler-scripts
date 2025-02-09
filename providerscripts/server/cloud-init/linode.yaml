@@ -49,7 +49,8 @@ write_files:
   owner: 'XXXXSERVER_USERXXXX:root'
   path: /home/homedir.dat
   permissions: '755'
-- content: |
+- path: /etc/ssh/sshd_config
+  content: |
     Port XXXXSSH_PORTXXXX
     Protocol 2
     HostKey /etc/ssh/ssh_host_rsa_key
@@ -83,7 +84,6 @@ write_files:
     MaxAuthTries 3
     AllowAgentForwarding no
     AllowUsers XXXXSERVER_USERXXXX
-    path: /etc/ssh/sshd_config
 
 package_update: true
 package_upgrade: true
