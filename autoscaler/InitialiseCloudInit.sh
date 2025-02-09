@@ -12,6 +12,7 @@ build_styles_settings="`/bin/cat ${HOME}/runtime/buildstyles.dat  | /bin/grep -v
 TIMEZONE_CONTINENT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh SERVER_TIMEZONE_CONTINENT`"
 TIMEZONE_CITY="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh  SERVER_TIMEZONE_CITY`"
 TIMEZONE="${TIMEZONE_CONTINENT}/${TIMEZONE_CITY}"
+SSH_PORT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh  SSH_PORT`"
 
 if ( [ ! -d ${HOME}/runtime/cloud-init ] )
 then
@@ -25,6 +26,7 @@ fi
 
 git_provider_domain="github.com"
 
+/bin/sed -i "s;XXXXSSH_PORTXXXX;${SSH_PORT};g" ${HOME}/runtime/cloud-init/webserver.yaml
 /bin/sed -i "s;XXXXTIMEZONEXXXX;${TIMEZONE};g" ${HOME}/runtime/cloud-init/webserver.yaml
 /bin/sed -i "s/XXXXALGORITHMXXXX/${ALGORITHM}/g" ${HOME}/runtime/cloud-init/webserver.yaml 
 /bin/sed -i "s/XXXXSERVER_USERXXXX/${SERVER_USER}/g" ${HOME}/runtime/cloud-init/webserver.yaml 
