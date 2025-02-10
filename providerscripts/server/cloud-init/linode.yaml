@@ -33,6 +33,8 @@ locale: en_GB
 keyboard:
   layout: gb
 
+byobu_by_default: disable
+
 write_files:
 - encoding: b64
   content: XXXXWEBSERVER_CONFIGURATIONXXXX
