@@ -1,3 +1,5 @@
+#set -x
+
 CLOUDHOST="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
 SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
 SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
@@ -52,8 +54,8 @@ then
         /bin/sed -i "s/#XXXXAPACHEXXXX//g" ${HOME}/runtime/cloud-init/webserver.yaml 
 fi
 
-DATABASE_INSTALLATION_TYPE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DATABASE_INSTALLATION_TYPE'`"
-DATABASE_DBaaS_INSTALLATION_TYPE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DATABASE_DBaaS_INSTALLATION_TYPE'`"
+DATABASE_INSTALLATION_TYPE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DATABASEINSTALLATIONTYPE'`"
+DATABASE_DBaaS_INSTALLATION_TYPE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DATABASEDBaaSINSTALLATIONTYPE'`"
 
 if ( [ "${DATABASE_INSTALLATION_TYPE}" = "Maria" ] )
 then
@@ -70,6 +72,24 @@ then
         then
                 /bin/sed -i 's/#XXXXMARIADB_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
                 /bin/sed -i 's/#XXXXMARIADB_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/database.yaml
+        fi
+fi
+
+if ( [ "${DATABASE_INSTALLATION_TYPE}" = "MySQL" ] )
+then
+        if ( [ "`/bin/grep ^MYSQL:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
+        then
+                /bin/sed -i 's/#XXXXMYSQL_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
+                /bin/sed -i 's/#XXXXMYSQL_SERVERXXXX//g' ${HOME}/runtime/cloud-init/database.yaml
+        fi
+fi
+
+if ( [ "${DATABASE_DBaaS_INSTALLATION_TYPE}" = "MySQL" ] )
+then
+        if ( [ "`/bin/grep ^MYSQL:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
+        then
+                /bin/sed -i 's/#XXXXMYSQL_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
+                /bin/sed -i 's/#XXXXMYSQL_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/database.yaml
         fi
 fi
 
@@ -91,9 +111,8 @@ then
         fi
 fi
 
-APPLICATION_LANGUAGE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'APPLICATION_LANGUAGE'`"
-PHP_VERSION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'PHP_VERSION'`"
-
+APPLICATION_LANGUAGE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'APPLICATIONLANGUAGE'`"
+PHP_VERSION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'PHPVERSION'`"
 
 if ( [ "${APPLICATION_LANGUAGE}" = "PHP" ] )
 then
@@ -102,7 +121,7 @@ then
                 /bin/sed  -i 's/#XXXXPHPXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
                 /bin/sed  -i "s/XXXXPHP_VERSIONXXXX/${PHP_VERSION}/g" ${HOME}/runtime/cloud-init/webserver.yaml
                 
-					 PHP_VERSION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'PHP_VERSION'`"
+                PHP_VERSION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'PHPVERSION'`"
                 php_modules="`/bin/grep ^PHP ${HOME}/runtime/buildstyles.dat | /bin/sed 's/^PHP:cloud-init://g' | /usr/bin/awk -F'|' '{print $1}' | /bin/sed 's/:/ /g'`"
                 php_module_list=""
                 for php_module in ${php_modules}
