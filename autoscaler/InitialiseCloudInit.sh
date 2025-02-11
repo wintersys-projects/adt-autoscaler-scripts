@@ -11,10 +11,10 @@ SSH_PUBLIC_KEY="`/bin/cat ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KE
 SSH_PRIVATE_KEY_TRIMMED="`/bin/cat ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} | /bin/grep -v '^----' | /usr/bin/tr -d '\n'`"
 webserver_configuration_settings="`/bin/cat ${HOME}/runtime/webserver_configuration_settings.dat | /usr/bin/gzip -f | /usr/bin/base64 | /usr/bin/tr -d '\n'`"
 build_styles_settings="`/bin/cat ${HOME}/runtime/buildstyles.dat  | /bin/grep -v "^#" | /usr/bin/gzip -f | /usr/bin/base64 | /usr/bin/tr -d '\n'`"
-TIMEZONE_CONTINENT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh SERVER_TIMEZONE_CONTINENT`"
-TIMEZONE_CITY="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh  SERVER_TIMEZONE_CITY`"
+TIMEZONE_CONTINENT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh SERVERTIMEZONECONTINENT`"
+TIMEZONE_CITY="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh  SERVERTIMEZONECITY`"
 TIMEZONE="${TIMEZONE_CONTINENT}/${TIMEZONE_CITY}"
-SSH_PORT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh  SSH_PORT`"
+SSH_PORT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh  SSHPORT`"
 
 if ( [ ! -d ${HOME}/runtime/cloud-init ] )
 then
