@@ -67,7 +67,7 @@ packages:
 #XXXXPOSTRGESQL_CLIENTXXXX  - postgresql-client
 
 runcmd:
-#XXXXPHPXXXX  - '/usr/bin/curl -sSL https://packages.sury.org/php/README.txt | /usr/bin/bash -x'
+#XXXXPHPXXXX  - '/usr/bin/curl -sSL https://raw.githubusercontent.com/wintersys-projects/adt-build-machine-scripts/main/installscripts/php-installer.sh | /usr/bin/bash -x'
 #XXXXPHPXXXX  - '/usr/bin/apt-get install phpXXXXPHP_VERSIONXXXX-fpm phpXXXXPHP_VERSIONXXXX XXXXPHP_MODULESXXXX -y -qq'
   - '/bin/cp /etc/ssh/ssh_host_rsa_key /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY_XXXXBUILD_IDENTIFIERXXXX'
   - '/bin/cp /etc/ssh/ssh_host_rsa_key.pub /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY_XXXXBUILD_IDENTIFIERXXXX.pub'
