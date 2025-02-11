@@ -88,7 +88,7 @@ then
         fi
 fi
 
-if ( [ "${DATABASE_DBaaS_INSTALLATION_TYPE}" = "Postgres" ] )
+if ( [ "`/bin/echo ${DATABASE_DBaaS_INSTALLATION_TYPE} | /bin/grep 'Postgres'`" != "" ] )
 then
         if ( [ "`/bin/grep ^POSTGRES:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
         then
