@@ -73,25 +73,6 @@ then
         fi
 fi
 
-if ( [ "${DATABASE_INSTALLATION_TYPE}" = "MySQL" ] )
-then
-        if ( [ "`/bin/grep ^MYSQL:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
-        then
-                /bin/sed -i 's/#XXXXMYSQL_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
-                /bin/sed -i 's/#XXXXMYSQL_SERVERXXXX//g' ${HOME}/runtime/cloud-init/database.yaml
-        fi
-fi
-
-if ( [ "${DATABASE_DBaaS_INSTALLATION_TYPE}" = "MySQL" ] )
-then
-        if ( [ "`/bin/grep ^MYSQL:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
-        then
-                /bin/sed -i 's/#XXXXMYSQL_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
-                /bin/sed -i 's/#XXXXMYSQL_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/database.yaml
-        fi
-fi
-
-
 if ( [ "${DATABASE_INSTALLATION_TYPE}" = "Postgres" ]  )
 then
         if ( [ "`/bin/grep ^POSTGRES:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
@@ -109,7 +90,6 @@ then
                 /bin/sed -i 's/#XXXXPOSTGRES_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/database.yaml
         fi
 fi
-
 
 APPLICATION_LANGUAGE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'APPLICATION_LANGUAGE'`"
 PHP_VERSION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'PHP_VERSION'`"
