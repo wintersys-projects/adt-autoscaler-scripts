@@ -66,21 +66,18 @@ then
         fi
 fi
 
-if ( [ "${DATABASE_DBaaS_INSTALLATION_TYPE}" = "Maria" ] )
+if ( [ "`/bin/echo ${DATABASE_DBaaS_INSTALLATION_TYPE} | /bin/grep 'MySQL'`" != "" ] )
 then
         if ( [ "`/bin/grep ^MARIADB:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
         then
                 /bin/sed -i 's/#XXXXMARIADB_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
                 /bin/sed -i 's/#XXXXMARIADB_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/database.yaml
+        else
+                /bin/sed -i 's/#XXXXMYSQL_CLIENTXXXX//g' ${BUILD_HOME}/runtimedata/${CLOUDHOST}/${BUILD_IDENTIFIER}/cloud-init/webserver.yaml
+                /bin/sed -i 's/#XXXXMYSQL_CLIENTXXXX//g' ${BUILD_HOME}/runtimedata/${CLOUDHOST}/${BUILD_IDENTIFIER}/cloud-init/database.yaml
         fi
 fi
 
-
-if ( [ "${DATABASE_DBaaS_INSTALLATION_TYPE}" = "MySQL" ] )
-then
-        /bin/sed -i 's/#XXXXMYSQL_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
-        /bin/sed -i 's/#XXXXMYSQL_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/database.yaml
-fi
 
 if ( [ "${DATABASE_INSTALLATION_TYPE}" = "Postgres" ]  )
 then
