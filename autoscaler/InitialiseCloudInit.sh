@@ -38,3 +38,96 @@ git_provider_domain="github.com"
 /bin/sed -i "s;XXXXWEBSERVER_CONFIGURATIONXXXX;${webserver_configuration_settings};g" ${HOME}/runtime/cloud-init/webserver.yaml 
 /bin/sed -i "s;XXXXBUILDSTYLES_SETTINGSXXXX;${build_styles_settings};g" ${HOME}/runtime/cloud-init/webserver.yaml 
 /bin/sed -i "s/XXXXGIT_PROVIDER_DOMAINXXXX/${git_provider_domain}/g" ${HOME}/runtime/cloud-init/webserver.yaml 
+
+
+WEBSERVER_CHOICE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'WEBSERVERCHOICE'`"
+
+if ( [ "${WEBSERVER_CHOICE}" = "NGINX" ] )
+then
+        /bin/sed -i "s/#XXXXNGINXXXXX//g" ${HOME}/runtime/cloud-init/webserver.yaml 
+fi
+
+if ( [ "${WEBSERVER_CHOICE}" = "APACHE" ] )
+then
+        /bin/sed -i "s/#XXXXAPACHEXXXX//g" ${HOME}/runtime/cloud-init/webserver.yaml 
+fi
+
+DATABASE_INSTALLATION_TYPE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DATABASE_INSTALLATION_TYPE'`"
+DATABASE_DBaaS_INSTALLATION_TYPE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DATABASE_DBaaS_INSTALLATION_TYPE'`"
+
+if ( [ "${DATABASE_INSTALLATION_TYPE}" = "Maria" ] )
+then
+        if ( [ "`/bin/grep ^MARIADB:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
+        then
+                /bin/sed -i 's/#XXXXMARIADB_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
+                /bin/sed -i 's/#XXXXMARIADB_SERVERXXXX//g' ${HOME}/runtime/cloud-init/database.yaml
+        fi
+fi
+
+if ( [ "${DATABASE_DBaaS_INSTALLATION_TYPE}" = "Maria" ] )
+then
+        if ( [ "`/bin/grep ^MARIADB:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
+        then
+                /bin/sed -i 's/#XXXXMARIADB_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
+                /bin/sed -i 's/#XXXXMARIADB_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/database.yaml
+        fi
+fi
+
+if ( [ "${DATABASE_INSTALLATION_TYPE}" = "MySQL" ] )
+then
+        if ( [ "`/bin/grep ^MYSQL:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
+        then
+                /bin/sed -i 's/#XXXXMYSQL_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
+                /bin/sed -i 's/#XXXXMYSQL_SERVERXXXX//g' ${HOME}/runtime/cloud-init/database.yaml
+        fi
+fi
+
+if ( [ "${DATABASE_DBaaS_INSTALLATION_TYPE}" = "MySQL" ] )
+then
+        if ( [ "`/bin/grep ^MYSQL:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
+        then
+                /bin/sed -i 's/#XXXXMYSQL_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
+                /bin/sed -i 's/#XXXXMYSQL_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/database.yaml
+        fi
+fi
+
+
+if ( [ "${DATABASE_INSTALLATION_TYPE}" = "Postgres" ]  )
+then
+        if ( [ "`/bin/grep ^POSTGRES:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
+        then
+                /bin/sed -i 's/#XXXXPOSTRGESQL_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
+                /bin/sed -i 's/#XXXXPOSTRGESQL_SERVERXXXX//g' ${HOME}/runtime/cloud-init/database.yaml
+        fi
+fi
+
+if ( [ "${DATABASE_DBaaS_INSTALLATION_TYPE}" = "Postgres" ] )
+then
+        if ( [ "`/bin/grep ^POSTGRES:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
+        then
+                /bin/sed -i 's/#XXXXPOSTGRES_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
+                /bin/sed -i 's/#XXXXPOSTGRES_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/database.yaml
+        fi
+fi
+
+
+APPLICATION_LANGUAGE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'APPLICATION_LANGUAGE'`"
+PHP_VERSION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'PHP_VERSION'`"
+
+
+if ( [ "${APPLICATION_LANGUAGE}" = "PHP" ] )
+then
+        if ( [ "`/bin/grep ^PHP:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
+        then
+                /bin/sed  -i 's/#XXXXPHPXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
+                /bin/sed  -i "s/XXXXPHP_VERSIONXXXX/${PHP_VERSION}/g" ${HOME}/runtime/cloud-init/webserver.yaml
+                
+					 PHP_VERSION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'PHP_VERSION'`"
+                php_modules="`/bin/grep ^PHP ${HOME}/runtime/buildstyles.dat | /bin/sed 's/^PHP:cloud-init://g' | /usr/bin/awk -F'|' '{print $1}' | /bin/sed 's/:/ /g'`"
+                php_module_list=""
+                for php_module in ${php_modules}
+                do
+                        php_modules_list="${php_modules_list} php${PHP_VERSION}-${php_module}"
+                done
+        fi
+fi
