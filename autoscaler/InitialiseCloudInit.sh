@@ -115,4 +115,6 @@ then
                         php_modules_list="${php_modules_list} php${PHP_VERSION}-${php_module}"
                 done
         fi
+        /bin/sed -i "s/XXXXPHP_MODULESXXXX/${php_modules_list}/" ${HOME}/runtime/cloud-init/webserver.yaml
+
 fi
