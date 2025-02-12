@@ -21,10 +21,7 @@ then
         /bin/mkdir -p ${HOME}/runtime/cloud-init
 fi
 
-if ( [ "${CLOUDHOST}" = "linode" ] )
-then
-        /bin/cp ${HOME}/providerscripts/server/cloud-init/linode.yaml ${HOME}/runtime/cloud-init/webserver.yaml
-fi
+/bin/cp ${HOME}/providerscripts/server/cloud-init/${CLOUDHOST}/webserver.yaml ${HOME}/runtime/cloud-init/webserver.yaml
 
 git_provider_domain="github.com"
 
