@@ -58,11 +58,14 @@ if ( [ -f ${HOME}/EXOSCALE ] || [ "${CLOUDHOST}" = "exoscale" ] )
 then
         template_visibility=" --template-visibility public "
 
+        /bin/sed -i "s/XXXXWEBSERVER_HOSTNAMEXXXX/${server_name}/g" ${HOME}/runtime/cloud-init/webserver.yaml
+        cloud_config="${HOME}/runtime/cloud-init/webserver.yaml"
+
         if ( [ "${ACTIVE_FIREWALL}" = "2" ] || [ "${ACTIVE_FIREWALL}" = "3" ] )
         then
-                /usr/bin/exo compute instance create "${server_name}" --instance-type standard.${server_size}  --security-group adt-webserver-${BUILD_IDENTIFIER} --template "${OS_CHOICE}" ${template_visibilty} --zone ${REGION} --ssh-key ${KEY_ID} --cloud-init "${HOME}/providerscripts/server/cloud-init/exoscale.dat"
+                /usr/bin/exo compute instance create "${server_name}" --instance-type standard.${server_size}  --security-group adt-webserver-${BUILD_IDENTIFIER} --template "${OS_CHOICE}" ${template_visibilty} --zone ${REGION} --ssh-key ${KEY_ID} --cloud-init "${cloud_config}"
         else
-                /usr/bin/exo compute instance create "${server_name}" --instance-type standard.${server_size}  --template "${OS_CHOICE}" ${template_visibilty} --zone ${REGION} --ssh-key ${KEY_ID} --cloud-init "${HOME}/providerscripts/server/cloud-init/exoscale.dat"
+                /usr/bin/exo compute instance create "${server_name}" --instance-type standard.${server_size}  --template "${OS_CHOICE}" ${template_visibilty} --zone ${REGION} --ssh-key ${KEY_ID} --cloud-init "${cloud_config}"
         fi
   
         if ( [ "`/usr/bin/exo compute private-network list -O json | /usr/bin/jq -r '.[] | select (.name == "adt_private_net_'${REGION}'").id'`" = "" ] )
