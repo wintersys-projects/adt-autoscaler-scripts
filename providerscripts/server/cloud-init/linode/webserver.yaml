@@ -53,7 +53,7 @@ write_files:
   content: |
     ClientAliveInterval 60
     ClientAliveCountMax 2
-  owner: 'XXXXSERVER_USERXXXX:XXXXSERVER_USERXXXX'
+  owner: 'root:root'
   permissions: '600'
 
 
