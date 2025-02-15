@@ -58,6 +58,12 @@ write_files:
   owner: 'root:root'
   path: /etc/netplan/eth1.yaml
   permissions: '0640'
+- content: |
+    ClientAliveInterval 60
+    ClientAliveCountMax 2
+  owner: 'XXXXSERVER_USERXXXX:XXXXSERVER_USERXXXX'
+  path: /home/XXXXSERVER_USERXXXX/.ssh/config
+  permissions: '600'
 
 
 package_update: true
