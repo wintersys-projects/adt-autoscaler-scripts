@@ -44,11 +44,11 @@ write_files:
   owner: root:root
   path: /home/XXXXSERVER_USERXXXX/.ssh/buildstyles.dat.gz
   permissions: '0644'
-- content: |
-        /home/XXXXSERVER_USERXXXX
-  owner: 'XXXXSERVER_USERXXXX:root'
-  path: /home/homedir.dat
-  permissions: '755'
+#- content: |
+#        /home/XXXXSERVER_USERXXXX
+#  owner: 'XXXXSERVER_USERXXXX:root'
+#  path: /home/homedir.dat
+#  permissions: '755'
 - content: |
     ClientAliveInterval 60
     ClientAliveCountMax 2
