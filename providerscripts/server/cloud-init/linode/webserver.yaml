@@ -49,12 +49,12 @@ write_files:
   owner: 'XXXXSERVER_USERXXXX:root'
   path: /home/homedir.dat
   permissions: '755'
-- path: /home/XXXXSERVER_USERXXXX/.ssh/config
-  content: |
+- content: |
     ClientAliveInterval 60
     ClientAliveCountMax 2
+  path: /home/XXXXSERVER_USERXXXX/.ssh/config
   owner: 'root:root'
-  permissions: '600'
+  permissions: '0600'
 
 
 package_update: true
