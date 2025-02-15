@@ -1,5 +1,17 @@
 #cloud-config
 
+write_files:
+  - path: /etc/netplan/eth1.yaml
+    content: |
+      network:
+        version: 2
+        ethernets:
+          eth1:
+            dhcp4: true
+
+runcmd:
+  - [ netplan, apply ]
+
 manage_resolv_conf: true
 resolv_conf:
   nameservers:
@@ -44,15 +56,6 @@ write_files:
   owner: root:root
   path: /home/XXXXSERVER_USERXXXX/.ssh/buildstyles.dat.gz
   permissions: '0644'
-- content: |
-    network:
-      version: 2
-      ethernets:
-        eth1:
-          dhcp4: true
-  owner: 'root:root'
-  path: /etc/netplan/eth1.yaml
-  permissions: '0640'
 - content: |
     ClientAliveInterval 60
     ClientAliveCountMax 2
