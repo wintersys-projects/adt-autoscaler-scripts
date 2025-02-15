@@ -275,8 +275,8 @@ ${HOME}/providerscripts/cloudhost/InitialiseCloudhostConfig.sh
 
 cd ${HOME}
 
-/bin/echo "ServerAliveInterval 15" | /usr/bin/tee ${HOME}/.ssh/config  /root/.ssh/config 
-/bin/echo "ServerAliveCountMax 6" | /usr/bin/tee -a ${HOME}/.ssh/config  /root/.ssh/config 
+#/bin/echo "ServerAliveInterval 15" | /usr/bin/tee ${HOME}/.ssh/config  /root/.ssh/config 
+#/bin/echo "ServerAliveCountMax 6" | /usr/bin/tee -a ${HOME}/.ssh/config  /root/.ssh/config 
 
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 >&2 /bin/echo "${0} Setting up the script which allows us to root"
@@ -296,8 +296,8 @@ cd ${HOME}
 /bin/echo "${0} `/bin/date`: Disabling password authentication" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 
-/bin/sed -i 's/^PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
-/bin/sed -i 's/^#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+#/bin/sed -i 's/^PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+#/bin/sed -i 's/^#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
 
 /bin/echo "${0} #######################################################################################" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 >&2 /bin/echo "${0} Changing our preferred SSH port"
