@@ -204,7 +204,7 @@ kernel.panic=10" >> /etc/sysctl.conf
 #ClientAliveCountMax 10" >> /etc/ssh/sshd_config
 #fi
 
-${HOME}/providerscripts/utilities/processing/RunServiceCommand.sh ssh restart
+#${HOME}/providerscripts/utilities/processing/RunServiceCommand.sh ssh restart
 
 #Install the programs that we need to use when building the autoscaler
 
