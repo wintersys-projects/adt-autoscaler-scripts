@@ -63,6 +63,7 @@ packages:
   - cron
 #XXXXNGINXXXXX  - nginx
 #XXXXAPACHEXXXX  - apache
+#XXXXLIGHTTPDXXXX - lighttpd
 #XXXXMARIADB_CLIENTXXXX  - mariadb-client
 #XXXXMYSQL_CLIENTXXXX  - default-mysql-client
 #XXXXPOSTRGESQL_CLIENTXXXX  - postgresql-client
