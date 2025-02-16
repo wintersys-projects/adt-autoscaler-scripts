@@ -67,6 +67,8 @@ packages:
   - cron
 #XXXXNGINXXXXX  - nginx
 #XXXXAPACHEXXXX  - apache
+#XXXXAPACHEXXXX  - libapache2-mod-php 
+#XXXXAPACHEXXXX  - libapache2-mod-fcgid
 #XXXXLIGHTTPDXXXX  - lighttpd
 #XXXXMARIADB_CLIENTXXXX  - mariadb-client
 #XXXXMYSQL_CLIENTXXXX  - default-mysql-client
