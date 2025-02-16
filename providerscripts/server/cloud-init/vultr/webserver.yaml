@@ -66,7 +66,7 @@ packages:
   - rsync
   - cron
 #XXXXNGINXXXXX  - nginx
-#XXXXAPACHEXXXX  - apache
+#XXXXAPACHEXXXX  - apache2
 #XXXXAPACHEXXXX  - libapache2-mod-php 
 #XXXXAPACHEXXXX  - libapache2-mod-fcgid
 #XXXXLIGHTTPDXXXX  - lighttpd
