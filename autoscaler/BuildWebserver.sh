@@ -72,9 +72,35 @@ do
         count="`/usr/bin/expr ${count} + 1`"
 done
 
+failedonlinecheck="1"
+
+#Do a check, as best we can to make sure that the website application is actually running correctly
+count="0"
+while ( [ "${count}" -lt "71" ] && [ "${failedonlinecheck}" != "0" ] )
+do
+        . ${HOME}/autoscaler/SelectHeadFile.sh
+
+        if ( [ "${failedonlinecheck}" = "1" ] )
+        then
+                /bin/echo "${0} `/bin/date`: Peforming online checks for ip address ${ip}" 
+                if ( [ "`/usr/bin/curl -I --max-time 60 --insecure https://${private_ip}:443/${headfile} | /bin/grep -E 'HTTP/2 200|HTTP/2 301|HTTP/2 302|HTTP/2 303|200 OK|302 Found|301 Moved Permanently'`" = "" ] )
+                then
+                        /bin/echo "/usr/bin/curl -I --max-time 60 --insecure https://${private_ip}:443/${headfile} | /bin/grep -E 'HTTP/2 200|HTTP/2 301|HTTP/2 302|HTTP/2 303|200 OK|302 Found|301 Moved Permanently"
+                        /bin/echo "${0} `/bin/date`: Expecting ${private_ip} to be online, but can't reach it with curl yet...."
+                        count="`/usr/bin/expr ${count} + 1`"
+                        /bin/echo "${0} `/bin/date`: Doing webserver/application online check for ${ip} attempt ${count}" 
+                        /bin/sleep 5
+                else
+                        /bin/echo "${0} `/bin/date`:  ${ip} is online that's wicked..." 
+                        failedonlinecheck="0"
+                fi
+        fi
+done
+
 if ( [ "${count}" != "71" ] )
 then
         ${HOME}/autoscaler/AddIPToDNS.sh ${ip}
+else
 fi
 
 #Put in check that website is online and responsive
