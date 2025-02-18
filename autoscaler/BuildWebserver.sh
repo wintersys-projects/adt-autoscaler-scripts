@@ -63,6 +63,10 @@ then
         /bin/echo "${0} `/bin/date`: The weberver didn't come online" 
         exit
 else
+        if ( [ ! -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip} ] )
+        then
+                /bin/touch ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip}
+        fi 
         if ( [ -f ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock ] )
         then
                 /bin/rm ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock
@@ -130,6 +134,16 @@ else
         /bin/echo "${0} `/bin/date`: webserver with ip address: ${ip} is being destroyed" 
         ${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
 fi
+
+/bin/echo "${0} `/bin/date`: Deleting the 'beingbuilt' ip address ${private_ip} from the config datastore" 
+${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh  beingbuiltips/${private_ip}
+/bin/rm ${HOME}/runtime/beingbuiltips/${buildno}/${private_ip}
+/bin/rm ${HOME}/runtime/beingbuiltpublicips/${buildno}/${ip}
+
+if ( [ ! -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip} ] )
+then
+        /bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip}
+fi 
 
 
 
