@@ -63,8 +63,25 @@ then
         /bin/echo "${0} `/bin/date`: The weberver didn't come online" 
         exit
 else
+        if ( [ -f ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock ] )
+        then
+                /bin/rm ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock
+        fi
+        if ( [ ! -d ${HOME}/runtime/beingbuiltips/${buildno} ] )
+        then 
+                /bin/mkdir -p ${HOME}/runtime/beingbuiltips/${buildno}
+        fi
+
+        if ( [ ! -d ${HOME}/runtime/beingbuiltpublicips/${buildno} ] )
+        then
+                /bin/mkdir -p ${HOME}/runtime/beingbuiltpublicips/${buildno}
+        fi
+
+        /bin/touch ${HOME}/runtime/beingbuiltips/${buildno}/${private_ip}
+        /bin/touch ${HOME}/runtime/beingbuiltpublicips/${buildno}/${ip}
+        
         /bin/echo "${0} `/bin/date`: The webserver has been assigned public ip address ${ip} and private ip address ${private_ip}" 
-        /bin/echo "${0} `/bin/date`: The webserver is now provisioned and I am about to start building its software"
+        /bin/echo "${0} `/bin/date`: The webserver is now provisioned and I am about to start building it out and installing software"
 fi
 
 count=0
@@ -104,6 +121,11 @@ if ( [ "${count}" != "71" ] )
 then
         ${HOME}/autoscaler/AddIPToDNS.sh ${ip}
 else
+        if ( [ -f ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock ] )
+        then
+                /bin/rm ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock
+        fi
+        
         /bin/echo "${0} `/bin/date`: webserver with ip address: ${ip} failed its online check" 
         /bin/echo "${0} `/bin/date`: webserver with ip address: ${ip} is being destroyed" 
         ${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
