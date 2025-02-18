@@ -203,17 +203,13 @@ then
 
 	/bin/echo "${0} `/bin/date`: A scaling cycle has been initiated, additional new scaling events will not be processed until this scaling cycle is complete" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 
-	active_webserver_ips="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh webserverips/*` "
-	no_active_webservers="`/bin/echo ${active_webserver_ips} | /usr/bin/wc -w`"
 	
  	while ( [ "${loop}" -le "`/usr/bin/expr ${no_needed_here} - 1`" ] )
 	do
 		loop="`/usr/bin/expr ${loop} + 1`"
 		/bin/touch ${HOME}/runtime/AUTOSCALINGMONITOR:${loop}
 		/bin/echo "${0} `/bin/date`: I have calculated that a webserver needs booting so am booting a new one by rsyncing from an existing webserver" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-		no_chosen_one="`/usr/bin/shuf -i 1-${no_active_webservers} -n 1`"
-   		chosen_webserver_ip="`/bin/echo "${active_webserver_ips}" | /usr/bin/cut -d " " -f ${no_chosen_one}`"
-   		newip="`${HOME}/autoscaler/BuildWebserver.sh ${loop} ${chosen_webserver_ip} &`"
+   		${HOME}/autoscaler/BuildWebserver.sh ${loop} &
 	done
 
 	/bin/echo "${0} `/bin/date`: This autoscaler is now waiting for the new webservers to build and will continue after they have all completed" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
@@ -241,13 +237,7 @@ then
 	/bin/touch ${HOME}/runtime/AUTHORISED_TO_SCALE
 	/bin/rm ${HOME}/runtime/NOT_AUTHORISED_TO_SCALE 
 	
-	/bin/echo "${0} `/bin/date`: This autoscaler has now been re-authorised to scale in response to new scaling events" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-		
-	if ( [ "${newip}" != "" ] )
-	then
-		/bin/echo "${0} `/bin/date`:  Added the new IP for the webserver( ${newip} ) to the DNS system" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-		${HOME}/providerscripts/email/SendEmail.sh "A WEBSERVER HAS BEEN DEPLOYED" "Webserver ( ${ip} ) has just been deployed and activated" "INFO"
-	fi   
+	/bin/echo "${0} `/bin/date`: This autoscaler has now been re-authorised to scale in response to new scaling events" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log 
 		
 	/bin/echo "${0} `/bin/date`: Rebooting autoscaler before next scaling event for hygiene reasons" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 	${HOME}/providerscripts/utilities/housekeeping/ShutdownThisAutoscaler.sh "reboot"  
