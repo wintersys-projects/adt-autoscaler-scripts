@@ -1,4 +1,5 @@
 
+buildno="${1}"
 
 SIZE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SIZE'`"
 REGION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
@@ -21,6 +22,8 @@ server_instance_name="`/bin/echo ${webserver_name} | /bin/sed 's/-$//g'`"
 
 
 ${HOME}/autoscaler/InitialiseCloudInit.sh
+
+/bin/touch ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock
 
 ${HOME}/providerscripts/server/CreateServer.sh "${SIZE}" "${server_instance_name}"
 
