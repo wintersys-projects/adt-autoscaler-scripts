@@ -166,4 +166,9 @@ then
 fi 
 
 
+trap "cleanup ${buildno} successfully" TERM
+
+/usr/bin/kill -TERM $$
+
+
 
