@@ -31,7 +31,6 @@ while ( [ "$?" != "0" ] && [ "${count}" -lt "10" ] )
 do
         /bin/sleep 5
         count="`/usr/bin/expr ${count} + 1`"
-#       buildmethod="`${HOME}/providerscripts/server/CreateServer.sh "${ostype}" "${REGION}" "${SIZE}" "${server_instance_name}" "${KEY_ID}" ${CLOUDHOST} "${DEFAULT_USER}" ${CLOUDHOST_PASSWORD}`"
         ${HOME}/providerscripts/server/CreateServer.sh "${SIZE}" "${server_instance_name}"
 done
 
@@ -60,7 +59,7 @@ if ( [ "${ip}" = "" ] )
 then
         #This should never happen, and I am not sure what to do about it if it does. If we don't have an ip address, how can
         #we destroy the machine? I simply exit, therefore.
-        /bin/echo "${0} `/bin/date`: The weberver didn't come online" 
+        /bin/echo "${0} `/bin/date`: The weberver didn't come online, no ip address assigned or available, this could be an API availability issue" 
         exit
 else
         if ( [ ! -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip} ] )
