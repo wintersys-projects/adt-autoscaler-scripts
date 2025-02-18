@@ -43,6 +43,10 @@ autoscaler_no="`/bin/echo ${autoscaler_name} | /usr/bin/awk -F'-' '{print $2}'`"
 webserver_name="ws-${REGION}-${BUILD_IDENTIFIER}-${autoscaler_no}-${rnd}"
 server_instance_name="`/bin/echo ${webserver_name} | /bin/sed 's/-$//g'`"
 
+#Check there is a directory for logging
+logdate="`/usr/bin/date | /usr/bin/awk '{print $1 $2 $3 $NF}'`"
+logdir="scaling-events-`/usr/bin/date | /usr/bin/awk '{print $1,$2,$3}' | /bin/sed 's/ //g'`"
+
 logdir="${logdir}/${webserver_name}"
 
 if ( [ ! -d ${HOME}/logs/${logdir} ] )
@@ -55,7 +59,6 @@ log_file="webserver_out_`/bin/date | /bin/sed 's/ //g'`"
 exec 1>>${HOME}/logs/${logdir}/${log_file}
 err_file="webserver_err_`/bin/date | /bin/sed 's/ //g'`"
 exec 2>>${HOME}/logs/${logdir}/${err_file}
-
 
 /bin/echo "Initialising Cloud Init for webserver ${webserver_name}"
 ${HOME}/autoscaler/InitialiseCloudInit.sh
