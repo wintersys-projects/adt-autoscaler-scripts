@@ -82,7 +82,7 @@ else
         fi
 
         /bin/touch ${HOME}/runtime/beingbuiltips/${buildno}/${private_ip}
-        /bin/touch ${HOME}/runtime/beingbuiltpublicips/${buildno}/${ip}
+        ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${HOME}/runtime/beingbuiltips/${buildno}/${private_ip} beingbuiltips/
         
         /bin/echo "${0} `/bin/date`: The webserver has been assigned public ip address ${ip} and private ip address ${private_ip}" 
         /bin/echo "${0} `/bin/date`: The webserver is now provisioned and I am about to start building it out and installing software"
@@ -138,7 +138,6 @@ fi
 /bin/echo "${0} `/bin/date`: Deleting the 'beingbuilt' ip address ${private_ip} from the config datastore" 
 ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh  beingbuiltips/${private_ip}
 /bin/rm ${HOME}/runtime/beingbuiltips/${buildno}/${private_ip}
-/bin/rm ${HOME}/runtime/beingbuiltpublicips/${buildno}/${ip}
 
 if ( [ ! -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip} ] )
 then
