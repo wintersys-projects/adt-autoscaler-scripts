@@ -165,6 +165,10 @@ then
         /bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip}
 fi 
 
+#Output how long the build took
+end=`/bin/date +%s`
+runtime="`/usr/bin/expr ${end} - ${start}`"
+/bin/echo "${0} This script took `/bin/date -u -d @${runtime} +\"%T\"` to complete and completed at time: `/usr/bin/date`" 
 
 trap "cleanup ${buildno} successfully" TERM
 
