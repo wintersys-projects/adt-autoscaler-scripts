@@ -82,6 +82,8 @@ fi
 
 count="1"
 ip=""
+/bin/echo "${0} `/bin/date`: I am now going to work on getting the IP adddresses of webserver ${server_instance_name}, this will take several attempts" 
+
 # There is a delay between the server being created and started and it "coming online". The way we can tell it is online is when
 # It returns an ip address, so try, several times to retrieve the ip address of the server
 # We are prepared to wait a total of 300 seconds for the machine to come online
@@ -130,7 +132,9 @@ else
         /bin/echo "${0} `/bin/date`: The webserver is now provisioned and I am about to start building it out and installing software"
 fi
 
-count=1
+count="1"
+/bin/echo "${0} `/bin/date`: I am now going to attempt several times to see if the webserver ${server_instance_name} has completed its build process" 
+/bin/echo "${0} `/bin/date`: This will take ten or twenty attempts at least"
 
 while ( [ "${count}" -lt "71" ] && [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/bin/ls /home/${SERVER_USER}/runtime/WEBSERVER_READY"`" = "" ] )
 do
@@ -141,13 +145,17 @@ done
 
 failedonlinecheck="1"
 count="1"
+headfile="`${HOME}/autoscaler/SelectHeadFile.sh`"
+/bin/echo "${0} `/bin/date`: Have set the headfile for curl command to be ${headfile}" 
+/bin/echo "${0} `/bin/date`: the full URL I am checking for is: https://${private_ip}:443/${headfile}"
+/bin/echo "${0} `/bin/date`: I expect this to take several attempts before the website is considered fully online"
+
 while ( [ "${count}" -lt "71" ] && [ "${failedonlinecheck}" != "0" ] )
 do
-        headfile="`${HOME}/autoscaler/SelectHeadFile.sh`"
+        
 
-        /bin/echo "${0} `/bin/date`: Have set the headfile for curl command to be ${headfile}" 
+        
         /bin/echo "${0} `/bin/date`: Peforming online checks using curl (attempt ${count}) for newly built webserver with ip address ${ip}" 
-        /bin/echo "${0} `/bin/date`: the full URL I am checking for is: https://${private_ip}:443/${headfile}"
 
         if ( [ "${failedonlinecheck}" = "1" ] )
         then
