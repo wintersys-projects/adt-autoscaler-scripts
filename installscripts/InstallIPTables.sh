@@ -56,12 +56,8 @@ then
                         /usr/sbin/ufw disable                                                                          
                 fi      
 
-          installed="-1"
-        while ( [ "${installed}" != "0" ] )
-        do
             eval ${install_command} iptables
-            installed="$?"
-        done
+e
 
 
                 /bin/echo iptables-persistent iptables-persistent/autosave_v4 boolean true | /usr/bin/sudo debconf-set-selections
@@ -78,12 +74,9 @@ then
                         /usr/sbin/ufw disable                                                                           
                 fi        
 		
-          installed="-1"
-        while ( [ "${installed}" != "0" ] )
-        do
+
             eval ${install_command} iptables
-            installed="$?"
-        done
+
                 /bin/echo iptables-persistent iptables-persistent/autosave_v4 boolean true | /usr/bin/sudo debconf-set-selections
                 /bin/echo iptables-persistent iptables-persistent/autosave_v4 boolean true | /usr/bin/sudo debconf-set-selections 
 
