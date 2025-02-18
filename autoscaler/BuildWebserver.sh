@@ -43,7 +43,21 @@ autoscaler_no="`/bin/echo ${autoscaler_name} | /usr/bin/awk -F'-' '{print $2}'`"
 webserver_name="ws-${REGION}-${BUILD_IDENTIFIER}-${autoscaler_no}-${rnd}"
 server_instance_name="`/bin/echo ${webserver_name} | /bin/sed 's/-$//g'`"
 
+logdir="${logdir}/${webserver_name}"
 
+if ( [ ! -d ${HOME}/logs/${logdir} ] )
+then
+        /bin/mkdir -p ${HOME}/logs/${logdir}
+fi
+
+#The log files for the server build are written here... 
+log_file="webserver_out_`/bin/date | /bin/sed 's/ //g'`"
+exec 1>>${HOME}/logs/${logdir}/${log_file}
+err_file="webserver_err_`/bin/date | /bin/sed 's/ //g'`"
+exec 2>>${HOME}/logs/${logdir}/${err_file}
+
+
+/bin/echo "Initialising Cloud Init for webserver ${webserver_name}"
 ${HOME}/autoscaler/InitialiseCloudInit.sh
 
 /bin/touch ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock
@@ -63,14 +77,15 @@ then
         /usr/bin/kill -TERM $$
 fi
 
-count="0"
+count="1"
 ip=""
 # There is a delay between the server being created and started and it "coming online". The way we can tell it is online is when
 # It returns an ip address, so try, several times to retrieve the ip address of the server
 # We are prepared to wait a total of 300 seconds for the machine to come online
-while ( [ "`/bin/echo ${ip} | /bin/grep -E "^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$"`" = "" ] && [ "${count}" -lt "15" ] || [ "${ip}" = "0.0.0.0" ] )
+while ( ( [ "${ip}" = "" ] || [ "${ip}" = "0.0.0.0" ] ) && [ "${count}" -lt "30" ]  )
 do
-        /bin/sleep 20
+        /bin/sleep 5
+        /bin/echo "${0} `/bin/date`: Attempting to get ip address of webserver ${server_instance_name} attempt ${count}" 
         ip="`${HOME}/providerscripts/server/GetServerIPAddresses.sh ${server_instance_name} ${CLOUDHOST}`"
         ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} webserverpublicips/${ip}
         private_ip="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh ${server_instance_name} ${CLOUDHOST}`"
@@ -82,17 +97,19 @@ if ( [ "${ip}" = "" ] )
 then
         #This should never happen, and I am not sure what to do about it if it does. If we don't have an ip address, how can
         #we destroy the machine? I simply exit, therefore.
-        /bin/echo "${0} `/bin/date`: The weberver didn't come online, no ip address assigned or available, this could be an API availability issue" 
+        /bin/echo "${0} `/bin/date`: The webserver didn't come online, no ip address assigned or available, this could be an API availability issue" 
         exit
 else
         if ( [ ! -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip} ] )
         then
                 /bin/touch ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip}
         fi 
+        
         if ( [ -f ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock ] )
         then
                 /bin/rm ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock
         fi
+        
         if ( [ ! -d ${HOME}/runtime/beingbuiltips/${buildno} ] )
         then 
                 /bin/mkdir -p ${HOME}/runtime/beingbuiltips/${buildno}
@@ -110,43 +127,44 @@ else
         /bin/echo "${0} `/bin/date`: The webserver is now provisioned and I am about to start building it out and installing software"
 fi
 
-count=0
+count=1
 
 while ( [ "${count}" -lt "71" ] && [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/bin/ls /home/${SERVER_USER}/runtime/WEBSERVER_READY"`" = "" ] )
 do
         /bin/sleep 5
+        /bin/echo "${0} `/bin/date`: Checking if I consider the webserver with ip address (${private_ip}) to have completed its build process" 
         count="`/usr/bin/expr ${count} + 1`"
 done
 
 failedonlinecheck="1"
-
-#Do a check, as best we can to make sure that the website application is actually running correctly
-count="0"
+count="1"
 while ( [ "${count}" -lt "71" ] && [ "${failedonlinecheck}" != "0" ] )
 do
         headfile="`${HOME}/autoscaler/SelectHeadFile.sh`"
 
+        /bin/echo "${0} `/bin/date`: Have set the headfile for curl command to be ${headfile}" 
+        /bin/echo "${0} `/bin/date`: Peforming online checks using curl (attempt ${count}) for newly built webserver with ip address ${ip}" 
+        /bin/echo "${0} `/bin/date`: the full URL I am checking for is: https://${private_ip}:443/${headfile}"
+
         if ( [ "${failedonlinecheck}" = "1" ] )
         then
-                /bin/echo "${0} `/bin/date`: Peforming online checks for newly built webserver with ip address ${ip}" 
                 if ( [ "`/usr/bin/curl -I --max-time 60 --insecure https://${private_ip}:443/${headfile} | /bin/grep -E 'HTTP/2 200|HTTP/2 301|HTTP/2 302|HTTP/2 303|200 OK|302 Found|301 Moved Permanently'`" = "" ] )
                 then
-                        /bin/echo "/usr/bin/curl -I --max-time 60 --insecure https://${private_ip}:443/${headfile} | /bin/grep -E 'HTTP/2 200|HTTP/2 301|HTTP/2 302|HTTP/2 303|200 OK|302 Found|301 Moved Permanently"
                         /bin/echo "${0} `/bin/date`: Expecting ${private_ip} to be online, but can't reach it with curl yet...."
-                        /bin/echo "${0} `/bin/date`: Doing webserver/application online check for ${ip} attempt ${count}" 
                         /bin/sleep 5
                         count="`/usr/bin/expr ${count} + 1`"
                 else
-                        /bin/echo "${0} `/bin/date`:  new webserver with ip address:${ip} is online that's wicked..." 
+                        /bin/echo "${0} `/bin/date`: a new webserver with ip address:${ip} is online that's wicked..." 
                         failedonlinecheck="0"
                 fi
         fi
 done
 
-if ( [ "${count}" != "71" ] )
+if ( [ "${count}" != "71" ] || [ "${failedonlinecheck}" = "0" ] )
 then
         ${HOME}/autoscaler/AddIPToDNS.sh ${ip}
-else
+elif ( [ "${failedonlinecheck}" = "1" ] )
+then
         if ( [ -f ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock ] )
         then
                 /bin/rm ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock
@@ -161,6 +179,7 @@ fi
 ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh  beingbuiltips/${private_ip}
 /bin/rm ${HOME}/runtime/beingbuiltips/${buildno}/${private_ip}
 
+/bin/echo "${0} `/bin/date`: This build hasn't stalled, so, removing file ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip}" 
 if ( [ ! -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip} ] )
 then
         /bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip}
