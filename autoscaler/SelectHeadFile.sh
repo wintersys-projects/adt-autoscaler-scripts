@@ -45,3 +45,4 @@ then
 		headfile="moodle/index.php"
 	fi
 fi
+/bin/echo "${headfile}"
