@@ -100,6 +100,10 @@ done
 if ( [ "${count}" != "71" ] )
 then
         ${HOME}/autoscaler/AddIPToDNS.sh ${ip}
+else
+        /bin/echo "${0} `/bin/date`: webserver with ip address: ${ip} failed its online check" 
+        /bin/echo "${0} `/bin/date`: webserver with ip address: ${ip} is being destroyed" 
+        ${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
 fi
 
 
