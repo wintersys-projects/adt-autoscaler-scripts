@@ -47,22 +47,16 @@ if ( [ "${apt}" != "" ] )
 then
 	if ( [ "${BUILDOS}" = "ubuntu" ] )
 	then
-           installed="-1"
-        while ( [ "${installed}" != "0" ] )
-        do
+
             eval ${install_command} mailutils
-            installed="$?"
-        done
+
 	fi
 
 	if ( [ "${BUILDOS}" = "debian" ] )
 	then
-           installed="-1"
-        while ( [ "${installed}" != "0" ] )
-        do
+
             eval ${install_command} mailutils
-            installed="$?"
-        done
+
 	fi
      	/bin/touch ${HOME}/runtime/installedsoftware/InstallMail.sh	
 fi
