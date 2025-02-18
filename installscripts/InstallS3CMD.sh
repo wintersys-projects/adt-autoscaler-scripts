@@ -50,22 +50,16 @@ then
  	then
 		if ( [ "${BUILDOS}" = "ubuntu" ] )
 		then
-             installed="-1"
-        while ( [ "${installed}" != "0" ] )
-        do
+
             eval ${install_command} s3cmd
-            installed="$?"
-        done
+
 		fi
 
 		if ( [ "${BUILDOS}" = "debian" ] )
 		then
-             installed="-1"
-        while ( [ "${installed}" != "0" ] )
-        do
+
             eval ${install_command} s3cmd
-            installed="$?"
-        done
+
 		fi
   	fi
     	/bin/touch ${HOME}/runtime/installedsoftware/InstallS3CMD.sh				
