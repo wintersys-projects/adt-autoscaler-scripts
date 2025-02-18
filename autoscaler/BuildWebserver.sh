@@ -1,4 +1,25 @@
 
+cleanup() {     
+        
+        if ( [ -f ${HOME}/runtime/AUTOSCALINGMONITOR:${1} ] )
+        then
+                if ( [ "${2}" = "successfully" ] )
+                then
+                        /bin/echo "${0} `/bin/date`: Build no ${1} has been completed ${2}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+                else
+                        /bin/echo "${0} `/bin/date`: Build no ${1} has been completed unsuccessfully - due to a raised trap condition" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+                fi
+                /bin/rm ${HOME}/runtime/AUTOSCALINGMONITOR:${1}
+        fi
+ 
+}
+
+#If we are trying to build a webserver before the toolkit has been fully installed, we don't want to do anything, so exit
+if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "INSTALLED_SUCCESSFULLY"`" = "0" ] )
+then
+        exit
+fi
+
 buildno="${1}"
 
 SIZE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SIZE'`"
