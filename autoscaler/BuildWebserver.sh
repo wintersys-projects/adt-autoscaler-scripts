@@ -22,6 +22,7 @@ fi
 
 buildno="${1}"
 trap "cleanup ${buildno}" TERM
+start=`/bin/date +%s`
 
 SIZE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SIZE'`"
 REGION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
