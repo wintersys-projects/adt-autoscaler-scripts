@@ -48,22 +48,16 @@ if ( [ "${apt}" != "" ] )
 then
     if ( [ "${BUILDOS}" = "ubuntu" ] )
     then
-        installed="-1"
-        while ( [ "${installed}" != "0" ] )
-        do
+
             eval ${install_command} network-manager
-            installed="$?"
-        done
+
     fi
 
     if ( [ "${BUILDOS}" = "debian" ] )
     then
-        installed="-1"
-        while ( [ "${installed}" != "0" ] )
-        do
+
             eval ${install_command} network-manager
-            installed="$?"
-        done    
+    
     fi
     /bin/touch ${HOME}/runtime/installedsoftware/InstallNetworkManager.sh				
 fi
