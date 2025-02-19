@@ -95,6 +95,7 @@ ALGORITHM="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'ALGO
 SSH_PORT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SSHPORT'`"
 SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
 SERVER_USER_PASSWORD="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
+MAX_WEBSERVERS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'MAXWEBSERVERS'`"
 
 SUDO=" DEBIAN_FRONTEND=noninteractive /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E "
 
@@ -128,9 +129,9 @@ then
 	exit
 fi
 
-if ( [ "${no_needed_here}" -gt "20" ] )
+if ( [ "${no_needed_here}" -gt "${MAX_WEBSERVERS}" ] )
 then
-	no_needed_here="20"
+	no_needed_here="${MAX_WEBSERVERS}"
 fi
 
 /bin/echo "${0} `/bin/date`: I found the total number of webservers that need to be running based on the current scaling policy on this autoscaler to be: ${no_needed_here}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
