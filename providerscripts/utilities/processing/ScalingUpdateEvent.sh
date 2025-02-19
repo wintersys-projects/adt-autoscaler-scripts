@@ -1,11 +1,10 @@
+CLOUDHOST="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
+BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
 
-
-
+new_scale_value="${1}"
 
 number_of_autoscalers="`${HOME}/providerscripts/server/NumberOfServers.sh "-as-" "${CLOUDHOST}"`"
-number_of_webservers="${new_scale_value}"
-
-/bin/echo "You are running ${number_autoscalers} and you are asking me to build ${new_scale_value} webservers"
+number_of_webservers="${new_scale_valu}"
 
 base_number_of_webservers="`/usr/bin/expr ${number_of_webservers} / ${number_of_autoscalers}`"
 total_base_number_of_webservers="`/usr/bin/expr ${base_number_of_webservers} \* ${number_of_autoscalers}`"
