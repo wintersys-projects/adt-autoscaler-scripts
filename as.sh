@@ -337,8 +337,8 @@ ${HOME}/providerscripts/utilities/housekeeping/CleanupAfterBuild.sh
 ${HOME}/providerscripts/email/SendEmail.sh "A NEW AUTOSCALER HAS BEEN SUCCESSFULLY BUILT" "A new autoscaler machine has been built and is now going to reboot before coming available" "INFO"
 
 /bin/touch ${HOME}/runtime/DONT_MESS_WITH_THESE_FILES-SYSTEM_BREAK
-
 /bin/touch ${HOME}/runtime/AUTOSCALER_READY
+/bin/touch ${HOME}/runtime/AUTHORISED_TO_SCALE
 
 ${HOME}/providerscripts/utilities/security/EnforcePermissions.sh
 
