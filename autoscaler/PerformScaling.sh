@@ -129,6 +129,11 @@ then
 	exit
 fi
 
+if ( ! [ `/usr/bin/expr match "${MAX_WEBSERVERS}" '^\([0-9]\+\)$'` ] )
+then
+	exit
+fi
+
 if ( [ "${no_needed_here}" -gt "${MAX_WEBSERVERS}" ] )
 then
 	no_needed_here="${MAX_WEBSERVERS}"
