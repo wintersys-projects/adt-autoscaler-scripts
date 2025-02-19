@@ -125,7 +125,7 @@ no_needed_here="`/usr/bin/expr ${NO_WEBSERVERS} - ${initial_no_webservers}`"
 
 if ( ! [ `/usr/bin/expr match "${no_needed_here}" '^\([0-9]\+\)$'` ] )
 then
-        exit
+	exit
 fi
 
 if ( [ "${no_needed_here}" -gt "20" ] )
