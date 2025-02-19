@@ -135,6 +135,8 @@ fi
 
 /bin/echo "${0} `/bin/date`: I found the total number of webservers that need to be running based on the current scaling policy on this autoscaler to be: ${no_needed_here}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 
+exit
+
 if ( [ "${no_needed_here}" -gt "0" ] )
 then
 	loop="0"
