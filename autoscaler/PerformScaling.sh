@@ -113,11 +113,6 @@ no_autoscalers="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "as-${RE
 /bin/echo "${0} `/bin/date`: I found the number of autoscalers running to be ${no_autoscalers}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 /bin/echo "${0} `/bin/date`: I found the existing number of actioned webservers to be ${initial_no_webservers}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 
-if ( [ "${initial_no_webservers}" = "" ] || [ "${no_autoscalers}" = "" ] )
-then
-	exit
-fi
-
 
 if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh STATIC_SCALE:*`" = "" ] )
 then
@@ -129,74 +124,9 @@ else
  	NO_WEBSERVERS="`/bin/echo ${webserver_values} | /usr/bin/awk "{print \$$autoscaler_index}"`" 
 fi
 
-/bin/echo "${0} `/bin/date`: I found the total number of webservers that need to be running based on the current scaling policy to be: ${NO_WEBSERVERS}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
+/bin/echo "${0} `/bin/date`: I found the total number of webservers that need to be running based on the current scaling policy on this autoscaler to be: ${NO_WEBSERVERS}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 
-if ( [ "${NO_WEBSERVERS}" != "${initial_no_webservers}" ] )
-then
-	 /bin/echo "${0} `/bin/date`: That means a total of `/usr/bin/expr ${NO_WEBSERVERS} - ${initial_no_webservers}` are needed and this autoscaler might have a role to play in that..." >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-else
-	 /bin/echo "${0} `/bin/date`: No additional webservers are needed on this check" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-fi
-
-
-if ( [ "${NO_WEBSERVERS}" = "" ] || [ "${initial_no_webservers}" = "${NO_WEBSERVERS}" ] )
-then
-   exit
-fi
-
-/bin/sleep 10
-
-total_needed="`/usr/bin/expr ${NO_WEBSERVERS} - ${initial_no_webservers}`"
-
-if ( [ "${total_needed}" -ge "${no_autoscalers}" ] )
-then
-	no_needed_here="`/usr/bin/expr ${total_needed} / ${no_autoscalers}`"
-	no_needed_here="`/bin/echo ${no_needed_here} | /usr/bin/awk -F'.' '{print $1}'`"
-	
-	/bin/echo "${0} `/bin/date`: There is ${no_autoscalers} autoscalers and there's ${no_neeeded_here} webserver(s) being built on each one" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-	
-	total_actioned="`/usr/bin/expr ${no_needed_here} \* ${no_autoscalers}`"
-
-	/bin/echo "${0} `/bin/date`: The total webservers across all autoscalers actioned to be built is ${total_actioned}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-	/bin/echo "${0} `/bin/date`: The total webservers across all autoscalers that need to be built is ${total_needed}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-	
-	if ( [ "${autoscaler_no}" = "0" ] && [ "${total_actioned}" != "${total_needed}" ] )
-	then
-		/bin/echo "${0} `/bin/date`: The total webservers needed and the total webservers actioned to be built are not equal" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-		/bin/echo "${0} `/bin/date`: This is the first autoscaler and therefore I will  apply a the necessary top up here" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-		topup="`/usr/bin/expr ${total_needed} - ${total_actioned}`"
-		/bin/echo "${0} `/bin/date`: The topup value is ${topup} and I am about to apply it" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-		no_needed_here="`/usr/bin/expr ${no_needed_here} + ${topup}`"  
-		/bin/echo "${0} `/bin/date`: The number of webservers being built on this autoscaler (including newly applied topup) is ${no_needed_here}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-	 fi
-fi
-
-if ( [ "${autoscaler_no}" = "0" ] && [ "${total_needed}" -lt "${no_autoscalers}" ] )
-then
-	no_needed_here="${total_needed}"
-fi
-
-if ( [ "${autoscaler_no}" != "0" ] && [ "${total_needed}" -lt "${no_autoscalers}" ] )
-then
-	/bin/sleep 180
-	initial_no_webservers="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}"  ${CLOUDHOST} | /usr/bin/tr '\n' ' ' | /usr/bin/wc -w`"
-	total_needed="`/usr/bin/expr ${NO_WEBSERVERS} - ${initial_no_webservers}`"
-
-	if ( [ "${total_needed}" -lt "${no_autoscalers}" ] )
-	then
-		no_needed_here="${total_needed}"
-	fi
-fi
-
-if ( [ "${no_needed_here}" -gt "20" ] )
-then
-	no_needed_here="20"
-	/bin/echo "${0} `/bin/date`: You tried to build more than 20 webservers on this autoscaler so I have applied a limit of 20 to your request" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-fi
-
-/bin/echo "${0} `/bin/date`: The final number of webservers I am building on this autoscaler is ${no_needed_here}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-
-if ( [ "${no_needed_here}" -gt "0" ] )
+if ( [ "${NO_WEBSERVERS}" -gt "0" ] )
 then
 	loop="0"
 
