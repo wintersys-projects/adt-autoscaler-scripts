@@ -59,9 +59,6 @@ if ( [ "${PRODUCTION}" = "1" ] )
 then
 	/bin/echo "*/2 * * * * export HOME="${HOMEDIR}" && ${HOME}/cron/PerformScalingFromCron.sh" >> /var/spool/cron/crontabs/root
 	/bin/echo "*/3 * * * * export HOME="${HOMEDIR}" && ${HOME}/cron/DeadOrAliveFromCron.sh" >> /var/spool/cron/crontabs/root
- 	#Remove the comments to set daily scale up and scale down or any other chronological policy you want
-	#/bin/echo "30 7 * * *  export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/processing/DailyScaleUp.sh 3" >> /var/spool/cron/crontabs/root
-	#/bin/echo "30 17 * * * export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/processing/DailyScaleDown.sh 2" >> /var/spool/cron/crontabs/root
 fi
 
 /bin/echo "30 3 * * *  export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/housekeeping/RemoveExpiredLogs.sh" >> /var/spool/cron/crontabs/root
