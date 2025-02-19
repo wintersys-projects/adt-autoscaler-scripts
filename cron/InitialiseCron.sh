@@ -59,6 +59,8 @@ if ( [ "${PRODUCTION}" = "1" ] )
 then
 	/bin/echo "*/2 * * * * export HOME="${HOMEDIR}" && ${HOME}/cron/PerformScalingFromCron.sh" >> /var/spool/cron/crontabs/root
 	/bin/echo "*/3 * * * * export HOME="${HOMEDIR}" && ${HOME}/cron/DeadOrAliveFromCron.sh" >> /var/spool/cron/crontabs/root
+ 	#/bin/echo "30 8 * * *  export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/processing/ScalingUpdateEvent.sh 3" >> /var/spool/cron/crontabs/root
+	#/bin/echo "30 17 * * *  export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/processing/ScalingUpdateEvent.sh 3" >> /var/spool/cron/crontabs/root
 fi
 
 /bin/echo "30 3 * * *  export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/housekeeping/RemoveExpiredLogs.sh" >> /var/spool/cron/crontabs/root
