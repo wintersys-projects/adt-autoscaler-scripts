@@ -108,6 +108,14 @@ autoscaler_name="`${HOME}/providerscripts/server/GetServerName.sh ${autoscalerip
 autoscaler_no="`/bin/echo ${autoscaler_name} | /usr/bin/awk -F'-' '{print $2}'`"
 initial_no_webservers="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}-${autoscaler_no}" ${CLOUDHOST} | /usr/bin/tr '\n' ' ' | /usr/bin/wc -w`"
 
+if ( [ "${autoscaler_no}" = "0" ] )
+then
+        if ( [ "`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}-init" ${CLOUDHOST} | /usr/bin/tr '\n' ' ' | /usr/bin/wc -w`" != "0" ] )
+        then
+                initial_no_webservers="`/usr/bin/expr ${initial_no_webservers} + 1`"
+        fi
+fi
+
 /bin/echo "${0} `/bin/date`: This machine is found to be autoscaler number ${autoscaler_no}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 /bin/echo "${0} `/bin/date`: I found the existing number of actioned webservers to be ${initial_no_webservers}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 
