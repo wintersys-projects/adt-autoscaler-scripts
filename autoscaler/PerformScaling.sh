@@ -126,7 +126,7 @@ then
 else
 	webserver_values="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh STATIC_SCALE:* | /bin/sed -e 's/STATIC_SCALE//g' -e 's/:/ /g' -e 's/^ //g'`"
 	autoscaler_index="`/usr/bin/expr ${autoscaler_no} + 1`"	
- 	NO_WEBSERVERS="`/bin/echo ${webserver_values} | /usr/bin/awk '{print $autoscaler_index}'`" 
+ 	NO_WEBSERVERS="`/bin/echo ${webserver_values} | /usr/bin/awk "{print \$$autoscaler_index}"`" 
 fi
 
 /bin/echo "${0} `/bin/date`: I found the total number of webservers that need to be running based on the current scaling policy to be: ${NO_WEBSERVERS}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
