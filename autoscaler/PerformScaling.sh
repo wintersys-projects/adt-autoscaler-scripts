@@ -123,14 +123,17 @@ fi
 
 no_needed_here="`/usr/bin/expr ${NO_WEBSERVERS} - ${initial_no_webservers}`"
 
+if ( ! [ `/usr/bin/expr match "${no_needed_here}" '^\([0-9]\+\)$'` ] )
+then
+        exit
+fi
+
 if ( [ "${no_needed_here}" -gt "20" ] )
 then
 	no_needed_here="20"
 fi
 
 /bin/echo "${0} `/bin/date`: I found the total number of webservers that need to be running based on the current scaling policy on this autoscaler to be: ${no_needed_here}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-
-exit
 
 if ( [ "${no_needed_here}" -gt "0" ] )
 then
