@@ -1,10 +1,19 @@
+set -x 
+
+HOME="`/bin/cat /home/homedir.dat`"
+
 CLOUDHOST="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
 BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
 
 new_scale_value="${1}"
 
+if ( [ ! -f ${HOME}/runtime/scaling ] )
+then
+        /bin/mkdir ${HOME}/runtime/scaling
+fi
+
 number_of_autoscalers="`${HOME}/providerscripts/server/NumberOfServers.sh "-as-" "${CLOUDHOST}"`"
-number_of_webservers="${new_scale_valu}"
+number_of_webservers="${new_scale_value}"
 
 base_number_of_webservers="`/usr/bin/expr ${number_of_webservers} / ${number_of_autoscalers}`"
 total_base_number_of_webservers="`/usr/bin/expr ${base_number_of_webservers} \* ${number_of_autoscalers}`"
@@ -24,10 +33,10 @@ done
 
 ${HOME}/providerscripts/datastore/configwrapper/MultiDeleteConfigDatastore.sh STATIC_SCALE:
 
-if ( [ -f ${HOME}/runtimedata/${CLOUDHOST}/${BUILD_IDENTIFIER}/STATIC_SCALE:* ] )
+if ( [ -f ${HOME}/runtime/scaling/STATIC_SCALE:* ] )
 then
-        /bin/rm ${HOME}/runtimedata/${CLOUDHOST}/${BUILD_IDENTIFIER}/STATIC_SCALE:*
+        /bin/rm ${HOME}/runtime/scaling/STATIC_SCALE:*
 fi
 
-/bin/touch ${HOME}/runtimedata/${CLOUDHOST}/${BUILD_IDENTIFIER}/${new_scale_values}
-${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${HOME}/runtimedata/${CLOUDHOST}/${BUILD_IDENTIFIER}/${new_scale_values} ${new_scale_values}
+/bin/touch ${HOME}/runtime/scaling/${new_scale_values}
+${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${HOME}/runtime/scaling/${new_scale_values} ${new_scale_values}
