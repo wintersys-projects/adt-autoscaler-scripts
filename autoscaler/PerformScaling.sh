@@ -134,6 +134,13 @@ then
 	exit
 fi
 
+HARD_LIMIT_WEBSERVERS="20"
+
+if ( [ "${MAX_WEBSERVERS}" -gt "${HARD_LIMIT_WEBSERVERS}" ] )
+then
+	MAX_WEBSERVERS="20"
+fi
+
 if ( [ "${no_needed_here}" -gt "${MAX_WEBSERVERS}" ] )
 then
 	no_needed_here="${MAX_WEBSERVERS}"
