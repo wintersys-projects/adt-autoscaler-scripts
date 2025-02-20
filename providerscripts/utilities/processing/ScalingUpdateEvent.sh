@@ -2,6 +2,14 @@ set -x
 
 HOME="`/bin/cat /home/homedir.dat`"
 
+scale_values="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh STATIC_SCALE`"
+age="`${HOME}/providerscripts/datastore/configwrapper/AgeOfConfigFile.sh ${scale_values}`"
+
+if ( [ "${age}" -le "600" ] )
+then
+        exit
+fi
+
 CLOUDHOST="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
 BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
 
