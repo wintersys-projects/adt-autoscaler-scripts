@@ -134,19 +134,19 @@ then
 
         if ( [ "${ACTIVE_FIREWALL}" = "2" ] || [ "${ACTIVE_FIREWALL}" = "3" ] )
         then
-                /usr/bin/vultr instance create --label="${server_name}" --region="${REGION}" --plan="${server_size}" --ipv6=false -s ${KEY_ID} --os="${OS_CHOICE}" --ddos="${ddos}" --userdata="`/bin/cat ${cloud_config}`" --firewall-group="${firewall_id}"
+                /usr/bin/vultr instance create --label="${server_name}" --region="${REGION}" --plan="${server_size}" --ipv6=false -s ${KEY_ID} --os="${OS_CHOICE}" --ddos="${ddos}" --userdata="`/bin/cat ${cloud_config}`" --firewall-group="${firewall_id}" --vpc-enable --vpc-ids ${vpc_id}
         else
-                /usr/bin/vultr instance create --label="${server_name}" --region="${REGION}" --plan="${server_size}" --ipv6=false -s ${KEY_ID} --os="${OS_CHOICE}" --ddos="${ddos}" --userdata="`/bin/cat ${cloud_config}`" 
+                /usr/bin/vultr instance create --label="${server_name}" --region="${REGION}" --plan="${server_size}" --ipv6=false -s ${KEY_ID} --os="${OS_CHOICE}" --ddos="${ddos}" --userdata="`/bin/cat ${cloud_config}`" --vpc-enable --vpc-ids ${vpc_id}
         fi
 
-        machine_id=""
-        count="0"
-        while ( [ "${machine_id}" = "" ] && [ "${count}" -lt "10" ] )
-        do
-                machine_id="`/usr/bin/vultr instance list -o json | /usr/bin/jq -r '.instances[] | select (.label == "'"${server_name}"'").id'`"
-                /bin/sleep 5
-                count="`/usr/bin/expr ${count} + 1`"
-        done
+    #    machine_id=""
+    #    count="0"
+    #    while ( [ "${machine_id}" = "" ] && [ "${count}" -lt "10" ] )
+    #    do
+    #            machine_id="`/usr/bin/vultr instance list -o json | /usr/bin/jq -r '.instances[] | select (.label == "'"${server_name}"'").id'`"
+    #            /bin/sleep 5
+    #            count="`/usr/bin/expr ${count} + 1`"
+    #    done
 
-        /usr/bin/vultr vpc2 nodes attach ${vpc_id} --nodes="${machine_id}"
+      #  /usr/bin/vultr vpc2 nodes attach ${vpc_id} --nodes="${machine_id}"
 fi
