@@ -23,11 +23,7 @@
 #Setup crontab
 
 /bin/echo "MAILTO=''" > /var/spool/cron/crontabs/root
-
 HOME="`/bin/cat /home/homedir.dat`"
-
-PRODUCTION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'PRODUCTION'`"
-
 
 #These scripts are set to run every minute
 /bin/echo "*/1 * * * * export HOME="${HOME}" && /bin/sleep 30 && ${HOME}/providerscripts/utilities/processing/UpdateIPs.sh" >> /var/spool/cron/crontabs/root
@@ -60,7 +56,7 @@ SERVER_TIMEZONE_CITY="`${HOME}/providerscripts/utilities/config/ExtractConfigVal
 
 #If we are building for production, then these scripts are also installed in the crontab. If it's for development then they are not
 #installed.
-if ( [ "${PRODUCTION}" = "1" ] )
+if ( [ "`${HOME}/providerscripts/utilities/config/CheckConfigValue.sh PRODUCTION:1`" = "1" ] )
 then
         /bin/echo "*/2 * * * * export HOME="${HOME}" && ${HOME}/cron/PerformScalingFromCron.sh" >> /var/spool/cron/crontabs/root
         /bin/echo "*/3 * * * * export HOME="${HOME}" && ${HOME}/cron/DeadOrAliveFromCron.sh" >> /var/spool/cron/crontabs/root
