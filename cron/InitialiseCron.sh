@@ -24,50 +24,51 @@
 
 /bin/echo "MAILTO=''" > /var/spool/cron/crontabs/root
 
-HOMEDIR="`/bin/cat /home/homedir.dat`"
+HOME="`/bin/cat /home/homedir.dat`"
+
+PRODUCTION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'PRODUCTION'`"
+
 
 #These scripts are set to run every minute
-/bin/echo "*/1 * * * * export HOME="${HOMEDIR}" && /bin/sleep 30 && ${HOME}/providerscripts/utilities/processing/UpdateIPs.sh" >> /var/spool/cron/crontabs/root
-/bin/echo "*/1 * * * * export HOME="${HOMEDIR}" && ${HOME}/cron/SetupFirewallFromCron.sh" >> /var/spool/cron/crontabs/root
-/bin/echo "*/1 * * * * export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/housekeeping/RemoveExpiredLocks.sh" >> /var/spool/cron/crontabs/root
-/bin/echo "*/1 * * * * export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/status/MonitorForOverload.sh" >> /var/spool/cron/crontabs/root
-/bin/echo "*/1 * * * * export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/status/CheckNetworkManagerStatus.sh" >> /var/spool/cron/crontabs/root
+/bin/echo "*/1 * * * * export HOME="${HOME}" && /bin/sleep 30 && ${HOME}/providerscripts/utilities/processing/UpdateIPs.sh" >> /var/spool/cron/crontabs/root
+/bin/echo "*/1 * * * * export HOME="${HOME}" && ${HOME}/cron/SetupFirewallFromCron.sh" >> /var/spool/cron/crontabs/root
+/bin/echo "*/1 * * * * export HOME="${HOME}" && ${HOME}/providerscripts/utilities/housekeeping/RemoveExpiredLocks.sh" >> /var/spool/cron/crontabs/root
+/bin/echo "*/1 * * * * export HOME="${HOME}" && ${HOME}/providerscripts/utilities/status/MonitorForOverload.sh" >> /var/spool/cron/crontabs/root
+/bin/echo "*/1 * * * * export HOME="${HOME}" && ${HOME}/providerscripts/utilities/status/CheckNetworkManagerStatus.sh" >> /var/spool/cron/crontabs/root
 
 #These scripts are set to run every 5 minutes
-/bin/echo "*/5 * * * * export HOME="${HOMEDIR}" && /bin/sleep 23 && ${HOME}/security/MonitorFirewall.sh" >> /var/spool/cron/crontabs/root
-/bin/echo "*/5 * * * * export HOME="${HOMEDIR}" && ${HOME}/autoscaler/RecordNumberOfWebserversRunning.sh" >> /var/spool/cron/crontabs/root
+/bin/echo "*/5 * * * * export HOME="${HOME}" && /bin/sleep 23 && ${HOME}/security/MonitorFirewall.sh" >> /var/spool/cron/crontabs/root
+/bin/echo "*/5 * * * * export HOME="${HOME}" && ${HOME}/autoscaler/RecordNumberOfWebserversRunning.sh" >> /var/spool/cron/crontabs/root
 
 #This script will run every 10 minutes
-/bin/echo "*/10 * * * * export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/security/EnforcePermissions.sh" >> /var/spool/cron/crontabs/root
-/bin/echo "*/10 * * * * export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/status/MonitorCron.sh" >> /var/spool/cron/crontabs/root
+/bin/echo "*/10 * * * * export HOME="${HOME}" && ${HOME}/providerscripts/utilities/security/EnforcePermissions.sh" >> /var/spool/cron/crontabs/root
+/bin/echo "*/10 * * * * export HOME="${HOME}" && ${HOME}/providerscripts/utilities/status/MonitorCron.sh" >> /var/spool/cron/crontabs/root
 
-/bin/echo "@hourly export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/status/LoadMonitoring.sh" >> /var/spool/cron/crontabs/root
+/bin/echo "@hourly export HOME="${HOME}" && ${HOME}/providerscripts/utilities/status/LoadMonitoring.sh" >> /var/spool/cron/crontabs/root
 
 
-/bin/echo "22 4 * * *  export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/software/UpdateSoftware.sh" >> /var/spool/cron/crontabs/root
+/bin/echo "22 4 * * *  export HOME="${HOME}" && ${HOME}/providerscripts/utilities/software/UpdateSoftware.sh" >> /var/spool/cron/crontabs/root
 
 SERVER_TIMEZONE_CONTINENT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERTIMEZONECONTINENT'`"
 SERVER_TIMEZONE_CITY="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERTIMEZONECITY'`"
 
 /bin/echo "@reboot export TZ=\":${SERVER_TIMEZONE_CONTINENT}/${SERVER_TIMEZONE_CITY}\"" >> /var/spool/cron/crontabs/root
-/bin/echo "@reboot export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/software/UpdateInfrastructure.sh" >>/var/spool/cron/crontabs/root
-/bin/echo "@reboot export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/housekeeping/RemoveExpiredLocks.sh reboot" >> /var/spool/cron/crontabs/root
-/bin/echo "@reboot export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/status/LoadMonitoring.sh 'reboot'" >> /var/spool/cron/crontabs/root
-/bin/echo "@reboot export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/status/CheckNetworkManagerStatus.sh" >> /var/spool/cron/crontabs/root
+/bin/echo "@reboot export HOME="${HOME}" && ${HOME}/providerscripts/utilities/software/UpdateInfrastructure.sh" >>/var/spool/cron/crontabs/root
+/bin/echo "@reboot export HOME="${HOME}" && ${HOME}/providerscripts/utilities/housekeeping/RemoveExpiredLocks.sh reboot" >> /var/spool/cron/crontabs/root
+/bin/echo "@reboot export HOME="${HOME}" && ${HOME}/providerscripts/utilities/status/LoadMonitoring.sh 'reboot'" >> /var/spool/cron/crontabs/root
+/bin/echo "@reboot export HOME="${HOME}" && ${HOME}/providerscripts/utilities/status/CheckNetworkManagerStatus.sh" >> /var/spool/cron/crontabs/root
 
 #If we are building for production, then these scripts are also installed in the crontab. If it's for development then they are not
 #installed.
 if ( [ "${PRODUCTION}" = "1" ] )
 then
-        /bin/echo "*/2 * * * * export HOME="${HOMEDIR}" && ${HOME}/cron/PerformScalingFromCron.sh" >> /var/spool/cron/crontabs/root
-        /bin/echo "*/3 * * * * export HOME="${HOMEDIR}" && ${HOME}/cron/DeadOrAliveFromCron.sh" >> /var/spool/cron/crontabs/root
-        sleep_period="`/usr/bin/hostname | /bin/sed 's/NO-//g' | /usr/bin/awk -F'-' '{print $1}'`"
-        sleep_period="`/usr/bin/expr ${sleep_period} \* 60`"
-        #/bin/echo "30 8 * * *  export HOME="${HOMEDIR}" && /bin/sleep ${sleep_period} && ${HOME}/providerscripts/utilities/processing/ScalingUpdateEvent.sh 5" >> /var/spool/cron/crontabs/root
-        #/bin/echo "30 17 * * *  export HOME="${HOMEDIR}" && /bin/sleep ${sleep_period} && ${HOME}/providerscripts/utilities/processing/ScalingUpdateEvent.sh 3" >> /var/spool/cron/crontabs/root
+        /bin/echo "*/2 * * * * export HOME="${HOME}" && ${HOME}/cron/PerformScalingFromCron.sh" >> /var/spool/cron/crontabs/root
+        /bin/echo "*/3 * * * * export HOME="${HOME}" && ${HOME}/cron/DeadOrAliveFromCron.sh" >> /var/spool/cron/crontabs/root
+        #/bin/echo "30 8 * * *  export HOME="${HOME}" && ${HOME}/providerscripts/utilities/processing/ScalingUpdateEvent.sh 5" >> /var/spool/cron/crontabs/root
+        #/bin/echo "30 17 * * *  export HOME="${HOME}" && ${HOME}/providerscripts/utilities/processing/ScalingUpdateEvent.sh 3" >> /var/spool/cron/crontabs/root
 fi
 
-/bin/echo "30 3 * * *  export HOME="${HOMEDIR}" && ${HOME}/providerscripts/utilities/housekeeping/RemoveExpiredLogs.sh" >> /var/spool/cron/crontabs/root
+/bin/echo "30 3 * * *  export HOME="${HOME}" && ${HOME}/providerscripts/utilities/housekeeping/RemoveExpiredLogs.sh" >> /var/spool/cron/crontabs/root
 
 #Install our new crontab
 /usr/bin/crontab /var/spool/cron/crontabs/root
