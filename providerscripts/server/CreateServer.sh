@@ -36,6 +36,7 @@ BUILDOS_VERSION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh
 REGION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
 DDOS_PROTECTION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'ENABLEDDOSPROTECTION'`"
 VPC_IP_RANGE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'VPCIPRANGE'`"
+VPC_NAME="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'VPCNAME'`"
 KEY_ID="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'KEYID'`"
 BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
 ACTIVE_FIREWALL="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'ACTIVEFIREWALLS'`"
