@@ -31,6 +31,8 @@ manage_etc_hosts: true
 
 bootcmd:
   - cloud-init-per once setlocales /bin/sed -i '/en_GB.UTF/s/\(^# \)\(.*$\)/\2/g' /etc/locale.gen
+  - cloud-init-per once /bin/echo LANG="en_GB.UTF-8" > /etc/default/locale
+
 locale: en_GB
 keyboard:
   layout: gb
