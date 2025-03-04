@@ -24,7 +24,7 @@ buildno="${1}"
 trap "cleanup ${buildno}" TERM
 start=`/bin/date +%s`
 
-SIZE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SIZE'`"
+SIZE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'WSSERVERTYPE'`"
 REGION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
 ALGORITHM="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'ALGORITHM'`"
 BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
