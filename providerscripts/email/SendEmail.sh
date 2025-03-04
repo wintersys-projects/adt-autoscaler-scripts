@@ -20,14 +20,13 @@
 # along with The Agile Deployment Toolkit.  If not, see <http://www.gnu.org/licenses/>.
 #####################################################################################
 #####################################################################################
-#set -x
+set -x
 
 subject="$1"
 message="$2"
 level="$3"
 to_address="$4"
-
-message="MESSSAGE TIMESTAMP: `/usr/bin/date` \n ${message}"
+content_type="$5"
 
 FROM_ADDRESS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SYSTEMFROMEMAILADDRESS'`"
 FROM_NAME="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'WEBSITEDISPLAYNAME'`"
@@ -87,7 +86,12 @@ then
                         /bin/touch ${HOME}/runtime/SSMTP_INITIALISED
                 fi
 
-                /bin/echo "${message}" | /usr/bin/mail -s "${subject}" -a "From: ${FROM_NAME} <${FROM_ADDRESS}>" "${TO_ADDRESS}" 
+                if ( [ "${content_type}" = "HTML" ] )
+                then
+                        /bin/echo "${message}" | /usr/bin/mail -s "${subject}" -a "From: ${FROM_NAME} <${FROM_ADDRESS}>" "${TO_ADDRESS}" --content-type="text/html"
+                else
+                        /bin/echo "${message}" | /usr/bin/mail -s "${subject}" -a "From: ${FROM_NAME} <${FROM_ADDRESS}>" "${TO_ADDRESS}"
+                fi
         fi
 else
         /bin/echo "${0} `/bin/date`:Email not sent because of missing parameter(s)"
