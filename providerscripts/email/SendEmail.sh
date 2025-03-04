@@ -1,10 +1,11 @@
 #!/bin/sh
-##########################################################################################
-# Description : We can use this script to send emails from within our scripts
-# These will generally be sysem emails or status emails
-# Date : 10-11-2016
-# Author : Peter Winter
-##########################################################################################
+################################################################################
+# Description: This script is used for sending system emails. Scripts can make use
+# of this whenever they need to send a system notification. Notifications are always
+# sent to the same email address which is defined at build time.
+# Date: 16-11-2016
+# Author: Peter Winter
+##################################################################################
 # License Agreement:
 # This file is part of The Agile Deployment Toolkit.
 # The Agile Deployment Toolkit is free software: you can redistribute it and/or modify
@@ -17,8 +18,8 @@
 # GNU General Public License for more details.
 # You should have received a copy of the GNU General Public License
 # along with The Agile Deployment Toolkit.  If not, see <http://www.gnu.org/licenses/>.
-########################################################################################
-########################################################################################
+#####################################################################################
+#####################################################################################
 #set -x
 
 subject="$1"
@@ -34,7 +35,7 @@ TO_ADDRESS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SYS
 
 if ( [ "${to_address}" != "" ] )
 then
-	TO_ADDRESS="${to_address}"
+        TO_ADDRESS="${to_address}"
 fi
 
 USERNAME="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'EMAILUSERNAME'`"
@@ -45,28 +46,49 @@ if ( [ "${level}" != "MANDATORY" ] && [ "`${HOME}/providerscripts/utilities/conf
 then
    exit
 fi
-
 if ( [ "${FROM_ADDRESS}" != "" ] && [ "${TO_ADDRESS}" != "" ] && [ "${USERNAME}" != "" ] && [ "${PASSWORD}" != "" ] && [ "${subject}" != "" ] && [ "${message}" != "" ] )
 then
-	if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'EMAILUTIL:sendemail'`" = "1" ] )	
-	then
-		if ( [ "${EMAIL_PROVIDER}" = "1" ] )
-		then
-			/usr/bin/sendemail -o tls=no -f ${FROM_ADDRESS} -t ${TO_ADDRESS} -s smtp-pulse.com:2525 -xu ${USERNAME} -xp ${PASSWORD} -u "${subject} `/bin/date`" -m ${message}
-		fi
-		if ( [ "${EMAIL_PROVIDER}" = "2" ] )
-		then
-			/usr/bin/sendemail -o tls=no -f ${FROM_ADDRESS} -t ${TO_ADDRESS} -s in-v3.mailjet.com:587 -xu ${USERNAME} -xp ${PASSWORD} -u "${subject} `/bin/date`" -m ${message}    
-		fi
-		if ( [ "${EMAIL_PROVIDER}" = "3" ] )
-		then
-			/usr/bin/sendemail -o tls=no -f ${FROM_ADDRESS} -t ${TO_ADDRESS} -s email-smtp.eu-west-1.amazonaws.com -xu ${USERNAME} -xp ${PASSWORD} -u "${subject} `/bin/date`" -m ${message}
-		fi
-  	fi
-      	if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'EMAILUTIL:mail'`" = "1" ] )
-    	then
-        	/bin/echo "${message}" | /usr/bin/mail -s "${subject}" -a "From: ${FROM_NAME} <${FROM_ADDRESS}>" "${TO_ADDRESS}" 
-    	fi
+        if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'EMAILUTIL:sendemail'`" = "1" ] )
+        then
+                if ( [ "${EMAIL_PROVIDER}" = "1" ] )
+                then
+                        /usr/bin/sendemail -o tls=no -f ${FROM_ADDRESS} -t ${TO_ADDRESS} -s smtp-pulse.com:2525 -xu ${USERNAME} -xp ${PASSWORD} -u "${subject} `/bin/date`" -m ${message}
+                fi
+                if ( [ "${EMAIL_PROVIDER}" = "2" ] )
+                then
+                        /usr/bin/sendemail -o tls=no -f ${FROM_ADDRESS} -t ${TO_ADDRESS} -s in-v3.mailjet.com:587 -xu ${USERNAME} -xp ${PASSWORD} -u "${subject} `/bin/date`" -m ${message}    
+                fi
+                if ( [ "${EMAIL_PROVIDER}" = "3" ] )
+                then
+                        /usr/bin/sendemail -o tls=no -f ${FROM_ADDRESS} -t ${TO_ADDRESS} -s email-smtp.eu-west-1.amazonaws.com -xu ${USERNAME} -xp ${PASSWORD} -u "${subject} `/bin/date`" -m ${message}
+                fi
+        fi
+        if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'EMAILUTIL:ssmtp'`" = "1" ] )
+        then
+                if ( [ ! -f ${HOME}/runtime/SSMTP_INITIALISED ] )
+                then
+                        if ( [ "${EMAIL_PROVIDER}" = "1" ] )
+                        then
+                                /bin/echo "mailhub=smtp-pulse.com:2525" >> /etc/ssmtp/ssmtp.conf
+                        fi
+                        if ( [ "${EMAIL_PROVIDER}" = "2" ] )
+                        then
+                                /bin/echo "mailhub=in-v3.mailjet.com:587" >> /etc/ssmtp/ssmtp.conf
+                        fi
+                        if ( [ "${EMAIL_PROVIDER}" = "3" ] )
+                        then
+                                /bin/echo "mailhub=email-smtp.eu-west-1.amazonaws.com" >> /etc/ssmtp/ssmtp.conf
+                        fi
+  
+                        /bin/echo "AuthUser=${USERNAME}" >> /etc/ssmtp/ssmtp.conf
+                        /bin/echo "AuthPass=${PASSWORD}" >> /etc/ssmtp/ssmtp.conf
+                        /bin/echo "FromLineOverride=YES" >> /etc/ssmtp/ssmtp.conf
+                        /bin/echo "UseSTARTTLS=YES" >> /etc/ssmtp/ssmtp.conf
+                        /bin/touch ${HOME}/runtime/SSMTP_INITIALISED
+                fi
+
+                /bin/echo "${message}" | /usr/bin/mail -s "${subject}" -a "From: ${FROM_NAME} <${FROM_ADDRESS}>" "${TO_ADDRESS}" 
+        fi
 else
-	/bin/echo "${0} `/bin/date`:Email not sent because of missing parameter(s)" 
+        /bin/echo "${0} `/bin/date`:Email not sent because of missing parameter(s)"
 fi
