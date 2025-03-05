@@ -45,7 +45,7 @@ then
 		#/usr/sbin/iptables -I INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
       		#/usr/sbin/iptables -I INPUT -m state -p tcp --dport 443 --state ESTABLISHED -j ACCEPT
       		#/usr/sbin/iptables -I INPUT -m state -p tcp --dport 1035 --state ESTABLISHED -j ACCEPT
-	      	/usr/sbin/iptables -I INPUT -m state -p tcp --state ESTABLISHED -j ACCEPT
+	      	/usr/sbin/iptables -I INPUT -m state --state ESTABLISHED -j ACCEPT
 		/usr/sbin/iptables -A INPUT -p icmp -m icmp --icmp-type 8 -j DROP
 		/usr/sbin/iptables -A INPUT -i lo -j ACCEPT
 		/usr/sbin/iptables -A OUTPUT -o lo -j ACCEPT
