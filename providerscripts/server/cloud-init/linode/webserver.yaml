@@ -53,12 +53,12 @@ write_files:
   path: /home/XXXXSERVER_USERXXXX/.ssh/config
   owner: 'root:root'
   permissions: '0600'
-- path: /etc/profile
-    content: | 
-      export LANGUAGE=en_GB.UTF-8
-      export LANG=en_GB.UTF-8
-      export LC_ALL=en_GB.UTF-8
-    append: true
+- content: | 
+    export LANGUAGE=en_GB.UTF-8
+    export LANG=en_GB.UTF-8
+    export LC_ALL=en_GB.UTF-8
+  path: /etc/profile
+  append: true
 
 
 package_update: true
