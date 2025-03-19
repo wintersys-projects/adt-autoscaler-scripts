@@ -95,14 +95,14 @@ runcmd:
   - '/bin/chmod 600 /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY_XXXXBUILD_IDENTIFIERXXXX'
   - '/bin/chmod 600 /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY_XXXXBUILD_IDENTIFIERXXXX.pub'
   - '/usr/bin/chown -R XXXXSERVER_USERXXXX:root /home/XXXXSERVER_USERXXXX'
-  - '/bin/sed -i "s/^Port.*/Port XXXXSSH_PORTXXXX/" -e "s/^#Port.*/Port XXXXSSH_PORTXXXX/" /etc/ssh/sshd_config'
-  - '/bin/sed -i "s/^PermitRootLogin/PermitRootLogin no/" -e "s/^#PermitRootLogin/PermitRootLogin no/" /etc/ssh/sshd_config'
-  - '/bin/sed -i "s/^PasswordAuthentication.*/PasswordAuthentication no/g" -e "s/^#PasswordAuthentication.*/PasswordAuthentication no/g" /etc/ssh/sshd_config'
-  - '/bin/sed -i "s/^PermitRootLogin.*/PermitRootLogin no/g" -e "s/^#PermitRootLogin.*/PermitRootLogin no/g" /etc/ssh/sshd_config'
-  - '/bin/sed -i "s/^KbdInteractiveAuthentication.*/KbdInteractiveAuthentication no/g" -e "s/^#KbdInteractiveAuthentication.*/KbdInteractiveAuthentication no/g" /etc/ssh/sshd_config'
-  - '/bin/sed -i "s/^ChallengeResponseAuthentication.*/ChallengeResponseAuthentication no/g" -e "s/^#ChallengeResponseAuthentication.*/ChallengeResponseAuthentication no/g" /etc/ssh/sshd_config'
-  - '/bin/sed -i "s/^AddressFamily.*/AddressFamily inet/g" -e "s/^#AddressFamily.*/AddressFamily inet/g" /etc/ssh/sshd_config'
-  - '/usr/bin/systemctl restart ssh'
+  - /bin/sed -i "s/^Port.*/Port XXXXSSH_PORTXXXX/" -e "s/^#Port.*/Port XXXXSSH_PORTXXXX/" /etc/ssh/sshd_config
+  - /bin/sed -i "s/^PermitRootLogin/PermitRootLogin no/" -e "s/^#PermitRootLogin/PermitRootLogin no/" /etc/ssh/sshd_config
+  - /bin/sed -i "s/^PasswordAuthentication.*/PasswordAuthentication no/g" -e "s/^#PasswordAuthentication.*/PasswordAuthentication no/g" /etc/ssh/sshd_config
+  - /bin/sed -i "s/^PermitRootLogin.*/PermitRootLogin no/g" -e "s/^#PermitRootLogin.*/PermitRootLogin no/g" /etc/ssh/sshd_config
+  - /bin/sed -i "s/^KbdInteractiveAuthentication.*/KbdInteractiveAuthentication no/g" -e "s/^#KbdInteractiveAuthentication.*/KbdInteractiveAuthentication no/g" /etc/ssh/sshd_config
+  - /bin/sed -i "s/^ChallengeResponseAuthentication.*/ChallengeResponseAuthentication no/g" -e "s/^#ChallengeResponseAuthentication.*/ChallengeResponseAuthentication no/g" /etc/ssh/sshd_config
+  - /bin/sed -i "s/^AddressFamily.*/AddressFamily inet/g" -e "s/^#AddressFamily.*/AddressFamily inet/g" /etc/ssh/sshd_config
+  - /usr/bin/systemctl restart ssh
   - 'export HOME=/home/XXXXSERVER_USERXXXX && /bin/sh ${HOME}/installscripts/InstallPackageManager.sh' 
   - 'export HOME=/home/XXXXSERVER_USERXXXX && /bin/sh ${HOME}/installscripts/InstallFirewall.sh'
   - 'export HOME=/home/XXXXSERVER_USERXXXX && /bin/sh ${HOME}/installscripts/InstallDatastoreTools.sh'
