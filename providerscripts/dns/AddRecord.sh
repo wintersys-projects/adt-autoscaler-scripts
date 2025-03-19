@@ -58,15 +58,14 @@ then
 fi
 
 subdomain="`/bin/echo ${4} | /usr/bin/awk -F'.' '{print $1}'`"
-#domain_url="`/bin/echo ${4} | /usr/bin/cut -d'.' -f2-`"
-domain_url="${4}"
+domain_url="`/bin/echo ${4} | /usr/bin/cut -d'.' -f2-`"
 ip="${5}"
 dns="${6}"
 
 if ( [ "${dns}" = "linode" ] )
 then
-	domain_id="`/usr/local/bin/linode-cli --json linodes list | /usr/bin/jq -r '.[] | select (.domain | contains("'${domain_url}'")).id'`"
-	/usr/local/bin/linode-cli domains records-create $domain_id --type A --name ${subdomain} --target ${ip} --ttl_sec 120
+        domain_id="`/usr/local/bin/linode-cli --json domains list | /usr/bin/jq -r '.[] | select (.domain | contains("'${domain_url}'")).id'`"
+        /usr/local/bin/linode-cli domains records-create $domain_id --type A --name ${subdomain} --target ${ip} --ttl_sec 120
 fi
 
 subdomain="`/bin/echo ${4} | /usr/bin/awk -F'.' '{print $1}'`"
