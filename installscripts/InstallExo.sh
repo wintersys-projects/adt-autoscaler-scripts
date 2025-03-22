@@ -22,14 +22,14 @@
 
 if ( [ "${1}" != "" ] )
 then
-    buildos="${1}"
+	buildos="${1}"
 fi
 
 if ( [ "${buildos}" = "" ] )
 then
-    BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
+	BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
 else 
-    BUILDOS="${buildos}"
+	BUILDOS="${buildos}"
 fi
 
 export DEBIAN_FRONTEND=noninteractive
@@ -43,4 +43,5 @@ if ( [ "${BUILDOS}" = "debian" ] )
 then
 	/usr/bin/curl -fsSL https://raw.githubusercontent.com/exoscale/cli/master/install-latest.sh | /bin/sh 	
 fi
+
 /bin/touch ${HOME}/runtime/installedsoftware/InstallExo.sh	
