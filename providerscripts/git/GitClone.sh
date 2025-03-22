@@ -64,7 +64,7 @@ then
 		then
 			/usr/bin/git clone https://${repository_username}@gitlab.com/${repository_ownername}/${repository_name}.git
 		else
-		   /usr/bin/git clone https://${repository_username}:${repository_password}@gitlab.com/${repository_ownername}/${repository_name}.git
+			/usr/bin/git clone https://${repository_username}:${repository_password}@gitlab.com/${repository_ownername}/${repository_name}.git
 		fi
 	fi
 fi
