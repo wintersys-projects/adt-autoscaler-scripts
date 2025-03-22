@@ -71,8 +71,8 @@ fi
 
 endit ()
 {
-   down_ip="${1}"
-   reason="${2}"
+	down_ip="${1}"
+	reason="${2}"
 
    #We don't want to go down below 2 webservers
    
@@ -90,11 +90,11 @@ endit ()
 			#before we destroy the server machine that that IP address still might be resolving to and giving us timeouts and so on
 			/bin/sleep 120
 			${HOME}/providerscripts/email/SendEmail.sh "A WEBSERVER IS BEING SHUTDOWN ${down_ip}" "${reason}" "INFO"
-   
+    
    			if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beenonline/${down_ip}"`" != "" ] )
 			then
 				${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beenonline/${down_ip}"  
-    			fi
+			fi
        
 			/usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=3 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${down_ip} "${SUDO} ${HOME}/providerscripts/utilities/housekeeping/ShutdownThisWebserver.sh"
 			/bin/echo "${0} `/bin/date`: Webserver with ip address: ${down_ip}  has been shutdown" 
@@ -110,27 +110,27 @@ endit ()
 
 probe_by_ssh ()
 {
-		connectable="0"
-		probecount="0"
+	connectable="0"
+	probecount="0"
 	
-		while ( [ "${connectable}" = "0" ] && [ "${probecount}" -lt "2" ] )
-		do
-			if ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=2 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "/bin/ls ${HOME}/runtime/AUTOSCALED_WEBSERVER_ONLINE" 2>/dev/null`" != "" ] ||  [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=2 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "/bin/ls ${HOME}/runtime/INITIAL_BUILD_WEBSERVER_ONLINE" 2>/dev/null`" != "" ] )
-			then
-				connectable="1"
-			else 
-				connectable="0"
-			fi
-			probecount="`/usr/bin/expr ${probecount} + 1`"
-	   done
-
-	   /bin/echo "${ip}" >> ${HOME}/runtime/probed_ips/processed_ips.dat
-	   
-	   if ( [ "${connectable}" = "0" ] )
-	   then
-			/bin/echo "${0} `/bin/date`: Webserver ${ip} was found to be offline because it couldn't be contacted over SSH" 
-			/bin/echo "${ip}" >> ${HOME}/runtime/probed_ips/failed_probe_ssh_ips.dat
+	while ( [ "${connectable}" = "0" ] && [ "${probecount}" -lt "2" ] )
+	do
+		if ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=2 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "/bin/ls ${HOME}/runtime/AUTOSCALED_WEBSERVER_ONLINE" 2>/dev/null`" != "" ] ||  [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=10 -o ConnectionAttempts=2 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "/bin/ls ${HOME}/runtime/INITIAL_BUILD_WEBSERVER_ONLINE" 2>/dev/null`" != "" ] )
+		then
+			connectable="1"
+		else 
+			connectable="0"
 		fi
+		probecount="`/usr/bin/expr ${probecount} + 1`"
+	done
+
+	/bin/echo "${ip}" >> ${HOME}/runtime/probed_ips/processed_ips.dat
+	   
+	if ( [ "${connectable}" = "0" ] )
+	then
+		/bin/echo "${0} `/bin/date`: Webserver ${ip} was found to be offline because it couldn't be contacted over SSH" 
+		/bin/echo "${ip}" >> ${HOME}/runtime/probed_ips/failed_probe_ssh_ips.dat
+	fi
 }
 
 probe_by_curl()
@@ -146,27 +146,26 @@ probe_by_curl()
 			status="down"
 		fi
 		probecount="`/usr/bin/expr ${probecount} + 1`"
-	 done
+	done
 
-	 /bin/echo "${ip}" >> ${HOME}/runtime/probed_ips/processed_ips.dat
+	/bin/echo "${ip}" >> ${HOME}/runtime/probed_ips/processed_ips.dat
 
-	 if ( [ "${status}" = "down" ] )
-	 then
-			/bin/echo "${0} `/bin/date`: Webserver ${ip} was found to be offline because it couldn't be contacted using curl" 
-			/bin/echo "${ip}" >> ${HOME}/runtime/probed_ips/failed_probe_curl_ips.dat
-	  fi
+	if ( [ "${status}" = "down" ] )
+	then
+		/bin/echo "${0} `/bin/date`: Webserver ${ip} was found to be offline because it couldn't be contacted using curl" 
+		/bin/echo "${ip}" >> ${HOME}/runtime/probed_ips/failed_probe_curl_ips.dat
+	fi
 }
 
 
 if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh STATIC_SCALE:*`" = "" ] )
 then
 	/bin/echo "${0} `/bin/date`: Failed to get valid number of webservers to scale to the value I got was: ${NO_WEBSERVERS}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-        ${HOME}/providerscripts/email/SendEmail.sh "COULDN'T GET SCALING VALUE" "I failed to get a valid scaling value the value I got was {${NO_WEBSERVERS}). I am making no alteration to the scaling setting." "ERROR"
+	${HOME}/providerscripts/email/SendEmail.sh "COULDN'T GET SCALING VALUE" "I failed to get a valid scaling value the value I got was {${NO_WEBSERVERS}). I am making no alteration to the scaling setting." "ERROR"
 else
 	webserver_values="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh STATIC_SCALE:* | /bin/sed -e 's/STATIC_SCALE//g' -e 's/:/ /g' -e 's/^ //g'`"
 	autoscaler_index="`/usr/bin/expr ${autoscaler_no} + 1`"	
  	NO_WEBSERVERS="`/bin/echo ${webserver_values} | /usr/bin/awk "{print \\$$autoscaler_index}"`" 
-	#NO_WEBSERVERS="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh STATIC_SCALE:* | /usr/bin/awk -F':' '{print $NF}'`"
 fi
 
 noactivewebservers="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}-${autoscaler_no}" ${CLOUDHOST} | /usr/bin/tr '\n' ' ' | /usr/bin/wc -w`"
@@ -175,10 +174,10 @@ noactivewebservers="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.
 count="0"
 while ( [ "${noactivewebservers}" -gt "${NO_WEBSERVERS}" ] && [ "${count}" -lt "5" ] )
 do
-   endit "`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}-${autoscaler_no}" ${CLOUDHOST} | /usr/bin/head -1`" "Because the machine was excess to requirements according to the scaling policy"
-   /bin/sleep 30
-   noactivewebservers="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}-${autoscaler_no}" ${CLOUDHOST} | /usr/bin/tr '\n' ' ' | /usr/bin/wc -w`"  
-   count="`/usr/bin/expr ${count} + 1`"
+	endit "`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}-${autoscaler_no}" ${CLOUDHOST} | /usr/bin/head -1`" "Because the machine was excess to requirements according to the scaling policy"
+	/bin/sleep 30
+	noactivewebservers="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}-${autoscaler_no}" ${CLOUDHOST} | /usr/bin/tr '\n' ' ' | /usr/bin/wc -w`"  
+	count="`/usr/bin/expr ${count} + 1`"
 done
 
 all_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}-${autoscaler_no}" ${CLOUDHOST}`"
@@ -199,7 +198,7 @@ for ip in ${online_ips}
 do
 	if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh beingbuiltips/ recursive | /bin/grep ${ip}`" != "" ] )
 	then
-	   online_ips="`/bin/echo ${online_ips} | /bin/sed "s/${ip}//g"`"
+		online_ips="`/bin/echo ${online_ips} | /bin/sed "s/${ip}//g"`"
 	fi
 done
 
@@ -260,10 +259,10 @@ processed_ips="`/bin/cat ${HOME}/runtime/probed_ips/processed_ips.dat`"
 
 for ip in ${processed_ips}
 do
-		if ( [ "`/bin/echo ${probed_ips} | /bin/grep ${ip}`" != "" ] )
-		then
-			online_ips="`/bin/echo ${online_ips} | /bin/sed "s/${ip}//g"`"
-		fi
+	if ( [ "`/bin/echo ${probed_ips} | /bin/grep ${ip}`" != "" ] )
+	then
+		online_ips="`/bin/echo ${online_ips} | /bin/sed "s/${ip}//g"`"
+	fi
 done
 
 /bin/echo "4: Current webserver online webserver list is : `/bin/echo ${online_ips} | /bin/sed 's/\n//g'`"
@@ -304,8 +303,8 @@ for ip in ${online_ips}
 do
 	if ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=5 -o ConnectionAttempts=2 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "/usr/bin/find ${HOME}/runtime/BUILD_IN_PROGRESS -mmin +30 2>/dev/null"`" != "" ] )
 	then
-	   /bin/echo "${0} `/bin/date`: Webserver ${ip} was found to be offline because it looks as if the build process failed to progress"
-	   online_ips="`/bin/echo ${online_ips} | /bin/sed "s/${ip}//g"`"
+		/bin/echo "${0} `/bin/date`: Webserver ${ip} was found to be offline because it looks as if the build process failed to progress"
+		online_ips="`/bin/echo ${online_ips} | /bin/sed "s/${ip}//g"`"
 	fi
 done
 
@@ -320,8 +319,8 @@ then
 	do
 		if ( [ "`/bin/echo ${online_ips} | /bin/grep ${ip}`" = "" ] )
 		then
-		   offline_ips="${offline_ips} ${ip}"
-		 fi
+			offline_ips="${offline_ips} ${ip}"
+		fi
 	done
 fi
 
@@ -348,8 +347,8 @@ then
 				${HOME}/autoscaler/RemoveIPFromDNS.sh ${public_ip}
 				if ( [ "`/bin/grep ${ip} ${HOME}/runtime/potentialenders/listofipstoend.dat | /usr/bin/wc -l`" -ge "2" ] )
 				then
-					 /bin/sed -i "s/${ip}//g" ${HOME}/runtime/potentialenders/listofipstoend.dat
-					 endit ${ip} "Webserver was found to be offline please check your logs (${HOME}/logs/deadoralive${logdate}) for the more detailed reason"
+					/bin/sed -i "s/${ip}//g" ${HOME}/runtime/potentialenders/listofipstoend.dat
+					endit ${ip} "Webserver was found to be offline please check your logs (${HOME}/logs/deadoralive${logdate}) for the more detailed reason"
 				fi
 			fi
 		fi
@@ -380,10 +379,10 @@ do
 	if ( [ "${pid}" != "" ] && [ "`/usr/bin/ps -o etime= -p "${pid}" | /usr/bin/awk -F':' '{print $1}' | /bin/sed 's/ //g'`" -ge "30" ] )
 	then
 		/bin/echo "${0} `/bin/date`: Killed BuildWebserver process ${pid} because it seemed to have stalled (been running for more than 30 minutes)" 
-	   /bin/kill ${pid}
-	   /bin/kill -KILL ${pid}
+		/bin/kill ${pid}
+		/bin/kill -KILL ${pid}
 		too_old="1"
-	   /bin/rm ${HOME}/runtime/autoscalelock.file
+		/bin/rm ${HOME}/runtime/autoscalelock.file
 	fi
 done
 
