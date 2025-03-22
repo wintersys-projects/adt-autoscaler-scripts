@@ -27,14 +27,14 @@
 
 if ( [ "${1}" != "" ] )
 then
-    buildos="${1}"
+	buildos="${1}"
 fi
 
 if ( [ "${buildos}" = "" ] )
 then
-    BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
+	BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
 else 
-    BUILDOS="${buildos}"
+	BUILDOS="${buildos}"
 fi
 
 CLOUDHOST="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
@@ -59,7 +59,6 @@ fi
 if ( [ "${CLOUDHOST}" = "linode" ] )
 then
 	/bin/echo "${0} `/bin/date`: Building for the Linode provider" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
-  #  ${HOME}/installscripts/Update.sh "${BUILDOS}"
 	${HOME}/installscripts/InstallLinodeCLI.sh ${BUILDOS}
 	/bin/chmod 400 ${HOME}/.config/linode-cli 
 	/usr/bin/touch ${HOME}/LINODE
