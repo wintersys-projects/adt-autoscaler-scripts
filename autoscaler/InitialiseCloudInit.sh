@@ -1,7 +1,8 @@
 #!/bin/sh
 ##########################################################################################################
-# Description: This script will get a list of all ip addresses registered and active for a particular domain
-# If an IP address appears in this list that machine is basically considerded a "live" webserver
+# Description : This will configure cloud-init scripts for each new  webservers that
+# you want to build. The result of this script is a valid cloud-init script with 
+# live data ready to be passed to a VPS instance when it is provisioned using the CLI
 # Author: Peter Winter
 # Date: 12/01/2017
 #########################################################################################################
@@ -39,7 +40,7 @@ SSH_PORT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh  SSHPO
 
 if ( [ ! -d ${HOME}/runtime/cloud-init ] )
 then
-        /bin/mkdir -p ${HOME}/runtime/cloud-init
+	/bin/mkdir -p ${HOME}/runtime/cloud-init
 fi
 
 /bin/cp ${HOME}/providerscripts/server/cloud-init/${CLOUDHOST}/webserver.yaml ${HOME}/runtime/cloud-init/webserver.yaml
@@ -64,17 +65,17 @@ WEBSERVER_CHOICE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.s
 
 if ( [ "${WEBSERVER_CHOICE}" = "NGINX" ] )
 then
-        /bin/sed -i "s/#XXXXNGINXXXXX//g" ${HOME}/runtime/cloud-init/webserver.yaml 
+	/bin/sed -i "s/#XXXXNGINXXXXX//g" ${HOME}/runtime/cloud-init/webserver.yaml 
 fi
 
 if ( [ "${WEBSERVER_CHOICE}" = "APACHE" ] )
 then
-        /bin/sed -i "s/#XXXXAPACHEXXXX//g" ${HOME}/runtime/cloud-init/webserver.yaml 
+	/bin/sed -i "s/#XXXXAPACHEXXXX//g" ${HOME}/runtime/cloud-init/webserver.yaml 
 fi
 
 if ( [ "${WEBSERVER_CHOICE}" = "LIGHTTPD" ] )
 then
-        /bin/sed -i "s/#XXXXLIGHTTPDXXXX//g" ${HOME}/runtime/cloud-init/webserver.yaml 
+	/bin/sed -i "s/#XXXXLIGHTTPDXXXX//g" ${HOME}/runtime/cloud-init/webserver.yaml 
 fi
 
 DATABASE_INSTALLATION_TYPE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DATABASEINSTALLATIONTYPE'`"
@@ -82,37 +83,37 @@ DATABASE_DBaaS_INSTALLATION_TYPE="`${HOME}/providerscripts/utilities/config/Extr
 
 if ( [ "${DATABASE_INSTALLATION_TYPE}" = "Maria" ] )
 then
-        if ( [ "`/bin/grep ^MARIADB:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
-        then
-                /bin/sed -i 's/#XXXXMARIADB_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
-        fi
+	if ( [ "`/bin/grep ^MARIADB:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
+	then
+		/bin/sed -i 's/#XXXXMARIADB_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
+	fi
 fi
 
 if ( [ "`/bin/echo ${DATABASE_DBaaS_INSTALLATION_TYPE} | /bin/grep 'MySQL'`" != "" ] )
 then
-        if ( [ "`/bin/grep ^MARIADB:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
-        then
-                /bin/sed -i 's/#XXXXMARIADB_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
-        else
-                /bin/sed -i 's/#XXXXMYSQL_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
-        fi
+	if ( [ "`/bin/grep ^MARIADB:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
+	then
+		/bin/sed -i 's/#XXXXMARIADB_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
+	else
+		/bin/sed -i 's/#XXXXMYSQL_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
+	fi
 fi
 
 
 if ( [ "${DATABASE_INSTALLATION_TYPE}" = "Postgres" ]  )
 then
-        if ( [ "`/bin/grep ^POSTGRES:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
-        then
-                /bin/sed -i 's/#XXXXPOSTRGESQL_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
-        fi
+	if ( [ "`/bin/grep ^POSTGRES:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
+	then
+		/bin/sed -i 's/#XXXXPOSTRGESQL_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
+	fi
 fi
 
 if ( [ "`/bin/echo ${DATABASE_DBaaS_INSTALLATION_TYPE} | /bin/grep 'Postgres'`" != "" ] )
 then
-        if ( [ "`/bin/grep ^POSTGRES:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
-        then
-                /bin/sed -i 's/#XXXXPOSTGRES_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
-        fi
+	if ( [ "`/bin/grep ^POSTGRES:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
+	then
+		/bin/sed -i 's/#XXXXPOSTGRES_CLIENTXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
+	fi
 fi
 
 APPLICATION_LANGUAGE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'APPLICATIONLANGUAGE'`"
@@ -120,19 +121,18 @@ PHP_VERSION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'PH
 
 if ( [ "${APPLICATION_LANGUAGE}" = "PHP" ] )
 then
-        if ( [ "`/bin/grep ^PHP:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
-        then
-                /bin/sed  -i 's/#XXXXPHPXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
-                /bin/sed  -i "s/XXXXPHP_VERSIONXXXX/${PHP_VERSION}/g" ${HOME}/runtime/cloud-init/webserver.yaml
+	if ( [ "`/bin/grep ^PHP:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
+	then
+		/bin/sed  -i 's/#XXXXPHPXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
+		/bin/sed  -i "s/XXXXPHP_VERSIONXXXX/${PHP_VERSION}/g" ${HOME}/runtime/cloud-init/webserver.yaml
                 
-                PHP_VERSION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'PHPVERSION'`"
-                php_modules="`/bin/grep ^PHP ${HOME}/runtime/buildstyles.dat | /bin/sed 's/^PHP:cloud-init://g' | /usr/bin/awk -F'|' '{print $1}' | /bin/sed 's/:/ /g'`"
-                php_module_list=""
-                for php_module in ${php_modules}
-                do
-                        php_modules_list="${php_modules_list} php${PHP_VERSION}-${php_module}"
-                done
-        fi
-        /bin/sed -i "s/XXXXPHP_MODULESXXXX/${php_modules_list}/" ${HOME}/runtime/cloud-init/webserver.yaml
-
+		PHP_VERSION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'PHPVERSION'`"
+		php_modules="`/bin/grep ^PHP ${HOME}/runtime/buildstyles.dat | /bin/sed 's/^PHP:cloud-init://g' | /usr/bin/awk -F'|' '{print $1}' | /bin/sed 's/:/ /g'`"
+		php_module_list=""
+		for php_module in ${php_modules}
+		do
+			php_modules_list="${php_modules_list} php${PHP_VERSION}-${php_module}"
+		done
+	fi
+	/bin/sed -i "s/XXXXPHP_MODULESXXXX/${php_modules_list}/" ${HOME}/runtime/cloud-init/webserver.yaml
 fi
