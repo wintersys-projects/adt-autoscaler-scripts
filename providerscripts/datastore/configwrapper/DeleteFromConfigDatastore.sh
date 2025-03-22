@@ -30,19 +30,19 @@ configbucket="`/bin/echo "${WEBSITE_URL}"-config | /bin/sed 's/\./-/g'`-${TOKEN}
 
 if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
 then
-        datastore_tool="/usr/bin/s3cmd --force del "
+	datastore_tool="/usr/bin/s3cmd --force del "
 elif ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ]  )
 then
-        host_base="`/bin/grep host_base /root/.s5cfg | /bin/grep host_base | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
-        datastore_tool="/usr/bin/s5cmd --credentials-file /root/.s5cfg --endpoint-url https://${host_base} rm "
+	host_base="`/bin/grep host_base /root/.s5cfg | /bin/grep host_base | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
+	datastore_tool="/usr/bin/s5cmd --credentials-file /root/.s5cfg --endpoint-url https://${host_base} rm "
 fi
 
 count="0"
 while ( [ "`${datastore_tool} s3://${configbucket}/$1 2>&1 >/dev/null | /bin/grep "ERROR"`" != "" ] && [ "${count}" -lt "5" ] )
 do
-        /bin/echo "An error has occured `/usr/bin/expr ${count} + 1` times in script ${0}"
-        /bin/sleep 5
-        count="`/usr/bin/expr ${count} + 1`"
+	/bin/echo "An error has occured `/usr/bin/expr ${count} + 1` times in script ${0}"
+	/bin/sleep 5
+	count="`/usr/bin/expr ${count} + 1`"
 done 
 
 
