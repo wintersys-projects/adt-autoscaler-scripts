@@ -24,14 +24,14 @@ HOME="`/bin/cat /home/homedir.dat`"
 
 if ( [ "${1}" != "" ] )
 then
-    buildos="${1}"
+	buildos="${1}"
 fi
 
 if ( [ "${buildos}" = "" ] )
 then
-    BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
+	BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
 else 
-    BUILDOS="${buildos}"
+	BUILDOS="${buildos}"
 fi
 
 
@@ -49,39 +49,33 @@ install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y inst
 
 if ( [ "${apt}" != "" ] )
 then
-        if ( [ "${BUILDOS}" = "ubuntu" ] )
-        then
-                if ( [ -f /usr/sbin/ufw ] )                                                                            
-                then                                                                                                  
-                        /usr/sbin/ufw disable                                                                          
-                fi      
-
-            eval ${install_command} iptables
-e
-
-
-                /bin/echo iptables-persistent iptables-persistent/autosave_v4 boolean true | /usr/bin/sudo debconf-set-selections
-                /bin/echo iptables-persistent iptables-persistent/autosave_v4 boolean true | /usr/bin/sudo debconf-set-selections 
-
-                eval ${install_command}  netfilter-persistent     
-                eval ${install_command}  iptables-persistent     
-        fi
-
-        if ( [ "${BUILDOS}" = "debian" ] )
-        then
-                if ( [ -f /usr/sbin/ufw ] )                                                                             
-                then                                                                                                    
-                        /usr/sbin/ufw disable                                                                           
-                fi        
+	if ( [ "${BUILDOS}" = "ubuntu" ] )
+	then
+		if ( [ -f /usr/sbin/ufw ] )                                                                            
+		then                                                                                                  
+			/usr/sbin/ufw disable                                                                          
+		fi      
 		
+  		eval ${install_command} iptables
+		/bin/echo iptables-persistent iptables-persistent/autosave_v4 boolean true | /usr/bin/sudo debconf-set-selections
+		/bin/echo iptables-persistent iptables-persistent/autosave_v4 boolean true | /usr/bin/sudo debconf-set-selections 
+		eval ${install_command}  netfilter-persistent     
+		eval ${install_command}  iptables-persistent     
+	
+ 	fi
 
-            eval ${install_command} iptables
-
-                /bin/echo iptables-persistent iptables-persistent/autosave_v4 boolean true | /usr/bin/sudo debconf-set-selections
-                /bin/echo iptables-persistent iptables-persistent/autosave_v4 boolean true | /usr/bin/sudo debconf-set-selections 
-
-                eval ${install_command}  netfilter-persistent     
-                eval ${install_command}  iptables-persistent     
-        fi
-	 /bin/touch ${HOME}/runtime/installedsoftware/InstallIPTables.sh	
+	if ( [ "${BUILDOS}" = "debian" ] )
+	then
+		if ( [ -f /usr/sbin/ufw ] )                                                                             
+		then                                                                                                    
+			/usr/sbin/ufw disable                                                                           
+		fi        
+		
+		eval ${install_command} iptables
+		/bin/echo iptables-persistent iptables-persistent/autosave_v4 boolean true | /usr/bin/sudo debconf-set-selections
+		/bin/echo iptables-persistent iptables-persistent/autosave_v4 boolean true | /usr/bin/sudo debconf-set-selections 
+		eval ${install_command}  netfilter-persistent     
+		eval ${install_command}  iptables-persistent     
+	fi
+	/bin/touch ${HOME}/runtime/installedsoftware/InstallIPTables.sh	
 fi
