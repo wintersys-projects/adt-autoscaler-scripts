@@ -64,8 +64,8 @@ dns="${6}"
 
 if ( [ "${dns}" = "linode" ] )
 then
-        domain_id="`/usr/local/bin/linode-cli --json domains list | /usr/bin/jq -r '.[] | select (.domain | contains("'${domain_url}'")).id'`"
-        /usr/local/bin/linode-cli domains records-create $domain_id --type A --name ${subdomain} --target ${ip} --ttl_sec 120
+	domain_id="`/usr/local/bin/linode-cli --json domains list | /usr/bin/jq -r '.[] | select (.domain | contains("'${domain_url}'")).id'`"
+	/usr/local/bin/linode-cli domains records-create $domain_id --type A --name ${subdomain} --target ${ip} --ttl_sec 120
 fi
 
 subdomain="`/bin/echo ${4} | /usr/bin/awk -F'.' '{print $1}'`"
@@ -77,6 +77,6 @@ if ( [ "${dns}" = "vultr" ] )
 then
 	HOME="`/bin/cat /home/homedir.dat`"
 	export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
-        /usr/bin/vultr dns record create ${domainurl} -n ${subdomain} -t A -d "${ip}" --priority=10 --ttl=120
+	/usr/bin/vultr dns record create ${domainurl} -n ${subdomain} -t A -d "${ip}" --priority=10 --ttl=120
 fi
 
