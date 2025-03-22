@@ -22,14 +22,14 @@
 
 if ( [ "${1}" != "" ] )
 then
-    buildos="${1}"
+	buildos="${1}"
 fi
 
 if ( [ "${buildos}" = "" ] )
 then
-    BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
+	BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
 else 
-    BUILDOS="${buildos}"
+	BUILDOS="${buildos}"
 fi
 
 apt=""
@@ -50,19 +50,15 @@ then
  	then
 		if ( [ "${BUILDOS}" = "ubuntu" ] )
 		then
-
-            eval ${install_command} s3cmd
-
+			eval ${install_command} s3cmd
 		fi
 
 		if ( [ "${BUILDOS}" = "debian" ] )
 		then
-
-            eval ${install_command} s3cmd
-
+			eval ${install_command} s3cmd
 		fi
-  	fi
-    	/bin/touch ${HOME}/runtime/installedsoftware/InstallS3CMD.sh				
+	fi
+	/bin/touch ${HOME}/runtime/installedsoftware/InstallS3CMD.sh				
 fi
 
 if ( [ -f ${HOME}/.s3cfg ] )
