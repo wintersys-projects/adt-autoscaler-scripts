@@ -27,75 +27,75 @@ CLOUDHOST="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOU
 
 if ( [ -f ${HOME}/DROPLET ] || [ "${CLOUDHOST}" = "digitalocean" ] )
 then
-        BUILDOS_VERSION="`/bin/echo ${BUILDOS_VERSION} | /bin/sed 's/\./-/g'`"
-        if ( [ "${BUILDOS}" = "ubuntu" ] )
-        then
-                /bin/echo "ubuntu-${BUILDOS_VERSION}-x64"
-elif ( [ "${BUILDOS}" = "debian" ] )
-        then
-                /bin/echo "debian-${BUILDOS_VERSION}-x64"
-        fi
+	BUILDOS_VERSION="`/bin/echo ${BUILDOS_VERSION} | /bin/sed 's/\./-/g'`"
+	if ( [ "${BUILDOS}" = "ubuntu" ] )
+	then
+		/bin/echo "ubuntu-${BUILDOS_VERSION}-x64"
+	elif ( [ "${BUILDOS}" = "debian" ] )
+	then
+		/bin/echo "debian-${BUILDOS_VERSION}-x64"
+	fi
 fi
 
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${CLOUDHOST}" = "exoscale" ] )
 then
-        if ( [ "${BUILDOS}" = "ubuntu" ] )
-        then
-                if ( [ "${BUILDOS_VERSION}" = "20.04" ] )
-                then
-                        /bin/echo "Linux Ubuntu ${BUILDOS_VERSION} LTS 64-bit"
-                elif ( [ "${BUILDOS_VERSION}" = "22.04" ] )
-                then
-                        /bin/echo "Linux Ubuntu ${BUILDOS_VERSION} LTS 64-bit"
-                elif ( [ "${BUILDOS_VERSION}" = "24.04" ] )
-                then
-                        /bin/echo "Linux Ubuntu ${BUILDOS_VERSION} LTS 64-bit"
-                fi
-        elif ( [ "${BUILDOS}" = "debian" ] )
-        then
-                if ( [ "${BUILDOS_VERSION}" = "11" ] )
-                then 
-                        /bin/echo "Linux Debian ${BUILDOS_VERSION} (Bullseye) 64-bit"
-                elif ( [ "${BUILDOS_VERSION}" = "12" ] )
-                then
-                        /bin/echo "Linux Debian ${BUILDOS_VERSION} (Bookworm) 64-bit"
-                fi
-        fi
+	if ( [ "${BUILDOS}" = "ubuntu" ] )
+	then
+		if ( [ "${BUILDOS_VERSION}" = "20.04" ] )
+		then
+			/bin/echo "Linux Ubuntu ${BUILDOS_VERSION} LTS 64-bit"
+		elif ( [ "${BUILDOS_VERSION}" = "22.04" ] )
+		then
+			/bin/echo "Linux Ubuntu ${BUILDOS_VERSION} LTS 64-bit"
+		elif ( [ "${BUILDOS_VERSION}" = "24.04" ] )
+		then
+			/bin/echo "Linux Ubuntu ${BUILDOS_VERSION} LTS 64-bit"
+		fi
+	elif ( [ "${BUILDOS}" = "debian" ] )
+	then
+		if ( [ "${BUILDOS_VERSION}" = "11" ] )
+		then 
+			/bin/echo "Linux Debian ${BUILDOS_VERSION} (Bullseye) 64-bit"
+		elif ( [ "${BUILDOS_VERSION}" = "12" ] )
+		then
+			/bin/echo "Linux Debian ${BUILDOS_VERSION} (Bookworm) 64-bit"
+		fi
+	fi
 fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${CLOUDHOST}" = "linode" ] )
 then
-        if ( [ "${BUILDOS}" = "ubuntu" ] )
-        then
-                if ( [ "${BUILDOS_VERSION}" = "20.04" ] )
-                then
-                        /bin/echo "linode/ubuntu20.04"
-                elif ( [ "${BUILDOS_VERSION}" = "22.04" ] )
-                then
-                        /bin/echo "linode/ubuntu22.04"
-                elif ( [ "${BUILDOS_VERSION}" = "24.04" ] )
-                then
-                        /bin/echo "linode/ubuntu24.04"
-                fi
-        elif ( [ "${BUILDOS}" = "debian" ] )
-        then
-                if ( [ "${BUILDOS_VERSION}" = "11" ] )
-                then 
-                        /bin/echo "linode/debian11"
-                elif ( [ "${BUILDOS_VERSION}" = "12" ] )
-                then
-                        /bin/echo "linode/debian12"
-                fi
-        fi
+	if ( [ "${BUILDOS}" = "ubuntu" ] )
+	then
+		if ( [ "${BUILDOS_VERSION}" = "20.04" ] )
+		then
+			/bin/echo "linode/ubuntu20.04"
+		elif ( [ "${BUILDOS_VERSION}" = "22.04" ] )
+		then
+			/bin/echo "linode/ubuntu22.04"
+		elif ( [ "${BUILDOS_VERSION}" = "24.04" ] )
+		then
+			/bin/echo "linode/ubuntu24.04"
+		fi
+	elif ( [ "${BUILDOS}" = "debian" ] )
+	then
+		if ( [ "${BUILDOS_VERSION}" = "11" ] )
+		then 
+			/bin/echo "linode/debian11"
+		elif ( [ "${BUILDOS_VERSION}" = "12" ] )
+		then
+			/bin/echo "linode/debian12"
+		fi
+	fi
 fi
 
 if ( [ -f ${HOME}/VULTR ] || [ "${CLOUDHOST}" = "vultr" ] )
 then
-        if ( [ "${BUILDOS}" = "ubuntu" ] )
-        then
-                /bin/echo "Ubuntu ${BUILDOS_VERSION} LTS x64"
-elif ( [ "${BUILDOS}" = "debian" ] )
-        then
-                /bin/echo "Debian ${BUILDOS_VERSION} x64"
-        fi
+	if ( [ "${BUILDOS}" = "ubuntu" ] )
+	then
+		/bin/echo "Ubuntu ${BUILDOS_VERSION} LTS x64"
+	elif ( [ "${BUILDOS}" = "debian" ] )
+	then
+		/bin/echo "Debian ${BUILDOS_VERSION} x64"
+	fi
 fi
