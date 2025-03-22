@@ -51,8 +51,8 @@ if ( [ "${dns}" = "exoscale" ] )
 then
 	zone="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
 	/usr/bin/exo dns remove ${domainurl} ${recordid} -Q -f --zone ${zone}
-   #Alternative
-   # /usr/bin/curl  -H "X-DNS-Token: ${authkey}"  -H 'Accept: application/json' -X DELETE  https://api.exoscale.com/dns/v1/domains/${domainurl}/records/${recordid}
+	#Alternative
+	# /usr/bin/curl  -H "X-DNS-Token: ${authkey}"  -H 'Accept: application/json' -X DELETE  https://api.exoscale.com/dns/v1/domains/${domainurl}/records/${recordid}
 fi
 
 record_id="${2}"
@@ -61,8 +61,8 @@ domain_url="`${home}/providerscripts/utilities/config/ExtractConfigValue.sh 'WEB
 
 if ( [ "${dns}" = "linode" ] )
 then
-        domain_id="`/usr/local/bin/linode-cli --json domains list | /usr/bin/jq -r '.[] | select (.domain | contains("'${domain_url}'")).id'`"
-        /usr/local/bin/linode-cli domains records-delete ${domain_id} ${record_id}
+	domain_id="`/usr/local/bin/linode-cli --json domains list | /usr/bin/jq -r '.[] | select (.domain | contains("'${domain_url}'")).id'`"
+	/usr/local/bin/linode-cli domains records-delete ${domain_id} ${record_id}
 fi
 
 record_id="${2}"
