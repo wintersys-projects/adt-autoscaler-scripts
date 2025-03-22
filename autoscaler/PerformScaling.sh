@@ -39,33 +39,6 @@ then
 	exit
 fi
 
-#if ( [ -f ${HOME}/runtime/INITIAL_BUILD_COMPLETED ] && [ ! -f ${HOME}/runtime/AUTHORISED_TO_SCALE ] )
-#then
-#   /bin/echo "${0} `/bin/date`: Initialisation process has completed and I am authorising scaling" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-#   /bin/touch ${HOME}/runtime/AUTHORISED_TO_SCALE  
-#   if ( [ -f ${HOME}/runtime/NOT_AUTHORISED_TO_SCALE ] )
-#   then
-#	   /bin/rm ${HOME}/runtime/NOT_AUTHORISED_TO_SCALE
-#
-#   fi
-#fi
-
-#if ( [ -f ${HOME}/runtime/INITIALBUILDCOMPLETED ] )
-#then
-#	if test "`/usr/bin/find ${HOME}/runtime/INITIALBUILDCOMPLETED -mmin -5`"
-#	then
-#		/bin/echo "${0} `/bin/date`: This autoscaler is still in its initial wait period and will be authorised to scale as soon as possible" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-#		/bin/touch ${HOME}/runtime/INITIAL_SCALING_PROCESSED
-#		/bin/touch ${HOME}/runtime/AUTHORISED_TO_SCALE  
-#		if ( [ -f ${HOME}/runtime/NOT_AUTHORISED_TO_SCALE ] )
-#		then
-#			/bin/rm ${HOME}/runtime/NOT_AUTHORISED_TO_SCALE
-#		fi
-#		exit
-#	fi
-#fi
-
-
 if ( [ -f ${HOME}/runtime/NOT_AUTHORISED_TO_SCALE ] )
 then
 	if test "`/usr/bin/find ${HOME}/runtime/NOT_AUTHORISED_TO_SCALE -mmin +30`"
@@ -85,7 +58,7 @@ fi
 
 if ( [ ! -f ${HOME}/runtime/AUTHORISED_TO_SCALE ] )
 then
-   exit
+	exit
 fi
 
 CLOUDHOST="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
@@ -115,7 +88,7 @@ initial_no_webservers="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "
 if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh STATIC_SCALE:*`" = "" ] )
 then
 	/bin/echo "${0} `/bin/date`: Failed to get valid number of webservers to scale to the value I got was: ${NO_WEBSERVERS}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-        ${HOME}/providerscripts/email/SendEmail.sh "COULDN'T GET SCALING VALUE" "I failed to get a valid scaling value the value I got was {${NO_WEBSERVERS}). I am making no alteration to the scaling setting." "ERROR"
+	${HOME}/providerscripts/email/SendEmail.sh "COULDN'T GET SCALING VALUE" "I failed to get a valid scaling value the value I got was {${NO_WEBSERVERS}). I am making no alteration to the scaling setting." "ERROR"
 else
 	webserver_values="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh STATIC_SCALE:* | /bin/sed -e 's/STATIC_SCALE//g' -e 's/:/ /g' -e 's/^ //g'`"
 	autoscaler_index="`/usr/bin/expr ${autoscaler_no} + 1`"	
@@ -157,13 +130,12 @@ then
 
 	/bin/echo "${0} `/bin/date`: A scaling cycle has been initiated, additional new scaling events will not be processed until this scaling cycle is complete" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 
-	
- 	while ( [ "${loop}" -le "`/usr/bin/expr ${no_needed_here} - 1`" ] )
+	while ( [ "${loop}" -le "`/usr/bin/expr ${no_needed_here} - 1`" ] )
 	do
 		loop="`/usr/bin/expr ${loop} + 1`"
 		/bin/touch ${HOME}/runtime/AUTOSCALINGMONITOR:${loop}
 		/bin/echo "${0} `/bin/date`: I have calculated that a webserver needs booting so am booting a new one by rsyncing from an existing webserver" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-   		${HOME}/autoscaler/BuildWebserver.sh ${loop} &
+		${HOME}/autoscaler/BuildWebserver.sh ${loop} &
 	done
 
 	/bin/echo "${0} `/bin/date`: This autoscaler is now waiting for the new webservers to build and will continue after they have all completed" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
@@ -187,7 +159,6 @@ then
 		done
 	done
 	
-
 	/bin/touch ${HOME}/runtime/AUTHORISED_TO_SCALE
 	/bin/rm ${HOME}/runtime/NOT_AUTHORISED_TO_SCALE 
 	
