@@ -22,14 +22,14 @@
 
 if ( [ "${1}" != "" ] )
 then
-    buildos="${1}"
+	buildos="${1}"
 fi
 
 if ( [ "${buildos}" = "" ] )
 then
-    BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
+	BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
 else 
-    BUILDOS="${buildos}"
+	BUILDOS="${buildos}"
 fi
 
 apt=""
@@ -48,24 +48,24 @@ if ( [ "${apt}" != "" ] )
 then
 	if ( [ "${BUILDOS}" = "ubuntu" ] )
 	then
-        	version="`/usr/bin/curl https://go.dev/dl/?mode=json | /usr/bin/jq -r '.[0].version' | /bin/sed 's/go//g'1`"          
-        	/usr/bin/wget -c https://storage.googleapis.com/golang/go${version}.linux-amd64.tar.gz  -O - | /usr/bin/tar -xz -C /usr/local  
+		version="`/usr/bin/curl https://go.dev/dl/?mode=json | /usr/bin/jq -r '.[0].version' | /bin/sed 's/go//g'1`"          
+		/usr/bin/wget -c https://storage.googleapis.com/golang/go${version}.linux-amd64.tar.gz  -O - | /usr/bin/tar -xz -C /usr/local  
         	
  		if ( [ ! -L /usr/bin/go ] )										
  		then													
-        		/usr/bin/ln -s /usr/local/go/bin/go /usr/bin/go 						
+			/usr/bin/ln -s /usr/local/go/bin/go /usr/bin/go 						
  		fi	 												
 	fi
 	if ( [ "${BUILDOS}" = "debian" ] )
 	then
-	 	version="`/usr/bin/curl https://go.dev/dl/?mode=json | /usr/bin/jq -r '.[0].version' | /bin/sed 's/go//g'1`"            
-        	/usr/bin/wget -c https://storage.googleapis.com/golang/go${version}.linux-amd64.tar.gz  -O - | /usr/bin/tar -xz -C /usr/local   
+		version="`/usr/bin/curl https://go.dev/dl/?mode=json | /usr/bin/jq -r '.[0].version' | /bin/sed 's/go//g'1`"            
+		/usr/bin/wget -c https://storage.googleapis.com/golang/go${version}.linux-amd64.tar.gz  -O - | /usr/bin/tar -xz -C /usr/local   
         	
  		if ( [ ! -L /usr/bin/go ] )										
  		then													
-        		/usr/bin/ln -s /usr/local/go/bin/go /usr/bin/go 						
- 		fi	 												
+			/usr/bin/ln -s /usr/local/go/bin/go /usr/bin/go 						
+		fi	 												
 	fi
- 	/bin/touch ${HOME}/runtime/installedsoftware/InstallGo.sh	
+	/bin/touch ${HOME}/runtime/installedsoftware/InstallGo.sh	
 fi
 
