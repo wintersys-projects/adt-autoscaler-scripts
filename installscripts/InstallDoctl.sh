@@ -21,23 +21,23 @@
 
 if ( [ "${1}" != "" ] )
 then
-    buildos="${1}"
+	buildos="${1}"
 fi
 
 if ( [ "${buildos}" = "" ] )
 then
-    BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
+	BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
 else 
-    BUILDOS="${buildos}"
+	BUILDOS="${buildos}"
 fi
 
 apt=""
 if ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt" ] )
 then
-        apt="/usr/bin/apt-get"
+	apt="/usr/bin/apt-get"
 elif ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt-fast" ] )
 then
-        apt="/usr/sbin/apt-fast"
+	apt="/usr/sbin/apt-fast"
 fi
 
 export DEBIAN_FRONTEND=noninteractive
@@ -45,25 +45,26 @@ install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y inst
 
 if ( [ "${BUILDOS}" = "ubuntu" ] )
 then
-	 eval ${install_command} snapd	
-	 snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"		
-	 ${snap} install doctl											
-	 /usr/bin/ln -s /snap/bin/doctl /usr/local/bin/doctl							
-	 /bin/mkdir -p /root/.config/doctl 									
-	 /bin/cp ${HOME}/.config/doctl/config.yaml /root/.config/doctl						
-	 /bin/chmod 400 ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml			
+	eval ${install_command} snapd	
+	snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"		
+	${snap} install doctl											
+	/usr/bin/ln -s /snap/bin/doctl /usr/local/bin/doctl							
+	/bin/mkdir -p /root/.config/doctl 									
+	/bin/cp ${HOME}/.config/doctl/config.yaml /root/.config/doctl						
+	/bin/chmod 400 ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml			
 fi
 
 if ( [ "${BUILDOS}" = "debian" ] )
 then
-	 eval ${install_command} snapd	
-	 snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"		
-	 ${snap} install doctl											
-	 /usr/bin/ln -s /snap/bin/doctl /usr/local/bin/doctl							
-	 /bin/mkdir -p /root/.config/doctl 									
-	 /bin/cp ${HOME}/.config/doctl/config.yaml /root/.config/doctl						
-	 /bin/chmod 400 ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml			
+	eval ${install_command} snapd	
+	snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"		
+	${snap} install doctl											
+	/usr/bin/ln -s /snap/bin/doctl /usr/local/bin/doctl							
+	/bin/mkdir -p /root/.config/doctl 									
+	/bin/cp ${HOME}/.config/doctl/config.yaml /root/.config/doctl						
+	/bin/chmod 400 ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml			
 fi
+
 /bin/touch ${HOME}/runtime/installedsoftware/InstallDoctl.sh	
 
 
