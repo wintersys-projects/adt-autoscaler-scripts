@@ -40,9 +40,7 @@ then
 			/bin/echo "${zoneid}" > ${HOME}/runtime/zoneid.dat
 		fi
 	fi
-
 	/bin/echo ${zoneid}
-
 fi
 
 
