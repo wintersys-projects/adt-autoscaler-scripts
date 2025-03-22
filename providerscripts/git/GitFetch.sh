@@ -20,7 +20,6 @@
 #######################################################################################
 #set -x
 
-
 repository_provider="${1}"
 repository_username="${2}"
 repository_password="${3}"
