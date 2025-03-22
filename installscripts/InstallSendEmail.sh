@@ -21,14 +21,14 @@
 
 if ( [ "${1}" != "" ] )
 then
-    buildos="${1}"
+	buildos="${1}"
 fi
 
 if ( [ "${buildos}" = "" ] )
 then
-    BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
+	BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
 else 
-    BUILDOS="${buildos}"
+	BUILDOS="${buildos}"
 fi
 apt=""
 if ( [ "`${HOME}/providerscripts/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt" ] )
@@ -46,13 +46,13 @@ if ( [ "${apt}" != "" ] )
 then
 	if ( [ "${BUILDOS}" = "ubuntu" ] )
 	then
-            eval ${install_command} sendemail
+		eval ${install_command} sendemail
 	fi
 
 	if ( [ "${BUILDOS}" = "debian" ] )
 	then
-            eval ${install_command} sendemail
-    	fi
-     	/bin/touch ${HOME}/runtime/installedsoftware/InstallSendEmail.sh	
+		eval ${install_command} sendemail
+	fi
+	/bin/touch ${HOME}/runtime/installedsoftware/InstallSendEmail.sh	
 fi
 
