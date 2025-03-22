@@ -1,23 +1,21 @@
 
-cleanup() {     
-        
-        if ( [ -f ${HOME}/runtime/AUTOSCALINGMONITOR:${1} ] )
-        then
-                if ( [ "${2}" = "successfully" ] )
-                then
-                        /bin/echo "${0} `/bin/date`: Build no ${1} has been completed ${2}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-                else
-                        /bin/echo "${0} `/bin/date`: Build no ${1} has been completed unsuccessfully - due to a raised trap condition" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-                fi
-                /bin/rm ${HOME}/runtime/AUTOSCALINGMONITOR:${1}
-        fi
- 
+cleanup() {             
+if ( [ -f ${HOME}/runtime/AUTOSCALINGMONITOR:${1} ] )
+then
+	if ( [ "${2}" = "successfully" ] )
+	then
+		/bin/echo "${0} `/bin/date`: Build no ${1} has been completed ${2}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+	else
+		/bin/echo "${0} `/bin/date`: Build no ${1} has been completed unsuccessfully - due to a raised trap condition" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+	fi
+	/bin/rm ${HOME}/runtime/AUTOSCALINGMONITOR:${1}
+fi 
 }
 
 #If we are trying to build a webserver before the toolkit has been fully installed, we don't want to do anything, so exit
 if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "INSTALLED_SUCCESSFULLY"`" = "0" ] )
 then
-        exit
+	exit
 fi
 
 buildno="${1}"
@@ -51,7 +49,7 @@ logdir="${logdir}/${webserver_name}"
 
 if ( [ ! -d ${HOME}/logs/${logdir} ] )
 then
-        /bin/mkdir -p ${HOME}/logs/${logdir}
+	/bin/mkdir -p ${HOME}/logs/${logdir}
 fi
 
 #The log files for the server build are written here... 
@@ -69,15 +67,15 @@ ${HOME}/providerscripts/server/CreateServer.sh "${SIZE}" "${server_instance_name
 
 while ( [ "$?" != "0" ] && [ "${count}" -lt "10" ] )
 do
-        /bin/sleep 5
-        count="`/usr/bin/expr ${count} + 1`"
-        ${HOME}/providerscripts/server/CreateServer.sh "${SIZE}" "${server_instance_name}"
+	/bin/sleep 5
+	count="`/usr/bin/expr ${count} + 1`"
+	${HOME}/providerscripts/server/CreateServer.sh "${SIZE}" "${server_instance_name}"
 done
 
 if ( [ "${count}" = "10" ] )
 then
-        /bin/echo "${0} `/bin/date`: Failed to build webserver with name ${server_instance_name} - this is most likely an issue with your provider (${CLOUDHOST}) check their status page" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-        /usr/bin/kill -TERM $$
+	/bin/echo "${0} `/bin/date`: Failed to build webserver with name ${server_instance_name} - this is most likely an issue with your provider (${CLOUDHOST}) check their status page" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+	/usr/bin/kill -TERM $$
 fi
 
 count="1"
@@ -89,47 +87,47 @@ ip=""
 # We are prepared to wait a total of 300 seconds for the machine to come online
 while ( ( [ "${ip}" = "" ] || [ "${ip}" = "0.0.0.0" ] ) && [ "${count}" -lt "30" ]  )
 do
-        /bin/sleep 5
-        /bin/echo "${0} `/bin/date`: Attempting to get ip address of webserver ${server_instance_name} attempt ${count}" 
-        ip="`${HOME}/providerscripts/server/GetServerIPAddresses.sh ${server_instance_name} ${CLOUDHOST}`"
-        ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} webserverpublicips/${ip}
-        private_ip="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh ${server_instance_name} ${CLOUDHOST}`"
-        ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${private_ip} webserverips/${private_ip}
-        count="`/usr/bin/expr ${count} + 1`"
+	/bin/sleep 5
+	/bin/echo "${0} `/bin/date`: Attempting to get ip address of webserver ${server_instance_name} attempt ${count}" 
+	ip="`${HOME}/providerscripts/server/GetServerIPAddresses.sh ${server_instance_name} ${CLOUDHOST}`"
+	${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} webserverpublicips/${ip}
+	private_ip="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh ${server_instance_name} ${CLOUDHOST}`"
+	${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${private_ip} webserverips/${private_ip}
+	count="`/usr/bin/expr ${count} + 1`"
 done
 
 if ( [ "${ip}" = "" ] )
 then
-        #This should never happen, and I am not sure what to do about it if it does. If we don't have an ip address, how can
-        #we destroy the machine? I simply exit, therefore.
-        /bin/echo "${0} `/bin/date`: The webserver didn't come online, no ip address assigned or available, this could be an API availability issue" 
-        exit
+	#This should never happen, and I am not sure what to do about it if it does. If we don't have an ip address, how can
+	#we destroy the machine? I simply exit, therefore.
+	/bin/echo "${0} `/bin/date`: The webserver didn't come online, no ip address assigned or available, this could be an API availability issue" 
+	exit
 else
-        if ( [ ! -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip} ] )
-        then
-                /bin/touch ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip}
-        fi 
+	if ( [ ! -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip} ] )
+	then
+		/bin/touch ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip}
+	fi 
         
-        if ( [ -f ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock ] )
-        then
-                /bin/rm ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock
-        fi
+	if ( [ -f ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock ] )
+	then
+		/bin/rm ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock
+	fi
         
-        if ( [ ! -d ${HOME}/runtime/beingbuiltips/${buildno} ] )
-        then 
-                /bin/mkdir -p ${HOME}/runtime/beingbuiltips/${buildno}
-        fi
+	if ( [ ! -d ${HOME}/runtime/beingbuiltips/${buildno} ] )
+	then 
+		/bin/mkdir -p ${HOME}/runtime/beingbuiltips/${buildno}
+	fi
 
-        if ( [ ! -d ${HOME}/runtime/beingbuiltpublicips/${buildno} ] )
-        then
-                /bin/mkdir -p ${HOME}/runtime/beingbuiltpublicips/${buildno}
-        fi
+	if ( [ ! -d ${HOME}/runtime/beingbuiltpublicips/${buildno} ] )
+	then
+		/bin/mkdir -p ${HOME}/runtime/beingbuiltpublicips/${buildno}
+	fi
 
-        /bin/touch ${HOME}/runtime/beingbuiltips/${buildno}/${private_ip}
-        ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${HOME}/runtime/beingbuiltips/${buildno}/${private_ip} beingbuiltips/
+	/bin/touch ${HOME}/runtime/beingbuiltips/${buildno}/${private_ip}
+	${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${HOME}/runtime/beingbuiltips/${buildno}/${private_ip} beingbuiltips/
         
-        /bin/echo "${0} `/bin/date`: The webserver has been assigned public ip address ${ip} and private ip address ${private_ip}" 
-        /bin/echo "${0} `/bin/date`: The webserver is now provisioned and I am about to start building it out and installing software"
+	/bin/echo "${0} `/bin/date`: The webserver has been assigned public ip address ${ip} and private ip address ${private_ip}" 
+	/bin/echo "${0} `/bin/date`: The webserver is now provisioned and I am about to start building it out and installing software"
 fi
 
 count="1"
@@ -138,9 +136,9 @@ count="1"
 
 while ( [ "${count}" -lt "71" ] && [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/bin/ls /home/${SERVER_USER}/runtime/WEBSERVER_READY"`" = "" ] )
 do
-        /bin/sleep 5
-        /bin/echo "${0} `/bin/date`: Checking if I consider the webserver with ip address (${private_ip}) to have completed its build process" 
-        count="`/usr/bin/expr ${count} + 1`"
+	/bin/sleep 5
+	/bin/echo "${0} `/bin/date`: Checking if I consider the webserver with ip address (${private_ip}) to have completed its build process" 
+	count="`/usr/bin/expr ${count} + 1`"
 done
 
 failedonlinecheck="1"
@@ -152,35 +150,34 @@ headfile="`${HOME}/autoscaler/SelectHeadFile.sh`"
 
 while ( [ "${count}" -lt "71" ] && [ "${failedonlinecheck}" != "0" ] )
 do
-        /bin/echo "${0} `/bin/date`: Peforming online checks using curl (attempt ${count}) for newly built webserver with ip address ${ip}" 
+	/bin/echo "${0} `/bin/date`: Peforming online checks using curl (attempt ${count}) for newly built webserver with ip address ${ip}" 
 
-        if ( [ "${failedonlinecheck}" = "1" ] )
-        then
-                if ( [ "`/usr/bin/curl -I --max-time 60 --insecure https://${private_ip}:443/${headfile} | /bin/grep -E 'HTTP/2 200|HTTP/2 301|HTTP/2 302|HTTP/2 303|200 OK|302 Found|301 Moved Permanently'`" = "" ] )
-                then
-                        /bin/echo "${0} `/bin/date`: Expecting ${private_ip} to be online, but can't reach it with curl yet...."
-                        /bin/sleep 5
-                        count="`/usr/bin/expr ${count} + 1`"
-                else
-                        /bin/echo "${0} `/bin/date`: a new webserver with ip address:${ip} is online that's wicked..." 
-                        failedonlinecheck="0"
-                fi
-        fi
+	if ( [ "${failedonlinecheck}" = "1" ] )
+	then
+		if ( [ "`/usr/bin/curl -I --max-time 60 --insecure https://${private_ip}:443/${headfile} | /bin/grep -E 'HTTP/2 200|HTTP/2 301|HTTP/2 302|HTTP/2 303|200 OK|302 Found|301 Moved Permanently'`" = "" ] )
+		then
+			/bin/echo "${0} `/bin/date`: Expecting ${private_ip} to be online, but can't reach it with curl yet...."
+			/bin/sleep 5
+			count="`/usr/bin/expr ${count} + 1`"
+		else
+			/bin/echo "${0} `/bin/date`: a new webserver with ip address:${ip} is online that's wicked..." 
+			failedonlinecheck="0"
+		fi
+	fi
 done
 
 if ( [ "${count}" != "71" ] || [ "${failedonlinecheck}" = "0" ] )
 then
-        ${HOME}/autoscaler/AddIPToDNS.sh ${ip}
+	${HOME}/autoscaler/AddIPToDNS.sh ${ip}
 elif ( [ "${failedonlinecheck}" = "1" ] )
 then
-        if ( [ -f ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock ] )
-        then
-                /bin/rm ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock
-        fi
-        
-        /bin/echo "${0} `/bin/date`: webserver with ip address: ${ip} failed its online check" 
-        /bin/echo "${0} `/bin/date`: webserver with ip address: ${ip} is being destroyed" 
-        ${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
+	if ( [ -f ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock ] )
+	then
+		/bin/rm ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock
+	fi
+	/bin/echo "${0} `/bin/date`: webserver with ip address: ${ip} failed its online check" 
+	/bin/echo "${0} `/bin/date`: webserver with ip address: ${ip} is being destroyed" 
+	${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
 fi
 
 /bin/echo "${0} `/bin/date`: Deleting the 'beingbuilt' ip address ${private_ip} from the config datastore" 
@@ -190,7 +187,7 @@ ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh  be
 /bin/echo "${0} `/bin/date`: This build hasn't stalled, so, removing file ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip}" 
 if ( [ ! -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip} ] )
 then
-        /bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip}
+	/bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip}
 fi 
 
 #Output how long the build took
