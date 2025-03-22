@@ -64,7 +64,6 @@ then
 	/bin/cp ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml
 	/bin/chown root:root ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml
 	/bin/chmod 400 ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml
-
 fi
 
 if ( [ "${CLOUDHOST}" = "exoscale" ] )
@@ -128,12 +127,10 @@ then
 	/bin/cp ${HOME}/.config/exoscale/exoscale.toml /root/.config/exoscale/exoscale.toml
 	/bin/chown root:root${HOME}/.config/exoscale/exoscale.toml /root/.config/exoscale/exoscale.toml
 	/bin/chmod 400 ${HOME}/.config/exoscale/exoscale.toml /root/.config/exoscale/exoscale.toml
-
 fi
 
 if ( [ "${CLOUDHOST}" = "linode" ] )
 then
-
 	CLOUDHOST_ACCOUNT_ID="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOUDHOSTACCOUNTID'`"
 	TOKEN="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'TOKEN'`"
 	REGION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
@@ -184,7 +181,6 @@ then
 	/bin/cp  ${HOME}/.config/linode-cli /root/.config/linode-cli
 	/bin/chown root:root /root/.config/linode-cli ${HOME}/.config/linode-cli
 	/bin/chmod 400 /root/.config/linode-cli ${HOME}/.config/linode-cli
-
 fi
 
 if ( [ "${CLOUDHOST}" = "vultr" ] )
