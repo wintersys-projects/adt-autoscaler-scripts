@@ -32,7 +32,7 @@ CLOUDHOST="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOU
 
 if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "INSTALLED_SUCCESSFULLY"`" = "0" ] )
 then
-        exit
+	exit
 fi
 
 #Get the ip address which has been passed as a parameter
@@ -42,26 +42,25 @@ ipcheck="`${HOME}/providerscripts/server/GetServerPrivateIPAddressByIP.sh ${ip} 
 
 if ( [ "${ipcheck}" != "" ] )
 then
-        if ( [ "`/bin/ls ${HOME}/runtime/beingbuiltips | /bin/grep ${ipcheck}`" = "" ] && [ ! -f  ${HOME}/runtime/IPREMOVED:${ip} ] )
-        then
-                #Add the ip address to the DNS provider. Once this is done, the webserver should be online then.
-                zonename="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{$1=""}1' | /bin/sed 's/^ //g' | /bin/sed 's/ /./g'`"
-                zoneid="`${HOME}/providerscripts/dns/GetZoneID.sh "${zonename}" "${DNS_USERNAME}" "${DNS_SECURITY_KEY}" "${DNS_CHOICE}"`"
-                if ( [ "`${HOME}/providerscripts/dns/GetRecordID.sh "${zoneid}" "${WEBSITE_URL}" "${ip}" "${DNS_USERNAME}" "${DNS_SECURITY_KEY}" "${DNS_CHOICE}"`" = "" ] )
-                then    
-                        ${HOME}/providerscripts/dns/AddRecord.sh "${zoneid}" "${DNS_USERNAME}" "${DNS_SECURITY_KEY}" "${WEBSITE_URL}" "${ip}" "${DNS_CHOICE}" 
-                        if ( [ "$?" = "0" ] )
-                        then
-                                private_ip="`${HOME}/providerscripts/server/GetServerPrivateIPAddressByIP.sh ${ip} ${CLOUDHOST}`"
-                                if ( [ -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip} ] )
-                                then
-                                        /bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip}
-                                fi
-                                /bin/touch /tmp/${private_ip}
-                                ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh /tmp/${private_ip} beenonline/${private_ip}
-                        fi
-                fi
-
-        fi
+	if ( [ "`/bin/ls ${HOME}/runtime/beingbuiltips | /bin/grep ${ipcheck}`" = "" ] && [ ! -f  ${HOME}/runtime/IPREMOVED:${ip} ] )
+	then
+		#Add the ip address to the DNS provider. Once this is done, the webserver should be online then.
+		zonename="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{$1=""}1' | /bin/sed 's/^ //g' | /bin/sed 's/ /./g'`"
+		zoneid="`${HOME}/providerscripts/dns/GetZoneID.sh "${zonename}" "${DNS_USERNAME}" "${DNS_SECURITY_KEY}" "${DNS_CHOICE}"`"
+		if ( [ "`${HOME}/providerscripts/dns/GetRecordID.sh "${zoneid}" "${WEBSITE_URL}" "${ip}" "${DNS_USERNAME}" "${DNS_SECURITY_KEY}" "${DNS_CHOICE}"`" = "" ] )
+		then    
+			${HOME}/providerscripts/dns/AddRecord.sh "${zoneid}" "${DNS_USERNAME}" "${DNS_SECURITY_KEY}" "${WEBSITE_URL}" "${ip}" "${DNS_CHOICE}" 
+			if ( [ "$?" = "0" ] )
+			then
+				private_ip="`${HOME}/providerscripts/server/GetServerPrivateIPAddressByIP.sh ${ip} ${CLOUDHOST}`"
+				if ( [ -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip} ] )
+				then
+					/bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip}
+				fi
+				/bin/touch /tmp/${private_ip}
+				${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh /tmp/${private_ip} beenonline/${private_ip}
+			fi
+		fi
+	fi
 fi
 
