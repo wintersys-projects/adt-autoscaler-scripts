@@ -25,7 +25,7 @@
 
 if ( [ "`${HOME}/providerscripts/utilities/config/CheckConfigValue.sh APPLICATIONLANGUAGE:HTML`" = "1" ] )
 then
-   headfile="index.html"
+	headfile="index.html"
 elif ( [ "`${HOME}/providerscripts/utilities/config/CheckConfigValue.sh APPLICATIONLANGUAGE:PHP`" = "1" ] )
 then
 	if ( [ "`${HOME}/providerscripts/utilities/config/CheckConfigValue.sh APPLICATION:joomla`" = "1" ] )
@@ -45,4 +45,5 @@ then
 		headfile="moodle/index.php"
 	fi
 fi
+
 /bin/echo "${headfile}"
