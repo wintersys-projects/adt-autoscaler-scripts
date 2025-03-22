@@ -22,56 +22,60 @@
 
 if ( [ "${1}" != "" ] )
 then
-    buildos="${1}"
+	buildos="${1}"
 fi
 
 if ( [ "${buildos}" = "" ] )
 then
-    BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
+	BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
 else 
-    BUILDOS="${buildos}"
+	BUILDOS="${buildos}"
 fi
 
 if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ] )
 then
-  if ( [ "${BUILDOS}" = "ubuntu" ] )
-  then
-    if ( [ -d /root/scratch ] )			
-    then						
-      /bin/rm -r /root/scratch/*		
-    else						
-      /bin/mkdir /root/scratch		
-		fi						
-
-    GOBIN=/root/scratch /usr/bin/go install github.com/peak/s5cmd/v2@latest                
-    if ( [ -f /root/scratch/s5cmd ] )                                                      
-    then                                                                                    
-      /bin/mv /root/scratch/s5cmd /usr/bin/s5cmd                                     
-    fi  											
-    if ( [ -d /root/scratch ] )								
-    then											
-      /bin/rm -r /root/scratch							
-	 	fi											
- fi	
-
- if ( [ "${BUILDOS}" = "debian" ] )
- then
-    if ( [ -d /root/scratch ] )			
+	if ( [ "${BUILDOS}" = "ubuntu" ] )
+	then
+		if ( [ -d /root/scratch ] )			
 		then						
-      /bin/rm -r /root/scratch/*		
+			/bin/rm -r /root/scratch/*		
 		else						
-      /bin/mkdir /root/scratch		
+			/bin/mkdir /root/scratch		
 		fi						
 
-    GOBIN=/root/scratch /usr/bin/go install github.com/peak/s5cmd/v2@latest               
-    if ( [ -f /root/scratch/s5cmd ] )                                                      
-    then                                                                                  
-      /bin/mv /root/scratch/s5cmd /usr/bin/s5cmd                                      
-    fi 											
-    if ( [ -d /root/scratch ] )								
-    then											
-      /bin/rm -r /root/scratch							
-    fi 
-  fi
-  /bin/touch ${HOME}/runtime/installedsoftware/InstallS5CMD.sh				
+		GOBIN=/root/scratch /usr/bin/go install github.com/peak/s5cmd/v2@latest                
+    
+		if ( [ -f /root/scratch/s5cmd ] )                                                      
+		then                                                                                    
+			/bin/mv /root/scratch/s5cmd /usr/bin/s5cmd                                     
+		fi  											
+    
+		if ( [ -d /root/scratch ] )								
+		then											
+			/bin/rm -r /root/scratch							
+		fi											
+	fi	
+
+	if ( [ "${BUILDOS}" = "debian" ] )
+	then
+		if ( [ -d /root/scratch ] )			
+		then						
+			/bin/rm -r /root/scratch/*		
+		else						
+			/bin/mkdir /root/scratch		
+		fi						
+
+		GOBIN=/root/scratch /usr/bin/go install github.com/peak/s5cmd/v2@latest               
+  
+  		if ( [ -f /root/scratch/s5cmd ] )                                                      
+		then                                                                                  
+			/bin/mv /root/scratch/s5cmd /usr/bin/s5cmd                                      
+		fi 											
+
+		if ( [ -d /root/scratch ] )								
+		then											
+			/bin/rm -r /root/scratch							
+		fi 
+	fi
+	/bin/touch ${HOME}/runtime/installedsoftware/InstallS5CMD.sh				
 fi 
