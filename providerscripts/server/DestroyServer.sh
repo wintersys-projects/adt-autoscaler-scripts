@@ -52,9 +52,9 @@ then
 	#This will destroy a server with the given ip address and cleanup all the associated configuration settings
 	if ( [ "${server_ip}" != "" ] )
 	then
-        	server_to_delete="`${HOME}/providerscripts/server/GetServerName.sh ${server_ip} 'digitalocean'`"
-        	server_id="`/usr/local/bin/doctl -o json compute droplet list | /usr/bin/jq -r '.[] | select (.name == "'${server_to_delete}'" ).id'`"
-        	/usr/local/bin/doctl -force compute droplet delete ${server_id} 
+		server_to_delete="`${HOME}/providerscripts/server/GetServerName.sh ${server_ip} 'digitalocean'`"
+		server_id="`/usr/local/bin/doctl -o json compute droplet list | /usr/bin/jq -r '.[] | select (.name == "'${server_to_delete}'" ).id'`"
+		/usr/local/bin/doctl -force compute droplet delete ${server_id} 
  
 		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverips/${private_server_ip}"
 		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverpublicips/${server_ip}" 
@@ -63,7 +63,7 @@ then
 
 		if ( [ -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_server_ip} ] )
 		then
-		   /bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_server_ip}
+			/bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_server_ip}
 		fi
 	fi
 fi
@@ -83,7 +83,7 @@ then
 
 		if ( [ -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_server_ip} ] )
 		then
-		   /bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_server_ip}
+			/bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_server_ip}
 		fi
 	fi
 fi
@@ -105,7 +105,7 @@ then
 
 		if ( [ -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_server_ip} ] )
 		then
-		   /bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_server_ip}
+			/bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_server_ip}
 		fi
 	fi
 fi
@@ -122,21 +122,19 @@ then
 		
   		if ( [ "${server_id}" = "" ] )
   		then
-    			server_id="`/usr/bin/vultr instance list -o json | /usr/bin/jq -r '.instances[] | select (.internal_ip == "'${server_ip}'").id'`"
+			server_id="`/usr/bin/vultr instance list -o json | /usr/bin/jq -r '.instances[] | select (.internal_ip == "'${server_ip}'").id'`"
 		fi
   
-  		/usr/bin/vultr instance delete ${server_id}
+		/usr/bin/vultr instance delete ${server_id}
 
-		
 		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverips/${private_server_ip}"
 		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverpublicips/${server_ip}"
 		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beenonline/${server_ip}" 
 		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beingbuiltips/${private_server_ip}"
 
-
 		if ( [ -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_server_ip} ] )
 		then
-		   /bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_server_ip}
+			/bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_server_ip}
 		fi
 	fi
 fi
