@@ -27,18 +27,18 @@ buildos="`/bin/grep ^ID /etc/*-release | /bin/grep debian | /usr/bin/awk -F'=' '
 
 if ( [ "${buildos}" = "ubuntu" ] )
 then
-    if ( [ "${service_type}" = "ssh" ] )
-    then
-        /usr/bin/systemctl daemon-reload
-    fi
-    /usr/bin/systemctl ${service_function} ${service_type} 
+	if ( [ "${service_type}" = "ssh" ] )
+	then
+		/usr/bin/systemctl daemon-reload
+	fi
+	/usr/bin/systemctl ${service_function} ${service_type} 
 fi
 
 if ( [ "${buildos}" = "debian" ] )
 then
-    if ( [ "${service_type}" = "ssh" ] )
-    then
-        /usr/bin/systemctl daemon-reload
-    fi
-    /usr/bin/systemctl ${service_function} ${service_type} 
+	if ( [ "${service_type}" = "ssh" ] )
+	then
+		/usr/bin/systemctl daemon-reload
+	fi
+	/usr/bin/systemctl ${service_function} ${service_type} 
 fi
