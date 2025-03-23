@@ -22,17 +22,17 @@
 
 if test "`/usr/bin/find ${HOME}/runtime/CPU_OVERLOAD_ACKNOWLEDGED -mmin +15`"
 then
-   /bin/rm ${HOME}/runtime/CPU_OVERLOAD_ACKNOWLEDGED
+	/bin/rm ${HOME}/runtime/CPU_OVERLOAD_ACKNOWLEDGED
 fi
 
 if test "`/usr/bin/find ${HOME}/runtime/LOW_MEMORY_ACKNOWLEDGED -mmin +15`"
 then
-   /bin/rm ${HOME}/runtime/LOW_MEMORY_ACKNOWLEDGED
+	/bin/rm ${HOME}/runtime/LOW_MEMORY_ACKNOWLEDGED
 fi
 
 if test "`/usr/bin/find ${HOME}/runtime/LOW_DISK_ACKNOWLEDGED -mmin +15`"
 then
-   /bin/rm ${HOME}/runtime/LOW_DISK_ACKNOWLEDGED
+	/bin/rm ${HOME}/runtime/LOW_DISK_ACKNOWLEDGED
 fi
 
 ip="`${HOME}/providerscripts/utilities/processing/GetPublicIP.sh`"
@@ -58,7 +58,6 @@ fi
 if ( [ ! -f ${HOME}/runtime/LOW_MEMORY_ACKNOWLEDGED ] )
 then
 	free_memory="`/usr/bin/free | /bin/grep Mem | /usr/bin/awk '{print $4/$2 * 100.0}'`"
-
 	if ( [ "${free_memory}" -lt "10" ] )
 	then
 		/bin/touch ${HOME}/runtime/LOW_MEMORY_ACKNOWLEDGED
@@ -69,7 +68,6 @@ fi
 if ( [ ! -f ${HOME}/runtime/LOW_DISK_ACKNOWLEDGED ] )
 then
 	disk_usage="`/usr/bin/df | /bin/grep -w "/" | /usr/bin/awk '{print $5}' | /bin/sed 's/%//'`"
-
 	if ( [ "${disk_usage}" -gt "90" ] )
 	then
 		/bin/touch ${HOME}/runtime/LOW_DISK_ACKNOWLEDGED
