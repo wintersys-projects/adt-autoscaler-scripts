@@ -32,7 +32,7 @@ fi
 
 if ( [ -f ${HOME}/DROPLET ] || [ "${cloudhost}" = "digitalocean" ] )
 then
-        /usr/local/bin/doctl compute droplet list -o json | /usr/bin/jq -r '.[] | select (.networks.v4[] | select (.ip_address == "'${ip}'")).networks.v4[] | select (.type == "public").ip_address'
+	/usr/local/bin/doctl compute droplet list -o json | /usr/bin/jq -r '.[] | select (.networks.v4[] | select (.ip_address == "'${ip}'")).networks.v4[] | select (.type == "public").ip_address'
 fi
 
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
@@ -47,24 +47,24 @@ then
 	linodeids="`/usr/local/bin/linode-cli --json linodes list | /usr/bin/jq '.[].id'`"
         
 	for linodeid in ${linodeids}
-        do
-                /usr/local/bin/linode-cli --json  linodes ips-list ${linodeid} | /usr/bin/jq -r '.[].ipv4.vpc[] | select (.address == "'${ip}'").nat_1_1'  
-        done
+	do
+		/usr/local/bin/linode-cli --json  linodes ips-list ${linodeid} | /usr/bin/jq -r '.[].ipv4.vpc[] | select (.address == "'${ip}'").nat_1_1'  
+	done
 fi
 
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
 	export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
 	#vpc_id="`/usr/bin/vultr vpc2 list -o json | /usr/bin/jq -r '.vpcs[] | select (.description == "adt-vpc").id'`"
-        #id="`/usr/bin/vultr vpc2 nodes list ${vpc_id} -o json | /usr/bin/jq -r '.nodes[] | select (.ip_address == "'${ip}'").id'`"
-        #/usr/bin/vultr instance get ${id} -o json | /usr/bin/jq -r '.instance.main_ip'
+	#id="`/usr/bin/vultr vpc2 nodes list ${vpc_id} -o json | /usr/bin/jq -r '.nodes[] | select (.ip_address == "'${ip}'").id'`"
+	#/usr/bin/vultr instance get ${id} -o json | /usr/bin/jq -r '.instance.main_ip'
 	ids="`/usr/bin/vultr instance list -o json | /usr/bin/jq -r '.instances[] | .id'`"
 	for id in ${ids}
 	do
-        	if ( [ "`/usr/bin/vultr instance ipv4 list ${id} -o json | /usr/bin/jq -r '.ipv4s[] | select (.ip == "'${ip}'")'`" != "" ] )
-        	then
-                	machine_id="${id}"
-        	fi
+		if ( [ "`/usr/bin/vultr instance ipv4 list ${id} -o json | /usr/bin/jq -r '.ipv4s[] | select (.ip == "'${ip}'")'`" != "" ] )
+		then
+			machine_id="${id}"
+		fi
 	done
 	/usr/bin/vultr instance list ${machine_id} -o json | /usr/bin/jq -r '.instances[].main_ip'
 fi
