@@ -29,5 +29,5 @@ fi
 #If its been 15 minutes since we updated the SSL certificate we can release the lock file we set
 if ( [ -f ${HOME}/runtime/UPDATEDSSL ] )
 then
-	 /usr/bin/find ${HOME}/runtime/UPDATEDSSL -type f -mmin +15 -delete
+	/usr/bin/find ${HOME}/runtime/UPDATEDSSL -type f -mmin +15 -delete
 fi
