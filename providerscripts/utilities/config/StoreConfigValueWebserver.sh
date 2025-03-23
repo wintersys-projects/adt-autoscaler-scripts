@@ -23,7 +23,7 @@ export HOME="`/bin/cat /home/homedir.dat`"
 
 if ( [ ! -f ${HOME}/runtime/webserver_configuration_settings.dat ] )
 then
-   exit
+	exit
 fi
 
 /bin/sed -i '/:/!d' ${HOME}/runtime/webserver_configuration_settings.dat
