@@ -38,12 +38,12 @@ export HOME="/home/${USER_HOME}" | /usr/bin/tee -a ~/.bashrc
 
 if ( [ ! -d ${HOME}/logs/initialbuild ] )
 then
-        /bin/mkdir -p ${HOME}/logs/initialbuild
+    /bin/mkdir -p ${HOME}/logs/initialbuild
 fi
 
 if ( [ ! -d ${HOME}/super ] )
 then
-        /bin/mkdir ${HOME}/super
+    /bin/mkdir ${HOME}/super
 fi
 
 /bin/mv ${HOME}/providerscripts/utilities/security/Super.sh ${HOME}/super
@@ -51,7 +51,7 @@ fi
 
 if ( [ -f ${HOME}/InstallGit.sh ] )
 then
-        /bin/rm ${HOME}/InstallGit.sh
+    /bin/rm ${HOME}/InstallGit.sh
 fi
 
 out_file="initialbuild/autoscaler-build-out-`/bin/date | /bin/sed 's/ //g'`"
@@ -65,15 +65,15 @@ exec 2>>${HOME}/logs/${err_file}
 #Create the config directories, these will be mounted from the autoscaler to the other server types - DB, WS and Images Servers
 if ( [ ! -d ${HOME}/.ssh ] )
 then
-        /bin/mkdir ${HOME}/.ssh
-        /bin/chmod 700 ${HOME}/.ssh
+    /bin/mkdir ${HOME}/.ssh
+    /bin/chmod 700 ${HOME}/.ssh
 fi
 
 if ( [ ! -d ${HOME}/runtime ] )
 then
-        /bin/mkdir -p ${HOME}/runtime
-        /bin/chown ${SERVER_USER}:${SERVER_USER} ${HOME}/runtime
-        /bin/chmod 755 ${HOME}/runtime
+    /bin/mkdir -p ${HOME}/runtime
+    /bin/chown ${SERVER_USER}:${SERVER_USER} ${HOME}/runtime
+    /bin/chmod 755 ${HOME}/runtime
 fi
 
 #Load the parts of the configuration that we need into memory
