@@ -37,7 +37,7 @@ fi
 
 if ( [ "`/bin/ls ${HOME}/runtime/AUTO*MON 2>/dev/null`" != "" ] )
 then
-	 /bin/rm ${HOME}/runtime/AUTO*MON* 2>/dev/null
+	/bin/rm ${HOME}/runtime/AUTO*MON* 2>/dev/null
 fi
 
 if ( [ -f ${HOME}/runtime/autoscalelock.file ] )
