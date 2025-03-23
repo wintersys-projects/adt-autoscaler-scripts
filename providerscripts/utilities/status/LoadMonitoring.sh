@@ -77,5 +77,4 @@ then
 	fi
 
 	/bin/rm ${HOME}/runtime/ATOP_RUNNING
-
 fi
