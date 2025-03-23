@@ -26,7 +26,7 @@ export HOME="`/bin/cat /home/homedir.dat`"
 
 if ( [ -f ${HOME}/DROPLET ] || [ "${cloudhost}" = "digitalocean" ] )
 then
-        /usr/local/bin/doctl compute droplet list -o json | /usr/bin/jq -r '.[] | select ( .name | contains ("'${server_type}'")).networks.v4[] | select (.type == "public").ip_address'  
+	/usr/local/bin/doctl compute droplet list -o json | /usr/bin/jq -r '.[] | select ( .name | contains ("'${server_type}'")).networks.v4[] | select (.type == "public").ip_address'  
 fi
 
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
@@ -44,7 +44,7 @@ if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
 	export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
 	server_type="`/bin/echo ${server_type} | /usr/bin/cut -c -25`"
-        /usr/bin/vultr instance list -o json | /usr/bin/jq -r '.instances[] | select (.label | contains("'${server_type}'")).main_ip' 
+	/usr/bin/vultr instance list -o json | /usr/bin/jq -r '.instances[] | select (.label | contains("'${server_type}'")).main_ip' 
 fi
 
 
