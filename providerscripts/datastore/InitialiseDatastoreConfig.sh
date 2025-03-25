@@ -2,7 +2,7 @@
 ####################################################################################
 # Author: Peter Winter
 # Date :  9/4/2016
-# Description: This script will install the s3cmd datastore tool on your webserver
+# Description: This script will install the s3cmd datastore tool on your autoscaler
 # it will configure itself based on the template in the subdirectory "configfiles".
 # If this tool later changes the format of its configuration the template in configfiles
 # will have to be updated to reflect the format changes
