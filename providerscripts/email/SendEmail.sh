@@ -1,8 +1,7 @@
 #!/bin/sh
 ################################################################################
 # Description: This script is used for sending system emails. Scripts can make use
-# of this whenever they need to send a system notification. Notifications are always
-# sent to the same email address which is defined at build time.
+# of this whenever they need to send a system notification. 
 # Date: 16-11-2016
 # Author: Peter Winter
 ##################################################################################
@@ -20,7 +19,7 @@
 # along with The Agile Deployment Toolkit.  If not, see <http://www.gnu.org/licenses/>.
 #####################################################################################
 #####################################################################################
-set -x
+#set -x
 
 subject="$1"
 message="$2"
