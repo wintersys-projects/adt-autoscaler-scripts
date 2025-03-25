@@ -1,9 +1,9 @@
 #!/bin/sh
-############################################################################################################################
+#######################################################################################################
 # Author : Peter Winter
 # Date   : 13/06/2016
-# Description : This script destroys a machine based on ip address
-########################################################################################################################
+# Description : This script destroys a machine based on ip address and cleans up after it is destroyed
+#######################################################################################################
 # License Agreement:
 # This file is part of The Agile Deployment Toolkit.
 # The Agile Deployment Toolkit is free software: you can redistribute it and/or modify
