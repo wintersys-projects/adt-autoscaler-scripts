@@ -1,7 +1,10 @@
 #!/bin/sh
 ##########################################################################################################
-# Description: This script will get a list of all ip addresses registered and active for a particular domain
+# Description: This script will get a list of all ip addresses registered and active with the DNS provider
 # If an IP address appears in this list that machine is basically considerded a "live" webserver
+# This won't return IP addresses of machines that are merely "booted" and "ready" it will only apply IP
+# addresses of machines that have been built and had their IP addresses added to the DNS provider
+# The list of IP addresses that are returned are the IP addresses of machines that can be considered "live"
 # Author: Peter Winter
 # Date: 12/01/2017
 #########################################################################################################
