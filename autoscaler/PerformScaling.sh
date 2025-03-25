@@ -103,6 +103,10 @@ else
 	webserver_values="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh STATIC_SCALE:* | /bin/sed -e 's/STATIC_SCALE//g' -e 's/:/ /g' -e 's/^ //g'`"
 	autoscaler_index="`/usr/bin/expr ${autoscaler_no} + 1`"	
  	NO_WEBSERVERS="`/bin/echo ${webserver_values} | /usr/bin/awk "{print \\$$autoscaler_index}"`" 
+  	if ( [ "${NO_WEBSERVERS}" = "" ] )
+   	then
+    		exit
+      	fi
 fi
 
 no_needed_here="`/usr/bin/expr ${NO_WEBSERVERS} - ${initial_no_webservers}`"
