@@ -2,7 +2,7 @@
 ######################################################################################
 # Author : Peter Winter
 # Date   : 11/08/2021
-# Description:This will monitor of the webserver is overloaded or not
+# Description:This will monitor if the webserver is overloaded or not
 #######################################################################################
 # License Agreement:
 # This file is part of The Agile Deployment Toolkit.
