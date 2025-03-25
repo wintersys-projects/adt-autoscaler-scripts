@@ -26,7 +26,7 @@ export HOME="/home/${USER_HOME}" | /usr/bin/tee -a ~/.bashrc
 
 /bin/echo "set mouse=r" > /root/.vimrc
 
-#Set the intialial permissions for the build
+#Set the intial permissions for the build
 /usr/bin/find ${HOME} -not -path '*/\.*' -type d -print0 | xargs -0 chmod 0755 # for directories
 /usr/bin/find ${HOME} -not -path '*/\.*' -type f -print0 | xargs -0 chmod 0500 # for files
 /bin/chown ${SERVER_USER}:root ${HOME}/.ssh
@@ -100,7 +100,7 @@ cd ${HOME}
 /bin/echo "${0} Initialising datastore config"
 ${HOME}/providerscripts/datastore/InitialiseDatastoreConfig.sh
 
-#Initialise the cron scripts. If you want to add cron jobs, modify this script to include them
+/bin/echo "${0} Initialising cron"
 ${HOME}/cron/InitialiseCron.sh
 
 ${HOME}/providerscripts/utilities/processing/UpdateIPs.sh
@@ -112,6 +112,7 @@ ${HOME}/providerscripts/email/SendEmail.sh "A NEW AUTOSCALER HAS BEEN SUCCESSFUL
 /bin/touch ${HOME}/runtime/AUTOSCALER_READY
 /bin/touch ${HOME}/runtime/AUTHORISED_TO_SCALE
 
+/bin/echo "${0} Enforcing permissions"
 ${HOME}/providerscripts/utilities/security/EnforcePermissions.sh
 
 ${HOME}/installscripts/UpdateAndUpgrade.sh ${BUILDOS} &
