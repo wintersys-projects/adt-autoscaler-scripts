@@ -1,15 +1,37 @@
+#!/bin/sh
+###################################################################################################
+# Description: This is where we build out a new webserver machine in response to a scaling event
+# Author: Peter Winter
+# Date: 12/01/2017
+######################################################################################################
+# License Agreement:
+# This file is part of The Agile Deployment Toolkit.
+# The Agile Deployment Toolkit is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Fou.logion, either version 3 of the License, or
+# (at your option) any later version.
+# The Agile Deployment Toolkit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# You should have received a copy of the GNU General Public License
+# along with The Agile Deployment Toolkit.  If not, see <http://www.gnu.org/licenses/>.
+#######################################################################################################
+#######################################################################################################
+#set -x
 
+#This function is called whenever the script exits or completes to clean up the monitoring that we have set up
 cleanup() {             
-if ( [ -f ${HOME}/runtime/AUTOSCALINGMONITOR:${1} ] )
-then
-	if ( [ "${2}" = "successfully" ] )
+	if ( [ -f ${HOME}/runtime/AUTOSCALINGMONITOR:${1} ] )
 	then
-		/bin/echo "${0} `/bin/date`: Build no ${1} has been completed ${2}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-	else
-		/bin/echo "${0} `/bin/date`: Build no ${1} has been completed unsuccessfully - due to a raised trap condition" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-	fi
-	/bin/rm ${HOME}/runtime/AUTOSCALINGMONITOR:${1}
-fi 
+		if ( [ "${2}" = "successfully" ] )
+		then
+			/bin/echo "${0} `/bin/date`: Build no ${1} has been completed ${2}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+		else
+			/bin/echo "${0} `/bin/date`: Build no ${1} has been completed unsuccessfully - due to a raised trap condition" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+		fi
+		/bin/rm ${HOME}/runtime/AUTOSCALINGMONITOR:${1}
+	fi 
 }
 
 #If we are trying to build a webserver before the toolkit has been fully installed, we don't want to do anything, so exit
@@ -18,7 +40,7 @@ then
 	exit
 fi
 
-buildno="${1}"
+buildno="${1}" #This script is passed a buildno as a parameter meaning is this "build 1" or "build 2" or "build n" of a multi webserver build cycle
 trap "cleanup ${buildno}" TERM
 start=`/bin/date +%s`
 
@@ -32,6 +54,7 @@ OPTIONS=" -o ConnectTimeout=10 -o ConnectionAttempts=10 -o UserKnownHostsFile=/d
 BUILD_KEY="${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER}"
 
 
+#Setup the webserver name taking into account which autoscaler it belongs to embedded in its name if this is a multi autoscaler deployment
 rnd="`/bin/echo ${SERVER_USER} | /usr/bin/fold -w 4 | /usr/bin/head -n 1`"
 rnd="${rnd}-`/usr/bin/openssl rand -base64 32 | /usr/bin/tr -cd 'a-zA-Z0-9' | /usr/bin/cut -b 1-4`"
 server_type="ws-${REGION}-${BUILD_IDENTIFIER}"
@@ -44,7 +67,6 @@ server_instance_name="`/bin/echo ${webserver_name} | /bin/sed 's/-$//g'`"
 #Check there is a directory for logging
 logdate="`/usr/bin/date | /usr/bin/awk '{print $1 $2 $3 $NF}'`"
 logdir="scaling-events-`/usr/bin/date | /usr/bin/awk '{print $1,$2,$3}' | /bin/sed 's/ //g'`"
-
 logdir="${logdir}/${webserver_name}"
 
 if ( [ ! -d ${HOME}/logs/${logdir} ] )
@@ -58,13 +80,17 @@ exec 1>>${HOME}/logs/${logdir}/${log_file}
 err_file="webserver_err_`/bin/date | /bin/sed 's/ //g'`"
 exec 2>>${HOME}/logs/${logdir}/${err_file}
 
+#Make the cloud-init script for building the webserver live and primed
 /bin/echo "Initialising Cloud Init for webserver ${webserver_name}"
 ${HOME}/autoscaler/InitialiseCloudInit.sh
 
+#Place a marker file which says that this machine is initially provisioning onto the file system
 /bin/touch ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock
 
+#Actually create the webserver passing in the name we have set for it as well as what machine type/size it should be
 ${HOME}/providerscripts/server/CreateServer.sh "${SIZE}" "${server_instance_name}"
 
+#Try a few times if something is unsuccessful, generally, it never should be
 while ( [ "$?" != "0" ] && [ "${count}" -lt "10" ] )
 do
 	/bin/sleep 5
@@ -84,7 +110,7 @@ ip=""
 
 # There is a delay between the server being created and started and it "coming online". The way we can tell it is online is when
 # It returns an ip address, so try, several times to retrieve the ip address of the server
-# We are prepared to wait a total of 300 seconds for the machine to come online
+# We are prepared to wait a total of 180 seconds for the machine to come online but it should generally be much quicker than that
 while ( ( [ "${ip}" = "" ] || [ "${ip}" = "0.0.0.0" ] ) && [ "${count}" -lt "30" ]  )
 do
 	/bin/sleep 5
@@ -101,28 +127,26 @@ then
 	#This should never happen, and I am not sure what to do about it if it does. If we don't have an ip address, how can
 	#we destroy the machine? I simply exit, therefore.
 	/bin/echo "${0} `/bin/date`: The webserver didn't come online, no ip address assigned or available, this could be an API availability issue" 
-	exit
+	/usr/bin/kill -TERM $$
 else
+    #We still need to worry that the build out of the machine might potentially stall for some unknown reason
 	if ( [ ! -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip} ] )
 	then
 		/bin/touch ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip}
 	fi 
-        
+
+	#If we are here then the machine isn't being initially provisioned any more so unset that worry
 	if ( [ -f ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock ] )
 	then
 		/bin/rm ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock
 	fi
-        
+
+	#Make a note that the machine with this IP address is currently being built. This will be removed once the machine is built
+	#Until it is built we can tell that it is building by checking this in the datastore
 	if ( [ ! -d ${HOME}/runtime/beingbuiltips/${buildno} ] )
 	then 
 		/bin/mkdir -p ${HOME}/runtime/beingbuiltips/${buildno}
 	fi
-
-	if ( [ ! -d ${HOME}/runtime/beingbuiltpublicips/${buildno} ] )
-	then
-		/bin/mkdir -p ${HOME}/runtime/beingbuiltpublicips/${buildno}
-	fi
-
 	/bin/touch ${HOME}/runtime/beingbuiltips/${buildno}/${private_ip}
 	${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${HOME}/runtime/beingbuiltips/${buildno}/${private_ip} beingbuiltips/
         
@@ -130,6 +154,7 @@ else
 	/bin/echo "${0} `/bin/date`: The webserver is now provisioned and I am about to start building it out and installing software"
 fi
 
+#We don't know how long the machine will take to configure and build but give it a good bit of time before we get impatient with it
 count="1"
 /bin/echo "${0} `/bin/date`: I am now going to attempt several times to see if the webserver ${server_instance_name} has completed its build process" 
 /bin/echo "${0} `/bin/date`: This will take ten or twenty attempts at least"
@@ -141,6 +166,15 @@ do
 	count="`/usr/bin/expr ${count} + 1`"
 done
 
+if ( [ "${count}" = "71" ] )
+then
+	/bin/echo "${0} `/bin/date`: A webserver has failed to build after being given a good go at succeeding" 
+ 	/bin/echo "${0} `/bin/date`: webserver with ip address: ${ip} is being destroyed" 
+	${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
+	/usr/bin/kill -TERM $$
+fi
+
+#If we got through to here we simply want to check that the website is online using curl
 failedonlinecheck="1"
 count="1"
 headfile="`${HOME}/autoscaler/SelectHeadFile.sh`"
@@ -166,7 +200,7 @@ do
 	fi
 done
 
-if ( [ "${count}" != "71" ] || [ "${failedonlinecheck}" = "0" ] )
+if ( [ "${count}" != "71" ] | [ "${failedonlinecheck}" = "0" ] )
 then
 	${HOME}/autoscaler/AddIPToDNS.sh ${ip}
 elif ( [ "${failedonlinecheck}" = "1" ] )
@@ -180,10 +214,12 @@ then
 	${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
 fi
 
+# This machine is no longer in a "being built" situation so cleanup
 /bin/echo "${0} `/bin/date`: Deleting the 'beingbuilt' ip address ${private_ip} from the config datastore" 
 ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh  beingbuiltips/${private_ip}
 /bin/rm ${HOME}/runtime/beingbuiltips/${buildno}/${private_ip}
 
+#If we are here then we haven't stalled so we can clean that up also if we need to
 /bin/echo "${0} `/bin/date`: This build hasn't stalled, so, removing file ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip}" 
 if ( [ ! -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip} ] )
 then
