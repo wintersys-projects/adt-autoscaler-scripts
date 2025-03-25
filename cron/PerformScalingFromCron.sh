@@ -1,6 +1,6 @@
 #!/bin/sh
 ########################################################################################
-# Description: This script is called repeatedly from cron and performs the autoscaling
+# Description: This script is called regularly from cron and performs the autoscaling
 # calculations. The end result of calling this script might be a newly spawned webserver(s)
 # and a subsequent reboot
 # Author: Peter Winter
@@ -21,12 +21,13 @@
 #########################################################################################
 #########################################################################################
 #set -x
-
+#If we are here without being fully installed, exit
 if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "INSTALLED_SUCCESSFULLY"`" = "0" ] )
 then
 	exit
 fi
 
+#If a scaling process is already undweway this is our first line of defence against there being more than one scaling event being actioned at once
 if ( [ "`/bin/ps -ef | /bin/grep PerformScaling | /bin/grep -v Cron | /bin/grep -v grep | /usr/bin/wc -l`" != "0" ] )
 then
 	exit
