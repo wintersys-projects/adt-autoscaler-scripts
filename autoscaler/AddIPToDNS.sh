@@ -4,7 +4,7 @@
 # from the providerscripts adds the ip address to the DNS service provider.
 # It checks that the record doesn't already exist with the DNS provider before it is added and also
 # removes any possibility of the machine to which the IP address belongs being a potentially stalled 
-# build - it can't be, because we are satisdfied that the IP address needs to be added 
+# build - it can't be, because we are satisfied that the IP address needs to be added 
 # Author: Peter Winter
 # Date: 12/01/2017
 ######################################################################################################
@@ -35,13 +35,14 @@ then
 	exit
 fi
 
-#Get the ip address which has been passed as a parameter
-
+#Get the ip address which has been passed as a parameter and check it
 ip="${1}"
 ipcheck="`${HOME}/providerscripts/server/GetServerPrivateIPAddressByIP.sh ${ip} ${CLOUDHOST}`"
 
+#If the ip address checks out we can begin the process of adding it
 if ( [ "${ipcheck}" != "" ] )
 then
+	#If the ip address exists in our beingbuilt list then we don't want to add it and as long as it hasn't been removed we are all set
 	if ( [ "`/bin/ls ${HOME}/runtime/beingbuiltips | /bin/grep ${ipcheck}`" = "" ] && [ ! -f  ${HOME}/runtime/IPREMOVED:${ip} ] )
 	then
 		#Add the ip address to the DNS provider. Once this is done, the webserver should be online then.
@@ -52,12 +53,14 @@ then
 			${HOME}/providerscripts/dns/AddRecord.sh "${zoneid}" "${DNS_USERNAME}" "${DNS_SECURITY_KEY}" "${WEBSITE_URL}" "${ip}" "${DNS_CHOICE}" 
 			if ( [ "$?" = "0" ] )
 			then
+       				#We are considered live now so remove the default flag of the webserver build potentially having stalled for some reason
 				private_ip="`${HOME}/providerscripts/server/GetServerPrivateIPAddressByIP.sh ${ip} ${CLOUDHOST}`"
 				if ( [ -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip} ] )
 				then
 					/bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip}
 				fi
 				/bin/touch /tmp/${private_ip}
+    				#Store our new ip address in the config datastore
 				${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh /tmp/${private_ip} beenonline/${private_ip}
 			fi
 		fi
