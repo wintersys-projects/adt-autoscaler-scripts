@@ -1,6 +1,6 @@
 #!/bin/sh
 #####################################################################################
-# Description: This script is called from cron and sets up the UFW firewall. It is called
+# Description: This script is called from cron and sets up the firewall. It is called
 # repeatedly as a way of aggressively ensuring that the firewall is enabled, but, once
 # the firewall is enabled a flag is set and checked each time this is called meaning
 # this effectively does nothing once the firewall is configured.
