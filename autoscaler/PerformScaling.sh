@@ -34,11 +34,16 @@ then
 	/bin/mkdir -p ${HOME}/logs/${logdir}
 fi
 
-if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "SWITCHOFFSCALING"`" = "1" ] )
+#Scaling can be switched off by having a file "SWITCH_OFF_SCALING" in the config datastore
+if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "SWITCH_OFF_SCALING"`" = "1" ] )
 then
 	exit
 fi
 
+# We need to get authorisation to scale (in other words, this script is called from cron every few minutes) and if it is called before the previous
+# call has completed then we are not authorised to scale. If we are still not authorised to scale after 30 minutes then something must be wrong
+# because 30 minutes is way longer than an webserver should take to build out so we remove the blcok on our scaling and reboot the autoscaler
+# in case its in some weird state. The scaling will be able to happen the next time its actioned from cron post reboot
 if ( [ -f ${HOME}/runtime/NOT_AUTHORISED_TO_SCALE ] )
 then
 	if test "`/usr/bin/find ${HOME}/runtime/NOT_AUTHORISED_TO_SCALE -mmin +30`"
@@ -51,11 +56,13 @@ then
 	fi
 fi
 
+# We are certainly not intially provisioning yet and if we think we are we need to get that idea out of our head
 if ( [ "`/bin/ls ${HOME}/runtime/INITIALLY_PROVISIONING* 2>/dev/null`" != "" ] )
 then
 	/bin/rm ${HOME}/runtime/INITIALLY_PROVISIONING*
 fi
 
+#Just make absolutely sure we are authorised to scale and if we are not, exit
 if ( [ ! -f ${HOME}/runtime/AUTHORISED_TO_SCALE ] )
 then
 	exit
@@ -72,6 +79,8 @@ MAX_WEBSERVERS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 
 
 SUDO=" DEBIAN_FRONTEND=noninteractive /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E "
 
+
+#Report up what we are doing
 autoscalerip="`${HOME}/providerscripts/utilities/processing/GetPublicIP.sh`"
 /bin/echo "${0} `/bin/date`: This autoscaler's IP address is ${autoscalerip}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 
@@ -85,6 +94,7 @@ initial_no_webservers="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "
 /bin/echo "${0} `/bin/date`: This machine is found to be autoscaler number ${autoscaler_no}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 /bin/echo "${0} `/bin/date`: I found the existing number of actioned webservers to be ${initial_no_webservers}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 
+#Work out how many webservers we need according to our scaling metrics
 if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh STATIC_SCALE:*`" = "" ] )
 then
 	/bin/echo "${0} `/bin/date`: Failed to get valid number of webservers to scale to the value I got was: ${NO_WEBSERVERS}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
@@ -97,6 +107,7 @@ fi
 
 no_needed_here="`/usr/bin/expr ${NO_WEBSERVERS} - ${initial_no_webservers}`"
 
+#Sanity check what we have got here as our number of webservers needed
 if ( ! [ `/usr/bin/expr match "${no_needed_here}" '^\([0-9]\+\)$'` ] )
 then
 	exit
@@ -107,6 +118,7 @@ then
 	exit
 fi
 
+#Set a hard limit so that if something is really wrong we don't scale to some huge number
 HARD_LIMIT_WEBSERVERS="20"
 
 if ( [ "${MAX_WEBSERVERS}" -gt "${HARD_LIMIT_WEBSERVERS}" ] )
@@ -120,16 +132,20 @@ then
 fi
 
 /bin/echo "${0} `/bin/date`: I found the total number of webservers that need to be running based on the current scaling policy on this autoscaler to be: ${no_needed_here}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-
 if ( [ "${no_needed_here}" -gt "0" ] )
 then
 	loop="0"
 
+	# So we have lift off meaning that we are about to start scaling and what that means is that we need to make a note that we are not authorised
+ 	# to scale whilst scaling
 	/bin/rm ${HOME}/runtime/AUTHORISED_TO_SCALE 
 	/bin/touch ${HOME}/runtime/NOT_AUTHORISED_TO_SCALE 
 
 	/bin/echo "${0} `/bin/date`: A scaling cycle has been initiated, additional new scaling events will not be processed until this scaling cycle is complete" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 
+	#We build a machine monitoring it to see if it takes longer than 30 minutes to build. 30 mins is way to long for a machine to take to buid
+ 	#and so if it takes 30 minutes we know something is wrong and we need to clean up
+  	#We concurrently build all the webservers that we calcuated we need for this build cycle this makes it snappy
 	while ( [ "${loop}" -le "`/usr/bin/expr ${no_needed_here} - 1`" ] )
 	do
 		loop="`/usr/bin/expr ${loop} + 1`"
@@ -141,6 +157,7 @@ then
 	/bin/echo "${0} `/bin/date`: This autoscaler is now waiting for the new webservers to build and will continue after they have all completed" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 	/bin/echo "${0} `/bin/date`: Action will be taken if any webserver that we are building doesn't complete in a maximum time of 30 minutes" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 
+	#Keep monioring until the monitor is removed by the build process which means that we consider it a pukka build
 	while ( [ "`/bin/ls ${HOME}/runtime/AUTOSCALINGMONITOR* 2>/dev/null`" != "" ] )
 	do
 		loop1="1"
@@ -148,6 +165,7 @@ then
 		do
 			if ( [ -f ${HOME}/runtime/AUTOSCALINGMONITOR:${loop1} ] )
 			then
+     				#If it takes longer than 30 minutes remove the monitor and elsewhere this will be considered a "stalled build" and treated accordingly
 				if test "`/usr/bin/find ${HOME}/runtime/AUTOSCALINGMONITOR:${loop1} -mmin +30 2>/dev/null`"
 				then
 					/bin/echo "${0} `/bin/date`: Have removed autoscaling monitor ${loop1} because it was older than 30 minutes which looks like a stall" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
@@ -158,6 +176,9 @@ then
 			loop1="`/usr/bin/expr ${loop1} + 1`"
 		done
 	done
+
+ 	#If we are here then it means that all monitors have been removed which means that we can authorised the next call coming in from cron
+  	#To this script to scale if it needs to
 	
 	/bin/touch ${HOME}/runtime/AUTHORISED_TO_SCALE
 	/bin/rm ${HOME}/runtime/NOT_AUTHORISED_TO_SCALE 
