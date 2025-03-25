@@ -174,6 +174,9 @@ then
 	/usr/bin/kill -TERM $$
 fi
 
+#If your application needs any updates to the native firewall then they will be applied here
+${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
+
 #If we got through to here we simply want to check that the website is online using curl
 failedonlinecheck="1"
 count="1"
