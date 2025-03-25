@@ -3,10 +3,6 @@
 # Author : Peter Winter
 # Date   : 13/06/2016
 # Description : This script spins up a machine of the specified size, name and so on on our chosen provider
-# There are two distinct ways that a machine can be built.
-# 1) A regular build
-# 2) From pre-existing snapshots.
-# It depends on whether the provider supports snapshots as to whether we can use option 2 or not
 #######################################################################################################
 # License Agreement:
 # This file is part of The Agile Deployment Toolkit.
