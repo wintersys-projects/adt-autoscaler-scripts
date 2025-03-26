@@ -3,7 +3,11 @@
 
 ##### This repository is the code which implements the autoscaling functions of the Agile Deployment Toolkit
 
-The autoscaler can be configured to spawn a predefined number of webservers which you can set using the ${BUILD_HOME}/helperscripts/AdjustScaling.sh script on your build machine. 
+The autoscaler can be configured to spawn a predefined number of webservers which you can set using the
+
+**${BUILD_HOME}/helperscripts/AdjustScaling.sh**
+
+script on your build machine. 
 
 This isn't strictly AUTOscaling because how many websevers to scale out to is statically defined, so, this toolkit might not be the best solution for use cases that need to service sudden spikes in traffic.
 
