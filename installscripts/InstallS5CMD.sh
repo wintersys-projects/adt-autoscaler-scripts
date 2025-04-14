@@ -42,7 +42,7 @@ then
 		else						
 			/bin/mkdir /root/scratch		
 		fi						
-
+		${HOME}/installscripts/InstallGo.sh ${BUILDOS}
 		GOBIN=/root/scratch /usr/bin/go install github.com/peak/s5cmd/v2@latest                
     
 		if ( [ -f /root/scratch/s5cmd ] )                                                      
@@ -64,7 +64,7 @@ then
 		else						
 			/bin/mkdir /root/scratch		
 		fi						
-
+		${HOME}/installscripts/InstallGo.sh ${BUILDOS}
 		GOBIN=/root/scratch /usr/bin/go install github.com/peak/s5cmd/v2@latest               
   
   		if ( [ -f /root/scratch/s5cmd ] )                                                      
