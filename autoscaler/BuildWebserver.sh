@@ -205,6 +205,7 @@ done
 
 if ( [ "${count}" != "71" ] | [ "${failedonlinecheck}" = "0" ] )
 then
+	${HOME}/providerscripts/security/firewall/TightenDBaaSFirewall.sh
 	${HOME}/autoscaler/AddIPToDNS.sh ${ip}
 elif ( [ "${failedonlinecheck}" = "1" ] )
 then
