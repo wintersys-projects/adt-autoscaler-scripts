@@ -157,6 +157,25 @@ probe_by_curl()
 	fi
 }
 
+#Purge any detached IP addresses from the DNS system
+
+dnsips="`${HOME}/autoscaler/GetDNSIPs.sh`"
+ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+
+if ( [ "${dnsips}" = "" ] )
+then
+	exit
+fi
+
+for dnsip in ${dnsips}
+do
+	if ( [ "`/bin/echo ${ips} | /bin/grep ${dnsip}`" = "" ] )
+	then
+		/bin/echo "${0} `/bin/date`: Purging detached IP address: ${dnsip}" 
+		${HOME}/autoscaler/RemoveIPFromDNS.sh ${dnsip}
+	fi
+done
+
 
 if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh STATIC_SCALE:*`" = "" ] )
 then
