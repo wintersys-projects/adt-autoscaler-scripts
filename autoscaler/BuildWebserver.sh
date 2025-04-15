@@ -177,6 +177,12 @@ fi
 #If your application needs any updates to the native firewall then they will be applied here
 ${HOME}/providerscripts/security/firewall/UpdateNativeFirewall.sh
 
+#If the DBaaS firewall needs to be updated to allow the IP address of our new webserver, this will do it
+if ( [ "`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DATABASEINSTALLATIONTYPE'`" = "DBaaS" ] )
+then
+	${HOME}/providerscripts/security/firewall/TightenDBaaSFirewall.sh
+fi
+
 #If we got through to here we simply want to check that the website is online using curl
 failedonlinecheck="1"
 count="1"
@@ -205,10 +211,6 @@ done
 
 if ( [ "${count}" != "71" ] | [ "${failedonlinecheck}" = "0" ] )
 then
-	if ( [ "`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DATABASEINSTALLATIONTYPE'`" = "DBaaS" ] )
-	then
-		${HOME}/providerscripts/security/firewall/TightenDBaaSFirewall.sh
-	fi
 	${HOME}/autoscaler/AddIPToDNS.sh ${ip}
 elif ( [ "${failedonlinecheck}" = "1" ] )
 then
