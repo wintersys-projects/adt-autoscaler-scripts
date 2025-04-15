@@ -34,7 +34,6 @@ DNS_USERNAME="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'D
 CLOUDHOST="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
 
 ip="${1}"
-private_ip="`${HOME}/providerscripts/server/GetServerPrivateIPAddressByIP.sh ${ip} ${CLOUDHOST}`"
 
 #remove the ip address which has been passed as a parameter from the DNS provider
 zonename="`/bin/echo ${WEBSITE_URL} | /usr/bin/awk -F'.' '{$1=""}1' | /bin/sed 's/^ //g' | /bin/sed 's/ /./g'`"
