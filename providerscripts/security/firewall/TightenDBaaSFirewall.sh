@@ -25,17 +25,22 @@ BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.s
 REGION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
 CLOUDHOST="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
 
+#The digital ocean managed database should be in the same VPC as the webserver machines which means that the managed database can only be accessed from within that VPC
+#This means that you have no need to have trusted IP addresses on an IP address by IP address basis for digital ocean. I have left the code below commented out in case
+#You do want to have specific IP addresses as trusted IPs but as long as your managed database is in the same VPC as your main machines then you shouldn't need this
+
 
 if ( [ "${CLOUDHOST}" = "digitalocean" ] )
 then
-    dbaas="`${HOME}/providerscripts/utilities/config/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
-    cluster_id="`/bin/echo ${dbaas} | /usr/bin/awk '{print $NF}'`"
-    ip_addr="`/usr/local/bin/doctl vpcs list -o json | /usr/bin/jq -r '.[] | select (.name == "adt-vpc" ) | select (.region == "'${REGION}'").ip_range'`"
-
-    if ( [ "${cluster_id}" != "" ] )
-    then
-        /usr/local/bin/doctl databases firewalls append ${cluster_id} --rule ip_addr:${ip_addr}
-    fi
+ :
+ #   dbaas="`${HOME}/providerscripts/utilities/config/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
+ #   cluster_id="`/bin/echo ${dbaas} | /usr/bin/awk '{print $NF}'`"
+ #   ip_addr="`/usr/local/bin/doctl vpcs list -o json | /usr/bin/jq -r '.[] | select (.name == "adt-vpc" ) | select (.region == "'${REGION}'").ip_range'`"
+ #
+ #   if ( [ "${cluster_id}" != "" ] )
+ #   then
+ #       /usr/local/bin/doctl databases firewalls append ${cluster_id} --rule ip_addr:${ip_addr}
+ #   fi
 fi
 
 if ( [ "${CLOUDHOST}" = "exoscale" ] )
@@ -98,23 +103,24 @@ fi
 
 if ( [ "${CLOUDHOST}" = "vultr" ] )
 then
-    export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
-    databaseids="`/usr/bin/vultr database list -o json | /usr/bin/jq -r '.databases[] | select (.label == "'${label}'").id'`"
-    selected_databaseid=""
+    :
+   # export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
+   # databaseids="`/usr/bin/vultr database list -o json | /usr/bin/jq -r '.databases[] | select (.label == "'${label}'").id'`"
+   # selected_databaseid=""
 
-    DB_IDENTIFIER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DB_IDENTIFIER'`"
+   # DB_IDENTIFIER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'DB_IDENTIFIER'`"
 
-    for databaseid in ${databaseids}
-    do
-        if ( [ "`/usr/bin/vultr database get ${databaseid} -o json | /usr/bin/jq -r '.database | select (.dbname == "'${DB_IDENTIFIER}'").id'`" != "" ] )
-        then
-            selected_databaseid="${databaseid}"
-        fi
-    done
+  #  for databaseid in ${databaseids}
+  #  do
+  #      if ( [ "`/usr/bin/vultr database get ${databaseid} -o json | /usr/bin/jq -r '.database | select (.dbname == "'${DB_IDENTIFIER}'").id'`" != "" ] )
+  #      then
+  #          selected_databaseid="${databaseid}"
+  #      fi
+  #  done
 
-    if ( [ "${selected_databaseid}" != "" ] )
-    then
-        VPC_IP_RANGE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'VPCIPRANGE'`"
-        /usr/bin/vultr database update ${selected_databaseid} --trusted-ips="${VPC_IP_RANGE}"
-    fi
+  #  if ( [ "${selected_databaseid}" != "" ] )
+  #  then
+  #      VPC_IP_RANGE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'VPCIPRANGE'`"
+  #      /usr/bin/vultr database update ${selected_databaseid} --trusted-ips="${VPC_IP_RANGE}"
+  #  fi
 fi
