@@ -2,7 +2,7 @@
 ####################################################################################
 # Author: Peter Winter
 # Date :  24/02/2022
-# Description: This will get a particular file from the configuration datastore
+# Description: This will list a particular value from the configuration datastore
 #######################################################################################
 # License Agreement:
 # This file is part of The Agile Deployment Toolkit.
@@ -21,27 +21,37 @@
 #set -x
 
 export HOME=`/bin/cat /home/homedir.dat`
-WEBSITE_URL="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'WEBSITEURL'`"
+
+WEBSITE_URL="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'WEBSITEURLORIGINAL'`"
+if ( [ "${WEBSITE_URL}" = "" ] )
+then
+        WEBSITE_URL="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'WEBSITEURL'`"
+fi
 
 SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
 TOKEN="`/bin/echo ${SERVER_USER} | /usr/bin/fold -w 4 | /usr/bin/head -n 1 | /usr/bin/tr '[:upper:]' '[:lower:]'`"
-
 configbucket="`/bin/echo "${WEBSITE_URL}"-config | /bin/sed 's/\./-/g'`-${TOKEN}"
 
 if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
 then
-	datastore_tool="/usr/bin/s3cmd --force get "
+        datastore_tool="/usr/bin/s3cmd --force get "
+        datastore_tool1="/usr/bin/s3cmd ls "
 elif ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ]  )
 then
-	host_base="`/bin/grep host_base /root/.s5cfg | /bin/grep host_base | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
-	datastore_tool="/usr/bin/s5cmd --credentials-file /root/.s5cfg --endpoint-url https://${host_base} cp "
+        host_base="`/bin/grep host_base /root/.s5cfg | /bin/grep host_base | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
+        datastore_tool="/usr/bin/s5cmd --credentials-file /root/.s5cfg --endpoint-url https://${host_base} cp "
+        datastore_tool1="/usr/bin/s5cmd --credentials-file /root/.s5cfg --endpoint-url https://${host_base} ls "
 fi
 
-count="0"
-while ( [ "`${datastore_tool} s3://${configbucket}/$1 $2 2>&1 >/dev/null | /bin/grep "ERROR"`" != "" ] && [ "${count}" -lt "5" ] )
-do
-	/bin/echo "An error has occured `/usr/bin/expr ${count} + 1` times in script ${0}"
-	/bin/sleep 5
-	count="`/usr/bin/expr ${count} + 1`"
-done 
+
+if ( [ "`${datastore_tool1} s3://${configbucket}/$1`" != "" ] )
+then
+        count="0"
+        while ( [ "`${datastore_tool} s3://${configbucket}/$1 s3://${configbucket}/$2 2>&1 >/dev/null | /bin/grep "ERROR"`" != "" ] && [ "${count}" -lt "5" ] )
+        do
+                /bin/echo "An error has occured `/usr/bin/expr ${count} + 1` times in script ${0}"
+                /bin/sleep 5
+                count="`/usr/bin/expr ${count} + 1`"
+        done
+fi
 
