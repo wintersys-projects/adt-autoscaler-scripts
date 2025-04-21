@@ -49,8 +49,7 @@ domainurl="`${home}/providerscripts/utilities/config/ExtractConfigValue.sh 'WEBS
 
 if ( [ "${dns}" = "exoscale" ] )
 then
-	zone="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
-	/usr/bin/exo dns remove ${domainurl} ${recordid} -Q -f --zone ${zone}
+	/usr/bin/exo dns remove ${domainurl} ${recordid} -Q -f 
 	#Alternative
 	# /usr/bin/curl  -H "X-DNS-Token: ${authkey}"  -H 'Accept: application/json' -X DELETE  https://api.exoscale.com/dns/v1/domains/${domainurl}/records/${recordid}
 fi
