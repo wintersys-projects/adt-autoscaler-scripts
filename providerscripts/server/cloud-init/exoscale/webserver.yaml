@@ -1,17 +1,5 @@
 #cloud-config
 
-write_files:
-  - path: /etc/netplan/eth1.yaml
-    content: |
-      network:
-        version: 2
-        ethernets:
-          eth1:
-            dhcp4: true
-
-runcmd:
-  - [ netplan, apply ]
-
 manage_resolv_conf: true
 resolv_conf:
   nameservers:
@@ -45,6 +33,14 @@ keyboard:
   layout: gb
 
 write_files:
+- path: /etc/netplan/eth1.yaml
+  content: |
+    network:
+      version: 2
+      ethernets:
+        eth1:
+          dhcp4: true
+  permissions: '0600'
 - encoding: b64
   content: XXXXWEBSERVER_CONFIGURATIONXXXX
   owner: root:root
@@ -91,6 +87,7 @@ packages:
 #XXXXPOSTRGESQL_CLIENTXXXX  - postgresql-client
 
 runcmd:
+  - [ netplan, apply ]
   - '/bin/sed -i "/en_GB.UTF/s/\(^# \)\(.*$\)/\2/g" /etc/locale.gen'
   - '/usr/sbin/locale-gen'
 #  - '/usr/sbin/netplan apply'
