@@ -183,6 +183,16 @@ then
 	${HOME}/providerscripts/security/firewall/TightenDBaaSFirewall.sh
 fi
 
+application_configuration_installed=""
+
+while ( [ "${application_configuration_installed}" = "" ] )
+do
+	/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "${SUDO} /home/${SERVER_USER}/providerscripts/application/configuration/SetApplicationConfiguration.sh"
+	application_configuration_installed="`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/bin/ls /home/${SERVER_USER}/runtime/INITIAL_CONFIG_SET"`" 2>&1 > /dev/null
+	/bin/sleep 1
+done
+
+
 #If we got through to here we simply want to check that the website is online using curl
 failedonlinecheck="1"
 count="1"
