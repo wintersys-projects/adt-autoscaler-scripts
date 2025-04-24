@@ -28,7 +28,7 @@ to_address="$4"
 content_type="$5"
 
 FROM_ADDRESS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SYSTEMFROMEMAILADDRESS'`"
-FROM_NAME="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'WEBSITEDISPLAYNAME'`"
+FROM_NAME="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'WEBSITEDISPLAYNAME | /usr/bin/sed 's/_//g''`"
 TO_ADDRESS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SYSTEMTOEMAILADDRESS'`"
 
 if ( [ "${to_address}" != "" ] )
