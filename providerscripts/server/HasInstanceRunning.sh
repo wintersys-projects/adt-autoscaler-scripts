@@ -25,9 +25,14 @@ export HOME="`/bin/cat /home/homedir.dat`"
 server_type="${1}"
 cloudhost="${2}"
 
-if ( [ -f ${HOME}/DROPLET ] || [ "${cloudhost}" = "digitalocean" ] )
+if (  [ -f ${HOME}/DROPLET ] || [ "${cloudhost}" = "digitalocean" ] )
 then
-	/usr/local/bin/doctl compute droplet list -o json | /usr/bin/jq -r '.[] | select (.name | contains("'${server_type}'")).id' 2>/dev/null
+        if ( [ "`/usr/local/bin/doctl compute droplet list -o json | /usr/bin/jq -r '.[] | select (.name | contains("'${server_type}'")).status' 2>/dev/null`" = "active" ] )
+        then
+                /bin/echo "running"
+        else
+                /bin/echo "not running"
+        fi
 fi
 
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
