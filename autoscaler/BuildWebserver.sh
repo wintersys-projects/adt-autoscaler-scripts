@@ -106,17 +106,25 @@ then
 	/usr/bin/kill -TERM $$
 fi
 
+status "Interrogating for webserver instance being available....if this goes on for ever there is a problem"
+
+while ( [ "`${HOME}/providerscripts/server/HasInstanceRunning.sh "${server_instance_name}" ${CLOUDHOST}`" = "" ] )
+do
+	/bin/sleep 5
+done
+
 count="1"
 ip=""
-/bin/echo "${0} `/bin/date`: I am now going to work on getting the IP adddresses of webserver ${server_instance_name}, this will take several attempts" 
+
+/bin/echo "${0} `/bin/date`: Attempting to get ip address of webserver ${server_instance_name} " 
 
 # There is a delay between the server being created and started and it "coming online". The way we can tell it is online is when
 # It returns an ip address, so try, several times to retrieve the ip address of the server
 # We are prepared to wait a total of 180 seconds for the machine to come online but it should generally be much quicker than that
-while ( ( [ "${ip}" = "" ] || [ "${ip}" = "0.0.0.0" ] ) && [ "${count}" -lt "30" ]  )
+while ( ( [ "${ip}" = "" ] || [ "${ip}" = "0.0.0.0" ] ) && [ "${count}" -lt "10" ]  )
 do
 	/bin/sleep 5
-	/bin/echo "${0} `/bin/date`: Attempting to get ip address of webserver ${server_instance_name} attempt ${count}" 
+	/bin/echo "${0} `/bin/date`: Attempting to get ip address of webserver ${server_instance_name} " 
 	ip="`${HOME}/providerscripts/server/GetServerIPAddresses.sh ${server_instance_name} ${CLOUDHOST}`"
 	private_ip="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh ${server_instance_name} ${CLOUDHOST}`"
 	count="`/usr/bin/expr ${count} + 1`"
