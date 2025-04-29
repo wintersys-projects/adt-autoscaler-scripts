@@ -59,14 +59,14 @@ fi
 
 if ( [ -f ${HOME}/runtime/autoscaler_configuration_settings.dat ] )
 then
-    /bin/chown root:root ${HOME}/runtime/autoscaler_configuration_settings.dat
-    /bin/chmod 600 ${HOME}/runtime/autoscaler_configuration_settings.dat
+    #/bin/chown root:root ${HOME}/runtime/autoscaler_configuration_settings.dat
+    /bin/chmod 660 ${HOME}/runtime/autoscaler_configuration_settings.dat
 fi
 
 if ( [ -f ${HOME}/runtime/buildstyles.dat ] )
 then
-    /bin/chown root:root ${HOME}/runtime/buildstyles.dat
-    /bin/chmod 600 ${HOME}/runtime/buildstyles.dat
+    #/bin/chown root:root ${HOME}/runtime/buildstyles.dat
+    /bin/chmod 660 ${HOME}/runtime/buildstyles.dat
 fi
 
 
