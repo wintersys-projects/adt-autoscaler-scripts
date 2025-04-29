@@ -120,7 +120,7 @@ do
 	count="`/usr/bin/expr ${count} + 1`"
 done
 
-if ( [ "${ip}" = "" ] )
+if ( [ "${ip}" = "" ] || [ "${private_ip}" = "" ] )
 then
 	#This should never happen, and I am not sure what to do about it if it does. If we don't have an ip address, how can
 	#we destroy the machine? I simply exit, therefore.
