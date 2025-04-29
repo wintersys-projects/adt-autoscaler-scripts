@@ -184,13 +184,25 @@ then
 	${HOME}/providerscripts/security/firewall/TightenDBaaSFirewall.sh
 fi
 
-application_configuration_installed=""
+application_language_installed=""
+count="1"
+while ( [ "${application_language_installed}" = "" ] )
+do
+	/bin/echo "${0} `/bin/date`: testing for application language installation on new webserver, this may take a few attempts this is attempt ${count}"
+	application_language_installed="`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/bin/ls /home/${SERVER_USER}/runtime/installedsoftware/InstallApplicationLanguage.sh"`" 
+	/bin/sleep 1
+  	count="`/usr/bin/expr ${count} + 1`"
+done
 
+application_configuration_installed=""
+count="1"
 while ( [ "${application_configuration_installed}" = "" ] )
 do
+	/bin/echo "${0} `/bin/date`: testing for application configuration installation on new webserver, this may take a few attempts this is attempt ${count}"
 	/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "${SUDO} /home/${SERVER_USER}/providerscripts/application/configuration/SetApplicationConfiguration.sh"
-	application_configuration_installed="`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/bin/ls /home/${SERVER_USER}/runtime/INITIAL_CONFIG_SET"`" 2>&1 > /dev/null
+	application_configuration_installed="`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/bin/ls /home/${SERVER_USER}/runtime/INITIAL_CONFIG_SET"`" 
 	/bin/sleep 1
+ 	count="`/usr/bin/expr ${count} + 1`"
 done
 
 
