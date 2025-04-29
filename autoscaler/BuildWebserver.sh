@@ -106,7 +106,7 @@ then
 	/usr/bin/kill -TERM $$
 fi
 
-/bin/echo "${0} `/bin/date`: Interrogating for webserver instance being available....if this goes on for ever there is a problem"
+/bin/echo "${0} `/bin/date`: Interrogating for webserver instance being available....if this goes on forever there is a problem"
 
 while ( [ "`${HOME}/providerscripts/server/IsInstanceRunning.sh "${server_instance_name}" ${CLOUDHOST}`" != "running" ] )
 do
