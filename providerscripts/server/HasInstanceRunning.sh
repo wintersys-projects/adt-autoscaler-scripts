@@ -27,25 +27,25 @@ cloudhost="${2}"
 
 if ( [ -f ${HOME}/DROPLET ] || [ "${cloudhost}" = "digitalocean" ] )
 then
-	/usr/local/bin/doctl compute droplet list -o json | /usr/bin/jq -r '.[] | select (.name | contains("'${server_type}'")).id'
+	/usr/local/bin/doctl compute droplet list -o json | /usr/bin/jq -r '.[] | select (.name | contains("'${server_type}'")).id' 2>/dev/null
 fi
 
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
  	zone="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
- 	/usr/bin/exo compute instance list --zone ${zone} -O json | /usr/bin/jq -r '.[] | select (.name | contains("'${server_type}'")).id' 
+ 	/usr/bin/exo compute instance list --zone ${zone} -O json | /usr/bin/jq -r '.[] | select (.name | contains("'${server_type}'")).id' 2>/dev/null
 fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
 then
-	/usr/local/bin/linode-cli --json linodes list | /usr/bin/jq -r '.[] | select (.label | contains("'${server_type}'")).id' 
+	/usr/local/bin/linode-cli --json linodes list | /usr/bin/jq -r '.[] | select (.label | contains("'${server_type}'")).id' 2>/dev/null
 fi
 
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then	
 	export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
 	server_type="`/bin/echo ${server_type} | /usr/bin/cut -c -25`"
- 	/usr/bin/vultr instance list -o json | /usr/bin/jq -r '.instances[] | select (.label | contains("'${server_type}'")).id'
+ 	/usr/bin/vultr instance list -o json | /usr/bin/jq -r '.instances[] | select (.label | contains("'${server_type}'")).id' 2>/dev/null
 fi
 
 
