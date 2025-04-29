@@ -27,13 +27,13 @@ cloudhost="${2}"
 
 if ( [ -f ${HOME}/DROPLET ] || [ "${cloudhost}" = "digitalocean" ] )
 then
-	/usr/local/bin/doctl compute droplet list -o json | /usr/bin/jq -r '.[] | select (.name | contains ("'${server_type}'")).networks.v4[] | select (.type == "private").ip_address' 
+	/usr/local/bin/doctl compute droplet list -o json | /usr/bin/jq -r '.[] | select (.name | contains ("'${server_type}'")).networks.v4[] | select (.type == "private").ip_address' 2>/dev/null 
 fi
 
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
 	zone="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
-	/usr/bin/exo compute private-network show adt_private_net_${zone} --zone ${zone} -O json | /usr/bin/jq -r '.leases[] | select(.instance | contains ("'${server_type}'")) | .ip_address'
+	/usr/bin/exo compute private-network show adt_private_net_${zone} --zone ${zone} -O json | /usr/bin/jq -r '.leases[] | select(.instance | contains ("'${server_type}'")) | .ip_address' 2>/dev/null
 fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
@@ -42,7 +42,7 @@ then
 	privateips=""
 	for linodeid in ${linodeids}
 	do
-		privateip="`/usr/local/bin/linode-cli --json linodes ips-list ${linodeid} | /usr/bin/jq -r '.[].ipv4.vpc[].address'`"		
+		privateip="`/usr/local/bin/linode-cli --json linodes ips-list ${linodeid} | /usr/bin/jq -r '.[].ipv4.vpc[].address' 2>/dev/null`"		
 		privateips=${privateips}" ${privateip}"
 	done
 	/bin/echo ${privateips}
@@ -56,7 +56,7 @@ then
 	ids="`/usr/bin/vultr instance list -o json | /usr/bin/jq -r '.instances[] | select (.label | contains("'${server_type}'")).id'`"
 	for id in ${ids} 
  	do
-		/usr/bin/vultr instance ipv4 list ${id} -o json | /usr/bin/jq -r '.ipv4s[] | select (.type == "private").ip'
+		/usr/bin/vultr instance ipv4 list ${id} -o json | /usr/bin/jq -r '.ipv4s[] | select (.type == "private").ip' 2>/dev/null
 	done
 
       #  ids="`/usr/bin/vultr instance list -o json | /usr/bin/jq -r '.instances[] | select (.label | contains("'${server_type}'")).id'`"
