@@ -116,9 +116,7 @@ do
 	/bin/sleep 5
 	/bin/echo "${0} `/bin/date`: Attempting to get ip address of webserver ${server_instance_name} attempt ${count}" 
 	ip="`${HOME}/providerscripts/server/GetServerIPAddresses.sh ${server_instance_name} ${CLOUDHOST}`"
-	${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} webserverpublicips/${ip}
 	private_ip="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh ${server_instance_name} ${CLOUDHOST}`"
-	${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${private_ip} webserverips/${private_ip}
 	count="`/usr/bin/expr ${count} + 1`"
 done
 
@@ -129,7 +127,10 @@ then
 	/bin/echo "${0} `/bin/date`: The webserver didn't come online, no ip address assigned or available, this could be an API availability issue" 
 	/usr/bin/kill -TERM $$
 else
-    #We still need to worry that the build out of the machine might potentially stall for some unknown reason
+	${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} webserverpublicips/${ip}
+	${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${private_ip} webserverips/${private_ip}
+
+	#We still need to worry that the build out of the machine might potentially stall for some unknown reason
 	if ( [ ! -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip} ] )
 	then
 		/bin/touch ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip}
