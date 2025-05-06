@@ -168,7 +168,7 @@ fi
 #We don't know how long the machine will take to configure and build but give it a good bit of time before we get impatient with it
 count="1"
 /bin/echo "${0} `/bin/date`: I am now going to attempt several times to see if the webserver ${server_instance_name} has completed its build process" 
-/bin/echo "${0} `/bin/date`: This will take ten or twenty attempts at least"
+/bin/echo "${0} `/bin/date`: This will may take as many as 100 attempts depending on how long the webserver takes to build"
 
 while ( [ "${count}" -lt "71" ] && [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/bin/ls /home/${SERVER_USER}/runtime/WEBSERVER_READY"`" = "" ] )
 do
@@ -224,7 +224,7 @@ headfile="`${HOME}/autoscaler/SelectHeadFile.sh`"
 /bin/echo "${0} `/bin/date`: the full URL I am checking for is: https://${private_ip}:443/${headfile}"
 /bin/echo "${0} `/bin/date`: I expect this to take several attempts before the website is considered fully online"
 
-while ( [ "${count}" -lt "71" ] && [ "${failedonlinecheck}" != "0" ] )
+while ( [ "${count}" -lt "171" ] && [ "${failedonlinecheck}" != "0" ] )
 do
 	/bin/echo "${0} `/bin/date`: Peforming online checks using curl (attempt ${count}) for newly built webserver with ip address ${ip}" 
 
@@ -242,7 +242,7 @@ do
 	fi
 done
 
-if ( [ "${count}" != "71" ] && [ "${failedonlinecheck}" = "0" ] )
+if ( [ "${count}" != "171" ] && [ "${failedonlinecheck}" = "0" ] )
 then
 	count="0"
 	while  ( [ "${count}" -lt "12" ] && [ "`${HOME}/autoscaler/DoubleCheckConfig.sh ${private_ip}`" = "not ok" ] )
