@@ -377,10 +377,13 @@ fi
 
 for ip in ${online_ips}
 do
-	${HOME}/autoscaler/AddIPToDNS.sh "`${HOME}/providerscripts/server/GetServerPublicIPAddressByIP.sh ${ip} ${CLOUDHOST}`" &
-	if ( [ -f ${HOME}/runtime/potentialenders/listofipstoend.dat ] )
-	then
-		/bin/sed -i "s/${ip}//g" ${HOME}/runtime/potentialenders/listofipstoend.dat
+	if [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beingbuiltips/*" | /bin/grep ${ip}`" = "" ] )
+ 	then
+		${HOME}/autoscaler/AddIPToDNS.sh "`${HOME}/providerscripts/server/GetServerPublicIPAddressByIP.sh ${ip} ${CLOUDHOST}`" &
+		if ( [ -f ${HOME}/runtime/potentialenders/listofipstoend.dat ] )
+		then
+			/bin/sed -i "s/${ip}//g" ${HOME}/runtime/potentialenders/listofipstoend.dat
+		fi
 	fi
 done
 
