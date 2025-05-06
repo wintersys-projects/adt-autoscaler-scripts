@@ -1,6 +1,6 @@
 
 
-
+private_ip="${1}"
 
 config_status="not ok"
 
