@@ -242,7 +242,7 @@ do
 	fi
 done
 
-if ( [ "${count}" != "71" ] | [ "${failedonlinecheck}" = "0" ] )
+if ( [ "${count}" != "71" ] && [ "${failedonlinecheck}" = "0" ] )
 then
 	count="0"
 	while  ( [ "${count}" -lt "12" ] && [ "`${HOME}/autoscaler/DoubleCheckConfig.sh ${private_ip}`" = "not ok" ] )
