@@ -111,6 +111,11 @@ fi
 
 no_needed_here="`/usr/bin/expr ${NO_WEBSERVERS} - ${initial_no_webservers}`"
 
+if ( [ "${no_needed_here}" -lt "0" ] )
+then
+        no_needed_here="0"
+fi
+
 #Sanity check what we have got here as our number of webservers needed
 if ( ! [ `/usr/bin/expr match "${no_needed_here}" '^\([0-9]\+\)$'` ] )
 then
