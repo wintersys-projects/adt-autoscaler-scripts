@@ -67,7 +67,6 @@ webserver_name="ws-${REGION}-${BUILD_IDENTIFIER}-${autoscaler_no}-${rnd}"
 server_instance_name="`/bin/echo ${webserver_name} | /bin/sed 's/-$//g'`"
 
 #Check there is a directory for logging
-logdate="`/usr/bin/date | /usr/bin/awk '{print $1 $2 $3 $NF}'`"
 logdir="scaling-events-`/usr/bin/date | /usr/bin/awk '{print $1,$2,$3}' | /bin/sed 's/ //g'`"
 logdir="${logdir}/${webserver_name}"
 
