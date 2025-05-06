@@ -244,6 +244,20 @@ done
 
 if ( [ "${count}" != "71" ] | [ "${failedonlinecheck}" = "0" ] )
 then
+	count="0"
+	while  ( [ "${count}" -lt "12" ] && [ "`${HOME}/autoscaler/DoubleCheckConfig.sh ${private_ip}`" = "not ok" ] )
+ 	do
+  		/bin/sleep 10
+    		count="`/usr/bin/expr ${count} + 1`"
+	done
+ 	if ( [ "${count}" = "12" ] )
+  	then
+   		failedonlinecheck="1"
+     	fi
+fi
+
+if ( [ "${failedonlinecheck}" = "0" ] )
+then
 	${HOME}/autoscaler/AddIPToDNS.sh ${ip}
 elif ( [ "${failedonlinecheck}" = "1" ] )
 then
