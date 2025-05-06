@@ -101,8 +101,8 @@ then
 	${HOME}/providerscripts/email/SendEmail.sh "COULDN'T GET SCALING VALUE" "I failed to get a valid scaling value the value I got was {${NO_WEBSERVERS}). I am making no alteration to the scaling setting." "ERROR"
 else
 	webserver_values="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh STATIC_SCALE:* | /bin/sed -e 's/STATIC_SCALE//g' -e 's/:/ /g' -e 's/^ //g'`"
-	autoscaler_index="`/usr/bin/expr ${autoscaler_no} + 1`"	
- 	NO_WEBSERVERS="`/bin/echo ${webserver_values} | /usr/bin/awk "{print \\$$autoscaler_index}"`" 
+	#autoscaler_index="`/usr/bin/expr ${autoscaler_no} + 1`"	
+ 	NO_WEBSERVERS="`/bin/echo ${webserver_values} | /usr/bin/awk "{print \\$$autoscaler_no}"`" 
   	if ( [ "${NO_WEBSERVERS}" = "" ] )
    	then
     		exit
