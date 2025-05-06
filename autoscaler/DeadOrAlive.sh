@@ -379,7 +379,7 @@ for ip in ${online_ips}
 do
 	if [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beingbuiltips/*" | /bin/grep ${ip}`" = "" ] )
  	then
-  		if ( [ "`${HOME}/autoscaler/DoubleCheckConfig.sh ${private_ip}`" = "ok" ] )
+  		if ( [ "`${HOME}/autoscaler/DoubleCheckConfig.sh ${ip}`" = "ok" ] )
     		then
 			${HOME}/autoscaler/AddIPToDNS.sh "`${HOME}/providerscripts/server/GetServerPublicIPAddressByIP.sh ${ip} ${CLOUDHOST}`" &
 			if ( [ -f ${HOME}/runtime/potentialenders/listofipstoend.dat ] )
