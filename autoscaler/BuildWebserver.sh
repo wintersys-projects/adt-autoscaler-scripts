@@ -93,6 +93,7 @@ ${HOME}/autoscaler/InitialiseCloudInit.sh
 ${HOME}/providerscripts/server/CreateServer.sh "${SIZE}" "${server_instance_name}"
 
 #Try a few times if something is unsuccessful, generally, it never should be
+count="0"
 while ( [ "$?" != "0" ] && [ "${count}" -lt "10" ] )
 do
 	/bin/sleep 5
