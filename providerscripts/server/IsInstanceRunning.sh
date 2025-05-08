@@ -38,7 +38,12 @@ fi
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
  	zone="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
- 	/usr/bin/exo compute instance list --zone ${zone} -O json | /usr/bin/jq -r '.[] | select (.name | contains("'${server_type}'")).id' 2>/dev/null
+ 	if ( [ "`/usr/bin/exo compute instance list --zone ${zone} -O json | /usr/bin/jq -r '.[] | select (.name | contains("'${server_type}'")).state' 2>/dev/null`" = "running" ] )
+  	then
+		/bin/echo "running"
+	else
+		/bin/echo "not running"
+	fi
 fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
