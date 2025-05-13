@@ -122,6 +122,7 @@ fi
 #Activate the application language by removing the block on it being installed
 APPLICATION_LANGUAGE="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'APPLICATIONLANGUAGE'`"
 PHP_VERSION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'PHPVERSION'`"
+BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
 
 if ( [ "${APPLICATION_LANGUAGE}" = "PHP" ] )
 then
@@ -139,4 +140,12 @@ then
 		done
 	fi
 	/bin/sed -i "s/XXXXPHP_MODULESXXXX/${php_modules_list}/" ${HOME}/runtime/cloud-init/webserver.yaml
+        if ( [ "${BUILDOS}" = "ubuntu" ] )
+        then
+                /bin/sed -i "s/#XXXXPHPUBUNTUXXXX//" ${HOME}/runtime/cloud-init/webserver.yaml
+        fi
+        if ( [ "${BUILDOS}" = "debian" ] )
+        then
+                /bin/sed -i "s/#XXXXPHPDEBIANXXXX//" ${HOME}/runtime/cloud-init/webserver.yaml
+        fi
 fi
