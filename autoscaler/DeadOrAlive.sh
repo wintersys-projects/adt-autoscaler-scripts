@@ -327,7 +327,7 @@ do
         no_processed_ips="`/bin/cat ${HOME}/runtime/probed_ips/processed_ips.dat | /usr/bin/wc -l`"
 done
 
-probed_ips="`/bin/cat ${HOME}/runtime/probed_ips/failed_probe_ssh_ips.dat`"
+probed_ips="`/bin/cat ${HOME}/runtime/probed_ips/failed_probe_curl_ips.dat`"
 processed_ips="`/bin/cat ${HOME}/runtime/probed_ips/processed_ips.dat`"
 
 for ip in ${processed_ips}
