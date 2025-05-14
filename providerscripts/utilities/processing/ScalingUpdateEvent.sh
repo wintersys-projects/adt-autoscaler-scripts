@@ -32,6 +32,7 @@ fi
 
 CLOUDHOST="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
 BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
+REGION="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'REGION'`"
 
 new_scale_value="${1}"
 
@@ -40,7 +41,7 @@ then
     /bin/mkdir ${HOME}/runtime/scaling
 fi
 
-number_of_autoscalers="`${HOME}/providerscripts/server/NumberOfServers.sh "-as-" "${CLOUDHOST}"`"
+number_of_autoscalers="`${HOME}/providerscripts/server/NumberOfServers.sh "as-${REGION}-${BUILD_IDENTIFIER}" "${CLOUDHOST}"`"
 number_of_webservers="${new_scale_value}"
 
 base_number_of_webservers="`/usr/bin/expr ${number_of_webservers} / ${number_of_autoscalers}`"
