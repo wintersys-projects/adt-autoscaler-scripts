@@ -2,7 +2,7 @@
 #################################################################################
 # Author: Peter Winter
 # Date :  9/4/2016
-# Description: Connect to the Webserver Server machine (linux)
+# Description: Connect to the Database Server machine (linux)
 #################################################################################
 # License Agreement:
 # This file is part of The Agile Deployment Toolkit.
@@ -20,24 +20,35 @@
 #####################################################################################
 #set -x
 
-command="$1"
+command="${1}"
+arg="${2}"
+arg1="${3}"
+arg2="${4}"
+arg3="${5}"
+
 
 SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
 SSH_PORT="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SSHPORT'`"
 ALGORITHM="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'ALGORITHM'`"
-webserver_ips="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh webserverips/*`"
 BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
 
+ips="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh webserverips/*`"
 
-for ip in ${webserver_ips}
-do
-	/bin/echo "Would you like to connect to the webserver with IP address: ${ip}"
-	/bin/echo "Please enter 'Y' or 'y' to connect, anything else to continue"
-	read response
-
-	if ( [ "${response}" = "Y" ] || [ "${response}" = "y" ] )
-	then 
-		/usr/bin/ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -p ${SSH_PORT} ${SERVER_USER}@${ip} "${command}"
-		exit
-	fi
-done
+if ( [ "${ips}" != "" ] )
+then
+        for ip in ${ips}
+        do
+                /bin/echo "Do you want to connect to webserver with ip address ${ip} (Y|N)"
+                read response
+                if ( [ "`/bin/echo 'Y y' | /bin/grep ${response}`" != "" ] )
+                then
+                        if ( [ "${command}" != "" ] )
+                        then
+                                /usr/bin/ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -p ${SSH_PORT} ${SERVER_USER}@${ip} "${command}" "${arg}" "${arg1}" "${arg2}" "${arg3}"
+                        else
+                                /usr/bin/ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -p ${SSH_PORT} ${SERVER_USER}@${ip}
+                        fi
+                        exit
+                fi
+        done
+fi
