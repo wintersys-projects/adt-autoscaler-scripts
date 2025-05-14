@@ -73,8 +73,6 @@ endit ()
 {
 	down_ip="${1}"
 	reason="${2}"
-
-   #We don't want to go down below 2 webservers
    
 	if ( [ "`/bin/ls -l ${HOME}/runtime/INITIALLY_PROVISIONING* 2>/dev/null`" = "" ] )
 	then  
