@@ -349,12 +349,10 @@ do
 	fi
 done
 
-/bin/echo "Final: Webservers submitted for review IP addresses are: `/bin/echo ${all_ips} | /bin/sed 's/\n//g'`"
-/bin/echo "Final: Webservers found to be online by the review are: `/bin/echo ${online_ips} | /bin/sed 's/\n//g'`"
 
 offline_ips=""
 
-if ( [ "${all_ips}" != "" ] && [ "${online_ips}" != "" ] )
+if ( [ "${all_ips}" != "" ] )
 then
 	for ip in ${all_ips}
 	do
@@ -364,6 +362,10 @@ then
 		fi
 	done
 fi
+
+/bin/echo "Final: Webservers submitted for review IP addresses are: `/bin/echo ${all_ips} | /bin/sed 's/\n//g'`"
+/bin/echo "Final: Webservers found to be online by the review are: `/bin/echo ${online_ips} | /bin/sed 's/\n//g'`"
+/bin/echo "Final: Webservers found to be offline by the review are: `/bin/echo ${offline_ips} | /bin/sed 's/\n//g'`"
 
 if ( [ ! -d ${HOME}/runtime/potentialenders ] )
 then
