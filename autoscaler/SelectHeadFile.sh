@@ -42,7 +42,7 @@ then
 	fi
 	if ( [ "`${HOME}/providerscripts/utilities/config/CheckConfigValue.sh APPLICATION:moodle`" = "1" ] )
 	then
-		headfile="moodle/index.php"
+		headfile="index.php"
 	fi
 fi
 
