@@ -318,6 +318,28 @@ do
 	probe_by_curl &
 done
 
+####ADDED
+no_processed_ips="`/bin/cat ${HOME}/runtime/probed_ips/processed_ips.dat | /usr/bin/wc -l`"
+
+while ( [ "${no_processed_ips}" -lt "${no_online_ips}" ] )
+do
+        /bin/sleep 5
+        no_processed_ips="`/bin/cat ${HOME}/runtime/probed_ips/processed_ips.dat | /usr/bin/wc -l`"
+done
+
+probed_ips="`/bin/cat ${HOME}/runtime/probed_ips/failed_probe_ssh_ips.dat`"
+processed_ips="`/bin/cat ${HOME}/runtime/probed_ips/processed_ips.dat`"
+
+for ip in ${processed_ips}
+do
+        if ( [ "`/bin/echo ${probed_ips} | /bin/grep ${ip}`" != "" ] )
+        then
+                online_ips="`/bin/echo ${online_ips} | /bin/sed "s/${ip}//g"`"
+        fi
+done
+
+####ADDED
+
 for ip in ${online_ips}
 do
 	if ( [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} -o ConnectTimeout=5 -o ConnectionAttempts=2 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${SERVER_USER}@${ip} "/usr/bin/find ${HOME}/runtime/BUILD_IN_PROGRESS -mmin +30 2>/dev/null"`" != "" ] )
