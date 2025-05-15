@@ -79,7 +79,7 @@ fi
 if ( [ -f /root/.bashrc ] )
 then
     /bin/cp /root/.bashrc ${HOME}/.bashrc
-    /bin/chmod 760 ${HOME}/.bashrc
+    /bin/chmod 644 ${HOME}/.bashrc
     /bin/chown ${SERVER_USER}:root ${HOME}/.bashrc
 fi
 
