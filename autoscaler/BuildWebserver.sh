@@ -170,7 +170,7 @@ count="1"
 /bin/echo "${0} `/bin/date`: I am now going to attempt several times to see if the webserver ${server_instance_name} has completed its build process" 
 /bin/echo "${0} `/bin/date`: This will may take as many as 100 attempts depending on how long the webserver takes to build"
 
-while ( [ "${count}" -lt "71" ] && [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/bin/ls /home/${SERVER_USER}/runtime/WEBSERVER_READY"`" = "" ] )
+while ( [ "${count}" -lt "71" ] && [ "`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/usr/bin/test -f /home/${SERVER_USER}/runtime/WEBSERVER_READY && /bin/echo 'WEBSERVER_READY'"`" = "" ] )
 do
 	/bin/sleep 5
 	/bin/echo "${0} `/bin/date`: Checking if I consider the webserver with ip address (${private_ip}) to have completed its build process this is attempt ${count}" 
@@ -199,7 +199,7 @@ count="1"
 while ( [ "${application_language_installed}" = "" ] )
 do
 	/bin/echo "${0} `/bin/date`: testing for application language installation on new webserver, this may take a few attempts this is attempt ${count}"
-	application_language_installed="`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/bin/ls /home/${SERVER_USER}/runtime/installedsoftware/InstallApplicationLanguage.sh"`" 
+	application_language_installed="`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/usr/bin/test -f /home/${SERVER_USER}/runtime/installedsoftware/InstallApplicationLanguage.sh && /bin/echo 'APPLICATION_LANGUAGE'"`" = "" ] )
 	/bin/sleep 1
   	count="`/usr/bin/expr ${count} + 1`"
 done
@@ -210,8 +210,8 @@ while ( [ "${application_configuration_installed}" = "" ] )
 do
 	/bin/echo "${0} `/bin/date`: testing for application configuration installation on new webserver, this may take a few attempts this is attempt ${count}"
 	/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "${SUDO} /home/${SERVER_USER}/providerscripts/application/configuration/SetApplicationConfiguration.sh"
-	application_configuration_installed="`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/bin/ls /home/${SERVER_USER}/runtime/INITIAL_CONFIG_SET"`" 
-	/bin/sleep 1
+	application_configuration_installed="`/usr/bin/ssh -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/usr/bin/test -f /home/${SERVER_USER}/runtime/INITIAL_CONFIG_SET && /bin/echo 'INITIAL_CONFIG_SET'"`" = "" ] )
+ 	/bin/sleep 1
  	count="`/usr/bin/expr ${count} + 1`"
 done
 
@@ -230,7 +230,7 @@ do
 
 	if ( [ "${failedonlinecheck}" = "1" ] )
 	then
-		if ( [ "`/usr/bin/curl -I --max-time 60 --insecure https://${private_ip}:443/${headfile} | /bin/grep -E 'HTTP/2 200|HTTP/2 301|HTTP/2 302|HTTP/2 303|200 OK|302 Found|301 Moved Permanently'`" = "" ] )
+		if ( [ "`/usr/bin/curl -s -I --max-time 60 --insecure https://${private_ip}:443/${headfile} | /bin/grep -E 'HTTP/2 200|HTTP/2 301|HTTP/2 302|HTTP/2 303|200 OK|302 Found|301 Moved Permanently'`" = "" ] )
 		then
 			/bin/echo "${0} `/bin/date`: Expecting ${private_ip} to be online, but can't reach it with curl yet...."
 			/bin/sleep 5
@@ -273,8 +273,10 @@ fi
 # This machine is no longer in a "being built" situation so cleanup
 /bin/echo "${0} `/bin/date`: Deleting the 'beingbuilt' ip address ${private_ip} from the config datastore" 
 ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh  beingbuiltips/${private_ip}
-/bin/rm ${HOME}/runtime/beingbuiltips/${buildno}/${private_ip}
-
+if ( [ -f ${HOME}/runtime/beingbuiltips/${buildno}/${private_ip} ] )
+then
+	/bin/rm ${HOME}/runtime/beingbuiltips/${buildno}/${private_ip}
+fi
 #If we are here then we haven't stalled so we can clean that up also if we need to
 /bin/echo "${0} `/bin/date`: This build hasn't stalled, so, removing file ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip}" 
 if ( [ ! -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip} ] )
