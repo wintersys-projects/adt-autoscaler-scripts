@@ -76,6 +76,12 @@ then
     /bin/chmod 755 ${HOME}/runtime
 fi
 
+if ( [ -f /root/.bashrc ] )
+then
+    /bin/cp /root/.bashrc ${HOME}/.bashrc
+    /bin/chmod 760 ${HOME}/.bashrc
+fi
+
 #Load the parts of the configuration that we need into memory
 GIT_EMAIL_ADDRESS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'GITEMAILADDRESS'`"
 BUILDOS="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
