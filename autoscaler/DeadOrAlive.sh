@@ -83,10 +83,6 @@ endit ()
 			/bin/echo "${0} `/bin/date`: Webserver with ip address: ${down_ip} is having it's ip address removed from the DNS system" 
 			public_ip_address="`${HOME}/providerscripts/server/GetServerPublicIPAddressByIP.sh ${down_ip} ${CLOUDHOST}`"
 			${HOME}/autoscaler/RemoveIPFromDNS.sh ${public_ip_address}
-			#Be aware that the time to live is 120 seconds and so we have removed a DNS record now, but, it will still be served for up to 120 seconds after we remove it
-			#So, we don't want it to not resolve to a server machine during that time period so we need to sleep for 120 seconds to make sure that the TTL has expired 
-			#before we destroy the server machine that that IP address still might be resolving to and giving us timeouts and so on
-			/bin/sleep 120
 			${HOME}/providerscripts/email/SendEmail.sh "A WEBSERVER IS BEING SHUTDOWN ${down_ip}" "${reason}" "INFO"
     
 
