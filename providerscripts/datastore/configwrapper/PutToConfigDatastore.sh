@@ -51,7 +51,7 @@ then
 	else
 		file_to_put="/tmp/${path_to_file}/${file}"
 		dir="`/bin/echo ${file_to_put} | /bin/sed 's:/[^/]*$::'`"
-		if ( [ ! -d ${dir} ] )
+		if ( [ -d ${dir} ] )
 		then
 			/bin/mv ${dir} ${dir}.$$
 			/bin/mkdir -p "${dir}"
