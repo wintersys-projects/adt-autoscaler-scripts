@@ -280,7 +280,7 @@ then
 fi
 #If we are here then we haven't stalled so we can clean that up also if we need to
 /bin/echo "${0} `/bin/date`: This build hasn't stalled, so, removing file ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip}" 
-if ( [ ! -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip} ] )
+if ( [ -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip} ] )
 then
 	/bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip}
 fi 
