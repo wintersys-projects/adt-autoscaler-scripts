@@ -33,6 +33,12 @@ SERVER_USER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'SE
 /bin/chmod 600 ${HOME}/.ssh/id_*
 /bin/chmod 644 ${HOME}/.ssh/id_*pub
 
+if ( [ -f ${HOME}/.bashrc ] )
+then
+    /bin/chmod 644 ${HOME}/.bashrc
+    /bin/chown ${SERVER_USER}:root ${HOME}/.bashrc
+fi
+
 if ( [ -f ${HOME}/.ssh/autoscaler_configuration_settings.dat.gz ] )
 then
     /bin/chown root:root ${HOME}/.ssh/autoscaler_configuration_settings.dat.gz
