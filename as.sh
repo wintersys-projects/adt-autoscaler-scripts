@@ -22,7 +22,9 @@
 
 #Get ourselves oriented and prepared
 USER_HOME="`/usr/bin/awk -F: '{ print $1}' /etc/passwd | /bin/grep "X*X"`"
-export HOME="/home/${USER_HOME}" | /usr/bin/tee -a ~/.bashrc
+/bin/echo 'export HOME="/home/'${USER_HOME}'"' >> /home/${USER_HOME}/.bashrc
+/bin/chmod 644 /home/${USER_HOME}/.bashrc
+/bin/chown ${USER_HOME}:root /home/${USER_HOME}/.bashrc
 
 /bin/echo "set mouse=r" > /root/.vimrc
 
