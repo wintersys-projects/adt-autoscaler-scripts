@@ -80,6 +80,7 @@ if ( [ -f /root/.bashrc ] )
 then
     /bin/cp /root/.bashrc ${HOME}/.bashrc
     /bin/chmod 760 ${HOME}/.bashrc
+    /bin/chown ${SERVER_USER}:root ${HOME}/.bashrc
 fi
 
 #Load the parts of the configuration that we need into memory
