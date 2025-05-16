@@ -212,7 +212,7 @@ done
 
 for ip in ${online_ips}
 do
-        if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh beingbuiltips/ recursive | /bin/grep ${ip} 2>/dev/null`" != "" ] )
+        if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh beingbuiltips/ recursive 2>/dev/nul | /bin/grep ${ip}l`" != "" ] )
         then
                 online_ips="`/bin/echo ${online_ips} | /bin/sed "s/${ip}//g"`"
         fi
