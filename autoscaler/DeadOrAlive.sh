@@ -382,7 +382,7 @@ then
                 then
                         /bin/echo "${0} `/bin/date`: Ending webserver with ip:${ip} because it is considered a stalled build" 
                         endit ${ip} "Webserver (${ip}) is being shutdown because it has been considered as a stalled build"
-                elif ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beenonline/${ip}"`" != "" ] )
+                elif ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beenonline/${ip}" 2>/dev/null`" != "" ] )
                 then
                         if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beingbuilt/${ip}" 2>/dev/null`" = "" ] )
                         then
