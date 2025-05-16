@@ -28,6 +28,7 @@ then
 	headfile="index.html"
 elif ( [ "`${HOME}/providerscripts/utilities/config/CheckConfigValue.sh APPLICATIONLANGUAGE:PHP`" = "1" ] )
 then
+        headfile="index.php
 	if ( [ "`${HOME}/providerscripts/utilities/config/CheckConfigValue.sh APPLICATION:joomla`" = "1" ] )
 	then
 		headfile="index.php"
