@@ -56,3 +56,10 @@ then
 	/bin/touch ${HOME}/runtime/installedsoftware/InstallSendEmail.sh	
 fi
 
+if ( [ ! -f /usr/bin/sendemail ] )
+then
+	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR SENDEMAIL" "I believe that sendemail hasn't installed correctly, please investigate" "ERROR"
+else
+	/bin/touch ${HOME}/runtime/installedsoftware/InstallSendEmail.sh	
+fi
+
