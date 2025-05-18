@@ -72,6 +72,12 @@ then
 		/usr/bin/ln -s ${HOME}/.local/bin/linode-cli /usr/local/bin/linode-cli				
 	fi													
 fi
-/bin/touch ${HOME}/runtime/installedsoftware/InstallLinodeCLI.sh	
+
+if ( [ ! -f /usr/local/bin/linode-cli ] )
+then
+	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR LINODE-CLI" "I believe that linode cli hasn't installed correctly, please investigate" "ERROR"
+else
+	/bin/touch ${HOME}/runtime/installedsoftware/InstallLinodeCLI.sh	
+fi
 
 
