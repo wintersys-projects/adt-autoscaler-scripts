@@ -34,6 +34,12 @@ fi
 
 if ( [ "${BUILDOS}" = "ubuntu" ] )
 then
+	if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd:binary'`" = "1" ] )
+ 	then
+		/usr/bin/wget="`/usr/bin/wget -q -O - https://api.github.com/repos/peak/s5cmd/releases/latest  | /usr/bin/jq -r '.assets[] | select (.name | contains ("amd64"))'.browser_download_url`"
+  		/usr/bin/dpkg -i ./s5cmd_*_linux_amd64.deb
+    		/bin/rm ./s5cmd_*_linux_amd64.deb
+	fi
 	if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd:source'`" = "1" ] )
 	then	
 		${HOME}/installscripts/InstallGo.sh ${BUILDOS}
@@ -43,6 +49,12 @@ then
 fi
 if ( [ "${BUILDOS}" = "debian" ] )
 then
+	if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd:binary'`" = "1" ] )
+ 	then
+		/usr/bin/wget="`/usr/bin/wget -q -O - https://api.github.com/repos/peak/s5cmd/releases/latest  | /usr/bin/jq -r '.assets[] | select (.name | contains ("amd64"))'.browser_download_url`"
+  		/usr/bin/dpkg -i ./s5cmd_*_linux_amd64.deb
+    		/bin/rm ./s5cmd_*_linux_amd64.deb
+	fi
 	if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd:source'`" = "1" ] )
 	then	
 		${HOME}/installscripts/InstallGo.sh ${BUILDOS}
