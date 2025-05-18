@@ -51,14 +51,14 @@ then
 		if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd:repo'`" = "1" ] )
  		then
 			eval ${install_command} s3cmd	
-		elif ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd:binary'`" = "1" ] )
+		elif ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd:source'`" = "1" ] )
  		then
   			eval ${install_command} python3
 			/usr/bin/ln -s /usr/bin/python3 /usr/bin/python
    			/usr/bin/git clone https://github.com/s3tools/s3cmd.git
 			/bin/cp ./s3cmd/s3cmd /usr/bin/s3cmd
 			/bin/cp -r ./s3cmd/S3 /usr/bin/
-			/bin/rm -r ./s3tools
+			/bin/rm -r ./s3cmd
 		fi
   	fi
 	if ( [ "${BUILDOS}" = "debian" ] )
@@ -66,14 +66,14 @@ then
 		if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd:repo'`" = "1" ] )
 		then
 			eval ${install_command} s3cmd
-		elif ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd:binary'`" = "1" ] )
+		elif ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd:source'`" = "1" ] )
 		then
   			eval ${install_command} python3
 			/usr/bin/ln -s /usr/bin/python3 /usr/bin/python
    			/usr/bin/git clone https://github.com/s3tools/s3cmd.git
 			/bin/cp ./s3cmd/s3cmd /usr/bin/s3cmd
 			/bin/cp -r ./s3cmd/S3 /usr/bin/
-			/bin/rm -r ./s3tools
+			/bin/rm -r ./s3cmd
 		fi
 	fi
 	/bin/touch ${HOME}/runtime/installedsoftware/InstallS3CMD.sh				
