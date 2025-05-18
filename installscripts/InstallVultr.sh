@@ -48,7 +48,14 @@ then
 	/bin/chown root:root /usr/bin/vultr              
 fi
 
-/bin/touch ${HOME}/runtime/installedsoftware/InstallVultr.sh	
+	
+
+if ( [ ! -f /usr/bin/vultr ] )
+then
+	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR VULTR" "I believe that vultr hasn't installed correctly, please investigate" "ERROR"
+else
+	/bin/touch ${HOME}/runtime/installedsoftware/InstallVultr.sh	
+fi
 
 
 
