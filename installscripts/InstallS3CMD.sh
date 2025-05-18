@@ -46,16 +46,30 @@ install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y inst
 
 if ( [ "${apt}" != "" ] )
 then
-	if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
- 	then
-		if ( [ "${BUILDOS}" = "ubuntu" ] )
-		then
-			eval ${install_command} s3cmd
+	if ( [ "${BUILDOS}" = "ubuntu" ] )
+	then
+		if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd:repo'`" = "1" ] )
+ 		then
+			eval ${install_command} s3cmd	
+		elif ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd:source'`" = "1" ] )
+ 		then
+			/usr/bin/get clone  https://github.com/s3tools/s3cmd.git
+			/bin/cp ./s3tools/s3cmd /usr/bin/s3cmd
+			/bin/cp -r ./s3tools/S3 /usr/bin/
+			/bin/rm -r ./s3tools
 		fi
-
-		if ( [ "${BUILDOS}" = "debian" ] )
+  	fi
+	if ( [ "${BUILDOS}" = "debian" ] )
+	then
+		if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd:repo'`" = "1" ] )
 		then
 			eval ${install_command} s3cmd
+		elif ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd:source'`" = "1" ] )
+		then
+   			/usr/bin/get clone https://github.com/s3tools/s3cmd.git
+			/bin/cp ./s3tools/s3cmd /usr/bin/s3cmd
+			/bin/cp -r ./s3tools/S3 /usr/bin/
+			/bin/rm -r ./s3tools
 		fi
 	fi
 	/bin/touch ${HOME}/runtime/installedsoftware/InstallS3CMD.sh				
