@@ -53,7 +53,7 @@ then
 			eval ${install_command} s3cmd	
 		elif ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd:source'`" = "1" ] )
  		then
-  			eval ${install_command} python3
+  			eval ${install_command} python3 python3-dateutil
 			/usr/bin/ln -s /usr/bin/python3 /usr/bin/python
    			/usr/bin/git clone https://github.com/s3tools/s3cmd.git
 			/bin/cp ./s3cmd/s3cmd /usr/bin/s3cmd
@@ -68,7 +68,7 @@ then
 			eval ${install_command} s3cmd
 		elif ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd:source'`" = "1" ] )
 		then
-  			eval ${install_command} python3
+  			eval ${install_command} python3 python3-dateutil
 			/usr/bin/ln -s /usr/bin/python3 /usr/bin/python
    			/usr/bin/git clone https://github.com/s3tools/s3cmd.git
 			/bin/cp ./s3cmd/s3cmd /usr/bin/s3cmd
