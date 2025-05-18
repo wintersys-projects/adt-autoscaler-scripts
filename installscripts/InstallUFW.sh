@@ -58,11 +58,17 @@ then
 	fi
 fi
 
-/bin/touch ${HOME}/runtime/installedsoftware/InstallUFW.sh	
 /usr/sbin/ufw disable
 
 if ( [ ! -f /usr/bin/ufw ] )
 then
 	/usr/bin/ln -s /usr/sbin/ufw /usr/bin/ufw
+fi
+
+if ( [ ! -f /usr/bin/ufw ] )
+then
+	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR UFW" "I believe that ufw hasn't installed correctly, please investigate" "ERROR"
+else
+	/bin/touch ${HOME}/runtime/installedsoftware/InstallUFW.sh	
 fi
 
