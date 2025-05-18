@@ -76,10 +76,16 @@ then
 			/bin/rm -r ./s3cmd
 		fi
 	fi
-	/bin/touch ${HOME}/runtime/installedsoftware/InstallS3CMD.sh				
 fi
 
 if ( [ -f ${HOME}/.s3cfg ] )
 then
 	/bin/cp ${HOME}/.s3cfg /root
+fi
+
+if ( [ ! -f /usr/bin/s3cmd ] )
+then
+	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR S3CMD" "I believe that s3cmd hasn't installed correctly, please investigate" "ERROR"
+else
+	/bin/touch ${HOME}/runtime/installedsoftware/InstallS3CMD.sh				
 fi
