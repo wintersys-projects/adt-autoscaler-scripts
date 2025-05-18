@@ -58,7 +58,7 @@ then
 	fi	
 fi
 
-if ( [ ! -f /usr/sbin/ssmtp] )
+if ( [ ! -f /usr/sbin/ssmtp ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR SSMTP" "I believe that ssmtp hasn't installed correctly, please investigate" "ERROR"
 else
