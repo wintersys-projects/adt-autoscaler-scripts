@@ -44,4 +44,9 @@ then
 	/usr/bin/curl -fsSL https://raw.githubusercontent.com/exoscale/cli/master/install-latest.sh | /bin/sh 	
 fi
 
-/bin/touch ${HOME}/runtime/installedsoftware/InstallExo.sh	
+if ( [ ! -f /usr/bin/exo ] )
+then
+	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR EXO" "I believe that exo hasn't installed correctly, please investigate" "ERROR"
+else
+	/bin/touch ${HOME}/runtime/installedsoftware/InstallDoctl.sh				
+fi
