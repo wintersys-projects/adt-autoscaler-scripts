@@ -65,6 +65,11 @@ then
 	/bin/chmod 400 ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml			
 fi
 
-/bin/touch ${HOME}/runtime/installedsoftware/InstallDoctl.sh	
+if ( [ ! -f /usr/local/bin/doctl ] )
+then
+	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR DOCTL" "I believe that doctl hasn't installed correctly, please investigate" "ERROR"
+else
+	/bin/touch ${HOME}/runtime/installedsoftware/InstallDoctl.sh				
+fi
 
 
