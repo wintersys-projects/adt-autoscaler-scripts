@@ -39,7 +39,7 @@ then
 		/bin/rm ${HOME}/.config/doctl/config.yaml
 	fi
 	
-	/bin/echo "${0} Configuring Digital Ocean CLI tool" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
+	/bin/echo "${0} Configuring Digital Ocean CLI tool" 
 
 	if ( [ ! -d ${HOME}/.config/doctl ] )
 	then
@@ -52,7 +52,7 @@ then
 	then
 		/bin/sed -i "s/XXXXTOKENXXXX/${TOKEN}/" ${HOME}/.config/doctl/config.yaml
 	else 
-		/bin/echo "${0} Couldn't find your digital ocean account personal access token in your template, will have to exit" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
+		/bin/echo "${0} Couldn't find your digital ocean account personal access token in your template, will have to exit" 
 		exit
 	fi
 
@@ -78,7 +78,7 @@ then
 		/bin/rm ${HOME}/.config/exoscale/exoscale.toml
 	fi
 
-	/bin/echo "${0} Configuring Exoscale CLI tool" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
+	/bin/echo "${0} Configuring Exoscale CLI tool" 
 
 	if ( [ ! -d ${HOME}/.config/exoscale ] )
 	then
@@ -91,7 +91,7 @@ then
 	then
 		/bin/sed -i "s/XXXXCLOUDEMAILADDRESSXXXX/${CLOUDHOST_ACCOUNT_ID}/" ${HOME}/.config/exoscale/exoscale.toml
 	else 
-		/bin/echo "${0} Couldn't find your exoscale cloud email address in your template, will have to exit" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
+		/bin/echo "${0} Couldn't find your exoscale cloud email address in your template, will have to exit"
 		exit
 	fi
 
@@ -99,7 +99,7 @@ then
 	then
 		/bin/sed -i "s/XXXXREGIONXXXX/${REGION}/" ${HOME}/.config/exoscale/exoscale.toml
 	else 
-		/bin/echo "${0} Couldn't find your region in your template, will have to exit" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
+		/bin/echo "${0} Couldn't find your region in your template, will have to exit" 
 		exit
 	fi
 
@@ -107,7 +107,7 @@ then
 	then
 		/bin/sed -i "s/XXXXACCESSKEYXXXX/${ACCESS_KEY}/" ${HOME}/.config/exoscale/exoscale.toml
 	else 
-		/bin/echo "${0} Couldn't find your access key in your template, will have to exit" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
+		/bin/echo "${0} Couldn't find your access key in your template, will have to exit" 
 		exit
 	fi
 
@@ -115,7 +115,7 @@ then
 	then
 		/bin/sed -i "s/XXXXSECRETKEYXXXX/${SECRET_KEY}/" ${HOME}/.config/exoscale/exoscale.toml
 	else 
-		/bin/echo "${0} Couldn't find your secret key in your template, will have to exit" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
+		/bin/echo "${0} Couldn't find your secret key in your template, will have to exit" 
 		exit
 	fi
 
@@ -153,7 +153,7 @@ then
 	then
 		/bin/sed -i "s/XXXXLINODEACCOUNTUSERNAMEXXXX/${CLOUDHOST_ACCOUNT_ID}/" ${HOME}/.config/linode-cli
 	else 
-		/bin/echo "${0} Couldn't find your linode account username in your template, will have to exit" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
+		/bin/echo "${0} Couldn't find your linode account username in your template, will have to exit" 
 		exit
 	fi
 
@@ -161,7 +161,7 @@ then
 	then
 		/bin/sed -i "s/XXXXTOKENXXXX/${TOKEN}/" ${HOME}/.config/linode-cli
 	else 
-		/bin/echo "${0} Couldn't find your linode account personal access token in your template, will have to exit" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
+		/bin/echo "${0} Couldn't find your linode account personal access token in your template, will have to exit" 
 		exit
 	fi
 
@@ -169,7 +169,7 @@ then
 	then
 		/bin/sed -i "s/XXXXREGIONXXXX/${REGION}/" ${HOME}/.config/linode-cli
 	else 
-		/bin/echo "${0} Couldn't find your region id in your template, will have to exit" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
+		/bin/echo "${0} Couldn't find your region id in your template, will have to exit" 
 		exit
 	fi
 
@@ -201,7 +201,7 @@ then
 		/bin/chown root:root ${HOME}/.vultr-cli.yaml /root/.vultr-cli.yaml
 		/bin/chmod 400 ${HOME}/.vultr-cli.yaml /root/.vultr-cli.yaml
 	else
-		/bin/echo "${0} Couldn't find your vultr API key from your template - will have to exit...." >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
+		/bin/echo "${0} Couldn't find your vultr API key from your template - will have to exit...." 
 		exit
 	fi
 fi
