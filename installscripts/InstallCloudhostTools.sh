@@ -41,7 +41,7 @@ CLOUDHOST="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'CLOU
 
 if ( [ "${CLOUDHOST}" = "digitalocean" ] )
 then
-	/bin/echo "${0} `/bin/date`: Building for the Digital Ocean provider" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
+	/bin/echo "${0} `/bin/date`: Building for the Digital Ocean provider" 
 	${HOME}/installscripts/InstallDoctl.sh ${BUILDOS}
 	/bin/chmod 400 {HOME}/.config/doctl/config.yaml
 	/usr/bin/touch ${HOME}/DROPLET
@@ -49,7 +49,7 @@ fi
 
 if ( [ "${CLOUDHOST}" = "exoscale" ] )
 then
-	/bin/echo "${0} `/bin/date`: Building for the Exoscale provider" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
+	/bin/echo "${0} `/bin/date`: Building for the Exoscale provider" 
 	${HOME}/installscripts/InstallExo.sh ${BUILDOS}
 	/bin/chmod 400 ${HOME}/.config/exoscale/exoscale.toml 
 	/usr/bin/touch ${HOME}/EXOSCALE
@@ -58,7 +58,7 @@ fi
 
 if ( [ "${CLOUDHOST}" = "linode" ] )
 then
-	/bin/echo "${0} `/bin/date`: Building for the Linode provider" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
+	/bin/echo "${0} `/bin/date`: Building for the Linode provider" 
 	${HOME}/installscripts/InstallLinodeCLI.sh ${BUILDOS}
 	/bin/chmod 400 ${HOME}/.config/linode-cli 
 	/usr/bin/touch ${HOME}/LINODE
@@ -66,7 +66,7 @@ fi
 
 if ( [ "${CLOUDHOST}" = "vultr" ] )
 then
-	/bin/echo "${0} `/bin/date`: Building for the Vultr provider" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
+	/bin/echo "${0} `/bin/date`: Building for the Vultr provider" 
 	${HOME}/installscripts/InstallGo.sh ${BUILDOS}
 	${HOME}/installscripts/InstallVultr.sh ${BUILDOS}
 	/usr/bin/touch ${HOME}/VULTR
