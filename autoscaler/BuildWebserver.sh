@@ -170,14 +170,14 @@ count="1"
 /bin/echo "${0} `/bin/date`: I am now going to attempt several times to see if the webserver ${server_instance_name} has completed its build process" 
 /bin/echo "${0} `/bin/date`: This will may take as many as 100 attempts depending on how long the webserver takes to build"
 
-while ( [ "${count}" -lt "71" ] && [ "`/usr/bin/ssh -q -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/usr/bin/test -f /home/${SERVER_USER}/runtime/WEBSERVER_READY && /bin/echo 'WEBSERVER_READY'"`" = "" ] )
+while ( [ "${count}" -lt "171" ] && [ "`/usr/bin/ssh -q -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/usr/bin/test -f /home/${SERVER_USER}/runtime/WEBSERVER_READY && /bin/echo 'WEBSERVER_READY'"`" = "" ] )
 do
 	/bin/sleep 5
 	/bin/echo "${0} `/bin/date`: Checking if I consider the webserver with ip address (${private_ip}) to have completed its build process this is attempt ${count}" 
 	count="`/usr/bin/expr ${count} + 1`"
 done
 
-if ( [ "${count}" = "71" ] )
+if ( [ "${count}" = "171" ] )
 then
 	/bin/echo "${0} `/bin/date`: A webserver has failed to build after being given a good go at succeeding" 
  	/bin/echo "${0} `/bin/date`: webserver with ip address: ${ip} is being destroyed" 
