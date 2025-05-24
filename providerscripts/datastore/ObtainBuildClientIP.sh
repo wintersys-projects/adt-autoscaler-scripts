@@ -20,12 +20,12 @@
 ########################################################################################
 #set -x
 
-if ( [ ! -d ${HOME}/runtime/BUILDMACHINEIP ] )
+if ( [ ! -d ${HOME}/runtime/buildmachineip ] )
 then
-	/bin/mkdir ${HOME}/runtime/BUILDMACHINEIP
+	/bin/mkdir ${HOME}/runtime/buildmachineip
 fi
 
-if ( [ "`/bin/ls ${HOME}/runtime/BUILDMACHINEIP/*`" != "" ] && [ -f ${HOME}/runtime/BUILD_MACHINE_UPDATED ] )
+if ( [ "`/bin/ls ${HOME}/runtime/buildmachineip/*`" != "" ] && [ -f ${HOME}/runtime/BUILD_MACHINE_UPDATED ] )
 then
 	exit
 fi
@@ -39,7 +39,7 @@ then
 fi
  
 BUILD_IDENTIFIER="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
-/bin/rm ${HOME}/runtime/BUILDMACHINEIP/*
+/bin/rm ${HOME}/runtime/buildmachineip/*
 
 if ( [ "`${HOME}/providerscripts/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
 then
@@ -50,9 +50,9 @@ then
 	datastore_tool="/usr/bin/s5cmd --credentials-file /root/.s5cfg --endpoint-url https://${host_base} cp "
 fi
 
-${datastore_tool} s3://adt-${BUILD_IDENTIFIER}/* ${HOME}/runtime/BUILDMACHINEIP
+${datastore_tool} s3://adt-${BUILD_IDENTIFIER}/* ${HOME}/runtime/buildmachineip
 
-BUILD_CLIENT_IP="`/bin/ls ${HOME}/runtime/BUILDMACHINEIP/* | /usr/bin/awk -F'/' '{print $NF}' | /bin/grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`"
+BUILD_CLIENT_IP="`/bin/ls ${HOME}/runtime/buildmachineip/* | /usr/bin/awk -F'/' '{print $NF}' | /bin/grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`"
 OLD_BUILD_CLIENT_IP="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDMACHINEIP'`"
 
 if ( [ "${OLD_BUILD_CLIENT_IP}" != "${BUILD_CLIENT_IP}" ] )
