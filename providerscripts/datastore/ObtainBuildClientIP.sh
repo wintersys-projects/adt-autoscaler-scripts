@@ -53,7 +53,7 @@ fi
 ${datastore_tool} s3://adt-${BUILD_IDENTIFIER}/* ${HOME}/runtime/BUILDMACHINEIP
 
 BUILD_CLIENT_IP="`/bin/ls ${HOME}/runtime/BUILDMACHINEIP/* | /usr/bin/awk -F'/' '{print $NF}' | /bin/grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`"
-OLD_BUILD_CLIENT_IP="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDCLIENTIP'`"
+OLD_BUILD_CLIENT_IP="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDMACHINEIP'`"
 
 if ( [ "${OLD_BUILD_CLIENT_IP}" != "${BUILD_CLIENT_IP}" ] )
 then
