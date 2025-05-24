@@ -52,11 +52,11 @@ fi
 
 ${datastore_tool} s3://adt-${BUILD_IDENTIFIER}/* ${HOME}/runtime/buildmachineip
 
-BUILD_CLIENT_IP="`/bin/ls ${HOME}/runtime/buildmachineip/* | /usr/bin/awk -F'/' '{print $NF}' | /bin/grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`"
-OLD_BUILD_CLIENT_IP="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDMACHINEIP'`"
+BUILD_MACHINE_IP="`/bin/ls ${HOME}/runtime/buildmachineip/* | /usr/bin/awk -F'/' '{print $NF}' | /bin/grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`"
+OLD_BUILD_MACHINE_IP="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDMACHINEIP'`"
 
-if ( [ "${OLD_BUILD_CLIENT_IP}" != "${BUILD_CLIENT_IP}" ] )
+if ( [ "${OLD_BUILD_MACHINE_IP}" != "${BUILD_MACHINE_IP}" ] )
 then
-	${HOME}/providerscripts/utilities/config/StoreConfigValue.sh "BUILDCLIENTIP" "${BUILD_CLIENT_IP}"  
+	${HOME}/providerscripts/utilities/config/StoreConfigValue.sh "BUILDMACHINEIP" "${BUILD_MACHINE_IP}"  
 	/bin/touch ${HOME}/runtime/BUILD_MACHINE_UPDATED
 fi
