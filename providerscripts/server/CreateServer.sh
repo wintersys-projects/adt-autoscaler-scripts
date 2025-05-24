@@ -93,10 +93,12 @@ then
 	if ( [ "${ACTIVE_FIREWALL}" = "2" ] || [ "${ACTIVE_FIREWALL}" = "3" ] )
 	then
 		firewall_id="`/usr/local/bin/linode-cli --json firewalls list | /usr/bin/jq -r '.[] | select (.label == "adt-webserver-'${BUILD_IDENTIFIER}'").id'`"
-		/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${REGION} --image "${OS_CHOICE}" --firewall_id="${firewall_id}" --type ${server_size} --label "${server_name}" --no-defaults --interfaces.primary true --interfaces.purpose vpc --interfaces.subnet_id ${subnet_id} --interfaces.ipv4.nat_1_1 any --metadata.user_data "${cloud_config}" --disk_encryption "enabled"
-	else
-		/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${REGION} --image "${OS_CHOICE}" --type ${server_size} --label "${server_name}" --no-defaults --interfaces.primary true --interfaces.purpose vpc --interfaces.subnet_id ${subnet_id} --interfaces.ipv4.nat_1_1 any  --metadata.user_data "${cloud_config}" --disk_encryption "enabled"
-	fi
+		#/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${REGION} --image "${OS_CHOICE}" --firewall_id="${firewall_id}" --type ${server_size} --label "${server_name}" --no-defaults --interfaces.primary true --interfaces.purpose vpc --interfaces.subnet_id ${subnet_id} --interfaces.ipv4.nat_1_1 any --metadata.user_data "${cloud_config}" --disk_encryption "enabled"
+		/usr/local/bin/linode-cli linodes create --authorized_keys "${key}" --root_pass "${emergency_password}" --region ${REGION} --image "${OS_CHOICE}" --firewall_id="${firewall_id}" --type ${server_size} --label "${server_name}" --no-defaults --interface_generation "legacy_config" --interfaces '[ { "primary": true, "purpose": "vpc", "subnet_id": '${subnet_id}',  "ipv4": { "nat_1_1": "any" } } ]' --metadata.user_data "${cloud_config}" --disk_encryption "enabled"
+ 	else
+		#/usr/local/bin/linode-cli linodes create  --authorized_keys "${key}" --root_pass ${emergency_password} --region ${REGION} --image "${OS_CHOICE}" --type ${server_size} --label "${server_name}" --no-defaults --interfaces.primary true --interfaces.purpose vpc --interfaces.subnet_id ${subnet_id} --interfaces.ipv4.nat_1_1 any  --metadata.user_data "${cloud_config}" --disk_encryption "enabled"
+		/usr/local/bin/linode-cli linodes create --authorized_keys "${key}" --root_pass "${emergency_password}" --region ${REGION} --image "${OS_CHOICE}" --type ${server_size} --label "${server_name}" --no-defaults --interface_generation "legacy_config" --interfaces '[ { "primary": true, "purpose": "vpc", "subnet_id": '${subnet_id}',  "ipv4": { "nat_1_1": "any" } } ]' --metadata.user_data "${cloud_config}" --disk_encryption "enabled"
+ 	fi
 fi
 
 if ( [ -f ${HOME}/VULTR ] || [ "${CLOUDHOST}" = "vultr" ] )
