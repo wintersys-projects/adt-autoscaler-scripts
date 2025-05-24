@@ -29,6 +29,6 @@ ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${public
 #Also record build client IP address - each machine has it but for uniformity of interface, we can record it here also
 ip="`${HOME}/providerscripts/utilities/config/ExtractConfigValue.sh 'BUILDMACHINEIP'`"
 
-${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} buildclientip/${ip}
+${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} buildmachineip/${ip}
 
 
