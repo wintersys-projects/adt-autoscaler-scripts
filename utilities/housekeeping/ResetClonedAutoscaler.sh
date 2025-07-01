@@ -7,7 +7,7 @@ CLOUDHOST="`${HOME}/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
 
 if ( [ "${CLOUDHOST}" = "digitalocean" ] )
 then
-  ${HOME}/utilities/processing/RunServiceCommand.sh "snapd.apparmor" restart
+    /usr/sbin/shutdown -r now
 fi
 
 ${HOME}/installscripts/UpdateAndUpgrade.sh ${BUILDOS} &
