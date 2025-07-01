@@ -36,7 +36,14 @@ VPC_NAME="`${HOME}/utilities/config/ExtractConfigValue.sh 'VPCNAME'`"
 KEY_ID="`${HOME}/utilities/config/ExtractConfigValue.sh 'KEYID'`"
 BUILD_IDENTIFIER="`${HOME}/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
 ACTIVE_FIREWALL="`${HOME}/utilities/config/ExtractConfigValue.sh 'ACTIVEFIREWALLS'`"
+BUILD_FROM_SNAPSHOT="`${HOME}/utilities/config/ExtractConfigValue.sh 'BUILDFROMSNAPSHOT'`"
 OS_CHOICE="`${HOME}/providerscripts/cloudhost/GetOperatingSystemVersion.sh`"
+
+SNAPSHOT_ID=""
+if ( [ "${BUILD_FROM_SNAPSHOT}" = "1" ] )
+then
+	SNAPSHOT_ID="`${HOME}/utilities/config/ExtractConfigValue.sh 'SNAPSHOTID'`"
+fi
 
 if ( [ -f ${HOME}/DROPLET ] || [ "${CLOUDHOST}" = "digitalocean" ] )
 then
@@ -45,8 +52,15 @@ then
 
 	/bin/sed -i "s/XXXXWEBSERVER_HOSTNAMEXXXX/${server_name}/g" ${HOME}/runtime/cloud-init/webserver.yaml
 	cloud_config="`/bin/cat ${HOME}/runtime/cloud-init/webserver.yaml`"
+
+	image='--image "${OS_CHOICE}"'
+
+ 	if ( [ "${SNAPSHOT_ID}" != "" ] )
+  	then
+   		image='--image "${SNAPSHOT_ID}"'
+        fi
         
-	webserver_id="`/usr/local/bin/doctl compute droplet create "${server_name}" -o json --size "${server_size}" --image "${OS_CHOICE}"  --region "${REGION}" --ssh-keys "${KEY_ID}" --vpc-uuid "${vpc_id}" --user-data "${cloud_config}" | /usr/bin/jq -r '.[].id'`"
+	webserver_id="`/usr/local/bin/doctl compute droplet create "${server_name}" -o json --size "${server_size}" ${image} --region "${REGION}" --ssh-keys "${KEY_ID}" --vpc-uuid "${vpc_id}" --user-data "${cloud_config}" | /usr/bin/jq -r '.[].id'`"
        
 	if ( [ "${ACTIVE_FIREWALL}" = "2" ] || [ "${ACTIVE_FIREWALL}" = "3" ] )
 	then
