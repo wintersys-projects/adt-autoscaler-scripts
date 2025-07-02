@@ -53,15 +53,17 @@ then
 	/bin/sed -i "s/XXXXWEBSERVER_HOSTNAMEXXXX/${server_name}/g" ${HOME}/runtime/cloud-init/webserver.yaml
 	cloud_config="`/bin/cat ${HOME}/runtime/cloud-init/webserver.yaml`"
 
-	image='--image "'${OS_CHOICE}'"'
+	image="--image ${OS_CHOICE}"
 
  	if ( [ "${SNAPSHOT_ID}" != "" ] )
   	then
-   		image='--image "'${SNAPSHOT_ID}'"'
+   		image="--image ${SNAPSHOT_ID}"
         fi
         
 	webserver_id="`/usr/local/bin/doctl compute droplet create "${server_name}" -o json --size "${server_size}" ${image} --region "${REGION}" --ssh-keys "${KEY_ID}" --vpc-uuid "${vpc_id}" --user-data "${cloud_config}" | /usr/bin/jq -r '.[].id'`"
-       
+
+       	/bin/sleep 10
+	
 	if ( [ "${ACTIVE_FIREWALL}" = "2" ] || [ "${ACTIVE_FIREWALL}" = "3" ] )
 	then
 		/usr/local/bin/doctl compute firewall add-droplets ${firewall_id} --droplet-ids ${webserver_id}
