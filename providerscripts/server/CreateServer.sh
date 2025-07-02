@@ -77,6 +77,11 @@ then
 	/bin/sed -i "s/XXXXWEBSERVER_HOSTNAMEXXXX/${server_name}/g" ${HOME}/runtime/cloud-init/webserver.yaml
 	cloud_config="${HOME}/runtime/cloud-init/webserver.yaml"
 
+        if ( [ "${BUILD_FROM_SNAPSHOT}" = "1" ] && [ "${SNAPSHOT_ID}" != "" ] )
+        then
+                OS_CHOICE="${SNAPSHOT_ID}"
+        fi
+
 	firewall=""
  
 	if ( [ "${ACTIVE_FIREWALL}" = "2" ] || [ "${ACTIVE_FIREWALL}" = "3" ] )
