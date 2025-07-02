@@ -80,7 +80,7 @@ then
         if ( [ "${BUILD_FROM_SNAPSHOT}" = "1" ] && [ "${SNAPSHOT_ID}" != "" ] )
         then
                 OS_CHOICE="${SNAPSHOT_ID}"
-		template_visibilty="--template-visibility private"
+		template_visibility="--template-visibility private"
         fi
 
 	firewall=""
@@ -90,7 +90,7 @@ then
 		firewall="--security-group adt-webserver-${BUILD_IDENTIFIER} "
   	fi
  
-	/usr/bin/exo compute instance create "${server_name}" --instance-type standard.${server_size}  ${firewall} --template "${OS_CHOICE}" ${template_visibilty} --zone ${REGION} --ssh-key ${KEY_ID} --cloud-init "${cloud_config}"
+	/usr/bin/exo compute instance create "${server_name}" --instance-type standard.${server_size}  ${firewall} --template "${OS_CHOICE}" ${template_visibility} --zone ${REGION} --ssh-key ${KEY_ID} --cloud-init "${cloud_config}"
 
 	if ( [ "`/usr/bin/exo compute private-network list -O json | /usr/bin/jq -r '.[] | select (.name == "adt_private_net_'${REGION}'").id'`" = "" ] )
 	then
