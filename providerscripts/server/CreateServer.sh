@@ -154,7 +154,7 @@ then
         firewall=""
         if ( [ "${ACTIVE_FIREWALL}" = "2" ] || [ "${ACTIVE_FIREWALL}" = "3" ] )
         then
-                firewall='--firewall-group="'${firewall_id}'"'
+                firewall="--firewall-group=${firewall_id}"
         fi
  
         /bin/sed -i "s/XXXXWEBSERVER_HOSTNAMEXXXX/${server_name}/g" ${HOME}/runtime/cloud-init/webserver.yaml
