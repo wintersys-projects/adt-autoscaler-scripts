@@ -80,6 +80,7 @@ then
         if ( [ "${BUILD_FROM_SNAPSHOT}" = "1" ] && [ "${SNAPSHOT_ID}" != "" ] )
         then
                 OS_CHOICE="${SNAPSHOT_ID}"
+		template_visibilty="--template-visibility private"
         fi
 
 	firewall=""
