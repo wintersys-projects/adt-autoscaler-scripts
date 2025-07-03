@@ -51,7 +51,6 @@ BUILD_IDENTIFIER="`${HOME}/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFI
 SERVER_USER="`${HOME}/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
 SERVER_USER_PASSWORD="`${HOME}/utilities/config/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
 SSH_PORT="`${HOME}/utilities/config/ExtractConfigValue.sh 'SSHPORT'`"
-BUILD_FROM_BACKUP="`${HOME}/utilities/config/ExtractConfigValue.sh 'BUILDFROMBACKUP'`"
 NO_REVERSE_PROXY="`${HOME}/utilities/config/ExtractConfigValue.sh 'NOREVERSEPROXY'`"
 OPTIONS=" -o ConnectTimeout=10 -o ConnectionAttempts=10 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "
 BUILD_KEY="${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER}"
@@ -186,20 +185,6 @@ then
  	/bin/echo "${0} `/bin/date`: webserver with ip address: ${ip} is being destroyed" 
 	${HOME}/providerscripts/server/DestroyServer.sh ${ip} ${CLOUDHOST}
 	/usr/bin/kill -TERM $$
-fi
-
-if ( [ "${BUILD_FROM_BACKUP}" = "1" ] )
-then
-        if ( [ -f ${HOME}/whole_webserver_backup/webserver_backup.tar ] && [ -f ${HOME}/whole_webserver_backup/webserver_hidden.tar ] )
-        then
-		/bin/echo "${0} `/bin/date`: Copying and exracting whole_webserver_backup.tar onto the new webserver machine with ip address ${private_ip}" 
-                /usr/bin/scp -q -P ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${HOME}/whole_webserver_backup/webserver_backup.tar ${SERVER_USER}@${private_ip}:/tmp
-                /usr/bin/scp -q -P ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${HOME}/whole_webserver_backup/webserver_hidden.tar ${SERVER_USER}@${private_ip}:/tmp
-                /usr/bin/ssh -q -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${SUDO} /usr/bin/tar xvf /tmp/webserver_backup.tar --keep-newer-files -C /"
-                /usr/bin/ssh -q -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${SUDO} /usr/bin/tar xvf /tmp/webserver_hidden.tar --keep-newer-files -C /"
-                /usr/bin/ssh -q -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${SUDO} /home/${SERVER_USER}/application/InstallApplication.sh"
-                /usr/bin/ssh -q -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "${SUDO} /home/${SERVER_USER}/utilities/housekeeping/ResetClonedWebserver.sh"
-        fi
 fi
 
 #If your application needs any updates to the native firewall then they will be applied here
