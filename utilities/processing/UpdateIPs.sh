@@ -21,14 +21,14 @@
 #set -x
 
 ip="`${HOME}/utilities/processing/GetIP.sh`"
-${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} autoscalerip/${ip}
+${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} autoscalerip/${ip} "no"
 
 publicip="`${HOME}/utilities/processing/GetPublicIP.sh`"
-${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${publicip} autoscalerpublicip/${publicip}
+${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${publicip} autoscalerpublicip/${publicip} "no"
 
 #Also record build client IP address - each machine has it but for uniformity of interface, we can record it here also
 ip="`${HOME}/utilities/config/ExtractConfigValue.sh 'BUILDMACHINEIP'`"
 
-${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} buildmachineip/${ip}
+${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} buildmachineip/${ip} "no"
 
 
