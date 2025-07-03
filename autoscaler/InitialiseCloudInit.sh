@@ -36,7 +36,7 @@ webserver_configuration_settings="`/bin/cat ${HOME}/runtime/webserver_configurat
 build_styles_settings="`/bin/cat ${HOME}/runtime/buildstyles.dat  | /bin/grep -v "^#" | /usr/bin/gzip -f | /usr/bin/base64 | /usr/bin/tr -d '\n'`"
 TIMEZONE_CONTINENT="`${HOME}/utilities/config/ExtractConfigValue.sh SERVERTIMEZONECONTINENT`"
 TIMEZONE_CITY="`${HOME}/utilities/config/ExtractConfigValue.sh  SERVERTIMEZONECITY`"
-BUILD_FROM_BACKUP="`${HOME}/utilities/config/ExtractConfigValue.sh  BUILDFROMBACKUP`"
+BUILD_FROM_SNAPSHOT="`${HOME}/utilities/config/ExtractConfigValue.sh  BUILDFROMSNAPSHOT`"
 TIMEZONE="${TIMEZONE_CONTINENT}/${TIMEZONE_CITY}"
 SSH_PORT="`${HOME}/utilities/config/ExtractConfigValue.sh  SSHPORT`"
 
@@ -46,9 +46,9 @@ then
 fi
 
 #Transfer the default cloud-init script to our working area so it can be filled with live data
-if ( [ "${BUILD_FROM_BACKUP}" = "1" ] )
+if ( [ "${BUILD_FROM_SNAPSHOT}" = "1" ] )
 then
-	/bin/cp ${HOME}/providerscripts/server/cloud-init/${CLOUDHOST}/webserver-by-archive.yaml ${HOME}/runtime/cloud-init/webserver.yaml
+	/bin/cp ${HOME}/providerscripts/server/cloud-init/${CLOUDHOST}/webserver-by-snapshot.yaml ${HOME}/runtime/cloud-init/webserver.yaml
 else
 	/bin/cp ${HOME}/providerscripts/server/cloud-init/${CLOUDHOST}/webserver.yaml ${HOME}/runtime/cloud-init/webserver.yaml
 fi
