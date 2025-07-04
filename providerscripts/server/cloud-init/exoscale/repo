@@ -17,6 +17,13 @@ ssh_keys:
       -----END OPENSSH PRIVATE KEY-----
 
 write_files:
+- path: /etc/netplan/eth1.yaml
+  content: |
+    network:
+      version: 2
+      ethernets:
+        eth1:
+          dhcp4: true
 - encoding: b64
   content: XXXXWEBSERVER_CONFIGURATIONXXXX
   owner: root:root
