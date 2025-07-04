@@ -119,6 +119,6 @@ ${HOME}/providerscripts/email/SendEmail.sh "A NEW AUTOSCALER HAS BEEN SUCCESSFUL
 /bin/echo "${0} Enforcing permissions"
 ${HOME}/utilities/security/EnforcePermissions.sh
 
-${HOME}/installscripts/UpdateAndUpgrade.sh ${BUILDOS} &
+#${HOME}/installscripts/UpdateAndUpgrade.sh ${BUILDOS} &
 
 
