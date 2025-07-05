@@ -144,10 +144,20 @@ then
           selected_databaseid="${databaseid}"
       fi
   done
+    ipaddresses=""
+    if ( [ "${multi_region_ips}" != "" ] )
+    then
+       ipaddresses="["
+       for ip in ${multi_region_ips}
+       do
+            ipaddresses="${ipaddresses}${ip},"
+       done
+       ipaddresses="`/bin/echo ${ipaddresses} | /bin/sed 's/,$//'`]"
+    fi
 
   if ( [ "${selected_databaseid}" != "" ] )
   then
       VPC_IP_RANGE="`${HOME}/utilities/config/ExtractConfigValue.sh 'VPCIPRANGE'`"
-      /usr/bin/vultr database update ${selected_databaseid} --trusted-ips="${VPC_IP_RANGE}"
+      /usr/bin/vultr database update ${selected_databaseid} --trusted-ips="${ipaddresses}"
   fi
 fi
