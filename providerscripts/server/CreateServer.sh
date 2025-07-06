@@ -60,7 +60,7 @@ then
    		image="--image ${SNAPSHOT_ID}"
         fi
         
-	webserver_id="`/usr/local/bin/doctl compute droplet create "${server_name}" -o json --size "${server_size}" ${image} --region "${REGION}" --ssh-keys "${KEY_ID}" --vpc-uuid "${vpc_id}" --user-data "${cloud_config}" | /usr/bin/jq -r '.[].id'`"
+	webserver_id="`/usr/local/bin/doctl compute droplet create "${server_name}" -o json --size "${server_size}" ${image} --region "${REGION}" --vpc-uuid "${vpc_id}" --user-data "${cloud_config}" | /usr/bin/jq -r '.[].id'`"
 
        	/bin/sleep 5
 	
@@ -90,7 +90,7 @@ then
 		firewall="--security-group adt-webserver-${BUILD_IDENTIFIER} "
   	fi
  
-	/usr/bin/exo compute instance create "${server_name}" --instance-type standard.${server_size}  ${firewall} --template "${OS_CHOICE}" ${template_visibility} --zone ${REGION} --ssh-key ${KEY_ID} --cloud-init "${cloud_config}"
+	/usr/bin/exo compute instance create "${server_name}" --instance-type standard.${server_size}  ${firewall} --template "${OS_CHOICE}" ${template_visibility} --zone ${REGION} --cloud-init "${cloud_config}"
 
 	if ( [ "`/usr/bin/exo compute private-network list -O json | /usr/bin/jq -r '.[] | select (.name == "adt_private_net_'${REGION}'").id'`" = "" ] )
 	then
@@ -173,6 +173,6 @@ then
         /bin/sed -i "s/XXXXWEBSERVER_HOSTNAMEXXXX/${server_name}/g" ${HOME}/runtime/cloud-init/webserver.yaml
         cloud_config="${HOME}/runtime/cloud-init/webserver.yaml"
 
-        /usr/bin/vultr instance create --label="${server_name}" --region="${REGION}" --plan="${server_size}" --ipv6=false -s ${KEY_ID} ${snapshot} ${os} ${ddos} ${firewall} --userdata="`/bin/cat ${cloud_config}`" --vpc-enable --vpc-ids ${vpc_id}
+        /usr/bin/vultr instance create --label="${server_name}" --region="${REGION}" --plan="${server_size}" --ipv6=false ${snapshot} ${os} ${ddos} ${firewall} --userdata="`/bin/cat ${cloud_config}`" --vpc-enable --vpc-ids ${vpc_id}
 
 fi
