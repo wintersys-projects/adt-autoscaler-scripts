@@ -32,6 +32,12 @@ then
     datastore_tool="/usr/bin/s5cmd --credentials-file /root/.s5cfg --endpoint-url https://${host_base} cp "
 fi
 
+if ( [ ! -f ${file_to_put} ] )
+then
+        file_to_put="/tmp/${file_to_put}"
+        /bin/touch ${file_to_put}
+fi
+
 count="0"
 while ( [ "`${datastore_tool} ${file_to_put} s3://${datastore_to_put_in} 2>&1 >/dev/null | /bin/grep "ERROR"`" != "" ] && [ "${count}" -lt "5" ] )
 do
