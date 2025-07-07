@@ -26,15 +26,18 @@ REGION="`${HOME}/utilities/config/ExtractConfigValue.sh 'REGION'`"
 CLOUDHOST="`${HOME}/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
 MULTI_REGION="`${HOME}/utilities/config/ExtractConfigValue.sh 'MULTIREGION'`"
 PRIMARY_REGION="`${HOME}/utilities/config/ExtractConfigValue.sh 'PRIMARYREGION'`"
+WEBSITE_URL="`${HOME}/utilities/config/ExtractConfigValue.sh 'WEBSITEURL'`"
+
 #The digital ocean managed database should be in the same VPC as the webserver machines which means that the managed database can only be accessed from within that VPC
 #This means that you have no need to have trusted IP addresses on an IP address by IP address basis for digital ocean. I have left the code below commented out in case
 #You do want to have specific IP addresses as trusted IPs but as long as your managed database is in the same VPC as your main machines then you shouldn't need this
 
 multi_region_ips=""
 
-if ( [ "${MULTI_REGION}" = "1" ] && [ "${PRIMARY_REGION}" = "1" ] )
+if ( [ "${MULTI_REGION}" = "1" ] )
 then
- multi_region_ips="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh multiregionwebserverpublicips/*`"
+        multi_region_bucket="`/bin/echo ${WEBSITE_URL} | /bin/sed 's/\./-/g'`-multi-region"
+        multi_region_ips="`${BUILD_HOME}/providerscripts/datastore/PutToDatastore.sh ${multi_region_bucket}/dbaas_ips/*`"
 fi
 
 if ( [ "${CLOUDHOST}" = "digitalocean" ] )
