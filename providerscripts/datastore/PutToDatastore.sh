@@ -22,6 +22,7 @@
 
 file_to_put="$1"
 datastore_to_put_in="$2"
+delete="${3}"
 
 if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
 then
@@ -47,4 +48,9 @@ do
 done
 
 file="`/bin/echo ${file_to_put} | /usr/bin/awk -F'/' '{print $NF}'`"
+
+if ( [ "${delete}" != "" ] )
+then
+    /bin/rm ${file_to_put}
+fi
 
