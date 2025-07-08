@@ -38,6 +38,22 @@ if ( [ "${MULTI_REGION}" = "1" ] )
 then
         multi_region_bucket="`/bin/echo ${WEBSITE_URL} | /bin/sed 's/\./-/g'`-multi-region"
         multi_region_ips="`${HOME}/providerscripts/datastore/ListFromDatastore.sh ${multi_region_bucket}/dbaas_ips/*`"
+        update_needed="0"
+        if ( [ -f ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat ] )
+        then
+                for ip in ${multi_region_ips}
+                do
+                        if ( [ "`/bin/grep ${ip} ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat`" = "" ] )
+                        then
+                                update_needed="1"
+                        fi
+                done
+        fi
+        
+        if ( [ "${update_needed}" = "0" ] )
+        then
+                exit
+        fi
 fi
 
 if ( [ "${CLOUDHOST}" = "digitalocean" ] )
@@ -170,3 +186,10 @@ then
       /usr/bin/vultr database update ${selected_databaseid} --trusted-ips="${ipaddresses}"
   fi
 fi
+
+if ( [ ! -d ${HOME}/runtime/dbaas_allowed_ips ] )
+then
+        /bin/mkdir -p ${HOME}/runtime/dbaas_allowed_ips
+fi
+
+/bin/echo "${ipaddresses}" > ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat
