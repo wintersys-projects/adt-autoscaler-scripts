@@ -49,10 +49,16 @@ then
                         fi
                 done
         fi
-        
+
         if ( [ "${update_needed}" = "0" ] )
         then
                 exit
+        else
+                if ( [ ! -d ${HOME}/runtime/dbaas_allowed_ips ] )
+                then
+                        /bin/mkdir -p ${HOME}/runtime/dbaas_allowed_ips
+                fi
+                /bin/touch ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat
         fi
 fi
 
@@ -185,11 +191,6 @@ then
       VPC_IP_RANGE="`${HOME}/utilities/config/ExtractConfigValue.sh 'VPCIPRANGE'`"
       /usr/bin/vultr database update ${selected_databaseid} --trusted-ips="${ipaddresses}"
   fi
-fi
-
-if ( [ ! -d ${HOME}/runtime/dbaas_allowed_ips ] )
-then
-        /bin/mkdir -p ${HOME}/runtime/dbaas_allowed_ips
 fi
 
 /bin/echo "${ipaddresses}" > ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat
