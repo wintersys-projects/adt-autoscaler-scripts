@@ -55,6 +55,11 @@ then
                 fi
         done
         
+        if ( [ "${multi_region_ips}" = "" ] )
+        then
+                multi_region_ips="`/bin/cat ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat`"
+        fi
+
         if ( [ "${update_needed}" = "0" ] )
         then
                 exit
