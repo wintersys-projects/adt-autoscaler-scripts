@@ -45,25 +45,12 @@ then
         fi
 
         /bin/touch ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat
-
-        update_needed="0"
-        for ip in ${multi_region_ips}
-        do
-                if ( [ "`/bin/grep ${ip} ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat`" = "" ] )
-                then
-                        update_needed="1"
-                fi
-        done
         
         if ( [ "${multi_region_ips}" = "" ] )
         then
                 multi_region_ips="`/bin/cat ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat`"
         fi
 
-        if ( [ "${update_needed}" = "0" ] )
-        then
-                exit
-        fi
 fi
 
 if ( [ "${CLOUDHOST}" = "digitalocean" ] )
