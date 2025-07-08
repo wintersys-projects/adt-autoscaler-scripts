@@ -37,6 +37,13 @@ HOME="`/bin/cat /home/homedir.dat`"
 /bin/echo "*/1 * * * * export HOME="${HOME}" && ${HOME}/utilities/status/MonitorForOverload.sh" >> /var/spool/cron/crontabs/root
 /bin/echo "*/1 * * * * export HOME="${HOME}" && ${HOME}/utilities/status/CheckNetworkManagerStatus.sh" >> /var/spool/cron/crontabs/root
 
+MULTI_REGIONS="`${HOME}/utilities/config/ExtractConfigValue.sh 'MULTI_REGION'`"
+
+if ( [ "${MULTI_REGION}" = "1" ] )
+then
+	/bin/echo "*/1 * * * * export HOME="${HOME}" && ${HOME}/providerscripts/cloudhost/security/firewall/TightenDBaaSFirewall.sh" >> /var/spool/cron/crontabs/root
+fi
+
 #These scripts are set to run every 5 minutes
 /bin/echo "*/5 * * * * export HOME="${HOME}" && /bin/sleep 23 && ${HOME}/security/MonitorFirewall.sh" >> /var/spool/cron/crontabs/root
 /bin/echo "*/5 * * * * export HOME="${HOME}" && ${HOME}/autoscaler/RecordNumberOfWebserversRunning.sh" >> /var/spool/cron/crontabs/root
