@@ -37,7 +37,7 @@ HOME="`/bin/cat /home/homedir.dat`"
 /bin/echo "*/1 * * * * export HOME="${HOME}" && ${HOME}/utilities/status/MonitorForOverload.sh" >> /var/spool/cron/crontabs/root
 /bin/echo "*/1 * * * * export HOME="${HOME}" && ${HOME}/utilities/status/CheckNetworkManagerStatus.sh" >> /var/spool/cron/crontabs/root
 
-MULTI_REGIONS="`${HOME}/utilities/config/ExtractConfigValue.sh 'MULTI_REGION'`"
+MULTIREGION="`${HOME}/utilities/config/ExtractConfigValue.sh 'MULTIREGION'`"
 
 if ( [ "${MULTI_REGION}" = "1" ] )
 then
