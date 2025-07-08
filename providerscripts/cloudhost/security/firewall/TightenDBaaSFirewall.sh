@@ -74,16 +74,18 @@ then
     then
        for ip in ${multi_region_ips}
        do
-            newips="${newips} ${ip}"
+            ipaddresses="${ipaddresses} ${ip}"
        done
     fi
-     
+
+    ipaddresses="`/bin/echo ${ipaddresses} | /usr/bin/tr ' ' '\n' | /usr/bin/sort -u`"
+
     if ( [ "`/bin/echo ${dbaas} | /bin/grep ' pg '`" != "" ] )
     then
-        /usr/bin/exo dbaas update -z ${zone}  ${database_name} --pg-ip-filter=${newips}
+        /usr/bin/exo dbaas update -z ${zone}  ${database_name} --pg-ip-filter=${ipaddresses}
     elif ( [ "`/bin/echo ${dbaas} | /bin/grep ' mysql '`" != "" ] )
     then
-        /usr/bin/exo dbaas update -z ${zone}  ${database_name} --mysql-ip-filter=${newips}
+        /usr/bin/exo dbaas update -z ${zone}  ${database_name} --mysql-ip-filter=${ipaddresses}
     fi
 fi
 
@@ -110,6 +112,8 @@ then
             ipaddresses="${ipaddresses} ${ip}"
        done
     fi
+
+    ipaddresses="`/bin/echo ${ipaddresses} | /usr/bin/tr ' ' '\n' | /usr/bin/sort -u`"
 
     allow_list=" "
     for ipaddress in ${ipaddresses}
@@ -157,6 +161,8 @@ then
        done
        ipaddresses="`/bin/echo ${ipaddresses} | /bin/sed 's/,$//'`]"
     fi
+
+    ipaddresses="`/bin/echo ${ipaddresses} | /usr/bin/tr ' ' '\n' | /usr/bin/sort -u`"
 
   if ( [ "${selected_databaseid}" != "" ] )
   then
