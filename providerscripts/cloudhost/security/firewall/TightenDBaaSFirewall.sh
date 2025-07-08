@@ -38,27 +38,26 @@ if ( [ "${MULTI_REGION}" = "1" ] )
 then
         multi_region_bucket="`/bin/echo ${WEBSITE_URL} | /bin/sed 's/\./-/g'`-multi-region"
         multi_region_ips="`${HOME}/providerscripts/datastore/ListFromDatastore.sh ${multi_region_bucket}/dbaas_ips/*`"
-        update_needed="0"
-        if ( [ -f ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat ] )
+
+        if ( [ ! -d ${HOME}/runtime/dbaas_allowed_ips ] )
         then
-                for ip in ${multi_region_ips}
-                do
-                        if ( [ "`/bin/grep ${ip} ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat`" = "" ] )
-                        then
-                                update_needed="1"
-                        fi
-                done
+                /bin/mkdir -p ${HOME}/runtime/dbaas_allowed_ips
         fi
 
+        /bin/touch ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat
+
+        update_needed="0"
+        for ip in ${multi_region_ips}
+        do
+                if ( [ "`/bin/grep ${ip} ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat`" = "" ] )
+                then
+                        update_needed="1"
+                fi
+        done
+        
         if ( [ "${update_needed}" = "0" ] )
         then
                 exit
-        else
-                if ( [ ! -d ${HOME}/runtime/dbaas_allowed_ips ] )
-                then
-                        /bin/mkdir -p ${HOME}/runtime/dbaas_allowed_ips
-                fi
-                /bin/touch ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat
         fi
 fi
 
