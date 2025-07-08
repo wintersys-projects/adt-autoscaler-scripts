@@ -37,7 +37,7 @@ multi_region_ips=""
 if ( [ "${MULTI_REGION}" = "1" ] )
 then
         multi_region_bucket="`/bin/echo ${WEBSITE_URL} | /bin/sed 's/\./-/g'`-multi-region"
-        multi_region_ips="`${BUILD_HOME}/providerscripts/datastore/PutToDatastore.sh ${multi_region_bucket}/dbaas_ips/*`"
+        multi_region_ips="`${HOME}/providerscripts/datastore/ListFromDatastore.sh ${multi_region_bucket}/dbaas_ips/*`"
 fi
 
 if ( [ "${CLOUDHOST}" = "digitalocean" ] )
