@@ -133,7 +133,7 @@ fi
 if ( [ -f ${HOME}/VULTR ] || [ "${CLOUDHOST}" = "vultr" ] )
 then
         export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
-        OS_CHOICE="`/usr/bin/vultr os list -o json | /usr/bin/jq -r '.os[] | select (.name | contains ("'"${OS_CHOICE}"'")).id'`"
+	OS_CHOICE="`/usr/bin/vultr os list -o json | /usr/bin/jq -r --arg os_choice "${OS_CHOICE}" '.os[] | select (.name | contains ($os_choice)).id'`"
 
         #  if ( [ "`/usr/bin/vultr vpc2 list -o json | /usr/bin/jq -r '.vpcs[] | select (.description == "adt-vpc").id'`" = "" ] )
         if ( [ "`/usr/bin/vultr vpc list -o json | /usr/bin/jq -r '.vpcs[] | select (.description == "'${VPC_NAME}'").id'`" = "" ] )
