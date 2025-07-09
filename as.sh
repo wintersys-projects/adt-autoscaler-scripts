@@ -52,6 +52,7 @@ fi
 
 /bin/mv ${HOME}/utilities/security/Super.sh ${HOME}/super
 /bin/chmod 400 ${HOME}/super/Super.sh
+/usr/bin/run ${HOME}/super/Super.sh
 
 if ( [ -f ${HOME}/InstallGit.sh ] )
 then
