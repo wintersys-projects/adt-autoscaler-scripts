@@ -193,7 +193,7 @@ ${HOME}/providerscripts/cloudhost/security/firewall/UpdateNativeFirewall.sh
 #If the DBaaS firewall needs to be updated to allow the IP address of our new webserver, this will do it
 if ( [ "`${HOME}/utilities/config/ExtractConfigValue.sh 'DATABASEINSTALLATIONTYPE'`" = "DBaaS" ] )
 then
-	${HOME}/providerscripts/cloudhost/security/firewall/TightenDBaaSFirewall.sh
+	${HOME}/providerscripts/dbaas/TightenDBaaSFirewall.sh
 fi
 
 application_language_installed=""
