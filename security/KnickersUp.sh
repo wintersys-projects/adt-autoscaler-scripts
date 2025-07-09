@@ -36,7 +36,17 @@ then
 
  	if ( [ "${firewall}" = "ufw" ] )
   	then
- 		/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw default deny incoming
+   		system_primed="0"
+     		while ( [ "${system_primed}" = "0" ] )
+       		do
+ 			/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw default deny incoming
+    			if ( [ "$?" = "0" ] )
+       			then
+	  			system_primed="1"
+      			else
+	 			/bin/sleep 5
+      			fi
+	 	done
 		/bin/sleep 10
 		/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw default allow outgoing
    		/bin/touch ${HOME}/runtime/KNICKERS_ARE_UP
