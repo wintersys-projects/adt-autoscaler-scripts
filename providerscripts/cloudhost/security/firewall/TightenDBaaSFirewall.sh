@@ -37,7 +37,7 @@ multi_region_ips=""
 if ( [ "${MULTI_REGION}" = "1" ] )
 then
         multi_region_bucket="`/bin/echo ${WEBSITE_URL} | /bin/sed 's/\./-/g'`-multi-region"
-        multi_region_ips="`${HOME}/providerscripts/datastore/ListFromDatastore.sh ${multi_region_bucket}/dbaas_ips/*`"
+        multi_region_ips="`${HOME}/providerscripts/datastore/ListFromDatastore.sh ${multi_region_bucket}/dbaas_ips/* | /usr/bin/awk -F'/' '{print $NF}'`"
 
         if ( [ ! -d ${HOME}/runtime/dbaas_allowed_ips ] )
         then
@@ -45,12 +45,30 @@ then
         fi
 
         /bin/touch ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat
-        
-        if ( [ "${multi_region_ips}" = "" ] )
-        then
-                multi_region_ips="`/bin/cat ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat`"
-        fi
+        existing_multi_region_ips="`/bin/cat ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat`"
 
+        modified="no"
+        for ip in ${multi_region_ips}
+        do
+                if ( [ "`/bin/grep ${ip} ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat`" = "" ] )
+                then
+                        /bin/echo "${ip}" >> ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat
+                        modified="yes"
+                fi
+                for ip in `/bin/cat ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat`
+                do
+                        if ( [ "`/bin/echo ${multi_region_ips} | /bin/grep ${ip}`" = "" ] )
+                        then
+                                /bin/sed -i "/${ip}/d"  ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat
+                                modified="yes"
+                        fi
+                done
+        done
+
+        if ( [ "${modified}" = "no" ] )
+        then
+                exit
+        fi
 fi
 
 if ( [ "${CLOUDHOST}" = "digitalocean" ] )
