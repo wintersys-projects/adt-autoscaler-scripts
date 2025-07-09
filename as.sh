@@ -94,7 +94,7 @@ GIT_USER="`${HOME}/utilities/config/ExtractConfigValue.sh 'GITUSER'  | /bin/sed 
 
 
 /bin/echo "${0} Setting up firewall"
-${HOME}/security/SetupFirewall.sh
+#${HOME}/security/SetupFirewall.sh
 
 /bin/echo "${0} Initialising cloudhost config"
 ${HOME}/providerscripts/cloudhost/InitialiseCloudhostConfig.sh
