@@ -33,11 +33,10 @@ REGION="`${HOME}/utilities/config/ExtractConfigValue.sh 'REGION'`"
 DDOS_PROTECTION="`${HOME}/utilities/config/ExtractConfigValue.sh 'ENABLEDDOSPROTECTION'`"
 VPC_IP_RANGE="`${HOME}/utilities/config/ExtractConfigValue.sh 'VPCIPRANGE'`"
 VPC_NAME="`${HOME}/utilities/config/ExtractConfigValue.sh 'VPCNAME'`"
-#KEY_ID="`${HOME}/utilities/config/ExtractConfigValue.sh 'KEYID'`"
 BUILD_IDENTIFIER="`${HOME}/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
 ACTIVE_FIREWALL="`${HOME}/utilities/config/ExtractConfigValue.sh 'ACTIVEFIREWALLS'`"
 BUILD_FROM_SNAPSHOT="`${HOME}/utilities/config/ExtractConfigValue.sh 'BUILDFROMSNAPSHOT'`"
-OS_CHOICE="`${HOME}/providerscripts/cloudhost/GetOperatingSystemVersion.sh`"
+OS_CHOICE="`${HOME}/providerscripts/server/GetOperatingSystemVersion.sh`"
 
 SNAPSHOT_ID=""
 if ( [ "${BUILD_FROM_SNAPSHOT}" = "1" ] )
