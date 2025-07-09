@@ -60,7 +60,6 @@ then
                         if ( [ "`/bin/echo ${multi_region_ips} | /bin/grep ${ip}`" = "" ] )
                         then
                                 /bin/sed -i "/${ip}/d"  ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat
-                                multi_region_ips="`/bin/cat ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat`"
                                 modified="yes"
                         fi
                 done
