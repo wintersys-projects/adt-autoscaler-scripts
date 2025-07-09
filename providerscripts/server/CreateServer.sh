@@ -150,7 +150,7 @@ then
         firewall_id="`/usr/bin/vultr firewall group list -o json | /usr/bin/jq -r '.firewall_groups[] | select (.description == "adt-webserver-'${BUILD_IDENTIFIER}'").id'`"
 
         snapshot=""
-        os='--os="'${OS_CHOICE}'"'
+        os="--os=${OS_CHOICE}"
 
         if ( [ "${BUILD_FROM_SNAPSHOT}" = "1" ] && [ "${SNAPSHOT_ID}" != "" ] )
         then
