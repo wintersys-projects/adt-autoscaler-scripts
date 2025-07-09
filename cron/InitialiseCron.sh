@@ -81,4 +81,4 @@ fi
 #Install our new crontab
 /usr/bin/crontab /var/spool/cron/crontabs/root
 
-${HOME}/utilities/processing/RunServiceCommand.sh "cron" restart'
+${HOME}/utilities/processing/RunServiceCommand.sh "cron" restart
