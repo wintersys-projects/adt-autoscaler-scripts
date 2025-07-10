@@ -109,7 +109,7 @@ then
        done
     fi
 
-    ipaddresses="`/bin/echo ${ipaddresses} | /usr/bin/tr ' ' '\n' | /usr/bin/sort -u`"
+    ipaddresses="`/bin/echo ${ipaddresses} | /bin/sed 's/ /,/g' | /usr/bin/sort -u`"
 
     if ( [ "`/bin/echo ${dbaas} | /bin/grep ' pg '`" != "" ] )
     then
