@@ -25,27 +25,36 @@
 
 if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "INSTALLED_SUCCESSFULLY"`" = "0" ] )
 then
-	exit
+        exit
 fi
 
 if ( [ "`/bin/ps -ef | /bin/grep DeadOrAlive | /bin/grep -v Cron | /bin/grep -v grep | /usr/bin/wc -l`" != "0" ] )
 then
-	exit
+        exit
 fi
 
 trap cleanup 0 1 2 3 6 9 14 15
 
 cleanup()
 {
-	/bin/rm ${HOME}/runtime/deadoralivelock.file
-	exit
+        /bin/rm ${HOME}/runtime/deadoralivelock.file
+        exit
 }
 
 lockfile=${HOME}/runtime/deadoralivelock.file
 
+NO_REVERSE_PROXY="`${HOME}/utilities/config/ExtractConfigValue.sh 'NOREVERSEPROXY'`"
+
 if ( [ ! -f ${lockfile} ] )
 then
-	/usr/bin/touch ${lockfile}
-	${HOME}/autoscaler/DeadOrAlive.sh
-	/bin/rm ${lockfile}
+        /usr/bin/touch ${lockfile}
+
+        if ( [ "${NO_REVERSE_PROXY}" != "0" ] )
+        then
+                ${HOME}/autoscaler/DeadOrAliveReverseProxies.sh
+        fi
+
+        ${HOME}/autoscaler/DeadOrAliveWebservers.sh
+	
+        /bin/rm ${lockfile}
 fi
