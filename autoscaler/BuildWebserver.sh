@@ -206,16 +206,16 @@ do
   	count="`/usr/bin/expr ${count} + 1`"
 done
 
-application_configuration_installed=""
-count="1"
-while ( [ "${application_configuration_installed}" = "" ] )
-do
-	/bin/echo "${0} `/bin/date`: testing for application configuration installation on new webserver, this may take a few attempts this is attempt ${count}"
-	/usr/bin/ssh -q -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "${SUDO} /home/${SERVER_USER}/application/configuration/SetApplicationConfiguration.sh"
-	application_configuration_installed="`/usr/bin/ssh -q -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/usr/bin/test -f /home/${SERVER_USER}/runtime/INITIAL_CONFIG_SET && /bin/echo 'INITIAL_CONFIG_SET'"`"
- 	/bin/sleep 5
- 	count="`/usr/bin/expr ${count} + 1`"
-done
+#application_configuration_installed=""
+#count="1"
+#while ( [ "${application_configuration_installed}" = "" ] )
+#do
+#	/bin/echo "${0} `/bin/date`: testing for application configuration installation on new webserver, this may take a few attempts this is attempt ${count}"
+#	/usr/bin/ssh -q -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "${SUDO} /home/${SERVER_USER}/application/configuration/SetApplicationConfiguration.sh"
+#	application_configuration_installed="`/usr/bin/ssh -q -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip} "/usr/bin/test -f /home/${SERVER_USER}/runtime/INITIAL_CONFIG_SET && /bin/echo 'INITIAL_CONFIG_SET'"`"
+ #	/bin/sleep 5
+ #	count="`/usr/bin/expr ${count} + 1`"
+#done
 
 
 #If we got through to here we simply want to check that the website is online using curl
