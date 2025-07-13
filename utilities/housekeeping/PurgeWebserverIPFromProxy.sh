@@ -16,5 +16,6 @@ proxy_ip_addresses="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.
 
 for ip_address in ${proxy_ip_addresses}
 do
-        /usr/bin/ssh -q -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${ip_address} "${SUDO} /home/${SERVER_USER}/providerscripts/webserver/configuration/reverseproxy/RemoveOldIPFromReverseProxyIPList.sh ${webserver_ip}"
+        ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip_address} webserveripstopurge/${ip_address} "no"
+       # /usr/bin/ssh -q -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${ip_address} "${SUDO} /home/${SERVER_USER}/providerscripts/webserver/configuration/reverseproxy/RemoveOldIPFromReverseProxyIPList.sh ${webserver_ip}"
 done
