@@ -231,7 +231,7 @@ do
 
 	if ( [ "${failedonlinecheck}" = "1" ] )
 	then
-		if ( [ "`/usr/bin/curl -s -I --max-time 60 --insecure https://${private_ip}:443/${headfile} | /bin/grep -E 'HTTP/2 200|HTTP/2 301|HTTP/2 302|HTTP/2 303|200 OK|302 Found|301 Moved Permanently'`" = "" ] )
+		if ( [ "`/usr/bin/curl -s -I --max-time 60 --insecure https://${private_ip}:443/${headfile} | /bin/grep -E 'HTTP.*200|HTTP.*301|HTTP.*302|HTTP.*303|200 OK|302 Found|301 Moved Permanently'`" = "" ] )
 		then
 			/bin/echo "${0} `/bin/date`: Expecting ${private_ip} to be online, but can't reach it with curl yet....restarting webserver"
 			/usr/bin/ssh -q -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${private_ip}  "${SUDO} /home/${SERVER_USER}/providerscripts/webserver/RestartWebserver.sh"
