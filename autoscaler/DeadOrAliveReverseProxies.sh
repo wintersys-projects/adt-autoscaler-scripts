@@ -1,5 +1,3 @@
-
-
 probe_by_curl()
 {
         probecount="0"
@@ -19,7 +17,8 @@ probe_by_curl()
         if ( [ "${status}" = "down" ] )
         then
                 /bin/echo "${0} `/bin/date`: ReverseProxy ${ip} was found to be offline because it couldn't be contacted using curl" 
-                ${HOME}/autoscaler/RemoveIPFromDNS.sh ${dnsip}        
+                ip="`${HOME}/providerscripts/server/GetServerPublicIPAddressByIP.sh ${ip} ${CLOUDHOST}`"
+                ${HOME}/autoscaler/RemoveIPFromDNS.sh ${ip}        
         fi
 }
 
