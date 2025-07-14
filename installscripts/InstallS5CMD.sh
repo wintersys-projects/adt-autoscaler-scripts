@@ -32,34 +32,44 @@ else
 	BUILDOS="${buildos}"
 fi
 
+cwd="`/usr/bin/pwd`"
+
 if ( [ "${BUILDOS}" = "ubuntu" ] )
 then
 	if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd:binary'`" = "1" ] )
  	then
+  		cd /opt
 		/usr/bin/wget "`/usr/bin/wget -q -O - https://api.github.com/repos/peak/s5cmd/releases/latest  | /usr/bin/jq -r '.assets[] | select (.name | contains ("amd64"))'.browser_download_url`"
-  		/usr/bin/dpkg -i ./s5cmd_*_linux_amd64.deb
-    		/bin/rm ./s5cmd_*_linux_amd64.deb
+  		/usr/bin/dpkg -i /opt/s5cmd_*_linux_amd64.deb
+    		/bin/rm /opt/s5cmd_*_linux_amd64.deb
+      		cd ${cwd}
 	fi
 	if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd:source'`" = "1" ] )
 	then	
+ 		cd /opt
 		${HOME}/installscripts/InstallGo.sh ${BUILDOS}
 		GOBIN=`/usr/bin/pwd` /usr/bin/go install github.com/peak/s5cmd/v2@latest                 
-		/bin/mv ./s5cmd /usr/bin/s5cmd                                      											
+		/bin/mv /opt/s5cmd /usr/bin/s5cmd  
+  		cd ${cwd}
 	fi
 fi
 if ( [ "${BUILDOS}" = "debian" ] )
 then
 	if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd:binary'`" = "1" ] )
  	then
+  		cd /opt
 		/usr/bin/wget "`/usr/bin/wget -q -O - https://api.github.com/repos/peak/s5cmd/releases/latest  | /usr/bin/jq -r '.assets[] | select (.name | contains ("amd64"))'.browser_download_url`"
-  		/usr/bin/dpkg -i ./s5cmd_*_linux_amd64.deb
-    		/bin/rm ./s5cmd_*_linux_amd64.deb
+  		/usr/bin/dpkg -i /opt/s5cmd_*_linux_amd64.deb
+    		/bin/rm /opt/s5cmd_*_linux_amd64.deb
+      		cd ${cwd}
 	fi
 	if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd:source'`" = "1" ] )
 	then	
+ 		cd /opt
 		${HOME}/installscripts/InstallGo.sh ${BUILDOS}
 		GOBIN=`/usr/bin/pwd` /usr/bin/go install github.com/peak/s5cmd/v2@latest                 
-		/bin/mv ./s5cmd /usr/bin/s5cmd                                      											
+		/bin/mv /opt/s5cmd /usr/bin/s5cmd  
+  		cd ${cwd}                                     											
 	fi				
 fi  
 
