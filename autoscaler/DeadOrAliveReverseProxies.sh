@@ -10,6 +10,7 @@ probe_by_curl()
                         status="up"
                 else
                         status="down"
+                        /bin/sleep 10
                 fi
                 probecount="`/usr/bin/expr ${probecount} + 1`"
         done
