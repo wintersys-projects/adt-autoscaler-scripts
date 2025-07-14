@@ -19,7 +19,8 @@ probe_by_curl()
         then
                 /bin/echo "${0} `/bin/date`: ReverseProxy ${ip} was found to be offline because it couldn't be contacted using curl" 
                 ip="`${HOME}/providerscripts/server/GetServerPublicIPAddressByIP.sh ${ip} ${CLOUDHOST}`"
-                ${HOME}/autoscaler/RemoveIPFromDNS.sh ${ip}        
+                ${HOME}/autoscaler/RemoveIPFromDNS.sh ${ip}     
+                ${HOME}/providerscripts/email/SendEmail.sh "IP ADDRESS REMOVED FROM DNS" "IP address of remote proxy IP address (${ip}) removed from DNS system due to an error" "ERROR"
         fi
 }
 
