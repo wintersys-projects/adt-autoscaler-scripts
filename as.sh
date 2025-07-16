@@ -28,7 +28,12 @@ USER_HOME="`/usr/bin/awk -F: '{ print $1}' /etc/passwd | /bin/grep "X*X"`"
 
 SERVER_USER="`${HOME}/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
 
-/bin/echo "set mouse=r" > /root/.vimrc
+#comment/amend as desired
+/bin/echo "set mouse=r
+syntax on
+filetype indent on
+set smartindent
+autocmd BufRead,BufWritePre *.sh normal gg=G" > /root/.vimrc
 
 #Set the intial permissions for the build
 /usr/bin/find ${HOME} -not -path '*/\.*' -type d -print0 | xargs -0 chmod 0755 # for directories
