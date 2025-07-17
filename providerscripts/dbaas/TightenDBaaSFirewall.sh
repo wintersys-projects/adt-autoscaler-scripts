@@ -169,37 +169,39 @@ fi
 
 if ( [ "${CLOUDHOST}" = "vultr" ] )
 then
-   export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
-   databaseids="`/usr/bin/vultr database list -o json | /usr/bin/jq -r '.databases[] | select (.label == "'${label}'").id'`"
-   selected_databaseid=""
+        export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
+        label="`${HOME}/utilities/config/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped" | /usr/bin/awk '{print $10}'`"
+        databaseids="`/usr/bin/vultr database list -o json | /usr/bin/jq -r '.databases[] | select (.label == "'${label}'").id'`"
+        selected_databaseid=""
 
-   DB_IDENTIFIER="`${HOME}/utilities/config/ExtractConfigValue.sh 'DB_IDENTIFIER'`"
+        DB_IDENTIFIER="`${HOME}/utilities/config/ExtractConfigValue.sh 'DBIDENTIFIER'`"
 
-  for databaseid in ${databaseids}
-  do
-      if ( [ "`/usr/bin/vultr database get ${databaseid} -o json | /usr/bin/jq -r '.database | select (.dbname == "'${DB_IDENTIFIER}'").id'`" != "" ] )
-      then
-          selected_databaseid="${databaseid}"
-      fi
-  done
-    ipaddresses=""
-    if ( [ "${multi_region_ips}" != "" ] )
-    then
-       ipaddresses="["
-       for ip in ${multi_region_ips}
-       do
-            ipaddresses="${ipaddresses}${ip},"
-       done
-       ipaddresses="`/bin/echo ${ipaddresses} | /bin/sed 's/,$//'`]"
-    fi
+        for databaseid in ${databaseids}
+        do
+                if ( [ "`/usr/bin/vultr database get ${databaseid} -o json | /usr/bin/jq -r '.database | select (.public_host | contains ("'${DB_IDENTIFIER}'")).id'`" != "" ] )
+                then
+                        selected_databaseid="${databaseid}"
+                fi
+        done
 
-    ipaddresses="`/bin/echo ${ipaddresses} | /usr/bin/tr ' ' '\n' | /usr/bin/sort -u`"
+        ipaddresses=""
 
-  if ( [ "${selected_databaseid}" != "" ] )
-  then
-      VPC_IP_RANGE="`${HOME}/utilities/config/ExtractConfigValue.sh 'VPCIPRANGE'`"
-      /usr/bin/vultr database update ${selected_databaseid} --trusted-ips="${ipaddresses}"
-  fi
+        if ( [ "${multi_region_ips}" != "" ] )
+        then
+                for ip in ${multi_region_ips}
+                do
+                        ipaddresses="${ipaddresses}${ip}/32,"
+                done
+                
+                ipaddresses="`/bin/echo ${ipaddresses} | /bin/sed 's/,$//'`"
+        fi
+
+        ipaddresses="`/bin/echo ${ipaddresses} | /usr/bin/tr ' ' '\n' | /usr/bin/sort -u`"
+        if ( [ "${selected_databaseid}" != "" ] )
+        then
+                VPC_IP_RANGE="`${HOME}/utilities/config/ExtractConfigValue.sh 'VPCIPRANGE'`"
+                /usr/bin/vultr database update ${selected_databaseid} --trusted-ips="${ipaddresses}"
+        fi
 fi
 
 /bin/echo "${ipaddresses}" > ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat
