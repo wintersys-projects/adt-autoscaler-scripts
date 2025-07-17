@@ -73,20 +73,20 @@ fi
 
 if ( [ "${CLOUDHOST}" = "digitalocean" ] )
 then
-    dbaas="`${HOME}/utilities/config/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
-    cluster_id="`/bin/echo ${dbaas} | /usr/bin/awk '{print $NF}'`"
-   # ip_addr="`/usr/local/bin/doctl vpcs list -o json | /usr/bin/jq -r '.[] | select (.name == "adt-vpc" ) | select (.region == "'${REGION}'").ip_range'`"
- 
-    if ( [ "${cluster_id}" != "" ] )
-    then
-        if ( [ "${multi_region_ips}" != "" ] )
+        dbaas="`${HOME}/utilities/config/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
+        cluster_name="`/bin/echo ${dbaas} | /usr/bin/awk '{print $8}'`"
+        cluster_id="`/usr/local/bin/doctl database list -o json | /usr/bin/jq -r '.[] | select (.name == "'${cluster_name}'").id'`"
+
+        if ( [ "${cluster_id}" != "" ] )
         then
-         for ip in ${multi_region_ips}
-         do
-          /usr/local/bin/doctl databases firewalls append ${cluster_id} --rule ip_addr:${ip}
-         done
-       fi
-    fi
+                if ( [ "${multi_region_ips}" != "" ] )
+                then
+                        for ip in ${multi_region_ips}
+                        do
+                                /usr/local/bin/doctl databases firewalls append ${cluster_id} --rule ip_addr:${ip}
+                        done
+                fi
+        fi
 fi
 
 if ( [ "${CLOUDHOST}" = "exoscale" ] )
