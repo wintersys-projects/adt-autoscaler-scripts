@@ -1,0 +1,58 @@
+#cloud-config
+
+users:
+  - name: XXXXSERVER_USERXXXX
+    passwd: 'XXXXSERVER_USER_PASSWORDXXXX'
+    groups: [ sudo ]
+    shell: /bin/bash
+    lock_passwd: false
+
+    ssh_authorized_keys:
+      - 'XXXXSSH_PUBLIC_KEYXXXX'
+
+ssh_keys:
+  XXXXALGORITHMXXXX_private: |
+      -----BEGIN OPENSSH PRIVATE KEY-----
+      XXXXSSH_PRIVATE_KEYXXXX
+      -----END OPENSSH PRIVATE KEY-----
+
+write_files:
+- path: /etc/netplan/eth1.yaml
+  content: |
+    network:
+      version: 2
+      ethernets:
+        eth1:
+          dhcp4: true
+- encoding: b64
+  content: XXXXWEBSERVER_CONFIGURATIONXXXX
+  owner: root:root
+  path: /home/XXXXSERVER_USERXXXX/.ssh/webserver_configuration_settings.dat.gz
+  permissions: '0644'
+- encoding: b64
+  content: XXXXBUILDSTYLES_SETTINGSXXXX
+  owner: root:root
+  path: /home/XXXXSERVER_USERXXXX/.ssh/buildstyles.dat.gz
+  permissions: '0644'
+  
+package_update: true
+package_upgrade: true
+
+runcmd:
+  - '/bin/sed -i "/en_GB.UTF/s/\(^# \)\(.*$\)/\2/g" /etc/locale.gen'
+  - '/usr/sbin/locale-gen'
+  - '/bin/cp /etc/ssh/ssh_host_XXXXALGORITHMXXXX_key /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY_XXXXBUILD_IDENTIFIERXXXX'
+  - '/bin/cp /etc/ssh/ssh_host_XXXXALGORITHMXXXX_key.pub /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY_XXXXBUILD_IDENTIFIERXXXX.pub'
+  - '/bin/chmod 600 /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY_XXXXBUILD_IDENTIFIERXXXX'
+  - '/bin/chmod 600 /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY_XXXXBUILD_IDENTIFIERXXXX.pub' 
+  - '/usr/bin/gzip -df /home/XXXXSERVER_USERXXXX/.ssh/webserver_configuration_settings.dat.gz'
+  - '/bin/cp /home/XXXXSERVER_USERXXXX/.ssh/webserver_configuration_settings.dat /home/XXXXSERVER_USERXXXX/runtime/webserver_configuration_settings.dat'
+  - '/usr/bin/gzip -df /home/XXXXSERVER_USERXXXX/.ssh/buildstyles.dat.gz'
+  - '/bin/cp /home/XXXXSERVER_USERXXXX/.ssh/buildstyles.dat /home/XXXXSERVER_USERXXXX/runtime/buildstyles.dat'
+  - '/usr/bin/find /home/XXXXSERVER_USERXXXX -type d -exec chmod 755 {} \;' 
+  - '/usr/bin/find /home/XXXXSERVER_USERXXXX -type f -exec chmod 750 {} \;'
+  - '/bin/chmod 600 /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY_XXXXBUILD_IDENTIFIERXXXX'
+  - '/bin/chmod 600 /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY_XXXXBUILD_IDENTIFIERXXXX.pub'
+  - '/usr/bin/chown -R XXXXSERVER_USERXXXX:root /home/XXXXSERVER_USERXXXX'
+  - '/home/XXXXSERVER_USERXXXX/utilities/processing/RunServiceCommand.sh "ssh" restart'
+  - '/home/XXXXSERVER_USERXXXX/utilities/processing/RunServiceCommand.sh "cron" restart'

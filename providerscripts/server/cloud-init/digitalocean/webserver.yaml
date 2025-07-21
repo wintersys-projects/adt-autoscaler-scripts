@@ -1,0 +1,120 @@
+#cloud-config
+
+manage_resolv_conf: true
+resolv_conf:
+  nameservers:
+    - '8.8.8.8'
+    - '8.8.4.4'
+    - '1.1.1.1'
+
+users:
+  - name: XXXXSERVER_USERXXXX
+    passwd: 'XXXXSERVER_USER_PASSWORDXXXX'
+    groups: [ sudo ]
+    shell: /bin/bash
+    lock_passwd: false
+
+    ssh_authorized_keys:
+      - 'XXXXSSH_PUBLIC_KEYXXXX'
+
+ssh_pwauth: false
+
+ssh_keys:
+  XXXXALGORITHMXXXX_private: |
+      -----BEGIN OPENSSH PRIVATE KEY-----
+      XXXXSSH_PRIVATE_KEYXXXX
+      -----END OPENSSH PRIVATE KEY-----
+
+timezone: 'XXXXTIMEZONEXXXX'
+hostname: XXXXWEBSERVER_HOSTNAMEXXXX
+manage_etc_hosts: true
+
+keyboard:
+  layout: gb
+
+write_files:
+- encoding: b64
+  content: XXXXWEBSERVER_CONFIGURATIONXXXX
+  owner: root:root
+  path: /home/XXXXSERVER_USERXXXX/.ssh/webserver_configuration_settings.dat.gz
+  permissions: '0644'
+- encoding: b64
+  content: XXXXBUILDSTYLES_SETTINGSXXXX
+  owner: root:root
+  path: /home/XXXXSERVER_USERXXXX/.ssh/buildstyles.dat.gz
+  permissions: '0644'
+- content: /home/XXXXSERVER_USERXXXX
+  owner: root:root
+  path: /home/homedir.dat
+  permissions: '0644'
+- content: |
+    ClientAliveInterval 60
+    ClientAliveCountMax 2
+  path: /home/XXXXSERVER_USERXXXX/.ssh/config
+  owner: 'root:root'
+  permissions: '0600'
+- content: | 
+    export LANGUAGE=en_GB.UTF-8
+    export LANG=en_GB.UTF-8
+    export LC_ALL=en_GB.UTF-8
+  path: /etc/profile
+  append: true
+
+
+package_update: true
+package_upgrade: true
+
+packages:
+  - git
+  - network-manager 
+  - jq
+  - rsync
+  - cron
+#XXXXNGINXXXXX  - nginx
+#XXXXAPACHEXXXX  - apache2
+#XXXXAPACHEXXXX  - libapache2-mod-fcgid
+#XXXXLIGHTTPDXXXX  - lighttpd
+#XXXXMARIADB_CLIENTXXXX  - mariadb-client
+#XXXXMYSQL_CLIENTXXXX  - default-mysql-client
+#XXXXPOSTRGESQL_CLIENTXXXX  - postgresql-client
+
+runcmd:
+  - '/bin/sed -i "/en_GB.UTF/s/\(^# \)\(.*$\)/\2/g" /etc/locale.gen'
+  - '/usr/sbin/locale-gen'
+#XXXXPHPDEBIANXXXX  - '/usr/bin/curl -sSL https://raw.githubusercontent.com/wintersys-projects/adt-build-machine-scripts/main/installscripts/php-installer.sh | /usr/bin/bash -x'
+#XXXXPHPDEBIANXXXX  - '/usr/bin/apt-get install phpXXXXPHP_VERSIONXXXX-fpm phpXXXXPHP_VERSIONXXXX XXXXPHP_MODULESXXXX -y -qq'
+#XXXXPHPUBUNTUXXXX  - 'LC_ALL=C.UTF-8 /usr/bin/add-apt-repository ppa:ondrej/php && /usr/bin/apt-get -qq -y update'
+#XXXXPHPUBUNTUXXXX  - '/usr/bin/apt-get install phpXXXXPHP_VERSIONXXXX-fpm phpXXXXPHP_VERSIONXXXX XXXXPHP_MODULESXXXX -y -qq'
+  - '/bin/cp /etc/ssh/ssh_host_XXXXALGORITHMXXXX_key /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY_XXXXBUILD_IDENTIFIERXXXX'
+  - '/bin/cp /etc/ssh/ssh_host_XXXXALGORITHMXXXX_key.pub /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY_XXXXBUILD_IDENTIFIERXXXX.pub'
+  - '/bin/chmod 600 /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY_XXXXBUILD_IDENTIFIERXXXX'
+  - '/bin/chmod 600 /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY_XXXXBUILD_IDENTIFIERXXXX.pub'
+  - '/usr/bin/git clone https://XXXXGIT_PROVIDER_DOMAINXXXX/XXXXINFRASTRUCTURE_REPOSITORY_OWNERXXXX/adt-webserver-scripts.git /home/XXXXSERVER_USERXXXX/clone'
+  - '/bin/mv /home/XXXXSERVER_USERXXXX/clone/* /home/XXXXSERVER_USERXXXX && /bin/rm -r /home/XXXXSERVER_USERXXXX/clone'
+  - '/usr/bin/gzip -d /home/XXXXSERVER_USERXXXX/.ssh/webserver_configuration_settings.dat.gz'
+  - '/bin/cp /home/XXXXSERVER_USERXXXX/.ssh/webserver_configuration_settings.dat /home/XXXXSERVER_USERXXXX/runtime/webserver_configuration_settings.dat'
+  - '/usr/bin/gzip -d /home/XXXXSERVER_USERXXXX/.ssh/buildstyles.dat.gz'
+  - '/bin/cp /home/XXXXSERVER_USERXXXX/.ssh/buildstyles.dat /home/XXXXSERVER_USERXXXX/runtime/buildstyles.dat'
+  - '/usr/bin/find /home/XXXXSERVER_USERXXXX -type d -exec chmod 755 {} \;' 
+  - '/usr/bin/find /home/XXXXSERVER_USERXXXX -type f -exec chmod 750 {} \;'
+  - '/bin/chmod 600 /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY_XXXXBUILD_IDENTIFIERXXXX'
+  - '/bin/chmod 600 /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY_XXXXBUILD_IDENTIFIERXXXX.pub'
+  - '/usr/bin/chown -R XXXXSERVER_USERXXXX:root /home/XXXXSERVER_USERXXXX'
+  - '/bin/sed -i -e "s/^Port.*/Port XXXXSSH_PORTXXXX/" -e "s/^#Port.*/Port XXXXSSH_PORTXXXX/" /etc/ssh/sshd_config'
+  - '/bin/sed -i -e "s/^PasswordAuthentication.*/PasswordAuthentication no/g" -e "s/^#PasswordAuthentication.*/PasswordAuthentication no/g" /etc/ssh/sshd_config'
+  - '/bin/sed -i -e "s/^PermitRootLogin.*/PermitRootLogin no/g" -e "s/^#PermitRootLogin.*/PermitRootLogin no/g" /etc/ssh/sshd_config'
+  - '/bin/sed -i -e "s/^KbdInteractiveAuthentication.*/KbdInteractiveAuthentication no/g" -e "s/^#KbdInteractiveAuthentication.*/KbdInteractiveAuthentication no/g" /etc/ssh/sshd_config'
+  - '/bin/sed -i -e "s/^ChallengeResponseAuthentication.*/ChallengeResponseAuthentication no/g" -e "s/^#ChallengeResponseAuthentication.*/ChallengeResponseAuthentication no/g" /etc/ssh/sshd_config'
+  - '/bin/sed -i -e "s/^AddressFamily.*/AddressFamily inet/g" -e "s/^#AddressFamily.*/AddressFamily inet/g" /etc/ssh/sshd_config'
+  - '/home/XXXXSERVER_USERXXXX/utilities/processing/RunServiceCommand.sh "ssh" restart'
+  - 'export HOME=/home/XXXXSERVER_USERXXXX && /bin/sh ${HOME}/installscripts/InstallPackageManager.sh' 
+  - 'export HOME=/home/XXXXSERVER_USERXXXX && /bin/sh ${HOME}/installscripts/InstallFirewall.sh'
+  - 'export HOME=/home/XXXXSERVER_USERXXXX && /bin/sh ${HOME}/installscripts/InstallDatastoreTools.sh'
+  - 'export HOME=/home/XXXXSERVER_USERXXXX && /bin/sh ${HOME}/ws.sh &'
+  - 'export HOME=/home/XXXXSERVER_USERXXXX && /bin/sh ${HOME}/installscripts/InstallWebserver.sh'
+  - 'export HOME=/home/XXXXSERVER_USERXXXX && /bin/sh ${HOME}/installscripts/InstallDatabaseClient.sh' 
+  - 'export HOME=/home/XXXXSERVER_USERXXXX && /bin/sh ${HOME}/installscripts/InstallEmailUtil.sh' 
+  - 'export HOME=/home/XXXXSERVER_USERXXXX && /bin/sh ${HOME}/installscripts/InstallApplicationLanguage.sh &'
+  - 'export HOME=/home/XXXXSERVER_USERXXXX && /bin/sh ${HOME}/installscripts/InstallWPCLI.sh &'
+  - 'export HOME=/home/XXXXSERVER_USERXXXX && /bin/sh ${HOME}/installscripts/InstallLego.sh &'
+  - 'export HOME=/home/XXXXSERVER_USERXXXX && /bin/sh ${HOME}/installscripts/InstallGo.sh &'
