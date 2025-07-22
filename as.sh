@@ -29,12 +29,17 @@ USER_HOME="`/usr/bin/awk -F: '{ print $1}' /etc/passwd | /bin/grep "X*X"`"
 SERVER_USER="`${HOME}/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
 
 #comment/amend as desired
-/bin/echo "set mouse=r
+if ( [ "`/bin/grep 'ADT-ADDED' /root/.vimrc`" = "" ] )
+then
+        /bin/echo "####ADT-ADDED####
+set mouse=r
 syntax on
 filetype indent on
 set smartindent
 set fo-=or
-autocmd BufRead,BufWritePre *.sh normal gg=G" >> /root/.vimrc
+autocmd BufRead,BufWritePre *.sh normal gg=G
+####ADT-ADDED####" >> /root/.vimrc
+fi
 
 #Set the intial permissions for the build
 /usr/bin/find ${HOME} -not -path '*/\.*' -type d -print0 | xargs -0 chmod 0755 # for directories
