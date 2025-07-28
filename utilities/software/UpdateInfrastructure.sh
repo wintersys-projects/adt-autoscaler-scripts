@@ -22,9 +22,9 @@
 
 cd ${HOME}
 
-if ( [ -d adt-webserver-scripts ] )
+if ( [ -d adt-autoscaler-scripts ] )
 then
-	/bin/rm -r adt-webserver-scripts
+	/bin/rm -r adt-autoscaler-scripts
 fi
 
 INFRASTRUCTURE_REPOSITORY_OWNER="`${HOME}/utilities/config/ExtractConfigValue.sh 'INFRASTRUCTUREREPOSITORYOWNER'`"
