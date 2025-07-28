@@ -32,13 +32,13 @@ INFRASTRUCTURE_REPOSITORY_PROVIDER="`${HOME}/utilities/config/ExtractConfigValue
 INFRASTRUCTURE_REPOSITORY_USERNAME="`${HOME}/utilities/config/ExtractConfigValue.sh 'INFRASTRUCTUREREPOSITORYUSERNAME'`"
 repository_name="adt-autoscaler-scripts"
 
-${HOME}/providerscripts/git/GitClone.sh "${INFRASTRUCTURE_REPOSITORY_PROVIDER}" "${INFRASTRUCTURE_REPOSITORY_USERNAME}" "" "${INFRASTRUCTURE_REPOSITORY_OWNER}" "${repository_name}"
+${HOME}/providerscripts/git/GitClone.sh "${INFRASTRUCTURE_REPOSITORY_PROVIDER}" "${INFRASTRUCTURE_REPOSITORY_USERNAME}" "${INFRASTRUCTURE_REPOSITORY_OWNER}" "${repository_name}"
 
 count="0" 
 while ( [ ! -d ${HOME}/${repository_name}/utilities ] && [ "${count}" -le "5" ] )
 do
 	/bin/sleep 5
-	${HOME}/providerscripts/git/GitClone.sh "${INFRASTRUCTURE_REPOSITORY_PROVIDER}" "${INFRASTRUCTURE_REPOSITORY_USERNAME}" "" "${INFRASTRUCTURE_REPOSITORY_OWNER}" "${repository_name}"
+	${HOME}/providerscripts/git/GitClone.sh "${INFRASTRUCTURE_REPOSITORY_PROVIDER}" "${INFRASTRUCTURE_REPOSITORY_USERNAME}" "${INFRASTRUCTURE_REPOSITORY_OWNER}" "${repository_name}"
 	count="`/usr/bin/expr ${count} + 1`"
 done
 
