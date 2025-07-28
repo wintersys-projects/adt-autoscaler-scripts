@@ -22,9 +22,9 @@
 
 repository_provider="${1}"
 repository_username="${2}"
-repository_password="${3}"
-repository_ownername="${4}"
-repository_name="${5}"
+repository_ownername="${3}"
+repository_name="${4}"
+repository_password="${5}"
 
 if ( [ "${repository_provider}" = "bitbucket" ] )
 then
