@@ -1,0 +1,1 @@
+        /usr/local/bin/linode-cli --json linodes list | /usr/bin/jq -r '.[] | select (.label | contains("'${server_type}'")).ipv6' 2>/dev/null
