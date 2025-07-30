@@ -18,51 +18,49 @@
 # along with The Agile Deployment Toolkit.  If not, see <http://www.gnu.org/licenses/>.
 #######################################################################################################
 #######################################################################################################
-#set -x
+set -x
 
 #This function is called whenever the script exits or completes to clean up the monitoring that we have set up
-cleanup() {             
-	if ( [ -f ${HOME}/runtime/AUTOSCALINGMONITOR:${1} ] )
-	then
-		if ( [ "${2}" = "successfully" ] )
-		then
-			/bin/echo "${0} `/bin/date`: Build no ${1} has been completed ${2}" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
-		else
 
+probe_by_curl()
+{
+        probecount="0"
+        status="down"
+        file="`${HOME}/autoscaler/SelectHeadFile.sh`"
+        while ( [ "${probecount}" -le "3" ] && [ "${status}" = "down" ] )
+        do
+                if ( [ "`/usr/bin/curl -s -m 20 --insecure -I "https://${ip}:443/${file}" 2>&1 | /bin/grep "HTTP" | /bin/grep -E "200|301|302|303"`" != "" ] ) 
+                then
+                        status="up"
+                else
+                        status="down"
+                        /bin/sleep 10
+                fi
+                probecount="`/usr/bin/expr ${probecount} + 1`"
+        done
 
-			probe_by_curl()
-			{
-				probecount="0"
-				status="down"
-				file="`${HOME}/autoscaler/SelectHeadFile.sh`"
-				while ( [ "${probecount}" -le "3" ] && [ "${status}" = "down" ] )
-				do
-					if ( [ "`/usr/bin/curl -s -m 20 --insecure -I "https://${ip}:443/${file}" 2>&1 | /bin/grep "HTTP" | /bin/grep -E "200|301|302|303"`" != "" ] ) 
-					then
-						status="up"
-					else
-						status="down"
-						/bin/sleep 10
-					fi
-					probecount="`/usr/bin/expr ${probecount} + 1`"
-				done
+        if ( [ "${status}" = "down" ] )
+        then
+                /bin/echo "${0} `/bin/date`: ReverseProxy ${ip} was found to be offline because it couldn't be contacted using curl" 
+                ip="`${HOME}/providerscripts/server/GetServerPublicIPAddressByIP.sh ${ip} ${CLOUDHOST}`"
+                ${HOME}/autoscaler/RemoveIPFromDNS.sh ${ip}     
+                ${HOME}/providerscripts/email/SendEmail.sh "IP ADDRESS REMOVED FROM DNS" "IP address of remote proxy IP address (${ip}) removed from DNS system due to an error" "ERROR"
+        fi
+}
 
-				if ( [ "${status}" = "down" ] )
-				then
-					/bin/echo "${0} `/bin/date`: ReverseProxy ${ip} was found to be offline because it couldn't be contacted using curl" 
-					ip="`${HOME}/providerscripts/server/GetServerPublicIPAddressByIP.sh ${ip} ${CLOUDHOST}`"
-					${HOME}/autoscaler/RemoveIPFromDNS.sh ${ip}     
-					${HOME}/providerscripts/email/SendEmail.sh "IP ADDRESS REMOVED FROM DNS" "IP address of remote proxy IP address (${ip}) removed from DNS system due to an error" "ERROR"
-				fi
-			}
+CLOUDHOST="`${HOME}/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
+BUILD_IDENTIFIER="`${HOME}/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
+REGION="`${HOME}/utilities/config/ExtractConfigValue.sh 'REGION'`"
 
-			CLOUDHOST="`${HOME}/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
-			BUILD_IDENTIFIER="`${HOME}/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
-			REGION="`${HOME}/utilities/config/ExtractConfigValue.sh 'REGION'`"
+ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "rp-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+ipv6s="`${HOME}/providerscripts/server/GetServerIPV6Addresses.sh "rp-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
 
-			ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "rp-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+for ip in ${ips}
+do
+        probe_by_curl
+done
 
-			for ip in ${ips}
-			do
-				probe_by_curl
-			done
+for ip in ${ipv6s}
+do
+        probe_by_curl
+done
