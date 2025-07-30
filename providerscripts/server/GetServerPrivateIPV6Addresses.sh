@@ -2,7 +2,7 @@
 ####################################################################################
 # Author : Peter Winter
 # Date   : 13/06/2016
-# Description : This script gets a list of server ip addresses based on a name/type
+# Description : This script gets a list of server ipv6 addresses based on a name/type
 ####################################################################################
 # License Agreement:
 # This file is part of The Agile Deployment Toolkit.
