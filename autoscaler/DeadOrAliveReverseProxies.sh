@@ -53,14 +53,9 @@ BUILD_IDENTIFIER="`${HOME}/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFI
 REGION="`${HOME}/utilities/config/ExtractConfigValue.sh 'REGION'`"
 
 ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "rp-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
-ipv6s="`${HOME}/providerscripts/server/GetServerPrivateIPV6Addresses.sh "rp-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
 
 for ip in ${ips}
 do
         probe_by_curl
 done
 
-for ip in ${ipv6s}
-do
-        probe_by_curl
-done
