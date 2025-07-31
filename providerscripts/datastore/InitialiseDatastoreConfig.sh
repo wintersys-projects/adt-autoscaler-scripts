@@ -49,7 +49,7 @@ then
 
 	if ( [ "${S3_SECRET_KEY}" != "" ] )
 	then
-		/bin/sed -i "s/XXXXSECRETKEYXXXX/${S3_SECRET_KEY}/" ${HOME}/.s3cfg
+		/bin/sed -i "s;XXXXSECRETKEYXXXX;${S3_SECRET_KEY};" ${HOME}/.s3cfg
 	else
 		/bin/echo "${0} Couldn't find the S3_SECRET_KEY setting"  
 	fi
