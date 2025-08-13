@@ -87,19 +87,31 @@ SERVER_USER_PASSWORD="`${HOME}/utilities/config/ExtractConfigValue.sh 'SERVERUSE
 
 ${HOME}/security/KnickersUp.sh
 
+updated_ssh="0"
+if ( [ "`/bin/grep ${VPC_IP_RANGE} /etc/ssh/sshd_config`" = "" ] )
+then
+	/bin/echo "AllowUsers ${SERVER_USER}@${VPC_IP_RANGE}" >> /etc/ssh/sshd_config
+	updated_ssh="1"
+fi
+
+if ( [ "${updated_ssh}" = "1" ] )
+then
+	${HOME}/utilities/processing/RunServiceCommand.sh "ssh" restart
+fi
+
 updated="0"
 
 if ( [ "`${HOME}/utilities/config/CheckConfigValue.sh BUILDMACHINEVPC:0`" = "1" ] )
 then
 
-	updated="0"
+	updated_ssh="0"
 	if ( [ "`/bin/grep ${BUILD_MACHINE_IP} /etc/ssh/sshd_config`" = "" ] )
 	then
 		/bin/echo "AllowUsers ${SERVER_USER}@${BUILD_MACHINE_IP}" >> /etc/ssh/sshd_config
-		updated="1"
+		updated_ssh="1"
 	fi
 
-	if ( [ "${updated}" = "1" ] )
+	if ( [ "${updated_ssh}" = "1" ] )
  	then
  		${HOME}/utilities/processing/RunServiceCommand.sh "ssh" restart
    	fi
