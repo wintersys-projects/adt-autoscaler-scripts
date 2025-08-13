@@ -93,7 +93,7 @@ if ( [ "`${HOME}/utilities/config/CheckConfigValue.sh BUILDMACHINEVPC:0`" = "1" 
 then
 
 	updated="0"
-	if ( [ "`/bin/grep ${ip} /etc/ssh/sshd_config`" = "" ] )
+	if ( [ "`/bin/grep ${BUILD_MACHINE_IP} /etc/ssh/sshd_config`" = "" ] )
 	then
 		/bin/echo "AllowUsers ${SERVER_USER}@${BUILD_MACHINE_IP}" >> /etc/ssh/sshd_config
 		updated="1"
