@@ -23,7 +23,7 @@
 
 zonename="${1}"
 email="${2}"
-authkey="${3}"
+credentials="${3}"
 dns="${4}"
 
 if ( [ "${dns}" = "cloudflare" ] )
@@ -33,7 +33,7 @@ then
 	then
 		zoneid="`/bin/cat ${HOME}/runtime/zoneid.dat`"
 	else
-		zoneid="`/usr/bin/curl -X GET "https://api.cloudflare.com/client/v4/zones?name=${zonename}&status=active&page=1&per_page=20&order=status&direction=desc&match=all" -H "X-Auth-Email: ${email}" -H "X-Auth-Key: ${authkey}" -H "Content-Type: application/json" | /usr/bin/jq -r '.result[].id'`"
+		zoneid="`/usr/bin/curl -X GET "https://api.cloudflare.com/client/v4/zones?name=${zonename}&status=active&page=1&per_page=20&order=status&direction=desc&match=all" --header "Authorization: Bearer ${api_token}" --header "Content-Type: application/json" | /usr/bin/jq -r '.result[].id'`"
 
 		if ( [ "${zoneid}" != "" ] )
 		then
