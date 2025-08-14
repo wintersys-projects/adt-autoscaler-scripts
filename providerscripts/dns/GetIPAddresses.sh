@@ -24,12 +24,13 @@
 zoneid="${1}"
 websiteurl="${2}"
 email="${3}"
-authkey="${4}"
+credentials="${4}"
 dns="${5}"
 
 if ( [ "${dns}" = "cloudflare" ] )
 then
-	/usr/bin/curl -X GET "https://api.cloudflare.com/client/v4/zones/${zoneid}/dns_records?type=A&name=${websiteurl}&page=1&per_page=20&order=type&direction=desc&match=all" -H "X-Auth-Email: ${email}" -H "X-Auth-Key: ${authkey}" -H "Content-Type: application/json" | /usr/bin/jq -r '.result[].content'
+	api_token="`/bin/echo ${credentials} | /usr/bin/awk -F':::' '{print $2}'`"
+	/usr/bin/curl -X GET "https://api.cloudflare.com/client/v4/zones/${zoneid}/dns_records?type=A&name=${websiteurl}&page=1&per_page=20&order=type&direction=desc&match=all"  --header "Authorization: Bearer ${api_token}" --header "Content-Type: application/json" | /usr/bin/jq -r '.result[].content'
 fi
 
 websiteurl="${2}"
