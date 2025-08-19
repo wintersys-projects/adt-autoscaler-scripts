@@ -170,19 +170,17 @@ then
 	dnsips="`${HOME}/autoscaler/GetDNSIPs.sh`"
 	ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
 
-	if ( [ "${dnsips}" = "" ] )
+	if ( [ "${dnsips}" != "" ] )
 	then
-		exit
+		for dnsip in ${dnsips}
+		do
+			if ( [ "`/bin/echo ${ips} | /bin/grep ${dnsip}`" = "" ] )
+			then
+				/bin/echo "${0} `/bin/date`: Purging detached IP address: ${dnsip}" 
+				${HOME}/autoscaler/RemoveIPFromDNS.sh ${dnsip}
+			fi
+		done
 	fi
-
-	for dnsip in ${dnsips}
-	do
-		if ( [ "`/bin/echo ${ips} | /bin/grep ${dnsip}`" = "" ] )
-		then
-			/bin/echo "${0} `/bin/date`: Purging detached IP address: ${dnsip}" 
-			${HOME}/autoscaler/RemoveIPFromDNS.sh ${dnsip}
-		fi
-	done
 fi
 
 
