@@ -69,7 +69,7 @@ dns="${6}"
 if ( [ "${dns}" = "linode" ] )
 then
 	domain_id="`/usr/local/bin/linode-cli --json domains list | /usr/bin/jq -r --arg tmp_domainurl "${domainurl}" '(.[] | select(.domain | contains($tmp_domainurl)) | .id)'`"
-	/usr/local/bin/linode-cli --json domains records-list ${domain_id} | /usr/bin/jq -r --arg tmp_ip "${ip}" '(.[] | select(.target | contains($tmp_ip)) | .id)'
+	/usr/local/bin/linode-cli --json domains records-list ${domain_id} | /usr/bin/jq -r '(.[] | select(.target == "'${ip}'")) | .id'
 fi
 
 domainurl="`/bin/echo ${2} | /usr/bin/cut -d'.' -f2-`"
