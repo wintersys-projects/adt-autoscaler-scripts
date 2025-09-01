@@ -132,21 +132,20 @@ BUILDOS="`${HOME}/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
 
 if ( [ "${APPLICATION_LANGUAGE}" = "PHP" ] )
 then
-	if ( [ "`/bin/grep ^PHP:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
-	then
-		/bin/sed  -i 's/#XXXXPHPXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
-		/bin/sed  -i "s/XXXXPHP_VERSIONXXXX/${PHP_VERSION}/g" ${HOME}/runtime/cloud-init/webserver.yaml
+	/bin/sed  -i 's/#XXXXPHPXXXX//g' ${HOME}/runtime/cloud-init/webserver.yaml
+	/bin/sed  -i "s/XXXXPHP_VERSIONXXXX/${PHP_VERSION}/g" ${HOME}/runtime/cloud-init/webserver.yaml
 
-		PHP_VERSION="`${HOME}/utilities/config/ExtractConfigValue.sh 'PHPVERSION'`"
-		php_modules="`/bin/grep ^PHP ${HOME}/runtime/buildstyles.dat | /bin/sed 's/^PHP:cloud-init://g' | /usr/bin/awk -F'|' '{print $1}' | /bin/sed 's/:/ /g'`"
-		php_module_list=""
-		for php_module in ${php_modules}
-		do
-			php_modules_list="${php_modules_list} php${PHP_VERSION}-${php_module}"
-		done
-	fi
+	PHP_VERSION="`${HOME}/utilities/config/ExtractConfigValue.sh 'PHPVERSION'`"
+	php_modules="`/bin/grep ^PHP ${HOME}/runtime/buildstyles.dat | /bin/sed 's/^PHP:cloud-init://g' | /usr/bin/awk -F'|' '{print $1}' | /bin/sed 's/:/ /g'`"
+	php_module_list=""
+	for php_module in ${php_modules}
+	do
+		php_modules_list="${php_modules_list} php${PHP_VERSION}-${php_module}"
+	done
+ 
 	/bin/sed -i "s/XXXXPHP_MODULESXXXX/${php_modules_list}/" ${HOME}/runtime/cloud-init/webserver.yaml
-	if ( [ "${BUILDOS}" = "ubuntu" ] )
+	
+ 	if ( [ "${BUILDOS}" = "ubuntu" ] )
 	then
 		/bin/sed -i "s/#XXXXPHPUBUNTUXXXX//" ${HOME}/runtime/cloud-init/webserver.yaml
 	fi
