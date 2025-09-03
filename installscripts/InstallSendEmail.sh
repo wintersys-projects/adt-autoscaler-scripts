@@ -30,13 +30,14 @@ then
 else 
 	BUILDOS="${buildos}"
 fi
+
 apt=""
 if ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt" ] )
 then
-	apt="/usr/bin/apt-get"
-elif ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt-fast" ] )
+	apt="/usr/bin/apt"
+elif ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt-get" ] )
 then
-	apt="/usr/sbin/apt-fast"
+	apt="/usr/bin/apt-get"
 fi
 
 export DEBIAN_FRONTEND=noninteractive
