@@ -94,6 +94,7 @@ runcmd:
   - [ netplan, apply ]
   - '/bin/sed -i "/en_GB.UTF/s/\(^# \)\(.*$\)/\2/g" /etc/locale.gen'
   - '/usr/sbin/locale-gen'
+  - 'export HOME=/home/XXXXSERVER_USERXXXX && /bin/sh ${HOME}/installscripts/InstallPackageManager.sh' 
 #XXXXPHPDEBIANXXXX  - '/usr/bin/curl -sSL https://raw.githubusercontent.com/wintersys-projects/adt-build-machine-scripts/main/installscripts/php-installer.sh | /usr/bin/bash -x'
 #XXXXPHPDEBIANXXXX  - '{ /usr/bin/apt-get install phpXXXXPHP_VERSIONXXXX-fpm phpXXXXPHP_VERSIONXXXX XXXXPHP_MODULESXXXX -y -qq ; export HOME=/home/XXXXSERVER_USERXXXX ; /bin/sh ${HOME}/installscripts/InstallApplicationLanguage.sh ; } &'
 #XXXXPHPUBUNTUXXXX  - 'LC_ALL=C.UTF-8 /usr/bin/add-apt-repository ppa:ondrej/php && /usr/bin/apt-get -qq -y update'
