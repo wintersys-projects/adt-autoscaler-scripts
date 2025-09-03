@@ -53,20 +53,8 @@ if ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | 
 then
 	if ( [ "${BUILDOS}" = "ubuntu" ] )
 	then
-		apt_fast_url='https://raw.githubusercontent.com/ilikenwf/apt-fast/master'
-
-		if ( [ -f /usr/local/sbin/apt-fast ] )
-		then
-			/bin/rm -f /usr/local/sbin/apt-fast
-		fi
-
-		/usr/bin/wget "${apt_fast_url}"/apt-fast -O /usr/sbin/apt-fast
-		/bin/chmod +x /usr/sbin/apt-fast
-
-		if ( [ ! -f /etc/apt-fast.conf ] )
-		then
-			/usr/bin/wget "$apt_fast_url"/apt-fast.conf -O /etc/apt-fast.conf
-		fi
+		/bin/bash -c "$(curl -sL https://git.io/vokNn)"
+		/usr/local/bin/apt-fast /usr/sbin/apt-fast
 
 		if ( [ -f /etc/apt/sources.list.d/ubuntu.sources ] )
 		then
@@ -89,20 +77,8 @@ then
 
 	if ( [ "${BUILDOS}" = "debian" ] )
 	then
-		apt_fast_url='https://raw.githubusercontent.com/ilikenwf/apt-fast/master'
-
-		if ( [ -f /usr/local/sbin/apt-fast ] )
-		then
-			/bin/rm -f /usr/local/sbin/apt-fast
-		fi
-
-		/usr/bin/wget "${apt_fast_url}"/apt-fast -O /usr/sbin/apt-fast
-		/bin/chmod +x /usr/sbin/apt-fast
-
-		if ( [ ! -f /etc/apt-fast.conf ] )
-		then
-			/usr/bin/wget "$apt_fast_url"/apt-fast.conf -O /etc/apt-fast.conf
-		fi
+		/bin/bash -c "$(curl -sL https://git.io/vokNn)"
+		/usr/local/bin/apt-fast /usr/sbin/apt-fast
 
 		if ( [ -f /etc/apt/mirrors/debian.list ] )
 		then
