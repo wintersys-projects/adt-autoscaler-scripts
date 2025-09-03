@@ -73,6 +73,7 @@ then
 			/bin/echo "MIRRORS=( 'mirrors.linode.com' )" >> /etc/apt-fast.conf
 		fi
 		/bin/echo "DLLIST=" >> /etc/apt-fast.conf
+		/bin/touch ${HOME}/runtime/installedsoftware/InstallPackageManager.sh
 	fi
 
 	if ( [ "${BUILDOS}" = "debian" ] )
@@ -96,5 +97,6 @@ then
 			/bin/echo "MIRRORS=( 'mirrors.linode.com' )" >> /etc/apt-fast.conf
 		fi
 		/bin/echo "DLLIST=" >> /etc/apt-fast.conf
+		/bin/touch ${HOME}/runtime/installedsoftware/InstallPackageManager.sh
 	fi
 fi
