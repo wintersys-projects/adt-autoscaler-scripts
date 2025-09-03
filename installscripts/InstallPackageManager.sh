@@ -18,7 +18,7 @@
 # along with The Agile Deployment Toolkit.  If not, see <http://www.gnu.org/licenses/>.
 #######################################################################################################
 #######################################################################################################
-set -x
+#set -x
 
 if ( [ "${1}" != "" ] )
 then
@@ -49,54 +49,19 @@ then
 	fi
 fi
 
-if ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt-fast" ] )
+if ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt-get" ] )
 then
 	if ( [ "${BUILDOS}" = "ubuntu" ] )
 	then
-		/bin/bash -c "$(curl -sL https://git.io/vokNn)"
-		/usr/bin/ln -s /usr/local/bin/apt-fast /usr/sbin/apt-fast
-
-		if ( [ -f /etc/apt/sources.list.d/ubuntu.sources ] )
-		then
-			/bin/sed -i "s/digitalocean/linode/g" /etc/apt/sources.list.d/ubuntu.sources
-		fi
-
-		${HOME}/installscripts/InstallAria2.sh "ubuntu"
-		/bin/echo 'DOWNLOADBELOW="aria2c -c -s ${_MAXNUM} -x ${_MAXNUM} -k 1M -q --file-allocation=none"' >> /etc/apt-fast.conf
-		/bin/sed -i 's/^#DOWNLOADBEFORE/DOWNLOADBEFORE/g' /etc/apt-fast.conf
-		if ( [ "${CLOUDHOST}" = "digitalocean" ] )
-		then
-			/bin/echo "MIRRORS=( 'mirrors.linode.com' )" >> /etc/apt-fast.conf
-		fi
-		if ( [ "${CLOUDHOST}" = "linode" ] )
-		then
-			/bin/echo "MIRRORS=( 'mirrors.linode.com' )" >> /etc/apt-fast.conf
-		fi
-		/bin/echo "DLLIST=" >> /etc/apt-fast.conf
-		/bin/touch ${HOME}/runtime/installedsoftware/InstallPackageManager.sh
+		/usr/bin/yes | /usr/bin/dpkg --configure -a
+		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -y -qq apt-utils
 	fi
 
 	if ( [ "${BUILDOS}" = "debian" ] )
 	then
-		/bin/bash -c "$(curl -sL https://git.io/vokNn)"
-		/usr/bin/ln -s /usr/local/bin/apt-fast /usr/sbin/apt-fast
-
-		if ( [ -f /etc/apt/mirrors/debian.list ] )
-		then
-			/bin/sed -i "s/digitalocean/linode/g" /etc/apt/mirrors/debian.list
-		fi
-		${HOME}/installscripts/InstallAria2.sh "debian"
-		/bin/echo 'DOWNLOADBELOW="aria2c -c -s ${_MAXNUM} -x ${_MAXNUM} -k 1M -q --file-allocation=none"' >> /etc/apt-fast.conf
-		/bin/sed -i 's/^#DOWNLOADBEFORE/DOWNLOADBEFORE/g' /etc/apt-fast.conf
-		if ( [ "${CLOUDHOST}" = "digitalocean" ] )
-		then
-			/bin/echo "MIRRORS=( 'mirrors.linode.com' )" >> /etc/apt-fast.conf
-		fi
-		if ( [ "${CLOUDHOST}" = "linode" ] )
-		then
-			/bin/echo "MIRRORS=( 'mirrors.linode.com' )" >> /etc/apt-fast.conf
-		fi
-		/bin/echo "DLLIST=" >> /etc/apt-fast.conf
-		/bin/touch ${HOME}/runtime/installedsoftware/InstallPackageManager.sh
+		/usr/bin/yes | /usr/bin/dpkg --configure -a
+		DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get -o DPkg::Lock::Timeout=-1 install -y -qq apt-utils
 	fi
 fi
+
+
