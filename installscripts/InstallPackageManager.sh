@@ -54,7 +54,7 @@ then
 	if ( [ "${BUILDOS}" = "ubuntu" ] )
 	then
 		/bin/bash -c "$(curl -sL https://git.io/vokNn)"
-		/usr/local/bin/apt-fast /usr/sbin/apt-fast
+		/usr/bin/ln -s /usr/local/bin/apt-fast /usr/sbin/apt-fast
 
 		if ( [ -f /etc/apt/sources.list.d/ubuntu.sources ] )
 		then
@@ -78,7 +78,7 @@ then
 	if ( [ "${BUILDOS}" = "debian" ] )
 	then
 		/bin/bash -c "$(curl -sL https://git.io/vokNn)"
-		/usr/local/bin/apt-fast /usr/sbin/apt-fast
+		/usr/bin/ln -s /usr/local/bin/apt-fast /usr/sbin/apt-fast
 
 		if ( [ -f /etc/apt/mirrors/debian.list ] )
 		then
