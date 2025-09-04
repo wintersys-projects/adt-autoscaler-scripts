@@ -90,6 +90,7 @@ endit ()
 				/bin/echo "${0} `/bin/date`: Webserver with ip address: ${down_ip} is having it's ip address removed from the DNS system" 
 				${HOME}/autoscaler/RemoveIPFromDNS.sh ${public_ip_address}
 			else
+				/bin/echo "${0} `/bin/date`: Webserver with ip address: ${down_ip} is having it's ip address removed from the Reverse Proxy" 
 				${HOME}/utilities/housekeeping/PurgeWebserverIPFromProxy.sh ${down_ip}
 			fi
 
