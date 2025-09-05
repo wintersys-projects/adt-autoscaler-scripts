@@ -184,6 +184,31 @@ then
 	fi
 fi
 
+#Clean up any straggling IP addresse which are in the datastore - could be there if a machine is killed without following shutdown procedures 
+#either through the GUI, the cli or because of some sort of failure which might then cause wider system problems if we don't clean it up
+
+live_public_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-" "${CLOUDHOST}"`"
+live_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "ws-" "${CLOUDHOST}"`"
+public_ips="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "webserverpublicips/"`"
+ips="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "webserverips/"`"
+
+
+for ip in ${public_ips}
+do
+        if ( [ "`/bin/echo ${live_public_ips} | /bin/grep ${ip}`" = "" ] )
+        then
+                ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverpublicips/${ip}"
+        fi
+done
+
+for ip in ${ips}
+do
+        if ( [ "`/bin/echo ${live_ips} | /bin/grep ${ip}`" = "" ] )
+        then
+                ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverips/${ip}"
+        fi
+done
+
 
 if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh STATIC_SCALE:*`" = "" ] )
 then
