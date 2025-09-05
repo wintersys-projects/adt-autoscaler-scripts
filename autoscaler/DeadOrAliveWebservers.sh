@@ -411,7 +411,7 @@ then
 			endit ${ip} "Webserver (${ip}) is being shutdown because it has been considered as a stalled build"
 		elif ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beenonline/${ip}" 2>/dev/null`" != "" ] )
 		then
-			if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beingbuilt/${ip}" 2>/dev/null`" = "" ] )
+			if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beingbuiltips/${ip}" 2>/dev/null`" = "" ] )
 			then
 				/bin/echo "${ip}" >> ${HOME}/runtime/potentialenders/listofipstoend.dat
 				/bin/echo "${0} `/bin/date`: Added IP ${ip} to list of ips to potentially get ended. This is its `/bin/grep ${ip} ${HOME}/runtime/potentialenders/listofipstoend.dat | /usr/bin/wc -l` chance gone out of 2 chances granted"
