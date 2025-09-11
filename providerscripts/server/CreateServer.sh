@@ -126,7 +126,7 @@ then
 		image="--image ${SNAPSHOT_ID}"
   		user_data=''
 	else
-		user_data='--metadata.user_data "'${cloud_config}'"'
+		user_data="--metadata.user_data ${cloud_config}"
 	fi
 
 	if ( [ "${ACTIVE_FIREWALL}" = "2" ] || [ "${ACTIVE_FIREWALL}" = "3" ] )
