@@ -82,9 +82,9 @@ then
 	then
 		OS_CHOICE="${SNAPSHOT_ID}"
 		template_visibility="--template-visibility private"
-	else
- 		user_data='--cloud-init "${cloud_config}"'
 	fi
+ 
+ 	user_data='--cloud-init "${cloud_config}"'
 
 	firewall=""
 
@@ -122,9 +122,9 @@ then
 	if ( [ "${BUILD_FROM_SNAPSHOT}" = "1" ] && [ "${SNAPSHOT_ID}" != "" ] )
 	then
 		image="--image ${SNAPSHOT_ID}"
-	else
-		user_data="--metadata.user_data ${cloud_config}"
 	fi
+ 
+	user_data="--metadata.user_data ${cloud_config}"
 
 	if ( [ "${ACTIVE_FIREWALL}" = "2" ] || [ "${ACTIVE_FIREWALL}" = "3" ] )
 	then
@@ -161,9 +161,9 @@ then
 	then
 		snapshot="--snapshot=${SNAPSHOT_ID}"
 		os=""
-  	else
-   		user_data='--userdata="`/bin/cat ${cloud_config}`"'
 	fi
+
+   	user_data='--userdata="`/bin/cat ${cloud_config}`"'
 
 	ddos=""
 	if ( [ "${DDOS_PROTECTION}" = "1" ] )
