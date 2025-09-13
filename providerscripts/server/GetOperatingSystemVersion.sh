@@ -47,10 +47,7 @@ then
 		fi
 	elif ( [ "${BUILDOS}" = "debian" ] )
 	then
-		if ( [ "${BUILDOS_VERSION}" = "12" ] )
-		then
-			/bin/echo "Linux Debian ${BUILDOS_VERSION} (Bookworm) 64-bit"
-		fi
+		/bin/echo "Linux Debian ${BUILDOS_VERSION} (Bookworm) 64-bit"
 	fi
 fi
 
@@ -58,16 +55,10 @@ if ( [ -f ${HOME}/LINODE ] || [ "${CLOUDHOST}" = "linode" ] )
 then
 	if ( [ "${BUILDOS}" = "ubuntu" ] )
 	then
-		if ( [ "${BUILDOS_VERSION}" = "24.04" ] )
-		then
-			/bin/echo "linode/ubuntu24.04"
-		fi
+		/bin/echo "linode/ubuntu${BUILDOS_VERSION}"
 	elif ( [ "${BUILDOS}" = "debian" ] )
 	then
-		if ( [ "${BUILDOS_VERSION}" = "12" ] )
-		then
-			/bin/echo "linode/debian12"
-		fi
+		/bin/echo "linode/debian${BUILDOS_VERSION}"
 	fi
 fi
 
