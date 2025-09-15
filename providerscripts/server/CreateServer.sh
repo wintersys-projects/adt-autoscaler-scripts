@@ -84,7 +84,7 @@ then
 		template_visibility="--template-visibility private"
 	fi
  
- 	user_data='--cloud-init "${cloud_config}"'
+ 	user_data="--cloud-init ${cloud_config}"
 
 	firewall=""
 
