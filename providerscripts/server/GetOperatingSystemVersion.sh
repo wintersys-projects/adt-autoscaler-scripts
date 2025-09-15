@@ -47,7 +47,13 @@ then
 		fi
 	elif ( [ "${BUILDOS}" = "debian" ] )
 	then
-		/bin/echo "Linux Debian ${BUILDOS_VERSION} (Bookworm) 64-bit"
+   		if ( [ "${BUILDOS_VERSION}" = "12" ] )
+   		then
+			/bin/echo "Linux Debian ${BUILDOS_VERSION} (Bookworm) 64-bit"
+		elif ( [ "${BUILDOS_VERSION}" = "13" ] )
+		then
+  			/bin/echo "Linux Debian ${BUILDOS_VERSION} (Trixie) 64-bit"
+		fi
 	fi
 fi
 
