@@ -91,33 +91,38 @@ fi
 
 if ( [ "${CLOUDHOST}" = "exoscale" ] )
 then
-	dbaas="`${HOME}/utilities/config/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
-	build_identifier="`${HOME}/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
-	zone="`/bin/echo ${dbaas} | /usr/bin/awk '{print $4}'`"
-	database_name="`/bin/echo ${dbaas} | /usr/bin/awk '{print $6}'`"
+        dbaas="`${HOME}/utilities/config/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
+        build_identifier="`${HOME}/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
+        zone="`/bin/echo ${dbaas} | /usr/bin/awk '{print $4}'`"
+        database_name="`/bin/echo ${dbaas} | /usr/bin/awk '{print $6}'`"
 
-	webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${zone}-${build_identifier}" ${CLOUDHOST}`"
-	database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "db-${zone}-${build_identifier}" ${CLOUDHOST}`"
-	newips="${webserver_ips} ${database_ips} "
-	newips="`/bin/echo ${newips} | /bin/sed 's/  / /g' | /bin/tr ' ' ',' | /bin/sed 's/,$//g'`"
+        webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${zone}-${build_identifier}" ${CLOUDHOST}`"
+        database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "db-${zone}-${build_identifier}" ${CLOUDHOST}`"
+        newips="${webserver_ips} ${database_ips} "
+        newips="`/bin/echo ${newips} | /bin/sed 's/  / /g' | /bin/tr ' ' ',' | /bin/sed 's/,$//g'`"
 
-	if ( [ "${multi_region_ips}" != "" ] )
-	then
-		for ip in ${multi_region_ips}
-		do
-			ipaddresses="${ipaddresses} ${ip}"
-		done
-	fi
+        if ( [ "${MULTI_REGION}" = "1" ] )
+        then
+                if ( [ "${multi_region_ips}" != "" ] )
+                then
+                        for ip in ${multi_region_ips}
+                        do
+                                ipaddresses="${ipaddresses} ${ip}"
+                        done
 
-	ipaddresses="`/bin/echo ${ipaddresses} | /bin/sed 's/ /,/g' | /usr/bin/sort -u`"
+                        ipaddresses="`/bin/echo ${ipaddresses} | /bin/sed 's/ /,/g' | /usr/bin/sort -u`"
+                fi
+        else
+                ipaddresses="${newips}"
+        fi
 
-	if ( [ "`/bin/echo ${dbaas} | /bin/grep ' pg '`" != "" ] )
-	then
-		/usr/bin/exo dbaas update -z ${zone}  ${database_name} --pg-ip-filter=${ipaddresses}
-	elif ( [ "`/bin/echo ${dbaas} | /bin/grep ' mysql '`" != "" ] )
-	then
-		/usr/bin/exo dbaas update -z ${zone}  ${database_name} --mysql-ip-filter=${ipaddresses}
-	fi
+        if ( [ "`/bin/echo ${dbaas} | /bin/grep ' pg '`" != "" ] )
+        then
+                /usr/bin/exo dbaas update -z ${zone}  ${database_name} --pg-ip-filter=${ipaddresses}
+        elif ( [ "`/bin/echo ${dbaas} | /bin/grep ' mysql '`" != "" ] )
+        then
+                /usr/bin/exo dbaas update -z ${zone}  ${database_name} --mysql-ip-filter=${ipaddresses}
+        fi
 fi
 
 if ( [ "${CLOUDHOST}" = "linode" ] )
