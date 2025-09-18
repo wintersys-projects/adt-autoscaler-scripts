@@ -162,8 +162,9 @@ then
 		snapshot="--snapshot=${SNAPSHOT_ID}"
 		os=""
 	fi
-
-   	user_data='--userdata="`/bin/cat ${cloud_config}`"'
+ 
+ 	cloud_config="`/bin/cat ${cloud_config}`" 	
+	user_data="--userdata=${cloud_config}"
 
 	ddos=""
 	if ( [ "${DDOS_PROTECTION}" = "1" ] )
