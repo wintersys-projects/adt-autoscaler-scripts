@@ -24,49 +24,49 @@ export HOME="`/bin/cat /home/homedir.dat`"
 
 server_type="${1}"
 cloudhost="${2}"
-rnd="${3}"
+rnd="`/bin/echo ${3} | /usr/bin/awk -F'-' '{print $NF}'`"
 
 if (  [ -f ${HOME}/DROPLET ] || [ "${cloudhost}" = "digitalocean" ] )
 then
-	if ( [ "`/usr/local/bin/doctl compute droplet list -o json | /usr/bin/jq -r '.[] | select (.name | contains("'${server_type}'-'${rnd}'")).status' 2>/dev/null`" = "active" ] )
-	then
-		/bin/echo "running"
-	else
-		/bin/echo "not running"
-	fi
+        if ( [ "`/usr/local/bin/doctl compute droplet list -o json | /usr/bin/jq -r '.[] | select (.name | contains("'${server_type}${rnd}'")).status' 2>/dev/null`" = "active" ] )
+        then
+                /bin/echo "running"
+        else
+                /bin/echo "not running"
+        fi
 fi
 
 if ( [ -f ${HOME}/EXOSCALE ] || [ "${cloudhost}" = "exoscale" ] )
 then
-	zone="`${HOME}/utilities/config/ExtractConfigValue.sh 'REGION'`"
-	if ( [ "`/usr/bin/exo compute instance list --zone ${zone} -O json | /usr/bin/jq -r '.[] | select (.name | contains("'${server_type}'-'${rnd}'")).state' 2>/dev/null`" = "running" ] )
-	then
-		/bin/echo "running"
-	else
-		/bin/echo "not running"
-	fi
+        zone="`${HOME}/utilities/config/ExtractConfigValue.sh 'REGION'`"
+        if ( [ "`/usr/bin/exo compute instance list --zone ${zone} -O json | /usr/bin/jq -r '.[] | select (.name | contains("'${server_type}${rnd}'")).state' 2>/dev/null`" = "running" ] )
+        then
+                /bin/echo "running"
+        else
+                /bin/echo "not running"
+        fi
 fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
 then
-	if ( [ "`/usr/local/bin/linode-cli --json linodes list | /usr/bin/jq -r '.[] | select (.label | contains("'${server_type}'-'${rnd}'")).status' 2>/dev/null`" = "running" ] )
-	then
-		/bin/echo "running"
-	else
-		/bin/echo "not running"
-	fi
+        if ( [ "`/usr/local/bin/linode-cli --json linodes list | /usr/bin/jq -r '.[] | select (.label | contains("'${server_type}${rnd}'")).status' 2>/dev/null`" = "running" ] )
+        then
+                /bin/echo "running"
+        else
+                /bin/echo "not running"
+        fi
 fi
 
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
-then	
-	export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
-	server_type="`/bin/echo ${server_type} | /usr/bin/cut -c -25`"
-	if ( [ "`/usr/bin/vultr instance list -o json | /usr/bin/jq -r '.instances[] | select (.label | contains("'${server_type}'-'${rnd}'")).status' 2>/dev/null`" = "active" ] )
-	then
-		/bin/echo "running"
-	else
-		/bin/echo "not running"
-	fi
+then
+        export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
+        server_type="`/bin/echo ${server_type} | /usr/bin/cut -c -25`"
+        if ( [ "`/usr/bin/vultr instance list -o json | /usr/bin/jq -r '.instances[] | select (.label | contains("'${server_type}${rnd}'")).status' 2>/dev/null`" = "active" ] )
+        then
+                /bin/echo "running"
+        else
+                /bin/echo "not running"
+        fi
 fi
 
 
