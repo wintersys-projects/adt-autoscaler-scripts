@@ -162,9 +162,8 @@ then
 		snapshot="--snapshot=${SNAPSHOT_ID}"
 		os=""
 	fi
- 
- 	cloud_config="`/bin/cat ${cloud_config}`" 	
-	user_data="--userdata=${cloud_config}"
+
+	cloud_config="`/bin/cat ${cloud_config}`"
 
 	ddos=""
 	if ( [ "${DDOS_PROTECTION}" = "1" ] )
@@ -181,6 +180,6 @@ then
 	/bin/sed -i "s/XXXXWEBSERVER_HOSTNAMEXXXX/${server_name}/g" ${HOME}/runtime/cloud-init/webserver.yaml
 	cloud_config="${HOME}/runtime/cloud-init/webserver.yaml"
 
-	/usr/bin/vultr instance create --label="${server_name}" --region="${REGION}" --plan="${server_size}" --ipv6=false ${snapshot} ${os} ${ddos} ${firewall} ${user_data} --vpc-enable --vpc-ids ${vpc_id}
+	/usr/bin/vultr instance create --label="${server_name}" --region="${REGION}" --plan="${server_size}" --ipv6=false ${snapshot} ${os} ${ddos} ${firewall} --userdata="${cloud_config}" --vpc-enable --vpc-ids ${vpc_id}
 
 fi
