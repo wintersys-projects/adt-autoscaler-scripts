@@ -59,7 +59,7 @@ fi
 if ( [ -f ${HOME}/VULTR ] || [ "${cloudhost}" = "vultr" ] )
 then
         export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
-        server_type="`/bin/echo ${server_type} | /usr/bin/cut -c -25`"
+        server_type="`/bin/echo ${server_type} | /usr/bin/cut -c -32`"
         if ( [ "`/usr/bin/vultr instance list -o json | /usr/bin/jq -r '.instances[] | select (.label | contains("'${server_type}'")).status' 2>/dev/null`" = "active" ] )
         then
                 /bin/echo "running"
