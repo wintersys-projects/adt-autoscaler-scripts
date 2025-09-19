@@ -163,7 +163,7 @@ then
 		os=""
 	fi
 
-	cloud_config="`/bin/cat ${cloud_config}`"
+	cloud_config="`/bin/cat ${HOME}/runtime/cloud-init/webserver.yaml`"
 
 	ddos=""
 	if ( [ "${DDOS_PROTECTION}" = "1" ] )
