@@ -154,3 +154,10 @@ then
 		/bin/sed -i "s/#XXXXPHPDEBIANXXXX//" ${HOME}/runtime/cloud-init/webserver.yaml
 	fi
 fi
+
+webserver_cloud_init_status="`/usr/bin/cloud-init schema --config-file ${HOME}/runtime/cloud-init/webserver.yaml`"
+/bin/echo "${webserver_cloud_init_status}"
+if ( [ "`/bin/echo ${webserver_cloud_init_status} | /bin/grep 'Invalid'`" != "" ] )
+then
+	/bin/echo "Invalid webserver cloud-init configuration found."
+fi   
