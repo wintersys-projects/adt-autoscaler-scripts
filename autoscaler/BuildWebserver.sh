@@ -67,7 +67,6 @@ autoscalerip="`${HOME}/utilities/processing/GetPublicIP.sh`"
 autoscaler_name="`${HOME}/providerscripts/server/GetServerName.sh ${autoscalerip} ${CLOUDHOST}`"
 autoscaler_no="`/bin/echo ${autoscaler_name} | /usr/bin/awk -F'-' '{print $2}'`"
 webserver_name="ws-${REGION}-${BUILD_IDENTIFIER}-${autoscaler_no}-${rnd}"
-server_instance_name="`/bin/echo ${webserver_name} | /bin/sed 's/-$//g'`"
 
 #Check there is a directory for logging
 logdir="scaling-events-`/usr/bin/date | /usr/bin/awk '{print $1,$2,$3}' | /bin/sed 's/ //g'`"
@@ -92,7 +91,7 @@ ${HOME}/autoscaler/InitialiseCloudInit.sh
 /bin/touch ${HOME}/runtime/INITIALLY_PROVISIONING-${buildno}.lock
 
 #Actually create the webserver passing in the name we have set for it as well as what machine type/size it should be
-${HOME}/providerscripts/server/CreateServer.sh "${SIZE}" "${server_instance_name}"
+${HOME}/providerscripts/server/CreateServer.sh "${SIZE}" "${webserver_name}"
 
 #Try a few times if something is unsuccessful, generally, it never should be
 count="0"
@@ -100,18 +99,18 @@ while ( [ "$?" != "0" ] && [ "${count}" -lt "10" ] )
 do
 	/bin/sleep 5
 	count="`/usr/bin/expr ${count} + 1`"
-	${HOME}/providerscripts/server/CreateServer.sh "${SIZE}" "${server_instance_name}"
+	${HOME}/providerscripts/server/CreateServer.sh "${SIZE}" "${webserver_name}"
 done
 
 if ( [ "${count}" = "10" ] )
 then
-	/bin/echo "${0} `/bin/date`: Failed to build webserver with name ${server_instance_name} - this is most likely an issue with your provider (${CLOUDHOST}) check their status page" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
+	/bin/echo "${0} `/bin/date`: Failed to build webserver with name ${webserver_name} - this is most likely an issue with your provider (${CLOUDHOST}) check their status page" >> ${HOME}/logs/${logdir}/MonitoringWebserverBuildLog.log
 	/usr/bin/kill -TERM $$
 fi
 
 /bin/echo "${0} `/bin/date`: Interrogating for webserver instance being available....if this goes on forever there is a problem"
 
-while ( [ "`${HOME}/providerscripts/server/IsInstanceRunning.sh "${server_instance_name}" ${CLOUDHOST} ${rnd}`" != "running" ] )
+while ( [ "`${HOME}/providerscripts/server/IsInstanceRunning.sh "${webserver_name}" ${CLOUDHOST} ${rnd}`" != "running" ] )
 do
 	/bin/sleep 5
 done
@@ -119,7 +118,7 @@ done
 count="1"
 ip=""
 
-/bin/echo "${0} `/bin/date`: Attempting to get ip address of webserver ${server_instance_name} " 
+/bin/echo "${0} `/bin/date`: Attempting to get ip address of webserver ${webserver_name} " 
 
 # There is a delay between the server being created and started and it "coming online". The way we can tell it is online is when
 # It returns an ip address, so try, several times to retrieve the ip address of the server
@@ -127,9 +126,9 @@ ip=""
 while ( ( [ "${ip}" = "" ] || [ "${ip}" = "0.0.0.0" ] ) && [ "${count}" -lt "10" ]  )
 do
 	/bin/sleep 5
-	/bin/echo "${0} `/bin/date`: Attempting to get ip address of webserver ${server_instance_name} " 
-	ip="`${HOME}/providerscripts/server/GetServerIPAddresses.sh ${server_instance_name} ${CLOUDHOST}`"
-	private_ip="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh ${server_instance_name} ${CLOUDHOST}`"
+	/bin/echo "${0} `/bin/date`: Attempting to get ip address of webserver ${webserver_name} " 
+	ip="`${HOME}/providerscripts/server/GetServerIPAddresses.sh ${webserver_name} ${CLOUDHOST}`"
+	private_ip="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh ${webserver_name} ${CLOUDHOST}`"
 	count="`/usr/bin/expr ${count} + 1`"
 done
 
