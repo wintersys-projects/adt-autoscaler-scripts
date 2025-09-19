@@ -160,4 +160,5 @@ webserver_cloud_init_status="`/usr/bin/cloud-init schema --config-file ${HOME}/r
 if ( [ "`/bin/echo ${webserver_cloud_init_status} | /bin/grep 'Invalid'`" != "" ] )
 then
 	/bin/echo "Invalid webserver cloud-init configuration found."
+ 	${HOME}/providerscripts/email/SendEmail.sh "INVALID CLOUD-INIT CONFIG" "Invalid webserver cloud-init configuration found." "ERROR"
 fi   
