@@ -59,7 +59,9 @@ then
 		image="--image ${SNAPSHOT_ID}"
 	fi
 
-	webserver_id="`/usr/local/bin/doctl compute droplet create "${server_name}" -o json --size "${server_size}" ${image} --region "${REGION}" --vpc-uuid "${vpc_id}" --user-data "${cloud_config}" | /usr/bin/jq -r '.[].id'`"
+ 	key_id="`/usr/local/bin/doctl compute ssh-key list -o json | /usr/bin/jq '.[] | select (.name == "AGILE_TOOLKIT_PUBLIC_KEY-'${BUILD_IDENTIFIER}'").id'`" 
+
+	webserver_id="`/usr/local/bin/doctl compute droplet create "${server_name}" -o json --size "${server_size}" ${image} --region "${REGION}" --ssh-keys "${key_id}" --vpc-uuid "${vpc_id}" --user-data "${cloud_config}" | /usr/bin/jq -r '.[].id'`"
 
 	/bin/sleep 5
 
