@@ -188,7 +188,7 @@ then
 fi
 
 #If your application needs any updates to the native firewall then they will be applied here
-${HOME}/providerscripts/cloudhost/security/firewall/UpdateNativeFirewall.sh
+#${HOME}/providerscripts/cloudhost/security/firewall/UpdateNativeFirewall.sh
 
 #If the DBaaS firewall needs to be updated to allow the IP address of our new webserver, this will do it
 if ( [ "`${HOME}/utilities/config/ExtractConfigValue.sh 'DATABASEINSTALLATIONTYPE'`" = "DBaaS" ] )
