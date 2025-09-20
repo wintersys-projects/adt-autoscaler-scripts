@@ -57,11 +57,9 @@ then
 	if ( [ "${BUILD_FROM_SNAPSHOT}" = "1" ] && [ "${SNAPSHOT_ID}" != "" ] )
 	then
 		image="--image ${SNAPSHOT_ID}"
-	else
- 		user_data='--user-data "${cloud_config}"'
 	fi
 
-	webserver_id="`/usr/local/bin/doctl compute droplet create "${server_name}" -o json --size "${server_size}" ${image} --region "${REGION}" --vpc-uuid "${vpc_id}" ${user_data} | /usr/bin/jq -r '.[].id'`"
+	webserver_id="`/usr/local/bin/doctl compute droplet create "${server_name}" -o json --size "${server_size}" ${image} --region "${REGION}" --vpc-uuid "${vpc_id}" --user-data-file "${cloud_config}" | /usr/bin/jq -r '.[].id'`"
 
 	/bin/sleep 5
 
