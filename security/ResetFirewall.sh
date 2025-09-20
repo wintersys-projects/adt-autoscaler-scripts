@@ -25,4 +25,5 @@ export HOME="`/bin/cat /home/homedir.dat`"
 if ( [ -f ${HOME}/runtime/FIREWALL-ACTIVE ] )
 then
   /bin/rm ${HOME}/runtime/FIREWALL-ACTIVE
+  ${HOME}/security/SetupFirewall.sh
 fi
