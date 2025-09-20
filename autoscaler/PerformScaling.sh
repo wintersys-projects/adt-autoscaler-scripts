@@ -161,6 +161,7 @@ then
 		/bin/touch ${HOME}/runtime/AUTOSCALINGMONITOR:${loop}
 		/bin/echo "${0} `/bin/date`: I have calculated that a webserver needs booting so am booting a new one by rsyncing from an existing webserver" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 		${HOME}/autoscaler/BuildWebserver.sh ${loop} &
+  		/bin/sleep 10
 	done
 
 	/bin/echo "${0} `/bin/date`: This autoscaler is now waiting for the new webservers to build and will continue after they have all completed" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
