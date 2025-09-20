@@ -59,7 +59,7 @@ then
 		image="--image ${SNAPSHOT_ID}"
 	fi
 
-	webserver_id="`/usr/local/bin/doctl compute droplet create "${server_name}" -o json --size "${server_size}" ${image} --region "${REGION}" --vpc-uuid "${vpc_id}" --user-data-file "${cloud_config}" | /usr/bin/jq -r '.[].id'`"
+	webserver_id="`/usr/local/bin/doctl compute droplet create "${server_name}" -o json --size "${server_size}" ${image} --region "${REGION}" --vpc-uuid "${vpc_id}" --user-data "${cloud_config}" | /usr/bin/jq -r '.[].id'`"
 
 	/bin/sleep 5
 
