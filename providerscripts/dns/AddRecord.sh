@@ -29,6 +29,7 @@ dns="${6}"
 
 if ( [ "${dns}" = "cloudflare" ] )
 then
+	#authkey="${credentials}"
 	api_token="`/bin/echo ${credentials} | /usr/bin/awk -F':::' '{print $2}'`"
  	count="0"
 	while ( [ "$?" != "0" ] && ( [ "${count}" -lt "5" ] || [ "${count}" = "0" ] ) )
