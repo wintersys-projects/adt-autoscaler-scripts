@@ -53,15 +53,16 @@ subdomain="`/bin/echo ${4} | /usr/bin/awk -F'.' '{print $1}'`"
 ip="${5}"
 dns="${6}"
 
+
 if ( [ "${dns}" = "digitalocean" ] )
 then
- 	count="0"
-	while ( [ "$?" != "0" ] && ( [ "${count}" -lt "5" ] || [ "${count}" = "0" ] ) )
- 	do
-  		count="`/usr/bin/expr ${count} + 1`"
-		/usr/local/bin/doctl compute domain records create --record-type A --record-name ${subdomain} --record-data ${ip} --record-ttl 60 ${domainurl}
+	count="0"
+	while ( [ "${count}" -lt "5" ] && [ "`/usr/local/bin/doctl compute domain records list ${domainurl} -o json | /usr/bin/jq -r '.[] | select (.data == "'${ip}'").id'`" = "" ] )
+	do
+		count="`/usr/bin/expr ${count} + 1`"
+		/usr/local/bin/doctl compute domain records create --record-type A --record-name ${subdomain} --record-data ${ip}  --record-ttl 60 ${domainurl}
 	done
- 
+
  	if ( [ "${count}" = "5" ] )
   	then
 		${HOME}/providerscripts/email/SendEmail.sh "FAILED TO ADD IP ADDRESS TO DNS SYSTEM" "IP address (${ip}) for domain ${domainurl}) could not be added to the DNS system" "ERROR"
