@@ -120,18 +120,16 @@ dns="${6}"
 
 if ( [ "${dns}" = "vultr" ] )
 then
-	HOME="`/bin/cat /home/homedir.dat`"
-	export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
-  	count="0"
-	while ( [ "$?" != "0" ] && ( [ "${count}" -lt "5" ] || [ "${count}" = "0" ] ) )
- 	do
-  		count="`/usr/bin/expr ${count} + 1`"
+	count="0"
+	while ( [ "${count}" -lt "5" ] && [ "`/usr/bin/vultr dns record list ${domainurl} -o json | /usr/bin/jq -r '.records[] | select (.data == "'${ip}'").id'`" = "" ] )
+	do
+		count="`/usr/bin/expr ${count} + 1`"
 		/usr/bin/vultr dns record create ${domainurl} -n ${subdomain} -t A -d "${ip}" --priority=10 --ttl=60
 	done
- 
+
  	if ( [ "${count}" = "5" ] )
   	then
 		${HOME}/providerscripts/email/SendEmail.sh "FAILED TO ADD IP ADDRESS TO DNS SYSTEM" "IP address (${ip}) for domain ${domainurl}) could not be added to the DNS system" "ERROR"
 	fi
-fi
+fi 
 
