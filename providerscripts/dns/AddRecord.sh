@@ -98,12 +98,13 @@ dns="${6}"
 if ( [ "${dns}" = "linode" ] )
 then
 	domain_id="`/usr/local/bin/linode-cli --json domains list | /usr/bin/jq -r '.[] | select (.domain | contains("'${domain_url}'")).id'`"
- 	count="0"
-	while ( [ "$?" != "0" ] && ( [ "${count}" -lt "5" ] || [ "${count}" = "0" ] ) )
- 	do
-  		count="`/usr/bin/expr ${count} + 1`"
-		/usr/local/bin/linode-cli domains records-create $domain_id --type A --name ${subdomain} --target ${ip} --ttl_sec 60
-	done
+    #Make damn sure that the DNS record gets added to the DNS system
+    count="0"
+    while ( [ "${count}" -lt "5" ] && [ "`/usr/local/bin/linode-cli domains records-list ${domain_id} --json | /usr/bin/jq -r '.[] | select (.target == "'${ip}'").id'`" = "" ] )
+    do
+    	count="`/usr/bin/expr ${count} + 1`"
+        /usr/local/bin/linode-cli domains records-create ${domain_id} --type A --name ${subdomain} --target ${ip} --ttl_sec 60
+    done
  
  	if ( [ "${count}" = "5" ] )
   	then
