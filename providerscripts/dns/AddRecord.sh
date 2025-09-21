@@ -43,7 +43,17 @@ dns="${6}"
 
 if ( [ "${dns}" = "digitalocean" ] )
 then
-	/usr/local/bin/doctl compute domain records create --record-type A --record-name ${subdomain} --record-data ${ip} --record-ttl 60 ${domainurl}
+ 	count="0"
+	while ( [ "$?" != "0" ] && ( [ "${count}" -lt "5" ] || [ "${count}" = "0" ] ) )
+ 	do
+  		count="`/usr/bin/expr ${count} + 1`"
+		/usr/local/bin/doctl compute domain records create --record-type A --record-name ${subdomain} --record-data ${ip} --record-ttl 60 ${domainurl}
+	done
+ 
+ 	if ( [ "${count}" = "5" ] )
+  	then
+   		/bin/touch /tmp/END_IT_ALL
+	fi
 fi
 
 authkey="${3}"
@@ -55,9 +65,17 @@ dns="${6}"
 if ( [ "${dns}" = "exoscale" ] )
 then
 	zone="`${HOME}/utilities/config/ExtractConfigValue.sh 'REGION'`"
-	/usr/bin/exo dns add A ${domainurl} -a ${ip} -n ${subdomain} -t 60
-	#Alternative
-	#/usr/bin/curl  -H "X-DNS-Token: ${authkey}" -H 'Accept: application/json' -H 'Content-Type: application/json' -X POST -d "{\"record\":{\"name\": \"${subdomain}\",\"record_type\": \"A\",\"content\": \"${ip}\",\"ttl\": 120}}" https://api.exoscale.com/dns/v1/domains/${domainurl}/records
+ 	count="0"
+	while ( [ "$?" != "0" ] && ( [ "${count}" -lt "5" ] || [ "${count}" = "0" ] ) )
+ 	do
+  		count="`/usr/bin/expr ${count} + 1`"
+		/usr/bin/exo dns add A ${domainurl} -a ${ip} -n ${subdomain} -t 60
+	done
+ 
+ 	if ( [ "${count}" = "5" ] )
+  	then
+   		/bin/touch /tmp/END_IT_ALL
+	fi
 fi
 
 subdomain="`/bin/echo ${4} | /usr/bin/awk -F'.' '{print $1}'`"
@@ -68,7 +86,18 @@ dns="${6}"
 if ( [ "${dns}" = "linode" ] )
 then
 	domain_id="`/usr/local/bin/linode-cli --json domains list | /usr/bin/jq -r '.[] | select (.domain | contains("'${domain_url}'")).id'`"
-	/usr/local/bin/linode-cli domains records-create $domain_id --type A --name ${subdomain} --target ${ip} --ttl_sec 60
+ 	count="0"
+	while ( [ "$?" != "0" ] && ( [ "${count}" -lt "5" ] || [ "${count}" = "0" ] ) )
+ 	do
+  		count="`/usr/bin/expr ${count} + 1`"
+		/usr/local/bin/linode-cli domains records-create $domain_id --type A --name ${subdomain} --target ${ip} --ttl_sec 60
+	done
+ 
+ 	if ( [ "${count}" = "5" ] )
+  	then
+   		/bin/touch /tmp/END_IT_ALL
+	fi
+
 fi
 
 subdomain="`/bin/echo ${4} | /usr/bin/awk -F'.' '{print $1}'`"
@@ -80,6 +109,16 @@ if ( [ "${dns}" = "vultr" ] )
 then
 	HOME="`/bin/cat /home/homedir.dat`"
 	export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
-	/usr/bin/vultr dns record create ${domainurl} -n ${subdomain} -t A -d "${ip}" --priority=10 --ttl=60
+  	count="0"
+	while ( [ "$?" != "0" ] && ( [ "${count}" -lt "5" ] || [ "${count}" = "0" ] ) )
+ 	do
+  		count="`/usr/bin/expr ${count} + 1`"
+		/usr/bin/vultr dns record create ${domainurl} -n ${subdomain} -t A -d "${ip}" --priority=10 --ttl=60
+	done
+ 
+ 	if ( [ "${count}" = "5" ] )
+  	then
+   		/bin/touch /tmp/END_IT_ALL
+	fi
 fi
 
