@@ -31,6 +31,7 @@ if ( [ "${dns}" = "cloudflare" ] )
 then
 	#authkey="${credentials}"
 	api_token="`/bin/echo ${credentials} | /usr/bin/awk -F':::' '{print $2}'`"
+	#Make damn sure that the DNS record gets added to the DNS system
  	count="0"
 	while ( ( [ "$?" != "0" ] || [ "${count}" = "0" ] ) && [ "${count}" -lt "5" ] )
  	do
@@ -56,6 +57,7 @@ dns="${6}"
 
 if ( [ "${dns}" = "digitalocean" ] )
 then
+	#Make damn sure that the DNS record gets added to the DNS system
 	count="0"
 	while ( [ "${count}" -lt "5" ] && [ "`/usr/local/bin/doctl compute domain records list ${domainurl} -o json | /usr/bin/jq -r '.[] | select (.data == "'${ip}'").id'`" = "" ] )
 	do
@@ -77,6 +79,7 @@ dns="${6}"
 
 if ( [ "${dns}" = "exoscale" ] )
 then
+	#Make damn sure that the DNS record gets added to the DNS system
 	count="0"
 	while ( [ "${count}" -lt "5" ] && [ "`/usr/bin/exo dns list -O json | /usr/bin/jq -r '.[] | select (.content ="'${ip}'").id'`" = "" ] )
  	do
@@ -119,6 +122,7 @@ dns="${6}"
 
 if ( [ "${dns}" = "vultr" ] )
 then
+	#Make damn sure that the DNS record gets added to the DNS system
 	count="0"
 	while ( [ "${count}" -lt "5" ] && [ "`/usr/bin/vultr dns record list ${domainurl} -o json | /usr/bin/jq -r '.records[] | select (.data == "'${ip}'").id'`" = "" ] )
 	do
