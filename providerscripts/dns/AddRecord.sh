@@ -77,9 +77,8 @@ dns="${6}"
 
 if ( [ "${dns}" = "exoscale" ] )
 then
-	zone="`${HOME}/utilities/config/ExtractConfigValue.sh 'REGION'`"
- 	count="0"
-	while ( [ "$?" != "0" ] && ( [ "${count}" -lt "5" ] || [ "${count}" = "0" ] ) )
+	count="0"
+	while ( [ "${count}" -lt "5" ] && [ "`/usr/bin/exo dns list -O json | /usr/bin/jq -r '.[] | select (.content ="'${ip}'").id'`" = "" ] )
  	do
   		count="`/usr/bin/expr ${count} + 1`"
 		/usr/bin/exo dns add A ${domainurl} -a ${ip} -n ${subdomain} -t 60
