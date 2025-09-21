@@ -32,7 +32,7 @@ then
 	#authkey="${credentials}"
 	api_token="`/bin/echo ${credentials} | /usr/bin/awk -F':::' '{print $2}'`"
  	count="0"
-	while ( [ "$?" != "0" ] && ( [ "${count}" -lt "5" ] || [ "${count}" = "0" ] ) )
+	while ( ( [ "$?" != "0" ] || [ "${count}" = "0" ] ) && [ "${count}" -lt "5" ] )
  	do
   		count="`/usr/bin/expr ${count} + 1`"
 		#key
