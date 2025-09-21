@@ -30,9 +30,20 @@ dns="${6}"
 if ( [ "${dns}" = "cloudflare" ] )
 then
 	api_token="`/bin/echo ${credentials} | /usr/bin/awk -F':::' '{print $2}'`"
-	#/usr/bin/curl -X POST "https://api.cloudflare.com/client/v4/zones/${zoneid}/dns_records" -H "X-Auth-Email: ${email}" -H "X-Auth-Key: ${authkey}" -H "Content-Type: application/json" --data '{"type":"A","name":"'${websiteurl}'","content":"'${ip}'","proxiable":true,"proxied":'${proxied}',"ttl":120}'
-	/usr/bin/curl -X POST "https://api.cloudflare.com/client/v4/zones/${zoneid}/dns_records" --header "Authorization: Bearer ${api_token}" --header "Content-Type: application/json" --data '{"type":"A","name":"'${websiteurl}'","content":"'${ip}'","proxiable":true,"proxied":true,"ttl":120}'
-
+ 	count="0"
+	while ( [ "$?" != "0" ] && ( [ "${count}" -lt "5" ] || [ "${count}" = "0" ] ) )
+ 	do
+  		count="`/usr/bin/expr ${count} + 1`"
+		#key
+		#/usr/bin/curl -X POST "https://api.cloudflare.com/client/v4/zones/${zoneid}/dns_records" -H "X-Auth-Email: ${email}" -H "X-Auth-Key: ${authkey}" -H "Content-Type: application/json" --data '{"type":"A","name":"'${websiteurl}'","content":"'${ip}'","proxiable":true,"proxied":'${proxied}',"ttl":120}'
+		#token
+  		/usr/bin/curl -X POST "https://api.cloudflare.com/client/v4/zones/${zoneid}/dns_records" --header "Authorization: Bearer ${api_token}" --header "Content-Type: application/json" --data '{"type":"A","name":"'${websiteurl}'","content":"'${ip}'","proxiable":true,"proxied":true,"ttl":120}'
+	done
+ 
+ 	if ( [ "${count}" = "5" ] )
+  	then
+		${HOME}/providerscripts/email/SendEmail.sh "FAILED TO ADD IP ADDRESS TO DNS SYSTEM" "IP address (${ip}) for domain ${domainurl}) could not be added to the DNS system" "ERROR"
+	fi
 fi
 
 websiteurl="${4}"
@@ -52,7 +63,7 @@ then
  
  	if ( [ "${count}" = "5" ] )
   	then
-   		/bin/touch /tmp/END_IT_ALL
+		${HOME}/providerscripts/email/SendEmail.sh "FAILED TO ADD IP ADDRESS TO DNS SYSTEM" "IP address (${ip}) for domain ${domainurl}) could not be added to the DNS system" "ERROR"
 	fi
 fi
 
@@ -74,7 +85,7 @@ then
  
  	if ( [ "${count}" = "5" ] )
   	then
-   		/bin/touch /tmp/END_IT_ALL
+		${HOME}/providerscripts/email/SendEmail.sh "FAILED TO ADD IP ADDRESS TO DNS SYSTEM" "IP address (${ip}) for domain ${domainurl}) could not be added to the DNS system" "ERROR"
 	fi
 fi
 
@@ -95,9 +106,8 @@ then
  
  	if ( [ "${count}" = "5" ] )
   	then
-   		/bin/touch /tmp/END_IT_ALL
+		${HOME}/providerscripts/email/SendEmail.sh "FAILED TO ADD IP ADDRESS TO DNS SYSTEM" "IP address (${ip}) for domain ${domainurl}) could not be added to the DNS system" "ERROR"
 	fi
-
 fi
 
 subdomain="`/bin/echo ${4} | /usr/bin/awk -F'.' '{print $1}'`"
@@ -118,7 +128,7 @@ then
  
  	if ( [ "${count}" = "5" ] )
   	then
-   		/bin/touch /tmp/END_IT_ALL
+		${HOME}/providerscripts/email/SendEmail.sh "FAILED TO ADD IP ADDRESS TO DNS SYSTEM" "IP address (${ip}) for domain ${domainurl}) could not be added to the DNS system" "ERROR"
 	fi
 fi
 
