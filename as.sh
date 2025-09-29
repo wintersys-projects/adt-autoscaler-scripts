@@ -39,7 +39,8 @@ set smartindent
 set fo-=or
 autocmd BufRead,BufWritePre *.sh normal gg=G
 ####ADT-ADDED####" >> /root/.vimrc
-/bin/echo 'export VISUAL=vim' >> ~/.bashrc
+/bin/echo 'export VISUAL=vim' >> /home/${USER_HOME}/.bashrc
+/bin/echo 'export VISUAL=vim' >> /root/.bashrc
 fi
 
 #Set the intial permissions for the build
