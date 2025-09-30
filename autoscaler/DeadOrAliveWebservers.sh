@@ -114,6 +114,10 @@ endit ()
 			then
 				${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beenonline/${down_ip}"  
 			fi
+			if ( [ "`${HOME}/utilities/config/ExtractConfigValue.sh 'DATABASEINSTALLATIONTYPE'`" = "DBaaS" ] )
+			then
+				${HOME}/providerscripts/dbaas/TightenDBaaSFirewall.sh
+			fi
 		fi
 	fi
 }
