@@ -34,15 +34,15 @@ WEBSITE_URL="`${HOME}/utilities/config/ExtractConfigValue.sh 'WEBSITEURL'`"
 
 multi_region_ips=""
 
+if ( [ ! -d ${HOME}/runtime/dbaas_allowed_ips ] )
+then
+	/bin/mkdir -p ${HOME}/runtime/dbaas_allowed_ips
+fi
+
 if ( [ "${MULTI_REGION}" = "1" ] )
 then
 	multi_region_bucket="`/bin/echo ${WEBSITE_URL} | /bin/sed 's/\./-/g'`-multi-region"
 	multi_region_ips="`${HOME}/providerscripts/datastore/ListFromDatastore.sh ${multi_region_bucket}/dbaas_ips/* | /usr/bin/awk -F'/' '{print $NF}'`"
-
-	if ( [ ! -d ${HOME}/runtime/dbaas_allowed_ips ] )
-	then
-		/bin/mkdir -p ${HOME}/runtime/dbaas_allowed_ips
-	fi
 
 	/bin/touch ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat
 	existing_multi_region_ips="`/bin/cat ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat`"
