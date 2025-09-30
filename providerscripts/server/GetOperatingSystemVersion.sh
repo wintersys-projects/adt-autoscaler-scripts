@@ -41,10 +41,7 @@ if ( [ -f ${HOME}/EXOSCALE ] || [ "${CLOUDHOST}" = "exoscale" ] )
 then
 	if ( [ "${BUILDOS}" = "ubuntu" ] )
 	then
-		if ( [ "${BUILDOS_VERSION}" = "24.04" ] )
-		then
-			/bin/echo "Linux Ubuntu ${BUILDOS_VERSION} LTS 64-bit"
-		fi
+		/bin/echo "Linux Ubuntu ${BUILDOS_VERSION} LTS 64-bit"
 	elif ( [ "${BUILDOS}" = "debian" ] )
 	then
    		if ( [ "${BUILDOS_VERSION}" = "12" ] )
