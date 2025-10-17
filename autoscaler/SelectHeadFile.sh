@@ -43,7 +43,7 @@ then
 	fi
 	if ( [ "`${HOME}/utilities/config/CheckConfigValue.sh APPLICATION:moodle`" = "1" ] )
 	then
-		headfile="public/index.php"
+		headfile="index.php"
 	fi
 fi
 
