@@ -128,8 +128,6 @@ fi
 
 if ( [ "${CLOUDHOST}" = "linode" ] )
 then
-	if ( [ "${MULTI_REGION}" = "1" ] )
-	then
 	dbaas="`${HOME}/utilities/config/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
 	label="`${HOME}/utilities/config/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped" | /usr/bin/awk '{print $7}'`"
 	database_id="`/usr/local/bin/linode-cli --json databases mysql-list | /usr/bin/jq '.[] | select(.label | contains ("'${label}'")) | .id'`"
@@ -155,25 +153,22 @@ then
 		fi
 
 		ipaddresses="`/bin/echo ${ipaddresses} | /usr/bin/tr ' ' '\n' | /usr/bin/sort -u`"
-	ellif ( [ "${MULTI_REGION}" = "0" ] )
-	then
-		ipaddresses="${VPC_IP_RANGE}"
-	fi
 
-	allow_list=" "
-	for ipaddress in ${ipaddresses}
-	do
-		allow_list="${allow_list} --allow_list ${ipaddress}/32"
-	done
+		allow_list=" "
+		for ipaddress in ${ipaddresses}
+		do
+			allow_list="${allow_list} --allow_list ${ipaddress}/32"
+		done
 
-	if ( [ "`/bin/echo ${dbaas} | /bin/grep 'mysql'`" != "" ] )
-	then
-		/usr/local/bin/linode-cli databases mysql-update ${database_id} ${allow_list}
-	fi
+		if ( [ "`/bin/echo ${dbaas} | /bin/grep 'mysql'`" != "" ] )
+		then
+			/usr/local/bin/linode-cli databases mysql-update ${database_id} ${allow_list}
+		fi
 
-	if ( [ "`/bin/echo ${dbaas} | /bin/grep 'postgresql'`" != "" ] )
-	then        
-		/usr/local/bin/linode-cli databases postgresql-update ${database_id} ${allow_list}
+		if ( [ "`/bin/echo ${dbaas} | /bin/grep 'postgresql'`" != "" ] )
+		then        
+			/usr/local/bin/linode-cli databases postgresql-update ${database_id} ${allow_list}
+		fi
 	fi
 fi
 
