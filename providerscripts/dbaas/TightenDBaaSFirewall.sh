@@ -27,6 +27,7 @@ CLOUDHOST="`${HOME}/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
 MULTI_REGION="`${HOME}/utilities/config/ExtractConfigValue.sh 'MULTIREGION'`"
 PRIMARY_REGION="`${HOME}/utilities/config/ExtractConfigValue.sh 'PRIMARYREGION'`"
 WEBSITE_URL="`${HOME}/utilities/config/ExtractConfigValue.sh 'WEBSITEURL'`"
+VPC_IP_RANGE="`${HOME}/utilities/config/ExtractConfigValue.sh 'VPCIPRANGE'`"
 
 #The digital ocean managed database should be in the same VPC as the webserver machines which means that the managed database can only be accessed from within that VPC
 #This means that you have no need to have trusted IP addresses on an IP address by IP address basis for digital ocean. I have left the code below commented out in case
@@ -127,6 +128,8 @@ fi
 
 if ( [ "${CLOUDHOST}" = "linode" ] )
 then
+	if ( [ "${MULTI_REGION}" = "1" ] )
+	then
 	dbaas="`${HOME}/utilities/config/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
 	label="`${HOME}/utilities/config/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped" | /usr/bin/awk '{print $7}'`"
 	database_id="`/usr/local/bin/linode-cli --json databases mysql-list | /usr/bin/jq '.[] | select(.label | contains ("'${label}'")) | .id'`"
@@ -136,20 +139,26 @@ then
 		database_id="`/usr/local/bin/linode-cli --json databases postgresql-list | /usr/bin/jq '.[] | select(.label | contains ("'${label}'")) | .id'`"
 	fi
 
-	webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
-	database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "db-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
-
-	ipaddresses="${webserver_ips} ${database_ips}"
-
-	if ( [ "${multi_region_ips}" != "" ] )
+	if ( [ "${MULTI_REGION}" = "1" ] )
 	then
-		for ip in ${multi_region_ips}
-		do
-			ipaddresses="${ipaddresses} ${ip}"
-		done
-	fi
+		webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+		database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "db-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
 
-	ipaddresses="`/bin/echo ${ipaddresses} | /usr/bin/tr ' ' '\n' | /usr/bin/sort -u`"
+		ipaddresses="${webserver_ips} ${database_ips}"
+
+		if ( [ "${multi_region_ips}" != "" ] )
+		then
+			for ip in ${multi_region_ips}
+			do
+				ipaddresses="${ipaddresses} ${ip}"
+			done
+		fi
+
+		ipaddresses="`/bin/echo ${ipaddresses} | /usr/bin/tr ' ' '\n' | /usr/bin/sort -u`"
+	ellif ( [ "${MULTI_REGION}" = "0" ] )
+	then
+		ipaddresses="${VPC_IP_RANGE}"
+	fi
 
 	allow_list=" "
 	for ipaddress in ${ipaddresses}
