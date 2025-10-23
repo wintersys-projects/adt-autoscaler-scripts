@@ -116,7 +116,7 @@ endit ()
 			fi
 			if ( [ "`${HOME}/utilities/config/ExtractConfigValue.sh 'DATABASEINSTALLATIONTYPE'`" = "DBaaS" ] )
 			then
-				${HOME}/providerscripts/dbaas/AdjustDBaaSFirewall.sh
+				${HOME}/providerscripts/dbaas/AdjustDBaaSFirewall.sh ${down_ip}
 			fi
 		fi
 	fi
