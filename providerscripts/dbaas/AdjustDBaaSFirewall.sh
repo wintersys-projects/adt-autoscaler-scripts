@@ -20,6 +20,7 @@
 ########################################################################################
 ########################################################################################
 #set -x
+ip_to_delete="${1}"
 
 BUILD_IDENTIFIER="`${HOME}/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
 REGION="`${HOME}/utilities/config/ExtractConfigValue.sh 'REGION'`"
@@ -80,7 +81,10 @@ then
 
 	if ( [ "${cluster_id}" != "" ] )
 	then
-		if ( [ "${multi_region_ips}" != "" ] )
+		if ( [ "${ip_to_delete}" != "" ] )
+		then
+				/usr/local/bin/doctl databases firewalls append ${cluster_id} --rule ip_addr:${ip_to_delete}
+		elif ( [ "${multi_region_ips}" != "" ] )
 		then
 			for ip in ${multi_region_ips}
 			do
