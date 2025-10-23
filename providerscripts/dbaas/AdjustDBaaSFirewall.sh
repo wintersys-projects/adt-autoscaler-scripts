@@ -83,7 +83,7 @@ then
 	then
 		if ( [ "${ip_to_delete}" != "" ] )
 		then
-				/usr/local/bin/doctl databases firewalls append ${cluster_id} --rule ip_addr:${ip_to_delete}
+				/usr/local/bin/doctl databases firewalls remove ${cluster_id} --rule ip_addr:${ip_to_delete}
 		elif ( [ "${multi_region_ips}" != "" ] )
 		then
 			for ip in ${multi_region_ips}
