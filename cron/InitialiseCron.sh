@@ -41,7 +41,7 @@ MULTI_REGION="`${HOME}/utilities/config/ExtractConfigValue.sh 'MULTIREGION'`"
 
 if ( [ "${MULTI_REGION}" = "1" ] )
 then
-	/bin/echo "*/1 * * * * export HOME="${HOME}" && ${HOME}/providerscripts/dbaas/TightenDBaaSFirewall.sh" >> /var/spool/cron/crontabs/root
+	/bin/echo "*/1 * * * * export HOME="${HOME}" && ${HOME}/providerscripts/dbaas/AdjustDBaaSFirewall.sh" >> /var/spool/cron/crontabs/root
 fi
 
 #These scripts are set to run every 5 minutes
