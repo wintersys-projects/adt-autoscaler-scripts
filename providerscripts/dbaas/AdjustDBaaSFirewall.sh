@@ -173,6 +173,19 @@ then
 		then        
 			/usr/local/bin/linode-cli databases postgresql-update ${database_id} ${allow_list}
 		fi
+	elif ( [ "${MULTI_REGION}" = "0" ] )
+	then
+		allow_list=" --allow-list ${VPC_IP_RANGE}"
+		
+		if ( [ "`/bin/echo ${dbaas} | /bin/grep 'mysql'`" != "" ] )
+		then
+			/usr/local/bin/linode-cli databases mysql-update ${database_id} ${allow_list}
+		fi
+
+		if ( [ "`/bin/echo ${dbaas} | /bin/grep 'postgresql'`" != "" ] )
+		then        
+			/usr/local/bin/linode-cli databases postgresql-update ${database_id} ${allow_list}
+		fi
 	fi
 fi
 
