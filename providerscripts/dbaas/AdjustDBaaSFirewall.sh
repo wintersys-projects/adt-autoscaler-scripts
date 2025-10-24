@@ -175,7 +175,7 @@ then
 		fi
 	elif ( [ "${MULTI_REGION}" = "0" ] )
 	then
-		allow_list=" --allow-list ${VPC_IP_RANGE}"
+		allow_list=" --allow_list ${VPC_IP_RANGE}"
 		
 		if ( [ "`/bin/echo ${dbaas} | /bin/grep 'mysql'`" != "" ] )
 		then
