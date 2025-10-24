@@ -47,7 +47,6 @@ then
 	multi_region_ips="`${HOME}/providerscripts/datastore/ListFromDatastore.sh ${multi_region_bucket}/dbaas_ips/* | /usr/bin/awk -F'/' '{print $NF}'`"
 
 	/bin/touch ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat
-#	existing_multi_region_ips="`/bin/cat ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat`"
 
 	modified="no"
 	for ip in ${multi_region_ips}
