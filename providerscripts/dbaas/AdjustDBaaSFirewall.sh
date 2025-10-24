@@ -79,14 +79,27 @@ then
 	cluster_name="`/bin/echo ${dbaas} | /usr/bin/awk '{print $8}'`"
 	cluster_id="`/usr/local/bin/doctl database list -o json | /usr/bin/jq -r '.[] | select (.name == "'${cluster_name}'").id'`"
 
+	webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+	database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "db-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+
+	ipaddresses="${webserver_ips} ${database_ips}"
+
+	if ( [ "${multi_region_ips}" != "" ] )
+	then
+		for ip in ${multi_region_ips}
+		do
+			ipaddresses="${ipaddresses} ${ip}"
+		done
+	fi
+
 	if ( [ "${cluster_id}" != "" ] )
 	then
 		if ( [ "${ip_to_delete}" != "" ] )
 		then
 				/usr/local/bin/doctl databases firewalls remove ${cluster_id} --rule ip_addr:${ip_to_delete}
-		elif ( [ "${multi_region_ips}" != "" ] )
+		elif ( [ "${ipaddresses}" != "" ] )
 		then
-			for ip in ${multi_region_ips}
+			for ip in ${ipaddresses}
 			do
 				/usr/local/bin/doctl databases firewalls append ${cluster_id} --rule ip_addr:${ip}
 			done
@@ -210,7 +223,13 @@ then
 		fi
 	done
 
-	ipaddresses=""
+	webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+	database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "db-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+
+	ipaddresses="${webserver_ips} ${database_ips}"
+
+	ipaddresses="`/bin/echo ${ipaddresses} | /bin/sed -e 's/ /\/32,/'`"
+
 
 	if ( [ "${multi_region_ips}" != "" ] )
 	then
@@ -218,9 +237,9 @@ then
 		do
 			ipaddresses="${ipaddresses}${ip}/32,"
 		done
-
-		ipaddresses="`/bin/echo ${ipaddresses} | /bin/sed 's/,$//'`"
 	fi
+
+	ipaddresses="`/bin/echo ${ipaddresses} | /bin/sed 's/,$//'`"
 
 	ipaddresses="`/bin/echo ${ipaddresses} | /usr/bin/tr ' ' '\n' | /usr/bin/sort -u`"
 	if ( [ "${selected_databaseid}" != "" ] )
