@@ -227,7 +227,7 @@ then
 
 	ipaddresses="${webserver_ips} ${database_ips}"
 
-	ipaddresses="`/bin/echo ${ipaddresses} | /bin/sed -e 's/ /\/32,/'`"
+	ipaddresses="`/bin/echo ${ipaddresses} | /bin/sed -e 's/  / /g' -e 's/ /\/32,/'`"
 
 
 	if ( [ "${multi_region_ips}" != "" ] )
