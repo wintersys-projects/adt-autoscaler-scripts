@@ -100,7 +100,10 @@ then
 		then
 			for ip in ${ipaddresses}
 			do
-				/usr/local/bin/doctl databases firewalls append ${cluster_id} --rule ip_addr:${ip}
+				if ( [ "`/usr/local/bin/doctl databases firewalls list ${cluster_id} | /bin/grep -w "${ip}"`" = "" ] )
+				then
+					/usr/local/bin/doctl databases firewalls append ${cluster_id} --rule ip_addr:${ip}
+				fi
 			done
 		fi
 	fi
