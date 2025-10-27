@@ -95,7 +95,11 @@ then
 	then
 		if ( [ "${ip_to_delete}" != "" ] )
 		then
-				/usr/local/bin/doctl databases firewalls remove ${cluster_id} --rule ip_addr:${ip_to_delete}
+			uuid="`/usr/local/bin/doctl databases firewalls list ${cluster_id} -o json | /usr/bin/jq -r '.[] | select (.value == "'${ip_to_delete}'").uuid'`"
+			if ( [ "${uuid}" != "" ] )
+			then
+				/usr/local/bin/doctl databases firewalls remove ${cluster_id} --uuid ${uuid}
+			fi
 		elif ( [ "${ipaddresses}" != "" ] )
 		then
 			for ip in ${ipaddresses}
