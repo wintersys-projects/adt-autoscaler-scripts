@@ -239,7 +239,7 @@ then
         webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
         database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "db-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
 
-        ipaddresses="${webserver_ips} ${database_ips} "
+        ipaddresses="${webserver_ips} ${database_ips} ${VPC_IP_RANGE} "
         ipaddresses="`/bin/echo "${ipaddresses}" | /bin/sed -e 's/  / /g' -e 's/ /\/32,/'`"
 
 
