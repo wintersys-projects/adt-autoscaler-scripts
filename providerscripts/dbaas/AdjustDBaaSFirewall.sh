@@ -227,6 +227,13 @@ then
                 then
                         selected_databaseid="${databaseid}"
                 fi
+				if ( [ "${selected_databaseid}" = "" ] )
+				then
+					if ( [ "`/usr/bin/vultr database get ${databaseid} -o json | /usr/bin/jq -r '.database | select (.public_host | contains ("'${DB_IDENTIFIER}'")).id'`" != "" ] )
+					then
+						selected_databaseid="${databaseid}"
+					fi
+				fi
         done
 
         webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
