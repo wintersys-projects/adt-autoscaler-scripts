@@ -241,9 +241,14 @@ then
 
         if ( [ "${MULTI_REGION}" = "1" ] && [ "${PRIMARY_REGION}" = "1" ] )
         then
-                ipaddresses="${webserver_ips} ${database_ips}/32 ${VPC_IP_RANGE} "
+                ipaddresses="${webserver_ips} ${database_ips} ${VPC_IP_RANGE}"
         else
-                ipaddresses="${webserver_ips} ${database_ips}/32 "
+                if ( [ "${MULTI_REGION}" = "1" ] )
+                then
+                        db_vpc_id="`${HOME}/utilities/config/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped" | /usr/bin/awk '{print $11}'`"
+                        db_subnet="`/usr/bin/vultr vpc list -o json | /usr/bin/jq -r '.vpcs[] | select (.id == "'${db_vpc_id}'").v4_subnet'`/20"
+                        ipaddresses="${webserver_ips} ${database_ips} ${db_subnet}"
+                fi
         fi
         
         ipaddresses="`/bin/echo "${ipaddresses}" | /bin/sed -e 's/  / /g' -e "s# #/32,#"`"
