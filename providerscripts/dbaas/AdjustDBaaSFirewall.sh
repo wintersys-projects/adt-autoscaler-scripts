@@ -239,7 +239,13 @@ then
         webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
         database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "db-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
 
-        ipaddresses="${webserver_ips} ${database_ips}/32 ${VPC_IP_RANGE} "
+        if ( ( [ "${MULTI_REGION}" = "1" ] && [ "${PRIMARY_REGION}" = "1" ] ) || [ "${MULTI_REGION}" = "0" ] )
+        then
+                ipaddresses="${webserver_ips} ${database_ips}/32 ${VPC_IP_RANGE} "
+        else
+                ipaddresses="${webserver_ips} ${database_ips}/32 "
+        fi
+        
         ipaddresses="`/bin/echo "${ipaddresses}" | /bin/sed -e 's/  / /g' -e "s# #/32,#"`"
 
         if ( [ "${multi_region_ips}" != "" ] )
