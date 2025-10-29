@@ -214,44 +214,43 @@ fi
 
 if ( [ "${CLOUDHOST}" = "vultr" ] )
 then
-	export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
-	label="`${HOME}/utilities/config/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped" | /usr/bin/awk '{print $10}'`"
-	databaseids="`/usr/bin/vultr database list -o json | /usr/bin/jq -r '.databases[] | select (.label == "'${label}'").id'`"
-	selected_databaseid=""
+        export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
+        label="`${HOME}/utilities/config/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped" | /usr/bin/awk '{print $10}'`"
+        databaseids="`/usr/bin/vultr database list -o json | /usr/bin/jq -r '.databases[] | select (.label == "'${label}'").id'`"
+        selected_databaseid=""
 
-	DB_IDENTIFIER="`${HOME}/utilities/config/ExtractConfigValue.sh 'DBIDENTIFIER'`"
+        DB_IDENTIFIER="`${HOME}/utilities/config/ExtractConfigValue.sh 'DBIDENTIFIER'`"
 
-	for databaseid in ${databaseids}
-	do
-		if ( [ "`/usr/bin/vultr database get ${databaseid} -o json | /usr/bin/jq -r '.database | select (.public_host | contains ("'${DB_IDENTIFIER}'")).id'`" != "" ] )
-		then
-			selected_databaseid="${databaseid}"
-		fi
-	done
+        for databaseid in ${databaseids}
+        do
+                if ( [ "`/usr/bin/vultr database get ${databaseid} -o json | /usr/bin/jq -r '.database | select (.host | contains ("'${DB_IDENTIFIER}'")).id'`" != "" ] )
+                then
+                        selected_databaseid="${databaseid}"
+                fi
+        done
 
-	webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
-	database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "db-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+        webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+        database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "db-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
 
-	ipaddresses="${webserver_ips} ${database_ips}"
+        ipaddresses="${webserver_ips} ${database_ips} "
+        ipaddresses="`/bin/echo "${ipaddresses}" | /bin/sed -e 's/  / /g' -e 's/ /\/32,/'`"
 
-	ipaddresses="`/bin/echo ${ipaddresses} | /bin/sed -e 's/  / /g' -e 's/ /\/32,/'`"
 
+        if ( [ "${multi_region_ips}" != "" ] )
+        then
+                for ip in ${multi_region_ips}
+                do
+                        ipaddresses="${ipaddresses}${ip}/32,"
+                done
+        fi
 
-	if ( [ "${multi_region_ips}" != "" ] )
-	then
-		for ip in ${multi_region_ips}
-		do
-			ipaddresses="${ipaddresses}${ip}/32,"
-		done
-	fi
+        ipaddresses="`/bin/echo ${ipaddresses} | /bin/sed 's/,$//'`"
 
-	ipaddresses="`/bin/echo ${ipaddresses} | /bin/sed 's/,$//'`"
-
-	ipaddresses="`/bin/echo ${ipaddresses} | /usr/bin/tr ' ' '\n' | /usr/bin/sort -u`"
-	if ( [ "${selected_databaseid}" != "" ] )
-	then
-		/usr/bin/vultr database update ${selected_databaseid} --trusted-ips="${ipaddresses}"
-	fi
+        ipaddresses="`/bin/echo ${ipaddresses} | /usr/bin/tr ' ' '\n' | /usr/bin/sort -u`"
+        if ( [ "${selected_databaseid}" != "" ] )
+        then
+                /usr/bin/vultr database update ${selected_databaseid} --trusted-ips="${ipaddresses}"
+        fi
 fi
 
 /bin/echo "${ipaddresses}" > ${HOME}/runtime/dbaas_allowed_ips/ip_list.dat
