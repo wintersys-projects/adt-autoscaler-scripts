@@ -28,7 +28,7 @@ HOME="`/bin/cat /home/homedir.dat`"
 
 if ( [ "${branch}" = "" ] )
 then
-        BRANCH="`${HOME}/utilities/config/ExtractBuildStyleValues.sh "GITBRANCH"`"
+        BRANCH="`/bin/sh ${HOME}/utilities/config/ExtractBuildStyleValues.sh "GITBRANCH" | /usr/bin/awk -F':' '{print $NF}'`"
 else
         BRANCH="${branch}"
 fi
@@ -53,8 +53,10 @@ fi
 /bin/echo "Press <enter> to confirm <ctrl-c> to exit"
 read x
 
-GIT_USER="`${HOME}/utilities/config/ExtractConfigValue.sh 'GITUSER'`"
-GIT_EMAIL_ADDRESS="`${HOME}/utilities/config/ExtractConfigValue.sh 'GITEMAILADDRESS'`"
+GIT_USER="`/bin/sh ${HOME}/utilities/config/ExtractConfigValue.sh 'GITUSER'`"
+GIT_EMAIL_ADDRESS="`/bin/sh ${HOME}/utilities/config/ExtractConfigValue.sh 'GITEMAILADDRESS'`"
+
+/usr/bin/git config --global --add safe.directory /home/development
 
 /usr/bin/git config --global user.email "${GIT_EMAIL_ADDRESS}"
 /usr/bin/git config --global user.name "${GIT_USER}"
@@ -62,4 +64,5 @@ GIT_EMAIL_ADDRESS="`${HOME}/utilities/config/ExtractConfigValue.sh 'GITEMAILADDR
 /usr/bin/git add . 
 /usr/bin/git commit -m "${commit_message}"
 /usr/bin/git push -u origin ${BRANCH}
-/usr/bin/git pull -${BRANCH}
+
+
