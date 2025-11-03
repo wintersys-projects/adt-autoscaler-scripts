@@ -63,6 +63,10 @@ GIT_EMAIL_ADDRESS="`/bin/sh ${HOME}/utilities/config/ExtractConfigValue.sh 'GITE
 
 /usr/bin/git add . 
 /usr/bin/git commit -m "${commit_message}"
+
+/bin/echo "Press <enter> to push these files to the git repo <ctrl-c> to abort"
+read x
+
 /usr/bin/git push -u origin ${BRANCH}
 
 /usr/bin/rsync -a /home/development/ ${HOME}
