@@ -105,6 +105,13 @@ GIT_USER="`${HOME}/utilities/config/ExtractConfigValue.sh 'GITUSER'  | /bin/sed 
 /usr/bin/git config --global init.defaultBranch main
 /usr/bin/git config --global pull.rebase false 
 
+if ( [ -f ${HOME}/utilities/software/PushInfrastructureScriptsUpdates.sh ] )
+then
+	/bin/cp ${HOME}/utilities/software/PushInfrastructureScriptsUpdates.sh /usr/sbin/push
+	/bin/chmod 755 /usr/bin/push
+	/bin/chown root:root /usr/bin/push
+fi
+
 
 /bin/echo "${0} Setting up firewall"
 ${HOME}/security/SetupFirewall.sh
