@@ -20,6 +20,7 @@
 ########################################################################################
 #set -x
 
+HOME="`/bin/cat /home/homedir.dat`"
 
 /usr/bin/rsync -a /home/development/ ${HOME}
 /bin/chown -R www-data:www-data ${HOME}
