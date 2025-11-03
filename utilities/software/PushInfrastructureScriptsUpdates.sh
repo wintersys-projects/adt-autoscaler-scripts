@@ -24,6 +24,8 @@
 commit_message="${1}"
 branch="${2}"
 
+HOME="`/bin/cat /home/homedir.dat`"
+
 if ( [ "${branch}" = "" ] )
 then
         BRANCH="`${HOME}/utilities/config/ExtractBuildStyleValues.sh "GITBRANCH"`"
