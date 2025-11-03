@@ -60,6 +60,7 @@ GIT_EMAIL_ADDRESS="`${HOME}/utilities/config/ExtractConfigValue.sh 'GITEMAILADDR
 /usr/bin/git add . 
 /usr/bin/git commit -m "${commit_message}"
 /usr/bin/git push -u origin ${BRANCH}
+/usr/bin/git pull -${BRANCH}
 
 /usr/bin/rsync -a /home/development/ ${HOME}
 /bin/chown -R www-data:www-data ${HOME}
