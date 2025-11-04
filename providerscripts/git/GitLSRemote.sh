@@ -24,7 +24,7 @@ repository_provider="${1}"
 repository_username="${2}"
 repository_ownername="${3}"
 repository_name="${4}"
-repository_password="${5}"
+repository_token="${5}"
 
 authentication_token=""
 
