@@ -35,8 +35,6 @@ then
 		if ( [ "`/bin/echo ${repository_password} | /bin/egrep -o '(ssh|ecdsa)'`" = "" ] )
 		then
 			/usr/bin/git ls-remote https://${repository_username}:${repository_password}@bitbucket.org/${repository_ownername}/${repository_name}.git | /bin/grep 'HEAD'
-		else
-			/usr/bin/git ls-remote git@bitbucket.org:${repository_ownername}/${repository_name}.git | /bin/grep 'HEAD'
 		fi
 	fi
 fi
@@ -49,8 +47,6 @@ then
 		if ( [ "`/bin/echo ${repository_password} | /bin/egrep -o '(ssh|ecdsa)'`" = "" ] )
 		then
 			/usr/bin/git ls-remote https://${repository_username}:${repository_password}@github.com/${repository_ownername}/${repository_name}.git | /bin/grep 'HEAD'
-		else
-			/usr/bin/git ls-remote git@github.com:${repository_ownername}/${repository_name}.git | /bin/grep 'HEAD'
 		fi
 	fi
 fi
@@ -63,8 +59,6 @@ then
 		if ( [ "`/bin/echo ${repository_password} | /bin/egrep -o '(ssh|ecdsa)'`" = "" ] )
 		then
 			/usr/bin/git ls-remote https://${repository_username}:${repository_password}@gitlab.com/${repository_ownername}/${repository_name}.git | /bin/grep 'HEAD'
-		else
-			/usr/bin/git ls-remote git@gitlab.com:${repository_ownername}/${repository_name}.git | /bin/grep 'HEAD'
 		fi
 	fi
 fi
