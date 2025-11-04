@@ -24,56 +24,33 @@ repository_provider="${1}"
 repository_username="${2}"
 repository_ownername="${3}"
 repository_name="${4}"
-repository_password="${5}"
+repository_token="${5}"
+
+authentication_token=""
+
+if ( [ "${repository_token}" != "" ] )
+then
+        authentication_token=":${repository_token}"
+fi
 
 count="0" 
 /bin/ls /tmp/test.$$
 while ( [ $? != "0" ] && [ "${count}" -lt "5" ] )
 do
-	count="`/usr/bin/expr ${count} + 1`"
-	if ( [ "${repository_provider}" = "bitbucket" ] )
-	then
-		if ( [ "${repository_username}" = "" ] && [ "${repository_password}" = "" ] )
-		then
-			/usr/bin/git clone https://bitbucket.org/${repository_ownername}/${repository_name}.git
-		else
-			if ( [ "${repository_password}" = "none" ] )
-			then
-				/usr/bin/git clone https://${repository_username}@bitbucket.org/${repository_ownername}/${repository_name}.git
-			else
-				/usr/bin/git clone https://${repository_username}:${repository_password}@bitbucket.org/${repository_ownername}/${repository_name}.git
-			fi
-		fi
-	fi
+        count="`/usr/bin/expr ${count} + 1`"
+        if ( [ "${repository_provider}" = "bitbucket" ] )
+        then
+                /usr/bin/git clone https://${repository_username}${authentication_token}@bitbucket.org/${repository_ownername}/${repository_name}.git
+        fi
 
-	if ( [ "${repository_provider}" = "github" ] )
-	then
-		if ( [ "${repository_username}" = "" ] && [ "${repository_password}" = "" ] )
-		then
-			/usr/bin/git clone https://github.com/${repository_ownername}/${repository_name}.git
-		else
-			if ( [ "${repository_password}" = "none" ] )
-			then
-				/usr/bin/git clone https://${repository_username}@github.com/${repository_ownername}/${repository_name}.git
-			else
-				/usr/bin/git clone https://${repository_username}:${repository_password}@github.com/${repository_ownername}/${repository_name}.git
-			fi
-		fi
-	fi
+        if ( [ "${repository_provider}" = "github" ] )
+        then
+                /usr/bin/git clone https://${repository_username}${authentication_token}@github.com/${repository_ownername}/${repository_name}.git
+        fi
 
-	if ( [ "${repository_provider}" = "gitlab" ] )
-	then
-		if ( [ "${repository_username}" = "" ] && [ "${repository_password}" = "" ] )
-		then
-			/usr/bin/git clone https://@gitlab.com/${repository_ownername}/${repository_name}.git
-		else
-			if ( [ "${repository_password}" = "none" ] )
-			then
-				/usr/bin/git clone https://${repository_username}@gitlab.com/${repository_ownername}/${repository_name}.git
-			else
-				/usr/bin/git clone https://${repository_username}:${repository_password}@gitlab.com/${repository_ownername}/${repository_name}.git
-			fi
-		fi
-	fi
+        if ( [ "${repository_provider}" = "gitlab" ] )
+        then
+                /usr/bin/git clone https://${repository_username}${authentication_token}@gitlab.com/${repository_ownername}/${repository_name}.git
+        fi
 done
 
