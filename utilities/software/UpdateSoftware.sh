@@ -32,7 +32,7 @@ do
 	/bin/sh ${HOME}/installscripts/${script} ${BUILDOS}
 done
 
-${HOME}/utilities/UpdateInfrastructure.sh
+${HOME}/utilities/software/UpdateInfrastructure.sh
 
 /usr/sbin/shutdown -r now
 
