@@ -32,7 +32,12 @@ then
 	then
 		/usr/bin/git pull https://${repository_username}@bitbucket.org/${repository_ownername}/${repository_name}.git
 	else
-		/usr/bin/git pull https://${repository_username}:${repository_password}@bitbucket.org/${repository_ownername}/${repository_name}.git
+		if ( [ "`/bin/echo ${repository_password} | /bin/egrep -o '(ssh|ecdsa)'`" = "" ] )
+		then
+			/usr/bin/git pull https://${repository_username}:${repository_password}@bitbucket.org/${repository_ownername}/${repository_name}.git 
+		else
+			/usr/bin/git pull git@bitbucket.org:${repository_ownername}/${repository_name}.git 
+		fi
 	fi
 fi
 if ( [ "${repository_provider}" = "github" ] )
@@ -41,7 +46,12 @@ then
 	then
 		/usr/bin/git pull https://${repository_username}@github.com/${repository_ownername}/${repository_name}.git
 	else
-		/usr/bin/git pull https://${repository_username}:${repository_password}@github.com/${repository_ownername}/${repository_name}.git
+		if ( [ "`/bin/echo ${repository_password} | /bin/egrep -o '(ssh|ecdsa)'`" = "" ] )
+		then
+			/usr/bin/git pull https://${repository_username}:${repository_password}@github.com/${repository_ownername}/${repository_name}.git 
+		else
+			/usr/bin/git pull git@github.com:${repository_ownername}/${repository_name}.git 
+		fi
 	fi
 fi
 if ( [ "${repository_provider}" = "gitlab" ] )
@@ -50,7 +60,12 @@ then
 	then
 		/usr/bin/git pull https://${repository_username}@gitlab.com/${repository_ownername}/${repository_name}.git
 	else
-		/usr/bin/git pull https://${repository_username}:${repository_password}@gitlab.com/${repository_ownername}/${repository_name}.git
+		if ( [ "`/bin/echo ${repository_password} | /bin/egrep -o '(ssh|ecdsa)'`" = "" ] )
+		then
+			/usr/bin/git pull https://${repository_username}:${repository_password}@gitlab.com/${repository_ownername}/${repository_name}.git 
+		else
+			/usr/bin/git pull git@gitlab.com:${repository_ownername}/${repository_name}.git 
+		fi
 	fi
 fi
 
