@@ -38,11 +38,11 @@ fi
 
 if ( [ -f ${HOME}/LINODE ] || [ "${cloudhost}" = "linode" ] )
 then
-	linodeids="`/usr/local/bin/linode-cli --json linodes list | /usr/bin/jq '.[] | select (.label | contains("'${server_type}'")).id'`"
+	linodeids="`/usr/local/bin/linode-cli linodes list --no-defaults --json | /usr/bin/jq '.[] | select (.label | contains("'${server_type}'")).id'`"
 	privateips=""
 	for linodeid in ${linodeids}
 	do
-		privateip="`/usr/local/bin/linode-cli --json linodes ips-list ${linodeid} | /usr/bin/jq -r '.[].ipv4.vpc[].address' 2>/dev/null`"		
+		privateip="`/usr/local/bin/linode-cli linodes ips-list ${linodeid} --no-defaults --json | /usr/bin/jq -r '.[].ipv4.vpc[].address' 2>/dev/null`"		
 		privateips=${privateips}" ${privateip}"
 	done
 	/bin/echo ${privateips}
