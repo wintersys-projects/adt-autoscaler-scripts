@@ -153,11 +153,11 @@ if ( [ "${CLOUDHOST}" = "linode" ] )
 then
         dbaas="`${HOME}/utilities/config/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped"`"
         label="`${HOME}/utilities/config/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped" | /usr/bin/awk '{print $7}'`"
-        database_id="`/usr/local/bin/linode-cli --json databases mysql-list | /usr/bin/jq '.[] | select(.label | contains ("'${label}'")) | .id'`"
+        database_id="`/usr/local/bin/linode-cli databases mysql-list --no-defaults --json | /usr/bin/jq '.[] | select(.label | contains ("'${label}'")) | .id'`"
 
         if ( [ "${database_id}" = "" ] )
         then
-                database_id="`/usr/local/bin/linode-cli --json databases postgresql-list | /usr/bin/jq '.[] | select(.label | contains ("'${label}'")) | .id'`"
+                database_id="`/usr/local/bin/linode-cli databases postgresql-list --no-defaults --json | /usr/bin/jq '.[] | select(.label | contains ("'${label}'")) | .id'`"
         fi
 
         if ( [ "${MULTI_REGION}" = "1" ] )
@@ -185,12 +185,12 @@ then
 
                 if ( [ "`/bin/echo ${dbaas} | /bin/grep 'mysql'`" != "" ] )
                 then
-                        /usr/local/bin/linode-cli databases mysql-update ${database_id} ${allow_list}
+                        /usr/local/bin/linode-cli databases mysql-update ${database_id} ${allow_list} --no-defaults
                 fi
 
                 if ( [ "`/bin/echo ${dbaas} | /bin/grep 'postgresql'`" != "" ] )
                 then        
-                        /usr/local/bin/linode-cli databases postgresql-update ${database_id} ${allow_list}
+                        /usr/local/bin/linode-cli databases postgresql-update ${database_id} ${allow_list} --no-defaults 
                 fi
         elif ( [ "${MULTI_REGION}" = "0" ] )
         then
@@ -198,12 +198,12 @@ then
 
                 if ( [ "`/bin/echo ${dbaas} | /bin/grep 'mysql'`" != "" ] )
                 then
-                        /usr/local/bin/linode-cli databases mysql-update ${database_id} ${allow_list}
+                        /usr/local/bin/linode-cli databases mysql-update ${database_id} ${allow_list} --no-defaults 
                 fi
 
                 if ( [ "`/bin/echo ${dbaas} | /bin/grep 'postgresql'`" != "" ] )
                 then        
-                        /usr/local/bin/linode-cli databases postgresql-update ${database_id} ${allow_list}
+                        /usr/local/bin/linode-cli databases postgresql-update ${database_id} ${allow_list} --no-defaults
                 fi
         fi
 fi
