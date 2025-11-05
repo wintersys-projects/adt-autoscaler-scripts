@@ -51,7 +51,7 @@ then
 
 	if ( [ "${matched_linode_id}" != "" ] )
 	then
-		/usr/local/bin/linode-cli  --json linodes ips-list ${matched_linode_id} | /usr/bin/jq -r '.[].ipv4.public[].address'
+		/usr/local/bin/linode-cli linodes ips-list ${matched_linode_id} --no-defaults --json | /usr/bin/jq -r '.[].ipv4.public[].address'
 	fi
 fi
 
