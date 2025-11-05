@@ -74,8 +74,8 @@ if ( [ "${dns}" = "linode" ] )
 then
 	export LINODE_CLI_CONFIG=/root/.config/dns-linode-cli
 
-	domain_id="`/usr/local/bin/linode-cli --json domains list | /usr/bin/jq -r --arg tmp_domainurl "${domainurl}" '(.[] | select(.domain | contains($tmp_domainurl)) | .id)'`"
-	/usr/local/bin/linode-cli --json domains records-list ${domain_id} | /usr/bin/jq -r '(.[] | select(.target == "'${ip}'")) | .id'
+	domain_id="`/usr/local/bin/linode-cli domains list --no-defaults --json | /usr/bin/jq -r --arg tmp_domainurl "${domainurl}" '(.[] | select(.domain | contains($tmp_domainurl)) | .id)'`"
+	/usr/local/bin/linode-cli domains records-list ${domain_id} --no-defaults --json | /usr/bin/jq -r '(.[] | select(.target == "'${ip}'")) | .id'
 
 	unset LINODE_CLI_CONFIG
 
