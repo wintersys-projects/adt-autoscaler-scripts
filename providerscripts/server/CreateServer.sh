@@ -128,7 +128,7 @@ then
 
 	if ( [ "${ACTIVE_FIREWALL}" = "2" ] || [ "${ACTIVE_FIREWALL}" = "3" ] )
 	then
-		firewall_id="`/usr/local/bin/linode-cli --json firewalls list | /usr/bin/jq -r '.[] | select (.label == "adt-webserver-'${BUILD_IDENTIFIER}'").id'`"
+		firewall_id="`/usr/local/bin/linode-cli firewalls list --no-defaults --json | /usr/bin/jq -r '.[] | select (.label == "adt-webserver-'${BUILD_IDENTIFIER}'").id'`"
 		/usr/local/bin/linode-cli linodes create --root_pass "${emergency_password}" --region ${REGION} ${image} --firewall_id="${firewall_id}"  --type ${server_size} --label "${server_name}" --no-defaults --interface_generation "linode" --interfaces ' [ { "purpose": "public", "firewall_id": '${firewall_id}', "default_route": { "ipv4": true }, "public": { "ipv4": { "addresses": [ { "address": "auto", "primary": true } ] } } }, { "purpose": "vpc", "firewall_id": '${firewall_id}',  "vpc": { "ipv4": { "addresses": [ { "address": "auto", "primary": true } ] } , "subnet_id": '${subnet_id}' } } ]' ${user_data} --disk_encryption "enabled"	
 	else
 		/usr/local/bin/linode-cli linodes create --root_pass "${emergency_password}" --region ${REGION} ${image} --type ${server_size} --label "${server_name}" --no-defaults --interface_generation "linode" --interfaces ' [ { "purpose": "public", "firewall_id": '${firewall_id}', "default_route": { "ipv4": true }, "public": { "ipv4": { "addresses": [ { "address": "auto", "primary": true } ] } } }, { "purpose": "vpc", "firewall_id": '${firewall_id}',  "vpc": { "ipv4": { "addresses": [ { "address": "auto", "primary": true } ] } , "subnet_id": '${subnet_id}' } } ]' ${user_data} --disk_encryption "enabled"	
