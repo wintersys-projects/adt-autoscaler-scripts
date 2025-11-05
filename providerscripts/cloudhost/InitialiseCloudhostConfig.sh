@@ -29,6 +29,7 @@
 export HOME="`/bin/cat /home/homedir.dat`"
 
 CLOUDHOST="`${HOME}/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
+DNS_SECURITY_KEY="`${HOME}/utilities/config/ExtractConfigValue.sh 'DNSSECURITYKEY'`"
 
 if ( [ "${CLOUDHOST}" = "digitalocean" ] )
 then
@@ -181,6 +182,12 @@ then
 	/bin/cp  ${HOME}/.config/linode-cli /root/.config/linode-cli
 	/bin/chown root:root /root/.config/linode-cli ${HOME}/.config/linode-cli
 	/bin/chmod 400 /root/.config/linode-cli ${HOME}/.config/linode-cli
+
+	/bin/cp ${HOME}/.config/linode-cli ${HOME}/.config/.dns-linode-cli
+	/bin/cp /root/.config/linode-cli /root/.config/dns-linode-cli
+
+	/bin/sed -i "s/^token.*/token = ${DNS_SECURITY_KEY}/" ${HOME}/.config/.dns-linode-cli
+	/bin/sed -i "s/^token.*/token = ${DNS_SECURITY_KEY}/" /root/.config/dns-linode-cli
 fi
 
 if ( [ "${CLOUDHOST}" = "vultr" ] )
