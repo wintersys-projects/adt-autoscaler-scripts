@@ -28,20 +28,27 @@ dns="${4}"
 
 if ( [ "${dns}" = "cloudflare" ] )
 then    
+	zoneid=""
 	#Storing it in a file stops us hitting cloudflare rate limits
 	if ( [ -f ${HOME}/runtime/zoneid.dat ] )
 	then
 		zoneid="`/bin/cat ${HOME}/runtime/zoneid.dat`"
 	else
- 		api_token="`/bin/echo ${credentials} | /usr/bin/awk -F':::' '{print $2}'`"
-		zoneid="`/usr/bin/curl -X GET "https://api.cloudflare.com/client/v4/zones?name=${zonename}&status=active&page=1&per_page=20&order=status&direction=desc&match=all" --header "Authorization: Bearer ${api_token}" --header "Content-Type: application/json" | /usr/bin/jq -r '.result[].id'`"
-
-		if ( [ "${zoneid}" != "" ] )
-		then
-			/bin/echo "${zoneid}" > ${HOME}/runtime/zoneid.dat
-		fi
+        if ( [ "`/bin/echo ${credentials} | /bin/grep ':::'`" != "" ] )
+        then
+                api_token="`/bin/echo ${credentials} | /usr/bin/awk -F':::' '{print $2}'`"
+                zoneid="`/usr/bin/curl -X GET "https://api.cloudflare.com/client/v4/zones?name=${zonename}&status=active&page=1&per_page=20&order=status&direction=desc&match=all" --header "Authorization: Bearer ${api_token}" --header "Content-Type: application/json" | /usr/bin/jq -r '.result[].id'`" 
+        else
+                authkey="${credentials}"
+                zoneid="`/usr/bin/curl -X GET "https://api.cloudflare.com/client/v4/zones?name=${zonename}&status=active&page=1&per_page=20&order=status&direction=desc&match=all" -H "X-Auth-Email: ${email}" -H "X-Auth-Key: ${authkey}" -H "Content-Type: application/json" | /usr/bin/jq -r '.result[].id'`"
+        fi
 	fi
-	/bin/echo ${zoneid}
+	
+	if ( [ "${zoneid}" != "" ] )
+	then
+		/bin/echo "${zoneid}" > ${HOME}/runtime/zoneid.dat
+		/bin/echo ${zoneid}
+	fi
 fi
 
 
