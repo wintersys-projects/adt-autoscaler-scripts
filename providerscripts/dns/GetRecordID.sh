@@ -48,7 +48,7 @@ dns="${6}"
 
 if ( [ "${dns}" = "digitalocean" ] )
 then
-	/usr/local/bin/doctl compute domain records list ${domainurl} -o json | /usr/bin/jq -r '.[] | select (.type == "A") | select (.name == "'${subdomain}'") | select (.data == "'${ip}'").id'
+	/usr/local/bin/doctl compute domain records list ${domainurl} --config /root/.config/doctl/dns-do-config.yaml -o json | /usr/bin/jq -r '.[] | select (.type == "A") | select (.name == "'${subdomain}'") | select (.data == "'${ip}'").id'
 fi
 
 domainurl="`/bin/echo ${2} | /usr/bin/cut -d'.' -f2-`"
