@@ -33,182 +33,194 @@ DNS_SECURITY_KEY="`${HOME}/utilities/config/ExtractConfigValue.sh 'DNSSECURITYKE
 
 if ( [ "${CLOUDHOST}" = "digitalocean" ] )
 then
-	TOKEN="`${HOME}/utilities/config/ExtractConfigValue.sh 'TOKEN'`"
+        TOKEN="`${HOME}/utilities/config/ExtractConfigValue.sh 'TOKEN'`"
 
-	if ( [ -f ${HOME}/.config/doctl/config.yaml ] )
-	then
-		/bin/rm ${HOME}/.config/doctl/config.yaml
-	fi
+        if ( [ -f ${HOME}/.config/doctl/config.yaml ] )
+        then
+                /bin/rm ${HOME}/.config/doctl/config.yaml
+        fi
 
-	/bin/echo "${0} Configuring Digital Ocean CLI tool" 
+        /bin/echo "${0} Configuring Digital Ocean CLI tool" 
 
-	if ( [ ! -d ${HOME}/.config/doctl ] )
-	then
-		/bin/mkdir -p ${HOME}/.config/doctl
-	fi
+        if ( [ ! -d ${HOME}/.config/doctl ] )
+        then
+                /bin/mkdir -p ${HOME}/.config/doctl
+        fi
 
-	/bin/cp ${HOME}/providerscripts/cloudhost/configfiles/digitalocean/digitalocean.tmpl ${HOME}/.config/doctl/config.yaml
+        /bin/cp ${HOME}/providerscripts/cloudhost/configfiles/digitalocean/digitalocean.tmpl ${HOME}/.config/doctl/config.yaml
 
-	if ( [ "${TOKEN}" != "" ] )
-	then
-		/bin/sed -i "s/XXXXTOKENXXXX/${TOKEN}/" ${HOME}/.config/doctl/config.yaml
-	else 
-		/bin/echo "${0} Couldn't find your digital ocean account personal access token in your template, will have to exit" 
-		exit
-	fi
+        if ( [ "${TOKEN}" != "" ] )
+        then
+                /bin/sed -i "s/XXXXTOKENXXXX/${TOKEN}/" ${HOME}/.config/doctl/config.yaml
+        else 
+                /bin/echo "${0} Couldn't find your digital ocean account personal access token in your template, will have to exit" 
+                exit
+        fi
 
-	if ( [ ! -d /root/.config/doctl ] )
-	then
-		/bin/mkdir -p /root/.config/doctl
-	fi
+        if ( [ ! -d /root/.config/doctl ] )
+        then
+                /bin/mkdir -p /root/.config/doctl
+        fi
 
-	/bin/cp ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml
-	/bin/chown root:root ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml
-	/bin/chmod 400 ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml
+        /bin/cp ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml
+        /bin/chown root:root ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml
+        /bin/chmod 400 ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml
 fi
 
 if ( [ "${CLOUDHOST}" = "exoscale" ] )
 then
-	CLOUDHOST_ACCOUNT_ID="`${HOME}/utilities/config/ExtractConfigValue.sh 'CLOUDHOSTACCOUNTID'`"
-	REGION="`${HOME}/utilities/config/ExtractConfigValue.sh 'REGION'`"
-	ACCESS_KEY="`${HOME}/utilities/config/ExtractConfigValue.sh 'ACCESSKEY'`"
-	SECRET_KEY="`${HOME}/utilities/config/ExtractConfigValue.sh 'SECRETKEY'`"
+        CLOUDHOST_ACCOUNT_ID="`${HOME}/utilities/config/ExtractConfigValue.sh 'CLOUDHOSTACCOUNTID'`"
+        REGION="`${HOME}/utilities/config/ExtractConfigValue.sh 'REGION'`"
+        ACCESS_KEY="`${HOME}/utilities/config/ExtractConfigValue.sh 'ACCESSKEY'`"
+        SECRET_KEY="`${HOME}/utilities/config/ExtractConfigValue.sh 'SECRETKEY'`"
 
-	if ( [ -f ${HOME}/.config/exoscale/exoscale.toml ] )
-	then
-		/bin/rm ${HOME}/.config/exoscale/exoscale.toml
-	fi
+        if ( [ -f ${HOME}/.config/exoscale/exoscale.toml ] )
+        then
+                /bin/rm ${HOME}/.config/exoscale/exoscale.toml
+        fi
 
-	/bin/echo "${0} Configuring Exoscale CLI tool" 
+        /bin/echo "${0} Configuring Exoscale CLI tool" 
 
-	if ( [ ! -d ${HOME}/.config/exoscale ] )
-	then
-		/bin/mkdir -p ${HOME}/.config/exoscale
-	fi
+        if ( [ ! -d ${HOME}/.config/exoscale ] )
+        then
+                /bin/mkdir -p ${HOME}/.config/exoscale
+        fi
 
-	/bin/cp ${HOME}/providerscripts/cloudhost/configfiles/exoscale/exoscale.tmpl  ${HOME}/.config/exoscale/exoscale.toml
+        /bin/cp ${HOME}/providerscripts/cloudhost/configfiles/exoscale/exoscale.tmpl  ${HOME}/.config/exoscale/exoscale.toml
 
-	if ( [ "${CLOUDHOST_ACCOUNT_ID}" != "" ] )
-	then
-		/bin/sed -i "s/XXXXCLOUDEMAILADDRESSXXXX/${CLOUDHOST_ACCOUNT_ID}/" ${HOME}/.config/exoscale/exoscale.toml
-	else 
-		/bin/echo "${0} Couldn't find your exoscale cloud email address in your template, will have to exit"
-		exit
-	fi
+        if ( [ "${CLOUDHOST_ACCOUNT_ID}" != "" ] )
+        then
+                /bin/sed -i "s/XXXXCLOUDEMAILADDRESSXXXX/${CLOUDHOST_ACCOUNT_ID}/" ${HOME}/.config/exoscale/exoscale.toml
+        else 
+                /bin/echo "${0} Couldn't find your exoscale cloud email address in your template, will have to exit"
+                exit
+        fi
 
-	if ( [ "${REGION}" != "" ] )
-	then
-		/bin/sed -i "s/XXXXREGIONXXXX/${REGION}/" ${HOME}/.config/exoscale/exoscale.toml
-	else 
-		/bin/echo "${0} Couldn't find your region in your template, will have to exit" 
-		exit
-	fi
+        if ( [ "${REGION}" != "" ] )
+        then
+                /bin/sed -i "s/XXXXREGIONXXXX/${REGION}/" ${HOME}/.config/exoscale/exoscale.toml
+        else 
+                /bin/echo "${0} Couldn't find your region in your template, will have to exit" 
+                exit
+        fi
 
-	if ( [ "${ACCESS_KEY}" != "" ] )
-	then
-		/bin/sed -i "s/XXXXACCESSKEYXXXX/${ACCESS_KEY}/" ${HOME}/.config/exoscale/exoscale.toml
-	else 
-		/bin/echo "${0} Couldn't find your access key in your template, will have to exit" 
-		exit
-	fi
+        if ( [ "${ACCESS_KEY}" != "" ] )
+        then
+                /bin/sed -i "s/XXXXACCESSKEYXXXX/${ACCESS_KEY}/" ${HOME}/.config/exoscale/exoscale.toml
+        else 
+                /bin/echo "${0} Couldn't find your access key in your template, will have to exit" 
+                exit
+        fi
 
-	if ( [ "${SECRET_KEY}" != "" ] )
-	then
-		/bin/sed -i "s/XXXXSECRETKEYXXXX/${SECRET_KEY}/" ${HOME}/.config/exoscale/exoscale.toml
-	else 
-		/bin/echo "${0} Couldn't find your secret key in your template, will have to exit" 
-		exit
-	fi
+        if ( [ "${SECRET_KEY}" != "" ] )
+        then
+                /bin/sed -i "s/XXXXSECRETKEYXXXX/${SECRET_KEY}/" ${HOME}/.config/exoscale/exoscale.toml
+        else 
+                /bin/echo "${0} Couldn't find your secret key in your template, will have to exit" 
+                exit
+        fi
 
-	if ( [ ! -d /root/.config/exoscale ] )
-	then
-		/bin/mkdir -p /root/.config/exoscale
-	fi
+        if ( [ ! -d /root/.config/exoscale ] )
+        then
+                /bin/mkdir -p /root/.config/exoscale
+        fi
 
-	/bin/cp ${HOME}/.config/exoscale/exoscale.toml /root/.config/exoscale/exoscale.toml
-	/bin/chown root:root${HOME}/.config/exoscale/exoscale.toml /root/.config/exoscale/exoscale.toml
-	/bin/chmod 400 ${HOME}/.config/exoscale/exoscale.toml /root/.config/exoscale/exoscale.toml
+        /bin/cp ${HOME}/.config/exoscale/exoscale.toml /root/.config/exoscale/exoscale.toml
+        /bin/chown root:root ${HOME}/.config/exoscale/exoscale.toml /root/.config/exoscale/exoscale.toml
+        /bin/chmod 400 ${HOME}/.config/exoscale/exoscale.toml /root/.config/exoscale/exoscale.toml
+
+        /bin/cp ${HOME}/.config/exoscale/.exoscale.toml /root/.config/exoscale/.dns-exoscale.toml
+        /bin/chown root:root /root/.config/exoscale/dns-exoscale.toml
+        /bin/chmod 400 /root/.config/exoscale/dns-exoscale.toml
+
+        DNS_ACCESS_KEY="`/bin/echo ${DNS_SECURITY_KEY} | /usr/bin/awk -F':' '{print $1}'`"
+        DNS_SECRET_KEY="`/bin/echo ${DNS_SECURITY_KEY} | /usr/bin/awk -F':' '{print $2}'`"
+
+        /bin/sed -i 's/key.*/key = "'${DNS_ACCESS_KEY}'"/' /root/.config/exoscale/dns-exoscale.toml
+        /bin/sed -i 's/secret.*/secret = "'${DNS_SECRET_KEY}'"/' /root/.config/exoscale/dns-exoscale.toml
 fi
 
 if ( [ "${CLOUDHOST}" = "linode" ] )
 then
-	CLOUDHOST_ACCOUNT_ID="`${HOME}/utilities/config/ExtractConfigValue.sh 'CLOUDHOSTACCOUNTID'`"
-	TOKEN="`${HOME}/utilities/config/ExtractConfigValue.sh 'TOKEN'`"
-	REGION="`${HOME}/utilities/config/ExtractConfigValue.sh 'REGION'`"
+        CLOUDHOST_ACCOUNT_ID="`${HOME}/utilities/config/ExtractConfigValue.sh 'CLOUDHOSTACCOUNTID'`"
+        TOKEN="`${HOME}/utilities/config/ExtractConfigValue.sh 'TOKEN'`"
+        REGION="`${HOME}/utilities/config/ExtractConfigValue.sh 'REGION'`"
 
-	if ( [ -f ${HOME}/.config/linode-cli ] )
-	then
-		/bin/rm ${HOME}/.config/linode-cli
-	fi
+        if ( [ -f ${HOME}/.config/linode-cli ] )
+        then
+                /bin/rm ${HOME}/.config/linode-cli
+        fi
 
-	if ( [ ! -d ${HOME}/.config ] )
-	then
-		/bin/mkdir ${HOME}/.config
-	fi
+        if ( [ ! -d ${HOME}/.config ] )
+        then
+                /bin/mkdir ${HOME}/.config
+        fi
 
-	/bin/echo "${0} Configuring Linode CLI tool" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
+        /bin/echo "${0} Configuring Linode CLI tool" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log
 
-	/bin/cp ${HOME}/providerscripts/cloudhost/configfiles/linode/linode-cli.tmpl  ${HOME}/.config/linode-cli
+        /bin/cp ${HOME}/providerscripts/cloudhost/configfiles/linode/linode-cli.tmpl  ${HOME}/.config/linode-cli
 
-	if ( [ "${CLOUDHOST_ACCOUNT_ID}" != "" ] )
-	then
-		/bin/sed -i "s/XXXXLINODEACCOUNTUSERNAMEXXXX/${CLOUDHOST_ACCOUNT_ID}/" ${HOME}/.config/linode-cli
-	else 
-		/bin/echo "${0} Couldn't find your linode account username in your template, will have to exit" 
-		exit
-	fi
+        if ( [ "${CLOUDHOST_ACCOUNT_ID}" != "" ] )
+        then
+                /bin/sed -i "s/XXXXLINODEACCOUNTUSERNAMEXXXX/${CLOUDHOST_ACCOUNT_ID}/" ${HOME}/.config/linode-cli
+        else 
+                /bin/echo "${0} Couldn't find your linode account username in your template, will have to exit" 
+                exit
+        fi
 
-	if ( [ "${TOKEN}" != "" ] )
-	then
-		/bin/sed -i "s/XXXXTOKENXXXX/${TOKEN}/" ${HOME}/.config/linode-cli
-	else 
-		/bin/echo "${0} Couldn't find your linode account personal access token in your template, will have to exit" 
-		exit
-	fi
+        if ( [ "${TOKEN}" != "" ] )
+        then
+                /bin/sed -i "s/XXXXTOKENXXXX/${TOKEN}/" ${HOME}/.config/linode-cli
+        else 
+                /bin/echo "${0} Couldn't find your linode account personal access token in your template, will have to exit" 
+                exit
+        fi
 
-	if ( [ "${REGION}" != "" ] )
-	then
-		/bin/sed -i "s/XXXXREGIONXXXX/${REGION}/" ${HOME}/.config/linode-cli
-	else 
-		/bin/echo "${0} Couldn't find your region id in your template, will have to exit" 
-		exit
-	fi
+        if ( [ "${REGION}" != "" ] )
+        then
+                /bin/sed -i "s/XXXXREGIONXXXX/${REGION}/" ${HOME}/.config/linode-cli
+        else 
+                /bin/echo "${0} Couldn't find your region id in your template, will have to exit" 
+                exit
+        fi
 
-	if ( [ ! -d /root/.config ] )
-	then
-		/bin/mkdir /root/.config
-	fi
+        if ( [ ! -d /root/.config ] )
+        then
+                /bin/mkdir /root/.config
+        fi
 
-	/bin/cp  ${HOME}/.config/linode-cli /root/.config/linode-cli
-	/bin/chown root:root /root/.config/linode-cli ${HOME}/.config/linode-cli
-	/bin/chmod 400 /root/.config/linode-cli ${HOME}/.config/linode-cli
+        /bin/cp  ${HOME}/.config/linode-cli /root/.config/linode-cli
+        /bin/chown root:root /root/.config/linode-cli ${HOME}/.config/linode-cli
+        /bin/chmod 400 /root/.config/linode-cli ${HOME}/.config/linode-cli
 
-	/bin/cp ${HOME}/.config/linode-cli ${HOME}/.config/.dns-linode-cli
-	/bin/cp /root/.config/linode-cli /root/.config/dns-linode-cli
+        /bin/cp ${HOME}/.config/linode-cli ${HOME}/.config/.dns-linode-cli
+        /bin/cp /root/.config/linode-cli /root/.config/dns-linode-cli
+        /bin/chown root:root /root/.config/dns-linode-cli
+        /bin/chmod 400 /root/.config/dns-linode-cli 
 
-	/bin/sed -i "s/^token.*/token = ${DNS_SECURITY_KEY}/" ${HOME}/.config/.dns-linode-cli
-	/bin/sed -i "s/^token.*/token = ${DNS_SECURITY_KEY}/" /root/.config/dns-linode-cli
+        /bin/sed -i "s/^token.*/token = ${DNS_SECURITY_KEY}/" ${HOME}/.config/.dns-linode-cli
+        /bin/sed -i "s/^token.*/token = ${DNS_SECURITY_KEY}/" /root/.config/dns-linode-cli
 fi
 
 if ( [ "${CLOUDHOST}" = "vultr" ] )
 then
-	TOKEN="`${HOME}/utilities/config/ExtractConfigValue.sh 'TOKEN'`"
+        TOKEN="`${HOME}/utilities/config/ExtractConfigValue.sh 'TOKEN'`"
 
-	if ( [ "${TOKEN}" != "" ] )
-	then
-		export VULTR_API_KEY="${TOKEN}"
-		if ( [ ! -d ${HOME}/.config ] )
-		then
-			/bin/mkdir ${HOME}/.config
-		fi
+        if ( [ "${TOKEN}" != "" ] )
+        then
+                export VULTR_API_KEY="${TOKEN}"
+                if ( [ ! -d ${HOME}/.config ] )
+                then
+                        /bin/mkdir ${HOME}/.config
+                fi
 
-		/usr/bin/touch ${HOME}/.config/VULTRAPIKEY:${VULTR_API_KEY}
-		/bin/echo "api-key: ${VULTR_API_KEY}" > ${HOME}/.vultr-cli.yaml
-		/bin/echo "api-key: ${VULTR_API_KEY}" > /root/.vultr-cli.yaml
-		/bin/chown root:root ${HOME}/.vultr-cli.yaml /root/.vultr-cli.yaml
-		/bin/chmod 400 ${HOME}/.vultr-cli.yaml /root/.vultr-cli.yaml
-	else
-		/bin/echo "${0} Couldn't find your vultr API key from your template - will have to exit...." 
-		exit
-	fi
+                /usr/bin/touch ${HOME}/.config/VULTRAPIKEY:${VULTR_API_KEY}
+                /bin/echo "api-key: ${VULTR_API_KEY}" > ${HOME}/.vultr-cli.yaml
+                /bin/echo "api-key: ${VULTR_API_KEY}" > /root/.vultr-cli.yaml
+                /bin/chown root:root ${HOME}/.vultr-cli.yaml /root/.vultr-cli.yaml
+                /bin/chmod 400 ${HOME}/.vultr-cli.yaml /root/.vultr-cli.yaml
+        else
+                /bin/echo "${0} Couldn't find your vultr API key from your template - will have to exit...." 
+                exit
+        fi
 fi
