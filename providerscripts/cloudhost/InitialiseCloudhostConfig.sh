@@ -225,6 +225,12 @@ then
                 /bin/echo "api-key: ${VULTR_API_KEY}" > /root/.vultr-cli.yaml
                 /bin/chown root:root ${HOME}/.vultr-cli.yaml /root/.vultr-cli.yaml
                 /bin/chmod 400 ${HOME}/.vultr-cli.yaml /root/.vultr-cli.yaml
+
+                /usr/bin/touch ${HOME}/.config/VULTRDNSAPIKEY:${DNS_SECURITY_KEY}
+                /bin/echo "api-key: ${DNS_SECURITY_KEY}" > ${HOME}/.dns-vultr-cli.yaml
+                /bin/echo "api-key: ${DNS_SECURITY_KEY}" > /root/.dns-vultr-cli.yaml
+                /bin/chown root:root ${HOME}/.vultr-cli.yaml /root/.dns-vultr-cli.yaml
+                /bin/chmod 400 ${HOME}/.vultr-cli.yaml /root/.dns-vultr-cli.yaml
         else
                 /bin/echo "${0} Couldn't find your vultr API key from your template - will have to exit...." 
                 exit
