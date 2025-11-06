@@ -61,10 +61,16 @@ then
         then
                 /bin/mkdir -p /root/.config/doctl
         fi
-
+        
         /bin/cp ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml
         /bin/chown root:root ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml
         /bin/chmod 400 ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml
+
+        /bin/cp ${HOME}/.config/doctl/config.yaml /root/.config/doctl/dns-do-config.yaml
+        /bin/chown root:root /root/.config/doctl/dns-do-config.yaml
+        /bin/chmod 400 /root/.config/doctl/dns-do-config.yaml
+
+        /bin/sed -i "s/^access-token.*/access-token: ${DNS_SECURITY_KEY}/" /root/.config/doctl/dns-do-config.yaml
 fi
 
 if ( [ "${CLOUDHOST}" = "exoscale" ] )
