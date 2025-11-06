@@ -46,7 +46,7 @@ dns="${5}"
 
 if ( [ "${dns}" = "digitalocean" ] )
 then
-	/usr/local/bin/doctl compute domain records delete --force ${domainurl} ${recordid}
+	/usr/local/bin/doctl compute domain records delete --config /root/.config/doctl/dns-do-config.yaml --force ${domainurl} ${recordid}
 fi
 
 recordid="${2}"
