@@ -129,7 +129,7 @@ then
         /bin/chown root:root ${HOME}/.config/exoscale/exoscale.toml /root/.config/exoscale/exoscale.toml
         /bin/chmod 400 ${HOME}/.config/exoscale/exoscale.toml /root/.config/exoscale/exoscale.toml
 
-        /bin/cp ${HOME}/.config/exoscale/.exoscale.toml /root/.config/exoscale/.dns-exoscale.toml
+        /bin/cp ${HOME}/.config/exoscale/exoscale.toml /root/.config/exoscale/dns-exoscale.toml
         /bin/chown root:root /root/.config/exoscale/dns-exoscale.toml
         /bin/chmod 400 /root/.config/exoscale/dns-exoscale.toml
 
