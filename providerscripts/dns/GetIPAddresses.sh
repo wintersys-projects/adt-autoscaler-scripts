@@ -89,5 +89,5 @@ if ( [ "${dns}" = "vultr" ] )
 then
 	HOME="`/bin/cat /home/homedir.dat`"
 	export VULTR_API_KEY="`/bin/ls ${HOME}/.config/VULTRAPIKEY:* | /usr/bin/awk -F':' '{print $NF}'`"
-	/usr/bin/vultr dns record list ${domain_url} -o json | /usr/bin/jq -r '.records[] | select (.name == "'${subdomain}'").data'
+	/usr/bin/vultr dns record list ${domain_url} --config /root/.dns-vultr-cli.yaml -o json | /usr/bin/jq -r '.records[] | select (.name == "'${subdomain}'").data'
 fi
