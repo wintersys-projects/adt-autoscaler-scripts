@@ -59,9 +59,9 @@ dns="${6}"
 
 if ( [ "${dns}" = "exoscale" ] )
 then
-	/usr/bin/exo -O json dns show ${domainurl}  | /usr/bin/jq -r '.[] | select (.content == "'${ip}'").id'
-	#Alternative
-	#/usr/bin/curl  -H "X-DNS-Token: ${authkey}" -H 'Accept: application/json' https://api.exoscale.com/dns/v1/domains/${domainurl}/records | /usr/bin/jq --arg tmp_subdomain "${subdomain}" --arg tmp_content "${ip}" '.[].record | select (.name == $tmp_subdomain and .content == $tmp_content ) | .id'
+        /usr/bin/exo dns show ${domainurl}  --config /root/.config/exoscale/.dns-exoscale.toml -O json | /usr/bin/jq -r '.[] | select (.content == "'${ip}'").id'
+        #Alternative
+        #/usr/bin/curl  -H "X-DNS-Token: ${authkey}" -H 'Accept: application/json' https://api.exoscale.com/dns/v1/domains/${domainurl}/records | /usr/bin/jq --arg tmp_subdomain "${subdomain}" --arg tmp_content "${ip}" '.[].record | select (.name == $tmp_subdomain and .content == $tmp_content ) | .id'
 fi
 
 domainurl="`/bin/echo ${2} | /usr/bin/cut -d'.' -f2-`"
