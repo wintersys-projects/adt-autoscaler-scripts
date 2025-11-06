@@ -50,10 +50,10 @@ if ( [ "${dns}" = "digitalocean" ] )
 then
 	#Make damn sure that the DNS record gets added to the DNS system
 	count="0"
-	while ( [ "${count}" -lt "5" ] && [ "`/usr/local/bin/doctl compute domain records list ${domainurl} -o json | /usr/bin/jq -r '.[] | select (.data == "'${ip}'").id'`" = "" ] )
+	while ( [ "${count}" -lt "5" ] && [ "`/usr/local/bin/doctl compute domain records list ${domainurl} --config /root/.config/doctl/dns-do-config.yaml -o json | /usr/bin/jq -r '.[] | select (.data == "'${ip}'").id'`" = "" ] )
 	do
 		count="`/usr/bin/expr ${count} + 1`"
-		/usr/local/bin/doctl compute domain records create --record-type A --record-name ${subdomain} --record-data ${ip}  --record-ttl 60 ${domainurl}
+		/usr/local/bin/doctl compute domain records create --record-type A --record-name ${subdomain} --record-data ${ip}  --record-ttl 60 --config /root/.config/doctl/dns-do-config.yaml ${domainurl} 
 	done
 
  	if ( [ "${count}" = "5" ] )
