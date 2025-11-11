@@ -58,7 +58,7 @@ fi
 
 if ( [ ! -f ${HOME}/runtime/FIREWALL-INITIALISED ] )
 then
-	if ( [ "${firewall}" = "ufw" ] && [ ! -f ${HOME}/runtime/FIREWALL-ACTIVE ] )
+	if ( [ "${firewall}" = "ufw" ] )
 	then
         /usr/bin/yes | /usr/sbin/ufw reset
         /usr/sbin/ufw delete allow 22/tcp
@@ -66,7 +66,7 @@ then
         /usr/sbin/ufw logging off
         /usr/sbin/ufw reload
 		/bin/touch ${HOME}/runtime/FIREWALL-INITIALISED 
-	elif ( [ "${firewall}" = "iptables" ] && [ ! -f ${HOME}/runtime/FIREWALL-ACTIVE ] )
+	elif ( [ "${firewall}" = "iptables" ] )
 	then
         /usr/sbin/iptables -P INPUT DROP
         /usr/sbin/iptables -P FORWARD DROP
