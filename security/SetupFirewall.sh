@@ -183,10 +183,17 @@ do
 
         if ( [ "${firewall}" = "ufw" ] )
         then
-                if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${port} | /bin/grep ALLOW`" = "" ] )
+                if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${port} | /bin/grep ALLOW`" = "" ] && [ "${delete}" != "yes" ] )
                 then
                         /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${ip_address} to any port ${port}
                         updated="1"
+                else
+                        if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${port} | /bin/grep ALLOW`" != "" ] && [ "${delete}" = "yes" ] )
+                        then
+                                /usr/bin/yes | /usr/sbin/ufw delete `/usr/sbin/ufw status numbered | /bin/grep ${port} | /usr/bin/awk -F"[\[\]]" '{print $2}' | /bin/sed 's/ //g'`
+                                updated="1"
+                        fi
+
                 fi
         elif ( [ "${firewall}" = "iptables" ] )
         then
