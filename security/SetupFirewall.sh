@@ -58,51 +58,34 @@ fi
 
 if ( [ ! -f ${HOME}/runtime/FIREWALL-INITIALISED ] )
 then
-        if ( [ "${firewall}" = "ufw" ] && [ ! -f ${HOME}/runtime/FIREWALL-ACTIVE ] )
-        then
-                /usr/bin/yes | /usr/sbin/ufw reset
-                /usr/sbin/ufw delete allow 22/tcp
-                /bin/sed -i "s/IPV6=yes/IPV6=no/g" /etc/default/ufw
+	if ( [ "${firewall}" = "ufw" ] && [ ! -f ${HOME}/runtime/FIREWALL-ACTIVE ] )
+	then
+        /usr/bin/yes | /usr/sbin/ufw reset
+        /usr/sbin/ufw delete allow 22/tcp
+        /bin/sed -i "s/IPV6=yes/IPV6=no/g" /etc/default/ufw
+        /usr/sbin/ufw logging off
+        /usr/sbin/ufw reload
+		/bin/touch ${HOME}/runtime/FIREWALL-INITIALISED 
+	elif ( [ "${firewall}" = "iptables" ] && [ ! -f ${HOME}/runtime/FIREWALL-ACTIVE ] )
+	then
+        /usr/sbin/iptables -P INPUT DROP
+        /usr/sbin/iptables -P FORWARD DROP
+        /usr/sbin/iptables -P OUTPUT ACCEPT
+        /usr/sbin/iptables -A INPUT -i lo -j ACCEPT
+        /usr/sbin/iptables -A OUTPUT -o lo -j ACCEPT
 
-                /usr/sbin/ufw logging off
-                VPC_IP_RANGE="`${HOME}/utilities/config/ExtractConfigValue.sh 'VPCIPRANGE'`"
-                ip_addresses="`/usr/sbin/ufw status | /bin/grep "^443" | /bin/grep -v "${VPC_IP_RANGE}" | /bin/grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b"`"
-
-                for ip_address in ${ip_addresses}
-                do
-                        /usr/sbin/ufw delete allow from ${ip_address}
-                done
-
-                /usr/sbin/ufw reload
-                /bin/touch ${HOME}/runtime/FIREWALL-INITIALISED 
-        elif ( [ "${firewall}" = "iptables" ] && [ ! -f ${HOME}/runtime/FIREWALL-INITIALISED ] )
-        then
-                /usr/sbin/iptables -P INPUT DROP
-                /usr/sbin/iptables -P FORWARD DROP
-                /usr/sbin/iptables -P OUTPUT ACCEPT
-                /usr/sbin/iptables -A INPUT -i lo -j ACCEPT
-                /usr/sbin/iptables -A OUTPUT -o lo -j ACCEPT
-
-                /usr/sbin/iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
-                /usr/sbin/iptables -A OUTPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
-                /usr/sbin/iptables -A FORWARD -i eth1 -o eth0 -j ACCEPT
-                /usr/sbin/iptables -A INPUT -m conntrack --ctstate INVALID -j DROP
-
-                /usr/sbin/ip6tables -P INPUT DROP
-                /usr/sbin/ip6tables -P FORWARD DROP
-                /usr/sbin/ip6tables -P OUTPUT ACCEPT
-                /usr/sbin/ip6tables -A INPUT -i lo -j ACCEPT
-                /usr/sbin/ip6tables -A OUTPUT -o lo -j ACCEPT
-
-                VPC_IP_RANGE="`${HOME}/utilities/config/ExtractConfigValue.sh 'VPCIPRANGE'`"
-                ip_addresses="`/usr/sbin/iptables -L INPUT -n | /bin/grep "443$" | /bin/grep -v "${VPC_IP_RANGE}" | /bin/grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b"`"
-                for ip_address in ${ip_addresses}
-                do
-                        /usr/sbin/iptables -D INPUT -s ${ip_address} -p tcp --dport 443 -j ACCEPT
-                done
-
-                /bin/touch ${HOME}/runtime/FIREWALL-INITIALISED 
-        fi
+        /usr/sbin/iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+        /usr/sbin/iptables -A OUTPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
+        /usr/sbin/iptables -A FORWARD -i eth1 -o eth0 -j ACCEPT
+        /usr/sbin/iptables -A INPUT -m conntrack --ctstate INVALID -j DROP
+        
+        /usr/sbin/ip6tables -P INPUT DROP
+        /usr/sbin/ip6tables -P FORWARD DROP
+        /usr/sbin/ip6tables -P OUTPUT ACCEPT
+        /usr/sbin/ip6tables -A INPUT -i lo -j ACCEPT
+        /usr/sbin/ip6tables -A OUTPUT -o lo -j ACCEPT
+		/bin/touch ${HOME}/runtime/FIREWALL-INITIALISED 
+	fi
 fi
 
 SSH_PORT="`${HOME}/utilities/config/ExtractConfigValue.sh 'SSHPORT'`"
