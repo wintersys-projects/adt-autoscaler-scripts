@@ -49,7 +49,7 @@ done
 
 file="`/bin/echo ${file_to_put} | /usr/bin/awk -F'/' '{print $NF}'`"
 
-if ( [ "${delete}" != "" ] )
+if ( [ "${delete}" = "yes" ] )
 then
 	/bin/rm ${file_to_put}
 fi
