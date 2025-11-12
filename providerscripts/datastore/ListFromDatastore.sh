@@ -31,4 +31,9 @@ then
 	datastore_tool="/usr/bin/s5cmd --credentials-file /root/.s5cfg --endpoint-url https://${host_base}  ls "
 fi
 
-${datastore_tool} s3://${file_to_list} | /usr/bin/awk '{print $NF}' | /usr/bin/awk -F'/' '{print $NF}'
+if ( [ "${file_to_list}" = "" ] )
+then
+        ${datastore_tool} | /usr/bin/awk '{print $NF}' | /usr/bin/awk -F'/' '{print $NF}'
+else
+        ${datastore_tool} s3://${file_to_list} | /usr/bin/awk '{print $NF}' | /usr/bin/awk -F'/' '{print $NF}'
+fi
