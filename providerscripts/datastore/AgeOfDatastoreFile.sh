@@ -22,15 +22,16 @@
 
 inspected_file="${1}"
 
-REGION="`${HOME}/utilities/config/ExtractConfigValue.sh 'REGION'`"
+S3_HOST_BASE="`${HOME}/utilities/config/ExtractConfigValue.sh 'S3HOSTBASE'`"
+datastore_region="`/bin/echo "${S3_HOST_BASE}" | /bin/sed 's/|/ /g' | /usr/bin/awk '{print $1}' | /bin/sed -E 's/(.digitaloceanspaces.com|sos-|.exo.io|.linodeobjects.com|.vultrobjects.com)//g'`"
 
 if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
 then
-	config_file="`/bin/grep -H ${REGION} /root/.s3cfg-* | /usr/bin/awk -F':' '{print $1}'`"
+	config_file="`/bin/grep -H ${datastore_region} /root/.s3cfg-* | /usr/bin/awk -F':' '{print $1}'`"
 	time_file_written="`/usr/bin/s3cmd --config=${config_file} info s3://${inspected_file} | /bin/grep "Last mod" | /usr/bin/awk -F',' '{print $2}'`"
 elif ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ]  )
 then
-	config_file="`/bin/grep -H ${REGION} /root/.s5cfg-* | /usr/bin/awk -F':' '{print $1}'`"
+	config_file="`/bin/grep -H ${datastore_region} /root/.s5cfg-* | /usr/bin/awk -F':' '{print $1}'`"
 	host_base="`/bin/grep host_base ${config_file}| /bin/grep host_base | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
 	time_file_written="`/usr/bin/s5cmd --credentials-file  ${config_file} --endpoint-url https://${host_base} ls s3://${inspected_file} | /bin/grep -v "BACKUP" | /usr/bin/awk '{print $1,$2}'`"
 fi
