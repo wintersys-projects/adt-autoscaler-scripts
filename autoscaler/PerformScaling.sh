@@ -34,7 +34,7 @@ then
 	/bin/mkdir -p ${HOME}/logs/${logdir}
 fi
 
-#Scaling can be switched off by having a file "SWITCH_OFF_SCALING" in the config datastore
+#Scaling can be switched off if you create a file SWITCH_OFF_SCALING in the config datastore
 if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "SWITCH_OFF_SCALING"`" = "1" ] )
 then
 	exit
