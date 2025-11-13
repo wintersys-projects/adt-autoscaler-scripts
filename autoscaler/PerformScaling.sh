@@ -159,7 +159,6 @@ then
 	do
 		loop="`/usr/bin/expr ${loop} + 1`"
 		/bin/touch ${HOME}/runtime/AUTOSCALINGMONITOR:${loop}
-		/bin/echo "${0} `/bin/date`: I have calculated that a webserver needs booting so am booting a new one by rsyncing from an existing webserver" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 		${HOME}/autoscaler/BuildWebserver.sh ${loop} &
   		/bin/sleep 10
 	done
