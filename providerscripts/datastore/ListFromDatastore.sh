@@ -38,12 +38,12 @@ fi
 if ( [ "${datastore_tool}" = "/usr/bin/s3cmd" ] )
 then
         config_file="`/bin/grep -H ${datastore_region} /root/.s3cfg-* | /usr/bin/awk -F':' '{print $1}'`"
-        datastore_cmd="/usr/bin/s3cmd --config=${config_file} ls "
+        datastore_cmd="${datastore_tool} --config=${config_file} ls "
 elif ( [ "${datastore_tool}" = "/usr/bin/s5cmd" ] )
 then
         config_file="`/bin/grep -H ${datastore_region} /root/.s5cfg-* | /usr/bin/awk -F':' '{print $1}'`"
         host_base="`/bin/grep host_base ${config_file} | /bin/grep host_base | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
-        datastore_cmd="/usr/bin/s5cmd --credentials-file ${config_file} --endpoint-url https://${host_base}  ls "
+        datastore_cmd="${datastore_tool} --credentials-file ${config_file} --endpoint-url https://${host_base}  ls "
 fi
 
 if ( [ "${file_to_list}" = "" ] )
