@@ -44,7 +44,7 @@ then
         datastore_cmd1="${datastore_tool} --credentials-file /root/.s5cfg-${count} --endpoint-url https://${host_base} mb "
 fi
 
-if ( [ "`${datastore_cmd} s3://${datastore_to_mount} 2>&1 >/dev/null | /bin/grep "ERROR"`" = "" ] )
+if ( [ "`${datastore_cmd} s3://${datastore_to_mount}`" != "" ] )
 then
         exit
 fi
