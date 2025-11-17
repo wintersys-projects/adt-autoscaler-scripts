@@ -27,20 +27,29 @@ SERVER_USER="`${HOME}/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
 TOKEN="`/bin/echo ${SERVER_USER} | /usr/bin/fold -w 4 | /usr/bin/head -n 1 | /usr/bin/tr '[:upper:]' '[:lower:]'`"
 configbucket="`/bin/echo "${WEBSITE_URL}"-config | /bin/sed 's/\./-/g'`-${TOKEN}"
 
+datastore_tool=""
 if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
 then
-	datastore_tool="/usr/bin/s3cmd ls "
-	datastore_tool_1="/usr/bin/s3cmd del "
+	datastore_tool="/usr/bin/s3cmd"
+elif ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ]  )
+then
+	datastore_tool="/usr/bin/s5cmd"
+fi
+
+if ( [ "${datastore_tool}" = "/usr/bin/s3cmd" ] )
+then
+	datastore_cmd="${datastore_tool} ls "
+	datastore_cmd_1="${datastore_tool} del "
 elif ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ]  )
 then
 	host_base="`/bin/grep host_base /root/.s5cfg | /bin/grep host_base | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
-	datastore_tool="/usr/bin/s5cmd --credentials-file /root/.s5cfg --endpoint-url https://${host_base} ls "
-	datastore_tool_1="/usr/bin/s5cmd --credentials-file /root/.s5cfg --endpoint-url https://${host_base} rm "
+	datastore_cmd="${datastore_tool} --credentials-file /root/.s5cfg --endpoint-url https://${host_base} ls "
+	datastore_cmd_1="${datastore_tool} --credentials-file /root/.s5cfg --endpoint-url https://${host_base} rm "
 fi
 
-files="`${datastore_tool} s3://${configbucket}/$1 | /usr/bin/awk '{print $NF}'`"
+files="`${datastore_cmd} s3://${configbucket}/$1 | /usr/bin/awk '{print $NF}'`"
 
 for file in ${files}
 do
-	${datastore_tool_1} ${file}
+	${datastore_cmd_1} ${file}
 done
