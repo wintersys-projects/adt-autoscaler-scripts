@@ -30,14 +30,22 @@ SERVER_USER="`${HOME}/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
 TOKEN="`/bin/echo ${SERVER_USER} | /usr/bin/fold -w 4 | /usr/bin/head -n 1 | /usr/bin/tr '[:upper:]' '[:lower:]'`"
 configbucket="`/bin/echo "${WEBSITE_URL}"-config | /bin/sed 's/\./-/g'`-${TOKEN}"
 
-
+datastore_tool=""
 if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
 then
-	datastore_tool="/usr/bin/s3cmd put "
+	datastore_tool="/usr/bin/s3cmd"
 elif ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ]  )
 then
+	datastore_tool="/usr/bin/s5cmd"
+fi
+
+if ( [ "${datastore_tool}" = "/usr/bin/s3cmd" ] )
+then
+	datastore_cmd="${datastore_tool} put "
+elif ( [ "${datastore_tool}" = "/usr/bin/s5cmd" ] )
+then
 	host_base="`/bin/grep host_base /root/.s5cfg | /bin/grep host_base | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
-	datastore_tool="/usr/bin/s5cmd --credentials-file /root/.s5cfg --endpoint-url https://${host_base} cp "
+	datastore_cmd="/usr/bin/s5cmd --credentials-file /root/.s5cfg --endpoint-url https://${host_base} cp "
 fi
 
 if ( [ ! -f ${file_to_put} ] )
@@ -62,9 +70,9 @@ fi
 
 if ( [ "${place_to_put}" != "" ] )
 then
-	command="${datastore_tool} ${file_to_put} s3://${configbucket}/${place_to_put}"
+	command="${datastore_cmd} ${file_to_put} s3://${configbucket}/${place_to_put}"
 else
-	command="${datastore_tool} ${file_to_put} s3://${configbucket}"
+	command="${datastore_cmd} ${file_to_put} s3://${configbucket}"
 fi
 
 count="0"
