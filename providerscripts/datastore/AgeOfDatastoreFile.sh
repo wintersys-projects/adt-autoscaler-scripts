@@ -27,13 +27,23 @@ datastore_region="`/bin/echo "${S3_HOST_BASE}" | /bin/sed 's/|/ /g' | /usr/bin/a
 
 if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
 then
-	config_file="`/bin/grep -H ${datastore_region} /root/.s3cfg-* | /usr/bin/awk -F':' '{print $1}'`"
-	time_file_written="`/usr/bin/s3cmd --config=${config_file} info s3://${inspected_file} | /bin/grep "Last mod" | /usr/bin/awk -F',' '{print $2}'`"
+	datastore_tool="/usr/bin/s3cmd"
 elif ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ]  )
+then
+	datastore_tool="/usr/bin/s5cmd"
+fi
+
+if ( [ "${datastore_tool}" = "/usr/bin/s3cmd" ] )
+then
+	config_file="`/bin/grep -H ${datastore_region} /root/.s3cfg-* | /usr/bin/awk -F':' '{print $1}'`"
+	datastore_cmd="${datastore_tool} --config=${config_file} info s3://${inspected_file}"
+	time_file_written="`${datastore_cmd} | /bin/grep "Last mod" | /usr/bin/awk -F',' '{print $2}'`"
+elif ( [ "${datastore_tool}" = "/usr/bin/s5cmd" ] )
 then
 	config_file="`/bin/grep -H ${datastore_region} /root/.s5cfg-* | /usr/bin/awk -F':' '{print $1}'`"
 	host_base="`/bin/grep host_base ${config_file}| /bin/grep host_base | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
-	time_file_written="`/usr/bin/s5cmd --credentials-file  ${config_file} --endpoint-url https://${host_base} ls s3://${inspected_file} | /bin/grep -v "BACKUP" | /usr/bin/awk '{print $1,$2}'`"
+	datastore_cmd="${datastore_tool} --credentials-file  ${config_file} --endpoint-url https://${host_base} ls s3://${inspected_file}"
+	time_file_written="`${datastore_cmd} | /bin/grep -v "BACKUP" | /usr/bin/awk '{print $1,$2}'`"
 fi
 
 time_file_written="`/usr/bin/date -d "${time_file_written}" +%s`"
