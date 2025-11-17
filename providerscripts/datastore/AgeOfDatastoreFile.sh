@@ -42,8 +42,8 @@ elif ( [ "${datastore_tool}" = "/usr/bin/s5cmd" ] )
 then
 	config_file="`/bin/grep -H ${datastore_region} /root/.s5cfg-* | /usr/bin/awk -F':' '{print $1}'`"
 	host_base="`/bin/grep host_base ${config_file}| /bin/grep host_base | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
-	datastore_cmd="${datastore_tool} --credentials-file  ${config_file} --endpoint-url https://${host_base} head s3://${inspected_file} | /usr/bin/jq -r '.last_modified'"
-	time_file_written="`${datastore_cmd}`"
+	datastore_cmd="${datastore_tool} --credentials-file  ${config_file} --endpoint-url https://${host_base} head s3://${inspected_file}"
+	time_file_written="`${datastore_cmd} | /usr/bin/jq -r '.last_modified'`"
 fi
 
 time_file_written="`/usr/bin/date -d "${time_file_written}" +%s`"
