@@ -45,11 +45,11 @@ fi
 
 if ( [ "${datastore_tool}" = "/usr/bin/s3cmd" ] )
 then
-	datastore_cmd="/usr/bin/s3cmd ls "
+	datastore_cmd="${datastore_tool} ls "
 elif ( [ "${datastore_tool}" = "/usr/bin/s5cmd" ] )
 then
 	host_base="`/bin/grep host_base /root/.s5cfg | /bin/grep host_base | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
-	datastore_cmd="/usr/bin/s5cmd --credentials-file /root/.s5cfg --endpoint-url https://${host_base} ls "
+	datastore_cmd="${datastore_tool} --credentials-file /root/.s5cfg --endpoint-url https://${host_base} ls "
 fi
 
 if ( [ "`${datastore_cmd} s3://${configbucket}/$1`" = "" ] )
