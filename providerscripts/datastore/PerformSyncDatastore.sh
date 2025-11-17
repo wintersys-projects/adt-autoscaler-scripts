@@ -26,21 +26,30 @@ count="$3"
 
 HOME="`/bin/cat /home/homedir.dat`"
 
-if ( [ "`/bin/grep "^DATASTORETOOL:*" ${HOME}/runtime/buildstyles.dat | /bin/grep s3cmd`" != "" ] )
+datastore_tool=""
+if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
 then
-	datastore_tool="/usr/bin/s3cmd --config=/root/.s3cfg-${count}"
+	datastore_tool="/usr/bin/s3cmd"
+elif ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ]  )
+then
+	datastore_tool="/usr/bin/s5cmd"
+fi
+
+if ( [ "${datastore_tool}" = "/usr/bin/s3cmd" ] )
+then
+	datastore_cmd="${datastore_tool} --config=/root/.s3cfg-${count} sync "
 elif ( [ "`/bin/grep "^DATASTORETOOL:*" ${HOME}/runtime/buildstyles.dat | /bin/grep s5cmd`" != "" ] )
 then
 	host_base="`/bin/grep host_base /root/.s5cfg-${count} | /bin/grep host_base | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
-	datastore_tool="/usr/bin/s5cmd --credentials-file /root/.s5cfg-${count} --endpoint-url https://${host_base} "
+	datastore_cmd="${datastore_tool} --credentials-file /root/.s5cfg-${count} --endpoint-url https://${host_base} sync "
 fi
 
 if ( [ -d ${original_object} ] || [ -f ${original_object} ] )
 then
-	${datastore_tool} sync ${original_object} s3://${new_object} 2>/dev/null
+	${datastore_cmd} ${original_object} s3://${new_object} 2>/dev/null
 elif ( [ -d ${new_object} ] || [ -f ${new_object} ] )
 then
-	${datastore_tool} sync s3://${original_object} ${new_object} 2>/dev/null
+	${datastore_cmd} s3://${original_object} ${new_object} 2>/dev/null
 else
-	${datastore_tool} sync s3://${original_object} s3://${new_object} 2>/dev/null
+	${datastore_cmd} s3://${original_object} s3://${new_object} 2>/dev/null
 fi
