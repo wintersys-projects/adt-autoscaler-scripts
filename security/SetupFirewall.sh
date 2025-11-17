@@ -30,12 +30,12 @@ fi
 
 if ( [ -f ${HOME}/runtime/FIREWALL-ACTIVE ] )
 then
-	exit
+        exit
 fi
 
 if ( [ ! -d ${HOME}/logs/firewall ] )
 then
-	/bin/mkdir -p ${HOME}/logs/firewall
+        /bin/mkdir -p ${HOME}/logs/firewall
 fi
 
 #This stream manipulation is required for correct function, please do not remove or comment out
@@ -44,30 +44,30 @@ fi
 
 if ( [ "`${HOME}/utilities/config/CheckConfigValue.sh ACTIVEFIREWALLS:1`" = "0" ] && [ "`${HOME}/utilities/config/CheckConfigValue.sh ACTIVEFIREWALLS:3`" = "0" ] )
 then
-	exit
+        exit
 fi
 
 firewall=""
 if ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "FIREWALL" | /usr/bin/awk -F':' '{print $NF}'`" = "ufw" ] )
 then
-	firewall="ufw"
+        firewall="ufw"
 elif ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "FIREWALL" | /usr/bin/awk -F':' '{print $NF}'`" = "iptables" ] )
 then
-	firewall="iptables"
+        firewall="iptables"
 fi
 
 if ( [ ! -f ${HOME}/runtime/FIREWALL-INITIALISED ] )
 then
-	if ( [ "${firewall}" = "ufw" ] )
-	then
+        if ( [ "${firewall}" = "ufw" ] )
+        then
         /usr/bin/yes | /usr/sbin/ufw reset
         /usr/sbin/ufw delete allow 22/tcp
         /bin/sed -i "s/IPV6=yes/IPV6=no/g" /etc/default/ufw
         /usr/sbin/ufw logging off
         /usr/sbin/ufw reload
-		/bin/touch ${HOME}/runtime/FIREWALL-INITIALISED 
-	elif ( [ "${firewall}" = "iptables" ] )
-	then
+                /bin/touch ${HOME}/runtime/FIREWALL-INITIALISED 
+        elif ( [ "${firewall}" = "iptables" ] )
+        then
         /usr/sbin/iptables -P INPUT DROP
         /usr/sbin/iptables -P FORWARD DROP
         /usr/sbin/iptables -P OUTPUT ACCEPT
@@ -84,8 +84,8 @@ then
         /usr/sbin/ip6tables -P OUTPUT ACCEPT
         /usr/sbin/ip6tables -A INPUT -i lo -j ACCEPT
         /usr/sbin/ip6tables -A OUTPUT -o lo -j ACCEPT
-		/bin/touch ${HOME}/runtime/FIREWALL-INITIALISED 
-	fi
+                /bin/touch ${HOME}/runtime/FIREWALL-INITIALISED 
+        fi
 fi
 
 SSH_PORT="`${HOME}/utilities/config/ExtractConfigValue.sh 'SSHPORT'`"
@@ -100,13 +100,13 @@ ${HOME}/security/KnickersUp.sh
 updated_ssh="0"
 if ( [ "`/bin/grep ${VPC_IP_RANGE} /etc/ssh/sshd_config`" = "" ] )
 then
-	/bin/echo "AllowUsers ${SERVER_USER}@${VPC_IP_RANGE}" >> /etc/ssh/sshd_config
-	updated_ssh="1"
+        /bin/echo "AllowUsers ${SERVER_USER}@${VPC_IP_RANGE}" >> /etc/ssh/sshd_config
+        updated_ssh="1"
 fi
 
 if ( [ "${updated_ssh}" = "1" ] )
 then
-	${HOME}/utilities/processing/RunServiceCommand.sh "ssh" restart
+        ${HOME}/utilities/processing/RunServiceCommand.sh "ssh" restart
 fi
 
 updated="0"
@@ -114,56 +114,56 @@ updated="0"
 if ( [ "`${HOME}/utilities/config/CheckConfigValue.sh BUILDMACHINEVPC:0`" = "1" ] )
 then
 
-	updated_ssh="0"
-	if ( [ "`/bin/grep ${BUILD_MACHINE_IP} /etc/ssh/sshd_config`" = "" ] )
-	then
-		/bin/echo "AllowUsers ${SERVER_USER}@${BUILD_MACHINE_IP}" >> /etc/ssh/sshd_config
-		updated_ssh="1"
-	fi
+        updated_ssh="0"
+        if ( [ "`/bin/grep ${BUILD_MACHINE_IP} /etc/ssh/sshd_config`" = "" ] )
+        then
+                /bin/echo "AllowUsers ${SERVER_USER}@${BUILD_MACHINE_IP}" >> /etc/ssh/sshd_config
+                updated_ssh="1"
+        fi
 
-	if ( [ "${updated_ssh}" = "1" ] )
- 	then
- 		${HOME}/utilities/processing/RunServiceCommand.sh "ssh" restart
-   	fi
-	
-	if ( [ "${firewall}" = "ufw" ] )
-	then
-		if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${BUILD_MACHINE_IP} | /bin/grep ALLOW`" = "" ] )
-		then
-			/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${BUILD_MACHINE_IP} to any port ${SSH_PORT}
-			/bin/sleep 5
-			updated="1"
-		fi
-	elif ( [ "${firewall}" = "iptables" ] )
-	then
-		if ( [ "`/usr/sbin/iptables --list-rules | /bin/grep ACCEPT | /bin/grep ${SSH_PORT} | /bin/grep ${BUILD_MACHINE_IP}`" = "" ] )
-		then
-			/usr/sbin/iptables -A INPUT -s ${BUILD_MACHINE_IP} -p tcp --dport ${SSH_PORT} -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+        if ( [ "${updated_ssh}" = "1" ] )
+        then
+                ${HOME}/utilities/processing/RunServiceCommand.sh "ssh" restart
+        fi
+
+        if ( [ "${firewall}" = "ufw" ] )
+        then
+                if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep -E "(${BUILD_MACHINE_IP}|${SSH_PORT}|ALLOW)"`" = "" ] )
+                then
+                        /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${BUILD_MACHINE_IP} to any port ${SSH_PORT}
+                        /bin/sleep 5
+                        updated="1"
+                fi
+        elif ( [ "${firewall}" = "iptables" ] )
+        then
+                if ( [ "`/usr/sbin/iptables --list-rules | /bin/grep ACCEPT | /bin/grep -E "(${BUILD_MACHINE_IP}|${SSH_PORT}|ACCEPT)"`" = "" ] )
+                then
+                        /usr/sbin/iptables -A INPUT -s ${BUILD_MACHINE_IP} -p tcp --dport ${SSH_PORT} -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
             /usr/sbin/iptables -A OUTPUT -s ${BUILD_MACHINE_IP} -p tcp --sport ${SSH_PORT} -m conntrack --ctstate ESTABLISHED -j ACCEPT
             /usr/sbin/iptables -A INPUT -s ${BUILD_MACHINE_IP} -p ICMP --icmp-type 8 -j ACCEPT
-			updated="1"
-		fi
-	fi
+                        updated="1"
+                fi
+        fi
 fi
 
 
 if ( [ "${firewall}" = "ufw" ] )
 then
-	if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep "${VPC_IP_RANGE}" | /bin/grep ALLOW`" = "" ] )
-	then
-		/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${VPC_IP_RANGE} to any port ${SSH_PORT}
-		/bin/sleep 5
-		updated="1"
-	fi
+        if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep -E "(${BUILD_MACHINE_IP}|${SSH_PORT}|ALLOW)"`" = "" ] )
+        then
+                /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${VPC_IP_RANGE} to any port ${SSH_PORT}
+                /bin/sleep 5
+                updated="1"
+        fi
 elif ( [ "${firewall}" = "iptables" ] )
 then
-	if ( [ "`/usr/sbin/iptables --list-rules | /bin/grep ACCEPT | /bin/grep ${SSH_PORT} | /bin/grep ${VPC_IP_RANGE}`" = "" ] )
-	then
+        if ( [ "`/usr/sbin/iptables --list-rules | /bin/grep -E "(${BUILD_MACHINE_IP}|${SSH_PORT}|ACCEPT)"`" = "" ] )
+        then
         /usr/sbin/iptables -A INPUT -s ${VPC_IP_RANGE} -p tcp --dport ${SSH_PORT} -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
         /usr/sbin/iptables -A INPUT -s ${VPC_IP_RANGE} -p tcp --dport 443 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
         /usr/sbin/iptables -A INPUT -s ${VPC_IP_RANGE} -p ICMP --icmp-type 8 -j ACCEPT
-		updated="1"
-	fi
+                updated="1"
+        fi
 fi
 
 custom_ports="`/bin/grep "^AUTOSCALERCUSTOMPORTS" ${HOME}/runtime/customfirewallports.dat | /usr/bin/awk -F':' '{print $NF}'`"
@@ -183,12 +183,12 @@ do
 
         if ( [ "${firewall}" = "ufw" ] )
         then
-                if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${port} | /bin/grep ALLOW`" = "" ] && [ "${delete}" != "yes" ] )
+                if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep -E "(${port}|${ip_address}|ALLOW)"`" = "" ] && [ "${delete}" != "yes" ] )
                 then
                         /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw allow from ${ip_address} to any port ${port}
                         updated="1"
                 else
-                        if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep ${port} | /bin/grep ALLOW`" != "" ] && [ "${delete}" = "yes" ] )
+                        if ( [ "`/bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E /usr/sbin/ufw status | /bin/grep -E "(${port}|${ip_address}|ALLOW)"`" != "" ] && [ "${delete}" = "yes" ] )
                         then
                                 /usr/bin/yes | /usr/sbin/ufw delete `/usr/sbin/ufw status numbered | /bin/grep ${port} | /usr/bin/awk -F"[\[\]]" '{print $2}' | /bin/sed 's/ //g'`
                                 updated="1"
@@ -197,13 +197,13 @@ do
                 fi
         elif ( [ "${firewall}" = "iptables" ] )
         then
-                if ( [ "`/usr/sbin/iptables --list-rules | /bin/grep ACCEPT | /bin/grep ${port}`" = "" ] && [ "${delete}" != "yes" ] )
+                if ( [ "`/usr/sbin/iptables --list-rules | /bin/grep -E "(${port}|${ip_address}|ACCEPT)"`" = "" ] && [ "${delete}" != "yes" ] )
                 then
                         /usr/sbin/iptables -A INPUT -s ${ip_address} -p tcp --dport ${port} -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
                         /usr/sbin/iptables -A OUTPUT -s ${ip_address} -p tcp --sport ${port} -m conntrack --ctstate ESTABLISHED -j ACCEPT
                         updated="1"
                 else
-                        if ( [ "`/usr/sbin/iptables --list-rules | /bin/grep ACCEPT | /bin/grep ${port}`" != "" ] && [ "${delete}" = "yes" ] )
+                        if ( [ "`/usr/sbin/iptables --list-rules | /bin/grep -E "(${port}|${ip_address}|ACCEPT)"`" != "" ] && [ "${delete}" = "yes" ] )
                         then
                                 /usr/sbin/iptables -D INPUT -s ${ip_address} -p tcp --dport ${port} -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
                                 /usr/sbin/iptables -D OUTPUT -s ${ip_address} -p tcp --sport ${port} -m conntrack --ctstate ESTABLISHED -j ACCEPT
@@ -216,39 +216,39 @@ done
 
 if ( [ "${updated}" = "1" ] )
 then
-	if ( [ "${firewall}" = "ufw" ] )
-	then
-		/usr/sbin/ufw -f enable
-		/usr/sbin/ufw reload
+        if ( [ "${firewall}" = "ufw" ] )
+        then
+                /usr/sbin/ufw -f enable
+                /usr/sbin/ufw reload
 
-	elif ( [ "${firewall}" = "iptables" ] )
-	then
+        elif ( [ "${firewall}" = "iptables" ] )
+        then
         /usr/sbin/iptables-save > /etc/iptables/rules.v4
         /usr/sbin/ip6tables-save > /etc/iptables/rules.v6
-	fi
+        fi
 
-	if ( [ "${BUILDOS}" = "ubuntu" ] )
-	then
-		${HOME}/utilities/processing/RunServiceCommand.sh systemd-networkd.service restart
-	elif ( [ "${BUILDOS}" = "debian" ] )
-	then
-		${HOME}/utilities/processing/RunServiceCommand.sh networking restart
-	fi
+        if ( [ "${BUILDOS}" = "ubuntu" ] )
+        then
+                ${HOME}/utilities/processing/RunServiceCommand.sh systemd-networkd.service restart
+        elif ( [ "${BUILDOS}" = "debian" ] )
+        then
+                ${HOME}/utilities/processing/RunServiceCommand.sh networking restart
+        fi
 fi
 
 if ( [ "${firewall}" = "ufw" ] )
 then
-	if ( [ "`/usr/bin/ufw status | /bin/grep 'inactive'`" = "" ] )
-	then
-		/bin/touch ${HOME}/runtime/FIREWALL-ACTIVE
-	fi
+        if ( [ "`/usr/bin/ufw status | /bin/grep 'inactive'`" = "" ] )
+        then
+                /bin/touch ${HOME}/runtime/FIREWALL-ACTIVE
+        fi
 elif ( [ "${firewall}" = "iptables" ] )
 then
-	if ( [ "`${HOME}/utilities/processing/RunServiceCommand.sh netfilter-persistent status | /bin/grep Loaded | /bin/grep enabled`" != "" ] )
-	then
-		if ( [ "`${HOME}/utilities/processing/RunServiceCommand.sh netfilter-persistent status | /bin/grep active`" != "" ] )
-		then
-			/bin/touch ${HOME}/runtime/FIREWALL-ACTIVE
-		fi
-	fi
+        if ( [ "`${HOME}/utilities/processing/RunServiceCommand.sh netfilter-persistent status | /bin/grep Loaded | /bin/grep enabled`" != "" ] )
+        then
+                if ( [ "`${HOME}/utilities/processing/RunServiceCommand.sh netfilter-persistent status | /bin/grep active`" != "" ] )
+                then
+                        /bin/touch ${HOME}/runtime/FIREWALL-ACTIVE
+                fi
+        fi
 fi
