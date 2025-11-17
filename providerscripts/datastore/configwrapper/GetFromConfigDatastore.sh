@@ -32,22 +32,31 @@ SERVER_USER="`${HOME}/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
 TOKEN="`/bin/echo ${SERVER_USER} | /usr/bin/fold -w 4 | /usr/bin/head -n 1 | /usr/bin/tr '[:upper:]' '[:lower:]'`"
 configbucket="`/bin/echo "${WEBSITE_URL}"-config | /bin/sed 's/\./-/g'`-${TOKEN}"
 
+datastore_tool=""
 if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
 then
-	datastore_tool="/usr/bin/s3cmd --force get "
-	datastore_tool1="/usr/bin/s3cmd ls "
+	datastore_tool="/usr/bin/s3cmd"
 elif ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ]  )
 then
+	datastore_tool="/usr/bin/s5cmd"
+fi
+
+if ( [ "${datastore_tool}" = "/usr/bin/s3cmd" ] )
+then
+	datastore_cmd="${datastore_tool} --force get "
+	datastore_cmd1="${datastore_tool} ls "
+elif ( [ "${datastore_tool}" = "/usr/bin/s5cmd" ] )
+then
 	host_base="`/bin/grep host_base /root/.s5cfg | /bin/grep host_base | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
-	datastore_tool="/usr/bin/s5cmd --credentials-file /root/.s5cfg --endpoint-url https://${host_base} cp "
-	datastore_tool1="/usr/bin/s5cmd --credentials-file /root/.s5cfg --endpoint-url https://${host_base} ls "
+	datastore_cmd="${datastore_tool} --credentials-file /root/.s5cfg --endpoint-url https://${host_base} cp "
+	datastore_cmd1="${datastore_tool} --credentials-file /root/.s5cfg --endpoint-url https://${host_base} ls "
 fi
 
 
-if ( [ "`${datastore_tool1} s3://${configbucket}/$1`" != "" ] )
+if ( [ "`${datastore_cmd1} s3://${configbucket}/$1`" != "" ] )
 then
 	count="0"
-	while ( [ "`${datastore_tool} s3://${configbucket}/$1 $2 2>&1 >/dev/null | /bin/grep "ERROR"`" != "" ] && [ "${count}" -lt "5" ] )
+	while ( [ "`${datastore_cmd} s3://${configbucket}/$1 $2 2>&1 >/dev/null | /bin/grep "ERROR"`" != "" ] && [ "${count}" -lt "5" ] )
 	do
 		/bin/echo "An error has occured `/usr/bin/expr ${count} + 1` times in script ${0}"
 		/bin/sleep 5
