@@ -23,22 +23,34 @@
 datastore_to_mount="$1"
 count="${2}"
 
+datastore_tool=""
+
 if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
 then
-        datastore_tool="/usr/bin/s3cmd --config=/root/.s3cfg-${count} "
+	datastore_tool="/usr/bin/s3cmd"
+elif ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ]  )
+then
+	datastore_tool="/usr/bin/s5cmd"
+fi
+
+if ( [ "${datastore_tool}" = "/usr/bin/s3cmd" ] )
+then
+        datastore_cmd="${datastore_tool} --config=/root/.s3cfg-${count} ls "
+        datastore_cmd="${datastore_tool} --config=/root/.s3cfg-${count} mb "
 elif ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ]  )
 then
         host_base="`/bin/grep host_base /root/.s5cfg-${count} | /bin/grep host_base | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
-        datastore_tool="/usr/bin/s5cmd --credentials-file /root/.s5cfg-${count} --endpoint-url https://${host_base} "
+        datastore_cmd="${datastore_tool} --credentials-file /root/.s5cfg-${count} --endpoint-url https://${host_base} ls "
+        datastore_cmd1="${datastore_tool} --credentials-file /root/.s5cfg-${count} --endpoint-url https://${host_base} mb "
 fi
 
-if ( [ "`${datastore_tool} ls s3://${datastore_to_mount} 2>&1 >/dev/null | /bin/grep "ERROR"`" = "" ] )
+if ( [ "`${datastore_cmd} s3://${datastore_to_mount} 2>&1 >/dev/null | /bin/grep "ERROR"`" = "" ] )
 then
         exit
 fi
 
 count="0"
-while ( [ "`${datastore_tool} mb s3://${datastore_to_mount} 2>&1 >/dev/null | /bin/grep "ERROR"`" != "" ] && [ "${count}" -lt "5" ] )
+while ( [ "`${datastore_cmd1} s3://${datastore_to_mount} 2>&1 >/dev/null | /bin/grep "ERROR"`" != "" ] && [ "${count}" -lt "5" ] )
 do
         /bin/echo "An error has occured `/usr/bin/expr ${count} + 1` times in script ${0}"
         /bin/sleep 5
