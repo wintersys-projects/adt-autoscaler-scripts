@@ -43,7 +43,7 @@ then
 elif ( [ "${datastore_tool}" = "/usr/bin/s5cmd" ] )
 then
 	host_base="`/bin/grep host_base /root/.s5cfg | /bin/grep host_base | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
-	datastore_cmd="${datastore_tool}--credentials-file /root/.s5cfg --endpoint-url https://${host_base} rm "
+	datastore_cmd="${datastore_tool} --credentials-file /root/.s5cfg --endpoint-url https://${host_base} rm "
 fi
 
 count="0"
