@@ -36,7 +36,7 @@ fi
 if ( [ "${datastore_tool}" = "/usr/bin/s3cmd" ] )
 then
         datastore_cmd="${datastore_tool} --config=/root/.s3cfg-${count} ls "
-        datastore_cmd="${datastore_tool} --config=/root/.s3cfg-${count} mb "
+        datastore_cmd1="${datastore_tool} --config=/root/.s3cfg-${count} mb "
 elif ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ]  )
 then
         host_base="`/bin/grep host_base /root/.s5cfg-${count} | /bin/grep host_base | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
