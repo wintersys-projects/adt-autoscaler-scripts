@@ -42,3 +42,8 @@ if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "
 then
 	${HOME}/installscripts/InstallS5CMD.sh ${BUILDOS}
 fi
+
+if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone'`" = "1" ] )
+then
+	${HOME}/installscripts/InstallRClone.sh ${BUILDOS}
+fi
