@@ -20,12 +20,6 @@
 #######################################################################################################
 #set -x
 
-#if rclone is used for the mount tool and the datastore tool we only want to install it for one of them (whichever gets there first)
-if ( [ -f ${HOME}/runtime/installedsoftware/InstallRClone.sh ] )
-then
-	exit
-fi
-
 if ( [ "${1}" != "" ] )
 then
 	buildos="${1}"
