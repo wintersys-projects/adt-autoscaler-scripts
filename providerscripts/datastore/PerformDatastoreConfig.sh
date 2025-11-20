@@ -164,7 +164,7 @@ then
                 /bin/rm ${HOME}/.rclone.cfg-${count}
         fi
 
-        /bin/cp ${HOME}/providerscripts/datastore/configfiles/rclone.cfg-${count}.tmpl ${HOME}/.rclone.cfg-${count}
+        /bin/cp ${HOME}/providerscripts/datastore/configfiles/rclone-cfg.tmpl ${HOME}/.rclone.cfg-${count}
 
         if ( [ "${S3_ACCESS_KEY}" != "" ] )  
         then
