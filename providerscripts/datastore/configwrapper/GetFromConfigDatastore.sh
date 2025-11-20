@@ -20,6 +20,8 @@
 ######################################################################################
 #set -x
 
+destination="${1}"
+
 export HOME=`/bin/cat /home/homedir.dat`
 
 WEBSITE_URL="`${HOME}/utilities/config/ExtractConfigValue.sh 'WEBSITEURLORIGINAL'`"
