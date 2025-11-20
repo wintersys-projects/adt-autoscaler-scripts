@@ -61,10 +61,6 @@ then
         /bin/touch ${file_to_put}
 fi
 
-if ( [ "`/bin/echo ${place_to_put} | /bin/grep '/'`" != "" ] && [ "`/bin/echo ${place_to_put} | /bin/grep  '/$'`" = "" ] )
-then
-        place_to_put="`/bin/echo ${place_to_put} | /usr/bin/awk -F'/' '{$NF=""; print $0}' | /bin/sed 's, ,/,g'`"
-fi
 
 count="0"
 while ( [ "`${datastore_cmd} ${file_to_put} ${bucket_prefix}${place_to_put} 2>&1 >/dev/null | /bin/grep -E "(ERROR|NOTICE)"`" != "" ] && [ "${count}" -lt "5" ] )
