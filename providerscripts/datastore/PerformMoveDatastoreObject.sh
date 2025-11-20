@@ -60,7 +60,7 @@ fi
 if ( [ "`${datastore_cmd}${original_object}`" != "" ] )
 then
         count="0"
-        while ( [ "`${datastore_cmd1}${original_object} ${second_prefix}${new_object} 2>&1 >/dev/null | /bin/grep "ERROR"`" != "" ] && [ "${count}" -lt "5" ] )
+        while ( [ "`${datastore_cmd1}${original_object} ${second_prefix}${new_object} 2>&1 >/dev/null | /bin/grep -E "(ERROR|NOTICE)"`" != "" ] && [ "${count}" -lt "5" ] )
         do
                 /bin/echo "An error has occured `/usr/bin/expr ${count} + 1` times in script ${0}"
                 /bin/sleep 5
