@@ -29,68 +29,79 @@ WEBSITE_URL="`${HOME}/utilities/config/ExtractConfigValue.sh 'WEBSITEURL'`"
 SERVER_USER="`${HOME}/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
 TOKEN="`/bin/echo ${SERVER_USER} | /usr/bin/fold -w 4 | /usr/bin/head -n 1 | /usr/bin/tr '[:upper:]' '[:lower:]'`"
 configbucket="`/bin/echo "${WEBSITE_URL}"-config | /bin/sed 's/\./-/g'`-${TOKEN}"
-
 datastore_tool=""
+
 if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
 then
-	datastore_tool="/usr/bin/s3cmd"
+        datastore_tool="/usr/bin/s3cmd"
 elif ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ]  )
 then
-	datastore_tool="/usr/bin/s5cmd"
+        datastore_tool="/usr/bin/s5cmd"
+elif ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone'`" = "1" ]  )
+then
+        datastore_tool="/usr/bin/rclone"
 fi
 
 if ( [ "${datastore_tool}" = "/usr/bin/s3cmd" ] )
 then
-	datastore_cmd="${datastore_tool} put "
+        host_base="`/bin/grep host_base /root/.s3cfg-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
+        datastore_cmd="${datastore_tool} --config=/root/.s3cfg-1 --force --host=https://${host_base} put "
+        bucket_prefix="s3://"
 elif ( [ "${datastore_tool}" = "/usr/bin/s5cmd" ] )
 then
-	host_base="`/bin/grep host_base /root/.s5cfg | /bin/grep host_base | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
-	datastore_cmd="${datastore_tool} --credentials-file /root/.s5cfg --endpoint-url https://${host_base} cp "
+        host_base="`/bin/grep host_base /root/.s5cfg-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
+        datastore_cmd="${datastore_tool} --credentials-file /root/.s5cfg-1 --endpoint-url https://${host_base} cp "
+        bucket_prefix="s3://"
+elif ( [ "${datastore_tool}" = "/usr/bin/rclone" ] )
+then
+        host_base="`/bin/grep host_base /root/.s5cfg-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
+        datastore_cmd="${datastore_tool} --config /root/.config/rclone/rclone.conf-1 --s3-endpoint ${host_base} copy "
+        bucket_prefix="s3:"
 fi
 
 if ( [ ! -f ${file_to_put} ] )
 then
-	path_to_file="`/bin/echo ${file_to_put} | sed 's:/[^/]*$::' | /bin/sed 's,^/,,'`"
-	file="`/bin/echo "${file_to_put}" | /bin/grep "/" | /usr/bin/awk -F'/' '{print $NF}'`"
+        path_to_file="`/bin/echo ${file_to_put} | sed 's:/[^/]*$::' | /bin/sed 's,^/,,'`"
+        file="`/bin/echo "${file_to_put}" | /bin/grep "/" | /usr/bin/awk -F'/' '{print $NF}'`"
 
-	if ( [ "`/bin/echo ${file_to_put} | /bin/grep "/"`" = "" ] )
-	then
-		file_to_put="/tmp/${file_to_put}"
-	else
-		file_to_put="/tmp/${path_to_file}/${file}"
-		dir="`/bin/echo ${file_to_put} | /bin/sed 's:/[^/]*$::'`"
-		if ( [ -d ${dir} ] )
-		then
-			/bin/mv ${dir} ${dir}.$$
-		fi
-		/bin/mkdir -p "${dir}"
-	fi
-	/bin/touch ${file_to_put}
+        if ( [ "`/bin/echo ${file_to_put} | /bin/grep "/"`" = "" ] )
+        then
+                file_to_put="/tmp/${file_to_put}"
+    else
+                file_to_put="/tmp/${path_to_file}/${file}"
+                dir="`/bin/echo ${file_to_put} | /bin/sed 's:/[^/]*$::'`"
+                if ( [ -d ${dir} ] )
+                then
+                        /bin/mv ${dir} ${dir}.$$
+                fi
+                /bin/mkdir -p "${dir}"
+        fi
+        /bin/touch ${file_to_put}
 fi
 
 if ( [ "${place_to_put}" != "" ] )
 then
-	command="${datastore_cmd} ${file_to_put} s3://${configbucket}/${place_to_put}"
+        command="${datastore_cmd} ${file_to_put} ${bucket_prefix}${config_bucket}/${place_to_put}"
 else
-	command="${datastore_cmd} ${file_to_put} s3://${configbucket}"
+        command="${datastore_cmd} ${file_to_put} ${bucket_prefix}${config_bucket}"
 fi
 
 count="0"
 satisfied="0"
 while ( [ "${count}" -lt "5" ] && [ "${satisfied}" = "0" ] )
 do
-	result="`${command} 2>&1 >/dev/null`" 
-	if ( [ "`/bin/echo ${result} | /bin/grep 'ERROR'`" != "" ] )
-	then
-		/bin/echo "An error has occured `/usr/bin/expr ${count} + 1` times in script ${0}"
-		/bin/sleep 5
-		count="`/usr/bin/expr ${count} + 1`"
-	else 
-		satisfied="1"
-	fi
-done 
+        result="`${command} 2>&1 >/dev/null`"
+        if ( [ "`/bin/echo ${result} | /bin/grep 'ERROR'`" != "" ] )
+        then
+                /bin/echo "An error has occured `/usr/bin/expr ${count} + 1` times in script ${0}"
+                /bin/sleep 5
+                count="`/usr/bin/expr ${count} + 1`"
+        else
+                satisfied="1"
+        fi
+done
 
-if ( [ -f ${file_to_put} ] )
+if ( [ -f /tmp/${file_to_put} ] )
 then
-	/bin/rm ${file_to_put}
+        /bin/rm /tmp/${file_to_put}
 fi
