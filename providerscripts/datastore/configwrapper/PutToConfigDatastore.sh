@@ -81,7 +81,7 @@ fi
 
 if ( [ "${place_to_put}" != "" ] )
 then
-        if ( [ "`/bin/echo ${place_to_put} | /bin/grep  '/$'`" = "" ] )
+        if ( [ "`/bin/echo ${place_to_put} | /bin/grep '/'`" != "" ] && [ "`/bin/echo ${place_to_put} | /bin/grep  '/$'`" = "" ] )
         then
                 place_to_put="`/bin/echo ${place_to_put} | /usr/bin/awk -F'/' '{$NF=""; print $0}' | /bin/sed 's, ,/,g'`"
         fi
