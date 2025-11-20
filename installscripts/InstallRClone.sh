@@ -50,11 +50,11 @@ if ( [ "${apt}" != "" ] )
 then
 	if ( [ "${BUILDOS}" = "ubuntu" ] )
 	then
-		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:repo'`" = "1" ] )
+		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:repo'`" = "1" ] || [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone:repo'`" = "1" ] )
 		then
 			eval ${install_command} rclone
 		fi
-		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:binary'`" = "1" ] )		
+		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:binary'`" = "1" ] || [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone:binary'`" = "1" ] )		
 		then
 			eval ${install_command} unzip 
 			cd /opt
@@ -63,12 +63,12 @@ then
 			/bin/cp rclone*amd64/rclone /usr/bin/rclone
 			cd ${cwd}
 		fi
-		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:script'`" = "1" ] )
+		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:script'`" = "1" ] || [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone:script'`" = "1" ] )
 		then
 			/usr/bin/curl https://rclone.org/install.sh | /usr/bin/bash
 			cd ${cwd}
 		fi   
-		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:source'`" = "1" ] )
+		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:source'`" = "1" ] || [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone:source'`" = "1" ] )
 		then
 			${HOME}/installscripts/InstallGo.sh ${BUILDOS}
 			cd /opt
@@ -83,11 +83,11 @@ then
 
 	if ( [ "${BUILDOS}" = "debian" ] )
 	then
-		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:repo'`" = "1" ] )
+		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:repo'`" = "1" ] || [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone:repo'`" = "1" ] )
 		then
 			eval ${install_command} rclone
 		fi
-		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:binary'`" = "1" ] )		
+		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:binary'`" = "1" ] || [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone:binary'`" = "1" ] )		
 		then
 			eval ${install_command} unzip 
 			cd /opt
@@ -96,12 +96,12 @@ then
 			/bin/cp rclone*amd64/rclone /usr/bin/rclone
 			cd ${cwd}
 		fi
-		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:script'`" = "1" ] )
+		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:script'`" = "1" ] || [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone:script'`" = "1" ] )
 		then
 			/usr/bin/curl https://rclone.org/install.sh | /usr/bin/bash
 			cd ${cwd}
 		fi   
-		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:source'`" = "1" ] )
+		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:source'`" = "1" ] || [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone:source'`" = "1" ] )
 		then
 			${HOME}/installscripts/InstallGo.sh ${BUILDOS}
 			cd /opt
