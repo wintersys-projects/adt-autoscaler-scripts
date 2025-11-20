@@ -2,7 +2,7 @@
 ####################################################################################
 # Author: Peter Winter
 # Date :  24/02/2022
-# Description: This script will tell us the "age" of a file in the config datastore
+# Description: This script will give the age of a file in the config datastore
 #######################################################################################
 # License Agreement:
 # This file is part of The Agile Deployment Toolkit.
@@ -21,38 +21,48 @@
 #set -x
 
 export HOME=`/bin/cat /home/homedir.dat`
-WEBSITE_URL="`${HOME}/utilities/config/ExtractConfigValue.sh 'WEBSITEURL'`"
+
+WEBSITE_URL="`${HOME}/utilities/config/ExtractConfigValue.sh 'WEBSITEURLORIGINAL'`"
+if ( [ "${WEBSITE_URL}" = "" ] )
+then
+	WEBSITE_URL="`${HOME}/utilities/config/ExtractConfigValue.sh 'WEBSITEURL'`"
+fi
 
 SERVER_USER="`${HOME}/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
 TOKEN="`/bin/echo ${SERVER_USER} | /usr/bin/fold -w 4 | /usr/bin/head -n 1 | /usr/bin/tr '[:upper:]' '[:lower:]'`"
-
 config_bucket="`/bin/echo "${WEBSITE_URL}"-config | /bin/sed 's/\./-/g'`-${TOKEN}"
-
 inspected_file="${config_bucket}/${1}"
 
 if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
 then
-	datastore_tool="/usr/bin/s3cmd"
+        datastore_tool="/usr/bin/s3cmd"
 elif ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ]  )
 then
-	datastore_tool="/usr/bin/s5cmd"
+        datastore_tool="/usr/bin/s5cmd"
+elif ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone'`" = "1" ]  )
+then
+        datastore_tool="/usr/bin/rclone"
 fi
 
 if ( [ "${datastore_tool}" = "/usr/bin/s3cmd" ] )
 then
-	config_file="`/bin/grep -H ${datastore_region} /root/.s3cfg-* | /usr/bin/awk -F':' '{print $1}'`"
-	datastore_cmd="${datastore_tool} --config=${config_file} info s3://${inspected_file}"
-	time_file_written="`${datastore_cmd} | /bin/grep "Last mod" | /usr/bin/awk -F',' '{print $2}'`"
+	    host_base="`/bin/grep host_base /root/.s3cfg-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`"
+        datastore_cmd="${datastore_tool} --config=/root/.s3cfg-1 info s3://${inspected_file}"
+        time_file_written="`${datastore_cmd} | /bin/grep "Last mod" | /usr/bin/awk -F',' '{print $2}'`"
 elif ( [ "${datastore_tool}" = "/usr/bin/s5cmd" ] )
 then
-	config_file="`/bin/grep -H ${datastore_region} /root/.s5cfg-* | /usr/bin/awk -F':' '{print $1}'`"
-	host_base="`/bin/grep host_base ${config_file}| /bin/grep host_base | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
-	datastore_cmd="${datastore_tool} --credentials-file  ${config_file} --endpoint-url https://${host_base} head s3://${inspected_file}"
-	time_file_written="`${datastore_cmd} | /usr/bin/jq -r '.last_modified'`"
+	    host_base="`/bin/grep host_base /root/.s5cfg-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`"
+        datastore_cmd="${datastore_tool} --credentials-file  /root/.s5cfg-1 --endpoint-url https://${host_base} head s3://${inspected_file}"
+        time_file_written="`${datastore_cmd} | /usr/bin/jq -r '.last_modified'`"
+elif ( [ "${datastore_tool}" = "/usr/bin/rclone" ] )
+then
+	    host_base="`/bin/grep host_base /root/.config/rclone/rclone.conf-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`"
+        config_file="`/bin/grep -H ${datastore_region} /root/.config/rclone/rclone.conf-1 | /usr/bin/awk -F':' '{print $1}'`"
+        datastore_cmd="${datastore_tool}--config ${config_file} --s3-endpoint ${host_base} lsl s3:${inspected_file}"
+        time_file_written="`${datastore_cmd} | /usr/bin/awk '{print $2}'`"
 fi
 
 time_file_written="`/usr/bin/date -d "${time_file_written}" +%s`"
-
 time_now="`/usr/bin/date +%s`"
 age_of_file_in_seconds="`/usr/bin/expr ${time_now} - ${time_file_written}`"
 /bin/echo ${age_of_file_in_seconds}
