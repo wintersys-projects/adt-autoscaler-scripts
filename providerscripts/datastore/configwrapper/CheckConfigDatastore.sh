@@ -25,7 +25,7 @@ WEBSITE_URL="`${HOME}/utilities/config/ExtractConfigValue.sh 'WEBSITEURL'`"
 SERVER_USER="`${HOME}/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
 TOKEN="`/bin/echo ${SERVER_USER} | /usr/bin/fold -w 4 | /usr/bin/head -n 1 | /usr/bin/tr '[:upper:]' '[:lower:]'`"
 
-configbucket="`/bin/echo "${WEBSITE_URL}"-config | /bin/sed 's/\./-/g'`-${TOKEN}"
+config_bucket="`/bin/echo "${WEBSITE_URL}"-config | /bin/sed 's/\./-/g'`-${TOKEN}"
 
 if ( [ "${1}" = "" ] )
 then
@@ -60,7 +60,7 @@ then
 	datastore_cmd="${datastore_tool} --config /root/.config/rclone/rclone.conf-1 --s3-endpoint ${host_base} ls s3:"
 fi
 
-if ( [ "`${datastore_cmd}${configbucket}/$1 2>/dev/null`" = "" ] )
+if ( [ "`${datastore_cmd}${config_bucket}/$1 2>/dev/null`" = "" ] )
 then
 	/bin/echo "0"
 else
