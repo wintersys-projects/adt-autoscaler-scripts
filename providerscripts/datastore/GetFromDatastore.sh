@@ -58,6 +58,11 @@ then
         destination="."
 fi
 
+if ( [ ! -d ${destination} ] )
+then
+        /bin/mkdir -p ${destination}
+fi
+
 if ( [ "`${datastore_cmd}${datastore_to_get}`" = "" ] )
 then
         /bin/echo "Key does not exist"
