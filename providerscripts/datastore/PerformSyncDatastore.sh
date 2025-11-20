@@ -29,27 +29,38 @@ HOME="`/bin/cat /home/homedir.dat`"
 datastore_tool=""
 if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
 then
-	datastore_tool="/usr/bin/s3cmd"
+        datastore_tool="/usr/bin/s3cmd"
 elif ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ]  )
 then
-	datastore_tool="/usr/bin/s5cmd"
+        datastore_tool="/usr/bin/s5cmd"
+elif ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone'`" = "1" ]  )
+then
+        datastore_tool="/usr/bin/rclone"
 fi
 
 if ( [ "${datastore_tool}" = "/usr/bin/s3cmd" ] )
 then
-	datastore_cmd="${datastore_tool} --config=/root/.s3cfg-${count} sync "
-elif ( [ "`/bin/grep "^DATASTORETOOL:*" ${HOME}/runtime/buildstyles.dat | /bin/grep s5cmd`" != "" ] )
+        host_base="`/bin/grep host_base /root/.s3cfg-${count} | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`"  
+        datastore_cmd="${datastore_tool} --config=/root/.s3cfg-${count} --host=https://${host_base} sync "
+        bucket_prefix="s3://"
+elif ( [ "${datastore_tool}" = "/usr/bin/s5cmd" ] )
 then
-	host_base="`/bin/grep host_base /root/.s5cfg-${count} | /bin/grep host_base | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
-	datastore_cmd="${datastore_tool} --credentials-file /root/.s5cfg-${count} --endpoint-url https://${host_base} sync "
+        host_base="`/bin/grep host_base /root/.s5cfg-${count} | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
+        datastore_cmd="${datastore_tool} --credentials-file /root/.s5cfg-${count} --endpoint-url https://${host_base} sync "
+        bucket_prefix="s3://"
+elif ( [ "${datastore_tool}" = "/usr/bin/rclone" ] )
+then
+        host_base="`/bin/grep ^endpoint /root/.config/rclone/rclone.conf-${count} | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
+        datastore_cmd="${datastore_tool} --config /root/.config/rclone/rclone.conf-${count} --s3-endpoint ${host_base} sync "
+        bucket_prefix="s3:"
 fi
 
-if ( [ -d ${original_object} ] || [ -f ${original_object} ] )
+if ( ( [ -d ${original_object} ] || [ -f ${original_object} ] ) && ( [ ! -d ${new_object} ] || [ ! -f ${new_object} ] ) )
 then
-	${datastore_cmd} ${original_object} s3://${new_object} 2>/dev/null
-elif ( [ -d ${new_object} ] || [ -f ${new_object} ] )
+        ${datastore_cmd} ${original_object} ${bucket_prefix}${new_object} 2>/dev/null
+elif ( ( [ -d ${new_object} ] || [ -f ${new_object} ] ) && ( [ ! -d ${original_object} ] || [ ! -f ${original_object} ] ) )
 then
-	${datastore_cmd} s3://${original_object} ${new_object} 2>/dev/null
+        ${datastore_cmd} ${bucket_prefix}${original_object} ${new_object} 2>/dev/null
 else
-	${datastore_cmd} s3://${original_object} s3://${new_object} 2>/dev/null
+        ${datastore_cmd} ${bucket_prefix}${original_object} ${bucket_prefix}${new_object} 2>/dev/null
 fi
