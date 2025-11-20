@@ -81,6 +81,10 @@ fi
 
 if ( [ "${place_to_put}" != "" ] )
 then
+        if ( [ "`/bin/echo ${place_to_put} | /bin/grep  '/$'`" = "" ] )
+        then
+                place_to_put="`/bin/echo ${place_to_put} | /usr/bin/awk -F'/' '{$NF=""; print $0}' | /bin/sed 's, ,/,g'`"
+        fi
         command="${datastore_cmd} ${file_to_put} ${bucket_prefix}${config_bucket}/${place_to_put}"
 else
         command="${datastore_cmd} ${file_to_put} ${bucket_prefix}${config_bucket}"
