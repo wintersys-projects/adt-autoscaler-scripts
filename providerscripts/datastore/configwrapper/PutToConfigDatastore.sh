@@ -102,7 +102,10 @@ do
         fi
 done
 
-if ( [ -f /tmp/${file_to_put} ] )
+if ( [ "${delete}" = "yes" ] )
 then
-        /bin/rm /tmp/${file_to_put}
+        if ( [ -f ${file_to_put} ] )
+        then
+                /bin/rm /tmp/${file_to_put}
+        fi
 fi
