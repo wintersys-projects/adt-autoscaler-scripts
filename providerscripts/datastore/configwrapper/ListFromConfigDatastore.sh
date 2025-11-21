@@ -58,6 +58,7 @@ then
         else
                 datastore_cmd="${datastore_tool} --config /root/.config/rclone/rclone.conf-1  --s3-endpoint ${host_base} ls s3:${config_bucket}/"
         fi
+        file_to_list="`/bin/echo ${file_to_list} | /bin/sed 's/\*//g'`"
 fi
 
 ${datastore_cmd}${file_to_list}  | /usr/bin/awk '{print $NF}' | /usr/bin/awk -F'/' '{print $NF}' | /bin/sed '/^$/d'
