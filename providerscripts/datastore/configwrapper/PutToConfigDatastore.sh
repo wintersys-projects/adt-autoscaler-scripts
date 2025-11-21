@@ -22,6 +22,7 @@
 
 file_to_put="${1}"
 place_to_put="${2}"
+delete="${3}"
 
 export HOME=`/bin/cat /home/homedir.dat`
 
