@@ -74,5 +74,8 @@ file="`/bin/echo ${file_to_put} | /usr/bin/awk -F'/' '{print $NF}'`"
 
 if ( [ "${delete}" = "yes" ] )
 then
-        /bin/rm ${file_to_put}
+        if ( [ -f ${file_to_put} ] )
+        then
+                /bin/rm /tmp/${file_to_put}
+        fi
 fi
