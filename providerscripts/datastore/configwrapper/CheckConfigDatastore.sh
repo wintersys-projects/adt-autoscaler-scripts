@@ -20,6 +20,8 @@
 ######################################################################################
 #set -x
 
+file_to_check="${1}"
+
 export HOME=`/bin/cat /home/homedir.dat`
 WEBSITE_URL="`${HOME}/utilities/config/ExtractConfigValue.sh 'WEBSITEURL'`"
 SERVER_USER="`${HOME}/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
@@ -60,7 +62,7 @@ then
 	datastore_cmd="${datastore_tool} --config /root/.config/rclone/rclone.conf-1 --s3-endpoint ${host_base} ls s3:"
 fi
 
-if ( [ "`${datastore_cmd}${config_bucket}/$1 2>/dev/null`" = "" ] )
+if ( [ "`${datastore_cmd}${config_bucket}/${file_to_check} 2>/dev/null`" = "" ] )
 then
 	/bin/echo "0"
 else
