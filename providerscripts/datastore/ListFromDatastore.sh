@@ -58,18 +58,20 @@ then
 elif ( [ "${datastore_tool}" = "/usr/bin/rclone" ] )
 then
         host_base="`/bin/grep ^endpoint /root/.config/rclone/rclone.conf-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
-        if ( [ "${file_to_list}" = "" ] )
+
+        include=""
+        if ( [ "${file_to_list}" != "" ] )
         then
-                datastore_cmd="${datastore_tool} --config /root/.config/rclone/rclone.conf-1  --s3-endpoint ${host_base} lsd s3:"
-        else
-                datastore_cmd="${datastore_tool} --config /root/.config/rclone/rclone.conf-1  --s3-endpoint ${host_base} ls s3:"
+                include="--include *${file_to_list}*"
         fi
-        file_to_list="`/bin/echo ${file_to_list} | /bin/sed 's/\*//g'`"
+
+        datastore_cmd="${datastore_tool} --config /root/.config/rclone/rclone.conf-1  --s3-endpoint ${host_base} ${include} ls s3:"
+        file_to_list=""
 fi
 
-if ( [ "${file_to_list}" = "" ] )
+if ( [ "`/bin/echo ${file_to_list} | /bin/grep '\/'`" != "" ] )
 then
-        ${datastore_cmd} | /usr/bin/awk '{print $NF}' 2>/dev/null
+        ${datastore_cmd}${file_to_list}  | /usr/bin/awk '{print $NF}' | /usr/bin/awk -F'/' '{print $NF}' | /bin/sed '/^$/d'
 else
-        ${datastore_cmd}${file_to_list} | /usr/bin/awk '{print $NF}' 2>/dev/null
+        ${datastore_cmd}${file_to_list} | /usr/bin/awk '{print $NF}'
 fi
