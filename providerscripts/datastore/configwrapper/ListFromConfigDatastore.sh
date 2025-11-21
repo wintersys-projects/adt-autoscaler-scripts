@@ -59,11 +59,17 @@ then
                 include="--include *${file_to_list}*"
         fi
 
+        path="no"
+        if ( [ "`/bin/echo ${file_to_list} | /bin/grep '\/'`" != "" ] )
+        then
+                path="yes"
+        fi
+
         datastore_cmd="${datastore_tool} --config /root/.config/rclone/rclone.conf-1  --s3-endpoint ${host_base} ${include} ls s3:${config_bucket}/"
         file_to_list=""
 fi
 
-if ( [ "`/bin/echo ${file_to_list} | /bin/grep '\/'`" != "" ] )
+if ( [ "${path}" = "yes" ] )
 then
         ${datastore_cmd}${file_to_list}  | /usr/bin/awk '{print $NF}' | /usr/bin/awk -F'/' '{print $NF}' | /bin/sed '/^$/d'
 else
