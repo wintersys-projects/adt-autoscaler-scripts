@@ -43,16 +43,19 @@ then
         host_base="`/bin/grep ^host_base /root/.s3cfg-${count} | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
         datastore_cmd="${datastore_tool} --force --recursive --multipart-chunk-size-mb=5 --config=/root/.s3cfg-${count}  --host=https://${host_base} put "
         bucket_prefix="s3://"
+        slasher="/"
 elif ( [ "${datastore_tool}" = "/usr/bin/s5cmd" ] )
 then
         host_base="`/bin/grep ^host_base /root/.s5cfg-${count} | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
         datastore_cmd="${datastore_tool} --credentials-file /root/.s5cfg-${count} --endpoint-url https://${host_base} cp "
         bucket_prefix="s3://"
+        slasher="/"
 elif ( [ "${datastore_tool}" = "/usr/bin/rclone" ] )
 then
         host_base="`/bin/grep ^endpoint /root/.config/rclone/rclone.conf-${count} | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
         datastore_cmd="${datastore_tool} --config /root/.config/rclone/rclone.conf-${count} --s3-endpoint ${host_base} copy "
         bucket_prefix="s3:"
+        slasher=""
 fi
 
 if ( [ ! -f ${file_to_put} ] )
@@ -63,7 +66,7 @@ fi
 
 
 count="0"
-while ( [ "`${datastore_cmd} ${file_to_put} ${bucket_prefix}${place_to_put} 2>&1 >/dev/null | /bin/grep -E "(ERROR|NOTICE)"`" != "" ] && [ "${count}" -lt "5" ] )
+while ( [ "`${datastore_cmd} ${file_to_put} ${bucket_prefix}${place_to_put}${slasher} 2>&1 >/dev/null | /bin/grep -E "(ERROR|NOTICE)"`" != "" ] && [ "${count}" -lt "5" ] )
 do
         /bin/echo "An error has occured `/usr/bin/expr ${count} + 1` times in script ${0}"
         /bin/sleep 5
