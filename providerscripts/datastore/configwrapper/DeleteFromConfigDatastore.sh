@@ -32,8 +32,10 @@ config_bucket="`/bin/echo "${WEBSITE_URL}"-config | /bin/sed 's/\./-/g'`-${TOKEN
 if ( [ "${recursive}" = "yes" ] )
 then
         recursive="--recursive"
+        recursive1="*"
 else
         recursive=""
+        recursive1=""
 fi
 
 datastore_tool=""
@@ -57,7 +59,8 @@ then
 elif ( [ "${datastore_tool}" = "/usr/bin/s5cmd" ] )
 then
         host_base="`/bin/grep ^host_base /root/.s5cfg-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`"
-        datastore_cmd="/usr/bin/s5cmd ${recursive} --credentials-file /root/.s5cfg-1 --endpoint-url https://${host_base}  rm s3://${config_bucket}/"
+        datastore_cmd="/usr/bin/s5cmd --credentials-file /root/.s5cfg-1 --endpoint-url https://${host_base}  rm s3://${config_bucket}/"
+        file_to_delete="${file_to_delete}${recursive1}"
 elif ( [ "${datastore_tool}" = "/usr/bin/rclone" ] )
 then
         host_base="`/bin/grep ^endpoint /root/.config/rclone/rclone.conf-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
