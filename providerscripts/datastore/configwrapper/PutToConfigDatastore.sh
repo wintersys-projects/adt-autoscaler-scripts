@@ -106,6 +106,6 @@ if ( [ "${delete}" = "yes" ] )
 then
         if ( [ -f ${file_to_put} ] )
         then
-                /bin/rm /tmp/${file_to_put}
+                /bin/rm ${file_to_put}
         fi
 fi
