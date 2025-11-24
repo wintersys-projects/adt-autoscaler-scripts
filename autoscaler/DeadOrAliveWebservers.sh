@@ -232,11 +232,11 @@ else
 fi
 
 noactivewebservers="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}-${autoscaler_no}" ${CLOUDHOST} | /usr/bin/tr '\n' ' ' | /usr/bin/wc -w`"
-
+originalnoactivewebservers="${noactivewebservers}"
 #Kill webservers in batches of up to 5 at a time
 count="1"
 candidate_termination_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}-${autoscaler_no}"`"
-while ( [ "${noactivewebservers}" -gt "${NO_WEBSERVERS}" ] && [ "${count}" -le "${noactivewebservers}" ] )
+while ( [ "${noactivewebservers}" -gt "${NO_WEBSERVERS}" ] && [ "${count}" -le "${originalnoactivewebservers}" ] )
 do
         candidate_ip="`/bin/echo ${candidate_termination_ips} | /usr/bin/cut -d " " -f ${count}`"
         endit "${candidate_ip}" "Because the machine was excess to requirements according to the scaling policy"
