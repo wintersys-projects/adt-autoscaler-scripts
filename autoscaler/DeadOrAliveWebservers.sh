@@ -76,13 +76,15 @@ endit ()
 {
 	down_ip="${1}"
 	reason="${2}"
+	
+	public_ip_address="`${HOME}/providerscripts/server/GetServerPublicIPAddressByIP.sh ${down_ip} ${CLOUDHOST}`"
+	webserver_name="`${HOME}/providerscripts/server/GetServerName.sh "${public_ip_address}" "${CLOUDHOST}"`"
 	#We don't want to go lower than 2 webservers no matter what
-	if ( [ "`/bin/ls -l ${HOME}/runtime/INITIALLY_PROVISIONING* 2>/dev/null`" = "" ] && [ "`${HOME}/providerscripts/server/NumberOfServers.sh "ws-${REGION}-${BUILD_IDENTIFIER}" "${CLOUDHOST}"`" -gt "2" ] )
+	if ( [  "`/bin/echo ${webserver_name} | /bin/grep "\-init\-"`" = "" ] && [ "`/bin/ls -l ${HOME}/runtime/INITIALLY_PROVISIONING* 2>/dev/null`" = "" ] && [ "`${HOME}/providerscripts/server/NumberOfServers.sh "ws-${REGION}-${BUILD_IDENTIFIER}" "${CLOUDHOST}"`" -gt "2" ] )
 	then  
 		autoscalerip="`${HOME}/utilities/processing/GetPublicIP.sh`"
-		public_ip_address="`${HOME}/providerscripts/server/GetServerPublicIPAddressByIP.sh ${down_ip} ${CLOUDHOST}`"
 
-		if ( [ "`${HOME}/providerscripts/server/GetServerName.sh "${public_ip_address}" "${CLOUDHOST}" | /bin/grep "\-init\-"`" = "" ] || [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beingbuiltips/*" 2>/dev/null | /bin/grep ${down_ip}`" = "" ] || [ "`/usr/bin/find ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${ip} -mmin +30`" != "" ] )
+		if (  [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beingbuiltips/*" 2>/dev/null | /bin/grep ${down_ip}`" = "" ] || [ "`/usr/bin/find ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${ip} -mmin +30`" != "" ] )
 		then
 			/bin/echo "Ending server with ip address ${down_ip}"
 
