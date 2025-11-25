@@ -136,7 +136,7 @@ then
                 /bin/echo "host_base = ${S3_HOST_BASE}" >> ${HOME}/.s5cfg-${count}
                 if ( [ "`/bin/grep '^alias s5cmd=' /root/.bashrc`" = "" ] )
                 then
-                        /bin/echo "alias s5cmd='/usr/bin/s5cmd --credentials-file /root/.s5cfg-1 --endpoint-url https://${host_base}'" >> /root/.bashrc
+                        /bin/echo "alias s5cmd='/usr/bin/s5cmd --credentials-file /root/.s5cfg-1 --endpoint-url https://${S3_HOST_BASE}'" >> /root/.bashrc
                 fi
                 datastore_tool="/usr/bin/s5cmd --credentials-file /root/.s5cfg-${count} --endpoint-url https://${S3_HOST_BASE}"
         else
