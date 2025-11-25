@@ -90,6 +90,11 @@ then
         if ( [ "${S3_HOST_BASE}" != "" ] )
         then
                 /bin/sed -i "s/XXXXHOSTBASEXXXX/${S3_HOST_BASE}/" ${HOME}/.s3cfg-${count}
+                
+                if ( [ "`/bin/grep '^alias s3cmd=' /root/.bashrc`" = "" ] )
+                then
+                        /bin/echo "alias s3cmd='/usr/bin/s3cmd --config=/root/.s3cfg-1 --host=https://${S3_HOST_BASE} '" >> /root/.bashrc
+                fi
         else
                 /bin/echo "${0} Couldn't find the S3_HOST_BASE setting" >> ${HOME}/logs/initialbuild/BUILD_PROCESS_MONITORING.log  
         fi
