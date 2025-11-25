@@ -53,7 +53,7 @@ then
         datastore_cmd1="${datastore_tool} --config /root/.config/rclone/rclone.conf-${count} --s3-endpoint ${host_base} mkdir s3:"
 fi
 
-if ( [ "`${datastore_cmd}${datastore_to_mount} 2>&1 | /bin/grep -E "(ERROR|NOTICE)"`" != "" ] )
+if ( [ "`${datastore_cmd}${datastore_to_mount} 2>/dev/null`" != "" ]  )
 then
         exit
 fi
