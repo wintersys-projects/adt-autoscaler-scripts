@@ -79,6 +79,10 @@ then
 			/bin/rm -r /opt/rclone
 			cd ${cwd}
 		fi
+		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone'`" = "1" ] )
+		then
+				${install_command} libfuse3-dev
+		fi
 	fi
 
 	if ( [ "${BUILDOS}" = "debian" ] )
@@ -111,6 +115,10 @@ then
 			/bin/mv /opt/rclone/rclone /usr/bin/rclone
 			/bin/rm -r /opt/rclone
 			cd ${cwd}
+		fi
+		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone'`" = "1" ] )
+		then
+				${install_command} libfuse3-dev
 		fi
 	fi
 fi
