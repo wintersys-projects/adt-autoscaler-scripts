@@ -54,7 +54,7 @@ then
 		if ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "FAIL2BAN" | /usr/bin/awk -F':' '{print $NF}'`" = "active" ] )
 		then
     		eval ${install_command} fail2ban
-			/bin/cp ${BUILD_HOME}/security/conf/fail2ban.conf /etc/fail2ban/jail.local
+			/bin/cp ${HOME}/security/conf/fail2ban.conf /etc/fail2ban/jail.local
 		fi
 	fi
 
@@ -63,7 +63,7 @@ then
 		if ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "FAIL2BAN" | /usr/bin/awk -F':' '{print $NF}'`" = "active" ] )
 		then
     		eval ${install_command} fail2ban
-			/bin/cp ${BUILD_HOME}/security/conf/fail2ban.conf /etc/fail2ban/jail.local
+			/bin/cp ${HOME}/security/conf/fail2ban.conf /etc/fail2ban/jail.local
 		fi
 	fi
 fi
