@@ -51,16 +51,22 @@ if ( [ "${apt}" != "" ] )
 then
 	if ( [ "${BUILDOS}" = "ubuntu" ] )
 	then
-    eval ${install_command} fail2ban
+		if ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "FAIL2BAN" | /usr/bin/awk -F':' '{print $NF}'`" = "active" ] )
+		then
+    		eval ${install_command} fail2ban
+		fi
 	fi
 
 	if ( [ "${BUILDOS}" = "debian" ] )
 	then    
-    eval ${install_command} fail2ban
+		if ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "FAIL2BAN" | /usr/bin/awk -F':' '{print $NF}'`" = "active" ] )
+		then
+    		eval ${install_command} fail2ban
+		fi
 	fi
 fi
 
-if ( [ ! -f /usr/sbin/iptables ] )
+if ( [ ! -f /usr/sbin/fail2ban ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR Fail2Ban" "I believe that fail2ban hasn't installed correctly, please investigate" "ERROR"
 else
