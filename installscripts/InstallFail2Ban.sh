@@ -68,7 +68,7 @@ then
 	fi
 fi
 
-if ( [ ! -f /usr/sbin/fail2ban ] )
+if ( [ ! -d /etc/fail2ban ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR Fail2Ban" "I believe that fail2ban hasn't installed correctly, please investigate" "ERROR"
 else
