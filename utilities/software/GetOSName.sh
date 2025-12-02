@@ -43,6 +43,10 @@ then
         then
                 /bin/echo "noble"
         fi
+        if ( [ "${BUILDOS_VERSION}" = "26.04" ] )
+        then
+                /bin/echo "resolute"
+        fi
 fi
 
 if ( [ "${BUILDOS}" = "debian" ] )
@@ -50,5 +54,13 @@ then
         if ( [ "${BUILDOS_VERSION}" = "13" ] )
         then
                 /bin/echo "trixie"
+        fi
+        if ( [ "${BUILDOS_VERSION}" = "14" ] )
+        then
+                /bin/echo "forky"
+        fi
+        if ( [ "${BUILDOS_VERSION}" = "15" ] )
+        then
+                /bin/echo "duke"
         fi
 fi
