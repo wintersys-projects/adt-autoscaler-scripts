@@ -50,3 +50,6 @@ if ( [ "${firewall}" = "iptables" ] )
 then
 	${HOME}/installscripts/InstallIPTables.sh ${BUILDOS}
 fi
+
+${HOME}/installscripts/InstallFail2Ban.sh ${BUILDOS}
+
