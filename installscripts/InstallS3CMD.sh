@@ -58,7 +58,7 @@ then
 			eval ${install_command} python3 python3-dateutil
 			/usr/bin/ln -s /usr/bin/python3 /usr/bin/python
 			cd /opt
-			/usr/bin/git clone https://github.com/s3tools/s3cmd.git
+			${HOME}/providerscripts/git/GitClone.sh "github" "" "s3tools" "s3cmd" ""
 			/bin/cp /opt/s3cmd/s3cmd /usr/bin/s3cmd
 			/bin/cp -r /opt/s3cmd/S3 /usr/bin/
 			/bin/rm -r /opt/s3cmd
@@ -74,7 +74,7 @@ then
 			eval ${install_command} python3 python3-dateutil
 			/usr/bin/ln -s /usr/bin/python3 /usr/bin/python
 			cd /opt
-			/usr/bin/git clone https://github.com/s3tools/s3cmd.git
+			${HOME}/providerscripts/git/GitClone.sh "github" "" "s3tools" "s3cmd" ""
 			/bin/cp /opt/s3cmd/s3cmd /usr/bin/s3cmd
 			/bin/cp -r /opt/s3cmd/S3 /usr/bin/
 			/bin/rm -r /opt/s3cmd
