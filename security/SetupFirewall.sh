@@ -256,4 +256,5 @@ fi
 if ( [ -f /etc/fail2ban/jail.d/jail.local ] )
 then
 	/bin/sed -i "s/XXXXSSHPORTXXXX/${SSH_PORT}/g" /etc/fail2ban/jail.d/jail.local
+	${HOME}/utilities/processing/RunServiceCommand.sh fail2ban restart
 fi
