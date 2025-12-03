@@ -23,6 +23,22 @@
 export HOME="`/bin/cat /home/homedir.dat`"
 BUILDOS="`${HOME}/utilities/config/ExtractConfigValue.sh 'BUILDOS'`"
 
+if ( [ ! -f /etc/fail2ban/jail.d/jail.local ] )
+then
+	if ( [ ! -d /etc/fail2ban/jail.d ] )
+	then
+		/bin/mkdir -p /etc/fail2ban/jail.d
+	fi
+fi
+
+if ( [ -f /etc/fail2ban/jail.d ] )
+then
+	/bin/cp ${HOME}/security/config/fail2ban.conf /etc/fail2ban/jail.d/jail.local
+	/bin/sed -i "s/XXXXSSHPORTXXXX/${SSH_PORT}/g" /etc/fail2ban/jail.d/jail.local
+	/bin/sed -i "s/#XXXXVPCIPRANGEXXXX/${VPC_IP_RANGE}/g" /etc/fail2ban/jail.d/jail.local
+	${HOME}/utilities/processing/RunServiceCommand.sh fail2ban restart
+fi
+
 if ( [ "`/usr/bin/find ${HOME}/runtime/customfirewallports.dat -mmin -1 -print`" != "" ] )
 then
         /bin/rm ${HOME}/runtime/FIREWALL-ACTIVE
@@ -253,18 +269,3 @@ then
         fi
 fi
 
-if ( [ ! -f /etc/fail2ban/jail.d/jail.local ] )
-then
-	if ( [ ! -d /etc/fail2ban/jail.d ] )
-	then
-		/bin/mkdir -p /etc/fail2ban/jail.d
-	fi
-fi
-
-if ( [ -f /etc/fail2ban/jail.d ] )
-then
-	/bin/cp ${HOME}/security/config/fail2ban.conf /etc/fail2ban/jail.d/jail.local
-	/bin/sed -i "s/XXXXSSHPORTXXXX/${SSH_PORT}/g" /etc/fail2ban/jail.d/jail.local
-	/bin/sed -i "s/#XXXXVPCIPRANGEXXXX/${VPC_IP_RANGE}/g" /etc/fail2ban/jail.d/jail.local
-	${HOME}/utilities/processing/RunServiceCommand.sh fail2ban restart
-fi
