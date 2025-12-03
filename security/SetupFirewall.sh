@@ -41,7 +41,7 @@ if ( [ -d /etc/fail2ban/jail.d ] )
 then
 	/bin/cp ${HOME}/security/config/fail2ban.conf /etc/fail2ban/jail.d/jail.local
 	/bin/sed -i "s/XXXXSSHPORTXXXX/${SSH_PORT}/g" /etc/fail2ban/jail.d/jail.local
-	/bin/sed -i "s/#XXXXVPCIPRANGEXXXX/${VPC_IP_RANGE}/g" /etc/fail2ban/jail.d/jail.local
+	/bin/sed -i "s;#XXXXVPCIPRANGEXXXX;${VPC_IP_RANGE};g" /etc/fail2ban/jail.d/jail.local
 	${HOME}/utilities/processing/RunServiceCommand.sh fail2ban restart
 fi
 
