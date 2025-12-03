@@ -72,7 +72,7 @@ then
 		then
 			${HOME}/installscripts/InstallGo.sh ${BUILDOS}
 			cd /opt
-			/usr/bin/git clone https://github.com/rclone/rclone.git 
+			${HOME}/providerscripts/git/GitClone.sh "github" "" "rclone" "rclone" ""
 			cd /opt/rclone
 			/usr/bin/go build
 			/bin/mv /opt/rclone/rclone /usr/bin/rclone
@@ -109,7 +109,7 @@ then
 		then
 			${HOME}/installscripts/InstallGo.sh ${BUILDOS}
 			cd /opt
-			/usr/bin/git clone https://github.com/rclone/rclone.git 
+			${HOME}/providerscripts/git/GitClone.sh "github" "" "rclone" "rclone" ""
 			cd /opt/rclone
 			/usr/bin/go build
 			/bin/mv /opt/rclone/rclone /usr/bin/rclone
