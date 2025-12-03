@@ -261,7 +261,7 @@ then
 	fi
 fi
 
-if ( [ -f /etc/fail2ban/jail.d/jail.local ] )
+if ( [ -f /etc/fail2ban/jail.d ] )
 then
 	/bin/cp ${HOME}/security/config/fail2ban.conf /etc/fail2ban/jail.d/jail.local
 	/bin/sed -i "s/XXXXSSHPORTXXXX/${SSH_PORT}/g" /etc/fail2ban/jail.d/jail.local
