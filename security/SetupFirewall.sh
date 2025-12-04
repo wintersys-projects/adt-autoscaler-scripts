@@ -29,20 +29,23 @@ BUILD_MACHINE_IP="`${HOME}/utilities/config/ExtractConfigValue.sh 'BUILDMACHINEI
 SERVER_USER="`${HOME}/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
 SERVER_USER_PASSWORD="`${HOME}/utilities/config/ExtractConfigValue.sh 'SERVERUSERPASSWORD'`"
 
-if ( [ ! -f /etc/fail2ban/jail.d/jail.local ] )
+if ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "FAIL2BAN" | /usr/bin/awk -F':' '{print $NF}'`" = "active" ] )
 then
-	if ( [ ! -d /etc/fail2ban/jail.d ] )
+	if ( [ ! -f /etc/fail2ban/jail.d/jail.local ] )
 	then
-		/bin/mkdir -p /etc/fail2ban/jail.d
+		if ( [ ! -d /etc/fail2ban/jail.d ] )
+		then
+			/bin/mkdir -p /etc/fail2ban/jail.d
+		fi
 	fi
-fi
 
-if ( [ -d /etc/fail2ban/jail.d ] )
-then
-	/bin/cp ${HOME}/security/config/fail2ban.conf /etc/fail2ban/jail.d/jail.local
-	/bin/sed -i "s/XXXXSSHPORTXXXX/${SSH_PORT}/g" /etc/fail2ban/jail.d/jail.local
-	/bin/sed -i "s;#XXXXVPCIPRANGEXXXX;${VPC_IP_RANGE};g" /etc/fail2ban/jail.d/jail.local
-	${HOME}/utilities/processing/RunServiceCommand.sh fail2ban restart
+	if ( [ -d /etc/fail2ban/jail.d ] )
+	then
+		/bin/cp ${HOME}/security/config/fail2ban.conf /etc/fail2ban/jail.d/jail.local
+		/bin/sed -i "s/XXXXSSHPORTXXXX/${SSH_PORT}/g" /etc/fail2ban/jail.d/jail.local
+		/bin/sed -i "s;#XXXXVPCIPRANGEXXXX;${VPC_IP_RANGE};g" /etc/fail2ban/jail.d/jail.local
+		${HOME}/utilities/processing/RunServiceCommand.sh fail2ban restart
+	fi
 fi
 
 if ( [ "`/usr/bin/find ${HOME}/runtime/customfirewallports.dat -mmin -1 -print`" != "" ] )
