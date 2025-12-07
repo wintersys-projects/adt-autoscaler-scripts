@@ -87,6 +87,8 @@ then
                 done
         fi
 
+        ipaddresses="${ipaddresses} ${VPC_IP_RANGE}"
+
         if ( [ "${cluster_id}" != "" ] )
         then
                 if ( [ "${ip_to_delete}" != "" ] )
@@ -118,23 +120,19 @@ then
 
         webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${zone}-${build_identifier}" ${CLOUDHOST}`"
         database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "db-${zone}-${build_identifier}" ${CLOUDHOST}`"
-        newips="${webserver_ips} ${database_ips} "
-        newips="`/bin/echo ${newips} | /bin/sed 's/  / /g' | /bin/tr ' ' ',' | /bin/sed 's/,$//g'`"
+        ipaddresses="${webserver_ips} ${database_ips} "
+        ipaddresses="`/bin/echo ${ipaddresses} | /bin/sed 's/  / /g' | /bin/tr ' ' ',' | /bin/sed 's/,$//g'`"
 
-        if ( [ "${MULTI_REGION}" = "1" ] )
+        if ( [ "${multi_region_ips}" != "" ] )
         then
-                if ( [ "${multi_region_ips}" != "" ] )
-                then
-                        for ip in ${multi_region_ips}
-                        do
-                                ipaddresses="${ipaddresses} ${ip}"
-                        done
-
-                        ipaddresses="`/bin/echo ${ipaddresses} | /bin/sed 's/ /,/g' | /usr/bin/sort -u`"
-                fi
-        else
-                ipaddresses="${newips}"
+                for ip in ${multi_region_ips}
+                do
+                        ipaddresses="${ipaddresses} ${ip}"
+                done
+                ipaddresses="`/bin/echo ${ipaddresses} | /bin/sed 's/ /,/g' | /usr/bin/sort -u`"
         fi
+
+        ipaddresses="${ipaddresses} ${VPC_IP_RANGE}"
 
         if ( [ "`/bin/echo ${dbaas} | /bin/grep ' pg '`" != "" ] )
         then
@@ -156,51 +154,36 @@ then
                 database_id="`/usr/local/bin/linode-cli databases postgresql-list --no-defaults --json | /usr/bin/jq '.[] | select(.label | contains ("'${label}'")) | .id'`"
         fi
 
-        if ( [ "${MULTI_REGION}" = "1" ] )
+        webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+        database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "db-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+        ipaddresses="${webserver_ips} ${database_ips}"
+
+        if ( [ "${multi_region_ips}" != "" ] )
         then
-                webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
-                database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "db-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
-
-                ipaddresses="${webserver_ips} ${database_ips}"
-
-                if ( [ "${multi_region_ips}" != "" ] )
-                then
-                        for ip in ${multi_region_ips}
-                        do
-                                ipaddresses="${ipaddresses} ${ip}"
-                        done
-                fi
-
-                ipaddresses="`/bin/echo ${ipaddresses} | /usr/bin/tr ' ' '\n' | /usr/bin/sort -u`"
-
-                allow_list=" "
-                for ipaddress in ${ipaddresses}
+                for ip in ${multi_region_ips}
                 do
-                        allow_list="${allow_list} --allow_list ${ipaddress}/32"
+                        ipaddresses="${ipaddresses} ${ip}"
                 done
+        fi
 
-                if ( [ "`/bin/echo ${dbaas} | /bin/grep 'mysql'`" != "" ] )
-                then
-                        /usr/local/bin/linode-cli databases mysql-update ${database_id} ${allow_list} --no-defaults
-                fi
+        ipaddresses="`/bin/echo ${ipaddresses} | /usr/bin/tr ' ' '\n' | /usr/bin/sort -u`"
 
-                if ( [ "`/bin/echo ${dbaas} | /bin/grep 'postgresql'`" != "" ] )
-                then        
-                        /usr/local/bin/linode-cli databases postgresql-update ${database_id} ${allow_list} --no-defaults 
-                fi
-        elif ( [ "${MULTI_REGION}" = "0" ] )
+        allow_list=" "
+        for ipaddress in ${ipaddresses}
+        do
+                allow_list="${allow_list} --allow_list ${ipaddress}/32"
+        done
+
+        allow_list="${allow_list} --allow_list ${VPC_IP_RANGE}"
+
+        if ( [ "`/bin/echo ${dbaas} | /bin/grep 'mysql'`" != "" ] )
         then
-                allow_list=" --allow_list ${VPC_IP_RANGE}"
+                /usr/local/bin/linode-cli databases mysql-update ${database_id} ${allow_list} --no-defaults
+        fi
 
-                if ( [ "`/bin/echo ${dbaas} | /bin/grep 'mysql'`" != "" ] )
-                then
-                        /usr/local/bin/linode-cli databases mysql-update ${database_id} ${allow_list} --no-defaults 
-                fi
-
-                if ( [ "`/bin/echo ${dbaas} | /bin/grep 'postgresql'`" != "" ] )
-                then        
-                        /usr/local/bin/linode-cli databases postgresql-update ${database_id} ${allow_list} --no-defaults
-                fi
+        if ( [ "`/bin/echo ${dbaas} | /bin/grep 'postgresql'`" != "" ] )
+        then        
+                /usr/local/bin/linode-cli databases postgresql-update ${database_id} ${allow_list} --no-defaults 
         fi
 fi
 
@@ -212,7 +195,6 @@ then
         selected_databaseid=""
 
         DB_IDENTIFIER="`${HOME}/utilities/config/ExtractConfigValue.sh 'DBIDENTIFIER'`"
-
         for databaseid in ${databaseids}
         do
                 if ( [ "`/usr/bin/vultr database get ${databaseid} -o json | /usr/bin/jq -r '.database | select (.host | contains ("'${DB_IDENTIFIER}'")).id'`" != "" ] )
@@ -230,19 +212,7 @@ then
 
         webserver_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
         database_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "db-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
-
-        if ( [ "${MULTI_REGION}" = "1" ] && [ "${PRIMARY_REGION}" = "1" ] )
-        then
-                ipaddresses="${webserver_ips} ${database_ips} ${VPC_IP_RANGE} "
-        else
-                if ( [ "${MULTI_REGION}" = "1" ] )
-                then
-                        db_vpc_id="`${HOME}/utilities/config/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped" | /usr/bin/awk '{print $11}'`"
-                        db_subnet="`/usr/bin/vultr vpc list -o json | /usr/bin/jq -r '.vpcs[] | select (.id == "'${db_vpc_id}'").v4_subnet'`/20 "
-                        ipaddresses="${webserver_ips} ${database_ips} ${db_subnet}"
-                fi
-        fi
-
+        ipaddresses="${webserver_ips} ${database_ips} "
         ipaddresses="`/bin/echo "${ipaddresses}" | /bin/sed -e 's/  / /g' -e "s# #/32,#"`"
 
         if ( [ "${multi_region_ips}" != "" ] )
@@ -253,12 +223,9 @@ then
                 done
         fi
 
-        ipaddresses="`/bin/echo ${ipaddresses} | /bin/sed 's#,$##' | /bin/sed 's# #,#g'`"
-
-        if ( [ "${MULTI_REGION}" = "0" ] )
-        then
-                ipaddresses="${VPC_IP_RANGE}"
-        fi
+        db_vpc_id="`${HOME}/utilities/config/ExtractConfigValues.sh "DATABASEDBaaSINSTALLATIONTYPE" "stripped" | /usr/bin/awk '{print $11}'`"
+        db_subnet="`/usr/bin/vultr vpc list -o json | /usr/bin/jq -r '.vpcs[] | select (.id == "'${db_vpc_id}'").v4_subnet'`/20 "
+        ip_addresses="${ipaddresses}${db_subnet}"
 
         if ( [ "${selected_databaseid}" != "" ] )
         then
