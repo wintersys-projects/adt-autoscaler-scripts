@@ -30,10 +30,6 @@ PRIMARY_REGION="`${HOME}/utilities/config/ExtractConfigValue.sh 'PRIMARYREGION'`
 WEBSITE_URL="`${HOME}/utilities/config/ExtractConfigValue.sh 'WEBSITEURL'`"
 VPC_IP_RANGE="`${HOME}/utilities/config/ExtractConfigValue.sh 'VPCIPRANGE'`"
 
-#The digital ocean managed database should be in the same VPC as the webserver machines which means that the managed database can only be accessed from within that VPC
-#This means that you have no need to have trusted IP addresses on an IP address by IP address basis for digital ocean. I have left the code below commented out in case
-#You do want to have specific IP addresses as trusted IPs but as long as your managed database is in the same VPC as your main machines then you shouldn't need this
-
 multi_region_ips=""
 
 if ( [ ! -d ${HOME}/runtime/dbaas_allowed_ips ] )
@@ -207,10 +203,6 @@ then
                 fi
         fi
 fi
-
-#The vultr managed database should be in the same VPC as the webserver machines which means that the managed database can only be accessed from within that VPC
-#This means that you have no need to have trusted IP addresses on an IP address by IP address basis for vultr. I have left the code below commented out in case
-#You do want to have specific IP addresses as trusted IPs but as long as your managed database is in the same VPC as your main machines then you shouldn't need this
 
 if ( [ "${CLOUDHOST}" = "vultr" ] )
 then
