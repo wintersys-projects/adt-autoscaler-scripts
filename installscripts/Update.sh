@@ -48,6 +48,7 @@ if ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | 
 then
 	if ( [ "${BUILDOS}" = "ubuntu" ] )
 	then
+		${HOME}/installscripts/RemoveUnattendedUpgrades.sh "ubuntu"
 		eval ${update_command}
 	fi
 
@@ -61,6 +62,7 @@ if ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | 
 then
 	if ( [ "${BUILDOS}" = "ubuntu" ] )
 	then
+		${HOME}/installscripts/RemoveUnattendedUpgrades.sh "ubuntu"
 		eval ${update_command}
 	fi
 
