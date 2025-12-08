@@ -48,7 +48,7 @@ then
 	fi
 fi
 
-if ( [ "`/usr/bin/find ${HOME}/runtime/customfirewallports.dat -mmin -1 -print`" != "" ] )
+if ( [ -f ${HOME}/runtime/customfirewallports.dat ] && [ "`/usr/bin/find ${HOME}/runtime/customfirewallports.dat -mmin -1 -print`" != "" ] )
 then
         /bin/rm ${HOME}/runtime/FIREWALL-ACTIVE
 fi
@@ -184,10 +184,12 @@ then
         fi
 fi
 
-custom_ports="`/bin/grep "^AUTOSCALERCUSTOMPORTS" ${HOME}/runtime/customfirewallports.dat | /usr/bin/awk -F':' '{print $NF}'`"
+if ( [ -f ${HOME}/runtime/customfirewallports.dat ] )
+then
+	custom_ports="`/bin/grep "^AUTOSCALERCUSTOMPORTS" ${HOME}/runtime/customfirewallports.dat | /usr/bin/awk -F':' '{print $NF}'`"
 
-for custom_port_token in ${custom_ports}
-do
+	for custom_port_token in ${custom_ports}
+	do
         delete="no"
         if ( [ "`/bin/echo ${custom_port_token} | /bin/grep 'ipv4'`" != "" ] )
         then
@@ -230,7 +232,8 @@ do
 
                 fi
         fi
-done
+	done
+fi
 
 if ( [ "${updated}" = "1" ] )
 then
