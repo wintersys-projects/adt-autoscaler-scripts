@@ -48,7 +48,7 @@ then
 	fi
 fi
 
-if ( [ -f ${HOME}/runtime/customfirewallports.dat ] && [ "`/usr/bin/find ${HOME}/runtime/customfirewallports.dat -mmin -1 -print`" != "" ] )
+if ( [ -f ${HOME}/runtime/firewallports.dat ] && [ "`/usr/bin/find ${HOME}/runtime/firewallports.dat -mmin -1 -print`" != "" ] )
 then
         /bin/rm ${HOME}/runtime/FIREWALL-ACTIVE
 fi
