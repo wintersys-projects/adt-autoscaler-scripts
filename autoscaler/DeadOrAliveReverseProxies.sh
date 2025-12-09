@@ -58,6 +58,17 @@ CLOUDHOST="`${HOME}/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
 BUILD_IDENTIFIER="`${HOME}/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
 REGION="`${HOME}/utilities/config/ExtractConfigValue.sh 'REGION'`"
 
+dns_ips="`${HOME}/autoscaler/GetDNSIPs.sh`"
+public_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "rp-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
+
+for ip in ${dns_ips}
+do
+        if ( [ "`/bin/echo ${public_ips} | /bin/grep ${ip}`" = "" ] )
+        then
+                ${HOME}/autoscaler/RemoveIPFromDNS.sh ${ip}     
+        fi
+done
+
 ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "rp-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
 
 for ip in ${ips}
