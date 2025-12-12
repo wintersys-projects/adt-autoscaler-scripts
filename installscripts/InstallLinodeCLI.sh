@@ -47,33 +47,38 @@ fi
 export DEBIAN_FRONTEND=noninteractive
 install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y install " 
 
-if ( [ "${BUILDOS}" = "ubuntu" ] )
-then
-	eval ${install_command} pipx		
-	if ( [ -f /usr/local/bin/linode-cli ] )									
-	then													
-		/usr/bin/pipx upgrade linode-cli 								
-	else													
-		/usr/bin/pipx install linode-cli 								
-		/bin/rm /usr/local/bin/linode-cli								
-		/usr/bin/ln -s ${HOME}/.local/bin/linode-cli /usr/local/bin/linode-cli				
-	fi													
-fi
+count="0"
+while ( [ ! -f /usr/local/bin/linode-cli ] && [ "${count}" -lt "5" ] )
+do
+	if ( [ "${BUILDOS}" = "ubuntu" ] )
+	then
+		eval ${install_command} pipx		
+		if ( [ -f /usr/local/bin/linode-cli ] )									
+		then													
+			/usr/bin/pipx upgrade linode-cli 								
+		else													
+			/usr/bin/pipx install linode-cli 								
+			/bin/rm /usr/local/bin/linode-cli								
+			/usr/bin/ln -s ${HOME}/.local/bin/linode-cli /usr/local/bin/linode-cli				
+		fi													
+	fi
 
-if ( [ "${BUILDOS}" = "debian" ] )
-then
-	eval ${install_command} pipx		
-	if ( [ -f /usr/local/bin/linode-cli ] )									
-	then													
-		/usr/bin/pipx upgrade linode-cli 								
-	else													
-		/usr/bin/pipx install linode-cli 								
-		/bin/rm /usr/local/bin/linode-cli								
-		/usr/bin/ln -s ${HOME}/.local/bin/linode-cli /usr/local/bin/linode-cli				
-	fi													
-fi
+	if ( [ "${BUILDOS}" = "debian" ] )
+	then
+		eval ${install_command} pipx		
+		if ( [ -f /usr/local/bin/linode-cli ] )									
+		then													
+			/usr/bin/pipx upgrade linode-cli 								
+		else													
+			/usr/bin/pipx install linode-cli 								
+			/bin/rm /usr/local/bin/linode-cli								
+			/usr/bin/ln -s ${HOME}/.local/bin/linode-cli /usr/local/bin/linode-cli				
+		fi													
+	fi
+	count="`/usr/bin/expr ${count} + 1`"
+done
 
-if ( [ ! -f /usr/local/bin/linode-cli ] )
+if ( [ ! -f /usr/local/bin/linode-cli ] && [ "${count}" = "5" ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR LINODE-CLI" "I believe that linode cli hasn't installed correctly, please investigate" "ERROR"
 else
