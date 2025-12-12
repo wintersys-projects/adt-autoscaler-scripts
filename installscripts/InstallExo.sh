@@ -34,19 +34,24 @@ fi
 
 export DEBIAN_FRONTEND=noninteractive
 
-if ( [ "${BUILDOS}" = "ubuntu" ] )
-then
-	/usr/bin/curl -fsSL https://raw.githubusercontent.com/exoscale/cli/master/install-latest.sh | /bin/sh	
-fi
+count="0"
+while ( [ ! -f /usr/bin/exo ] && [ "${count}" -lt "5" ] )
+do
+	if ( [ "${BUILDOS}" = "ubuntu" ] )
+	then
+		/usr/bin/curl -fsSL https://raw.githubusercontent.com/exoscale/cli/master/install-latest.sh | /bin/sh	
+	fi
 
-if ( [ "${BUILDOS}" = "debian" ] )
-then
-	/usr/bin/curl -fsSL https://raw.githubusercontent.com/exoscale/cli/master/install-latest.sh | /bin/sh 	
-fi
+	if ( [ "${BUILDOS}" = "debian" ] )
+	then
+		/usr/bin/curl -fsSL https://raw.githubusercontent.com/exoscale/cli/master/install-latest.sh | /bin/sh 	
+	fi
+	count="`/usr/bin/expr ${count} + 1`"
+done
 
-if ( [ ! -f /usr/bin/exo ] )
+if ( [ ! -f /usr/bin/exo ] && [ "${count}" = "5" ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR EXO" "I believe that exo hasn't installed correctly, please investigate" "ERROR"
 else
-	/bin/touch ${HOME}/runtime/installedsoftware/InstallDoctl.sh				
+	/bin/touch ${HOME}/runtime/installedsoftware/InstallExo.sh				
 fi
