@@ -44,31 +44,36 @@ fi
 export DEBIAN_FRONTEND=noninteractive
 install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y install " 
 
-if ( [ "${apt}" != "" ] )
-then
-	if ( [ "${BUILDOS}" = "ubuntu" ] )
+count="0"
+while ( [ ! -f /usr/bin/go ] && [ "${count}" -lt "5" ] )
+do
+	if ( [ "${apt}" != "" ] )
 	then
-		version="`/usr/bin/curl https://go.dev/dl/?mode=json | /usr/bin/jq -r '.[0].version' | /bin/sed 's/go//g'1`"          
-        /usr/bin/wget -c https://dl.google.com/go/go${version}.linux-amd64.tar.gz -O - | /usr/bin/tar -xz -C /usr/local  
+		if ( [ "${BUILDOS}" = "ubuntu" ] )
+		then
+			version="`/usr/bin/curl https://go.dev/dl/?mode=json | /usr/bin/jq -r '.[0].version' | /bin/sed 's/go//g'1`"          
+        	/usr/bin/wget -c https://dl.google.com/go/go${version}.linux-amd64.tar.gz -O - | /usr/bin/tar -xz -C /usr/local  
 
-		if ( [ ! -L /usr/bin/go ] )										
-		then													
-			/usr/bin/ln -s /usr/local/go/bin/go /usr/bin/go 						
-		fi	 												
+			if ( [ ! -L /usr/bin/go ] )										
+			then													
+				/usr/bin/ln -s /usr/local/go/bin/go /usr/bin/go 						
+			fi	 												
+		fi
+		if ( [ "${BUILDOS}" = "debian" ] )
+		then
+			version="`/usr/bin/curl https://go.dev/dl/?mode=json | /usr/bin/jq -r '.[0].version' | /bin/sed 's/go//g'1`"            
+        	/usr/bin/wget -c https://dl.google.com/go/go${version}.linux-amd64.tar.gz -O - | /usr/bin/tar -xz -C /usr/local  
+
+			if ( [ ! -L /usr/bin/go ] )										
+			then													
+				/usr/bin/ln -s /usr/local/go/bin/go /usr/bin/go 						
+			fi	 												
+		fi		
 	fi
-	if ( [ "${BUILDOS}" = "debian" ] )
-	then
-		version="`/usr/bin/curl https://go.dev/dl/?mode=json | /usr/bin/jq -r '.[0].version' | /bin/sed 's/go//g'1`"            
-        /usr/bin/wget -c https://dl.google.com/go/go${version}.linux-amd64.tar.gz -O - | /usr/bin/tar -xz -C /usr/local  
+	count="`/usr/bin/expr ${count} + 1`"
+done
 
-		if ( [ ! -L /usr/bin/go ] )										
-		then													
-			/usr/bin/ln -s /usr/local/go/bin/go /usr/bin/go 						
-		fi	 												
-	fi		
-fi
-
-if ( [ ! -f /usr/bin/go ] )
+if ( [ ! -f /usr/bin/go ] && [ "${count}" = "5" ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR GO" "I believe that go hasn't installed correctly, please investigate" "ERROR"
 else
