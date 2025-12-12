@@ -1,6 +1,6 @@
 #!/bin/sh
 ######################################################################################################
-# Description: This script will install the cron utility
+# Description: This script will install the aria2c utility
 # Author: Peter Winter
 # Date: 17/01/2017
 #######################################################################################################
@@ -37,20 +37,31 @@ apt="/usr/bin/apt-get"
 export DEBIAN_FRONTEND=noninteractive
 install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y install " 
 
-if ( [ "${apt}" != "" ] )
-then
-	if ( [ "${BUILDOS}" = "ubuntu" ] )
+count="0"
+while ( [ ! -f /usr/sbin/aria2c ] && [ "${count}" -lt "5" ] )
+do
+	if ( [ "${apt}" != "" ] )
 	then
-		${install_command} snapd
-		/usr/bin/snap install aria2c 
-		/bin/ln -s /snap/bin/aria2c /usr/sbin/aria2c 
-	fi
+		if ( [ "${BUILDOS}" = "ubuntu" ] )
+		then
+			${install_command} snapd
+			/usr/bin/snap install aria2c 
+			/bin/ln -s /snap/bin/aria2c /usr/sbin/aria2c 
+		fi
 
-	if ( [ "${BUILDOS}" = "debian" ] )
-	then
-		${install_command} snapd
-		/usr/bin/snap install aria2c 
-		/bin/ln -s /snap/bin/aria2c /usr/sbin/aria2c 
+		if ( [ "${BUILDOS}" = "debian" ] )
+		then
+			${install_command} snapd
+			/usr/bin/snap install aria2c 
+			/bin/ln -s /snap/bin/aria2c /usr/sbin/aria2c 
+		fi
 	fi
-	/bin/touch ${HOME}/runtime/installedsoftware/InstallAria2c.sh				
+	count="`/usr/bin/expr ${count} + 1`"
+done
+
+if ( [ ! -f /usr/sbin/aria2c ] && [ "${count}" = "5" ] )
+then
+	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR ARIA2C" "I believe that aria2c hasn't installed correctly, please investigate" "ERROR"
+else
+	/bin/touch ${HOME}/runtime/installedsoftware/InstallAria2.sh				
 fi
