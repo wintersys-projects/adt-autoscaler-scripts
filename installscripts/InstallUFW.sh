@@ -1,9 +1,9 @@
 #!/bin/sh
-###############################################################################################
-# Description: This script will  install ufw
+######################################################################################################
+# Description: This script will install ufw
 # Author: Peter Winter
-# Date: 12/01/2017
-###############################################################################################
+# Date: 17/01/2017
+#######################################################################################################
 # License Agreement:
 # This file is part of The Agile Deployment Toolkit.
 # The Agile Deployment Toolkit is free software: you can redistribute it and/or modify
@@ -16,8 +16,8 @@
 # GNU General Public License for more details.
 # You should have received a copy of the GNU General Public License
 # along with The Agile Deployment Toolkit.  If not, see <http://www.gnu.org/licenses/>.
-################################################################################################
-################################################################################################
+#######################################################################################################
+#######################################################################################################
 
 if ( [ "${1}" != "" ] )
 then
@@ -30,7 +30,6 @@ then
 else 
 	BUILDOS="${buildos}"
 fi
-
 HOME="`/bin/cat /home/homedir.dat`"
 
 apt=""
@@ -43,20 +42,25 @@ then
 fi
 
 export DEBIAN_FRONTEND=noninteractive
-install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y install " 
+install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y install "
 
-if ( [ "${apt}" != "" ] )
-then
-	if ( [ "${BUILDOS}" = "ubuntu" ] )
+count="0"
+while ( [ ! -f /usr/bin/ufw ] && [ "${count}" -lt "5" ] )
+do
+	if ( [ "${apt}" != "" ] )
 	then
-		eval ${install_command} ufw
-	fi
+		if ( [ "${BUILDOS}" = "ubuntu" ] )
+		then
+			eval ${install_command} ufw	
+		fi
 
-	if ( [ "${BUILDOS}" = "debian" ] )
-	then
-		eval ${install_command} ufw
+		if ( [ "${BUILDOS}" = "debian" ] )
+		then
+			eval ${install_command} ufw	
+		fi
 	fi
-fi
+	count="`/usr/bin/expr ${count} + 1`"
+done
 
 /usr/sbin/ufw disable
 
@@ -65,7 +69,7 @@ then
 	/usr/bin/ln -s /usr/sbin/ufw /usr/bin/ufw
 fi
 
-if ( [ ! -f /usr/bin/ufw ] )
+if ( [ ! -f /usr/bin/ufw ] && [ "${count}" = "5" ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR UFW" "I believe that ufw hasn't installed correctly, please investigate" "ERROR"
 else
