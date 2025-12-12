@@ -41,54 +41,60 @@ then
 	apt="/usr/bin/apt-get"
 fi
 
-export DEBIAN_FRONTEND=noninteractive
-install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y install " 
-
 cwd="`/usr/bin/pwd`"
 
-if ( [ "${apt}" != "" ] )
-then
-	if ( [ "${BUILDOS}" = "ubuntu" ] )
+export DEBIAN_FRONTEND=noninteractive
+install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y install "
+
+count="0"
+while ( [ ! -f /usr/bin/s3cmd ] && [ "${count}" -lt "5" ] )
+do
+	if ( [ "${apt}" != "" ] )
 	then
-		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd:repo'`" = "1" ] )
+		if ( [ "${BUILDOS}" = "ubuntu" ] )
 		then
-			eval ${install_command} s3cmd	
-		elif ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd:source'`" = "1" ] )
+			if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd:repo'`" = "1" ] )
+			then
+				eval ${install_command} s3cmd	
+			elif ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd:source'`" = "1" ] )
+			then
+				eval ${install_command} python3 python3-dateutil
+				/usr/bin/ln -s /usr/bin/python3 /usr/bin/python
+				cd /opt
+				${HOME}/providerscripts/git/GitClone.sh "github" "" "s3tools" "s3cmd" ""
+				/bin/cp /opt/s3cmd/s3cmd /usr/bin/s3cmd
+				/bin/cp -r /opt/s3cmd/S3 /usr/bin/
+				/bin/rm -r /opt/s3cmd
+				cd ${cwd}
+			fi
+		fi
+		if ( [ "${BUILDOS}" = "debian" ] )
 		then
-			eval ${install_command} python3 python3-dateutil
-			/usr/bin/ln -s /usr/bin/python3 /usr/bin/python
-			cd /opt
-			${HOME}/providerscripts/git/GitClone.sh "github" "" "s3tools" "s3cmd" ""
-			/bin/cp /opt/s3cmd/s3cmd /usr/bin/s3cmd
-			/bin/cp -r /opt/s3cmd/S3 /usr/bin/
-			/bin/rm -r /opt/s3cmd
+			if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd:repo'`" = "1" ] )
+			then
+				eval ${install_command} s3cmd
+			elif ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd:source'`" = "1" ] )
+			then
+				eval ${install_command} python3 python3-dateutil
+				/usr/bin/ln -s /usr/bin/python3 /usr/bin/python
+				cd /opt
+				${HOME}/providerscripts/git/GitClone.sh "github" "" "s3tools" "s3cmd" ""
+				/bin/cp /opt/s3cmd/s3cmd /usr/bin/s3cmd
+				/bin/cp -r /opt/s3cmd/S3 /usr/bin/
+				/bin/rm -r /opt/s3cmd
+				cd ${cwd}
+			fi
 		fi
 	fi
-	if ( [ "${BUILDOS}" = "debian" ] )
-	then
-		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd:repo'`" = "1" ] )
-		then
-			eval ${install_command} s3cmd
-		elif ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd:source'`" = "1" ] )
-		then
-			eval ${install_command} python3 python3-dateutil
-			/usr/bin/ln -s /usr/bin/python3 /usr/bin/python
-			cd /opt
-			${HOME}/providerscripts/git/GitClone.sh "github" "" "s3tools" "s3cmd" ""
-			/bin/cp /opt/s3cmd/s3cmd /usr/bin/s3cmd
-			/bin/cp -r /opt/s3cmd/S3 /usr/bin/
-			/bin/rm -r /opt/s3cmd
-			cd ${cwd}
-		fi
-	fi
-fi
+	count="`/usr/bin/expr ${count} + 1`"
+done
 
 if ( [ -f ${HOME}/.s3cfg ] )
 then
 	/bin/cp ${HOME}/.s3cfg /root
 fi
 
-if ( [ ! -f /usr/bin/s3cmd ] )
+if ( [ ! -f /usr/bin/s3cmd ] && [ "${count}" = "5" ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR S3CMD" "I believe that s3cmd hasn't installed correctly, please investigate" "ERROR"
 else
