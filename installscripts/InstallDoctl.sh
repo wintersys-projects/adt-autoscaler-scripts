@@ -41,31 +41,36 @@ then
 fi
 
 export DEBIAN_FRONTEND=noninteractive
-install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y install " 
+install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y install " #
 
-if ( [ "${BUILDOS}" = "ubuntu" ] )
-then
-	eval ${install_command} snapd	
-	snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"		
-	${snap} install doctl											
-	/usr/bin/ln -s /snap/bin/doctl /usr/local/bin/doctl							
-	/bin/mkdir -p /root/.config/doctl 									
-	/bin/cp ${HOME}/.config/doctl/config.yaml /root/.config/doctl						
-	/bin/chmod 400 ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml			
-fi
+count="0"
+while ( [ ! -f /usr/local/bin/doctl ] && [ "${count}" -lt "5" ] )
+do
+	if ( [ "${BUILDOS}" = "ubuntu" ] )
+	then
+		eval ${install_command} snapd	
+		snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"		
+		${snap} install doctl											
+		/usr/bin/ln -s /snap/bin/doctl /usr/local/bin/doctl							
+		/bin/mkdir -p /root/.config/doctl 									
+		/bin/cp ${HOME}/.config/doctl/config.yaml /root/.config/doctl						
+		/bin/chmod 400 ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml			
+	fi
 
-if ( [ "${BUILDOS}" = "debian" ] )
-then
-	eval ${install_command} snapd	
-	snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"		
-	${snap} install doctl											
-	/usr/bin/ln -s /snap/bin/doctl /usr/local/bin/doctl							
-	/bin/mkdir -p /root/.config/doctl 									
-	/bin/cp ${HOME}/.config/doctl/config.yaml /root/.config/doctl						
-	/bin/chmod 400 ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml			
-fi
+	if ( [ "${BUILDOS}" = "debian" ] )
+	then
+		eval ${install_command} snapd	
+		snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"		
+		${snap} install doctl											
+		/usr/bin/ln -s /snap/bin/doctl /usr/local/bin/doctl							
+		/bin/mkdir -p /root/.config/doctl 									
+		/bin/cp ${HOME}/.config/doctl/config.yaml /root/.config/doctl						
+		/bin/chmod 400 ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml			
+	fi
+	count="`/usr/bin/expr ${count} + 1`"
+done
 
-if ( [ ! -f /usr/local/bin/doctl ] )
+if ( [ ! -f /usr/local/bin/doctl ] && [ "${count}" = "5" ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR DOCTL" "I believe that doctl hasn't installed correctly, please investigate" "ERROR"
 else
