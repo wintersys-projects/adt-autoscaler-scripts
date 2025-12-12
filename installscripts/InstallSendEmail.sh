@@ -1,9 +1,9 @@
 #!/bin/sh
-###############################################################################################
-# Description: This script will install sendemail
+######################################################################################################
+# Description: This script will install the sendemail utility
 # Author: Peter Winter
-# Date: 12/01/2017
-###############################################################################################
+# Date: 17/01/2017
+#######################################################################################################
 # License Agreement:
 # This file is part of The Agile Deployment Toolkit.
 # The Agile Deployment Toolkit is free software: you can redistribute it and/or modify
@@ -16,8 +16,8 @@
 # GNU General Public License for more details.
 # You should have received a copy of the GNU General Public License
 # along with The Agile Deployment Toolkit.  If not, see <http://www.gnu.org/licenses/>.
-################################################################################################
-################################################################################################
+#######################################################################################################
+#######################################################################################################
 
 if ( [ "${1}" != "" ] )
 then
@@ -41,23 +41,27 @@ then
 fi
 
 export DEBIAN_FRONTEND=noninteractive
-install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y install " 
+install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y install "
 
-if ( [ "${apt}" != "" ] )
-then
-	if ( [ "${BUILDOS}" = "ubuntu" ] )
+count="0"
+while ( [ ! -f /usr/bin/sendemail ] && [ "${count}" -lt "5" ] )
+do
+	if ( [ "${apt}" != "" ] )
 	then
-		eval ${install_command} sendemail
-	fi
+		if ( [ "${BUILDOS}" = "ubuntu" ] )
+		then
+			eval ${install_command} sendemail	
+		fi
 
-	if ( [ "${BUILDOS}" = "debian" ] )
-	then
-		eval ${install_command} sendemail
+		if ( [ "${BUILDOS}" = "debian" ] )
+		then
+			eval ${install_command} sendemail	
+		fi
 	fi
-	/bin/touch ${HOME}/runtime/installedsoftware/InstallSendEmail.sh	
-fi
+	count="`/usr/bin/expr ${count} + 1`"
+done
 
-if ( [ ! -f /usr/bin/sendemail ] )
+if ( [ ! -f /usr/bin/sendemail ] && [ "${count}" = "5" ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR SENDEMAIL" "I believe that sendemail hasn't installed correctly, please investigate" "ERROR"
 else
