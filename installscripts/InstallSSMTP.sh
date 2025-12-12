@@ -18,6 +18,7 @@
 # along with The Agile Deployment Toolkit.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################################
 ################################################################################################
+#set -x
 
 if ( [ "${1}" != "" ] )
 then
@@ -40,25 +41,30 @@ then
 	apt="/usr/bin/apt-get"
 fi
 
-export DEBIAN_FRONTEND=noninteractive
+export DEBIAN_FRONTEND=noninteractive 
 install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y install " 
 
-if ( [ "${apt}" != "" ] )
-then
-	if ( [ "${BUILDOS}" = "ubuntu" ] )
+count="0"
+while ( [ ! -f /usr/sbin/ssmtp ] && [ "${count}" -lt "5" ] )
+do
+	if ( [ "${apt}" != "" ] )
 	then
-		eval ${install_command} ssmtp	
-		eval ${install_command} mailutils	
+		if ( [ "${BUILDOS}" = "ubuntu" ] )
+		then
+			eval ${install_command} ssmtp	
+			eval ${install_command} mailutils		
+		fi
+
+		if ( [ "${BUILDOS}" = "debian" ] )
+		then
+			eval ${install_command} ssmtp	
+			eval ${install_command} mailutils		
+		fi	
 	fi
+	count="`/usr/bin/expr ${count} + 1`"
+done
 
-	if ( [ "${BUILDOS}" = "debian" ] )
-	then
-		eval ${install_command} ssmtp	
-		eval ${install_command} mailutils	
-	fi	
-fi
-
-if ( [ ! -f /usr/sbin/ssmtp ] )
+if ( [ ! -f /usr/sbin/ssmtp ] && [ "${count}" = "5" ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR SSMTP" "I believe that ssmtp hasn't installed correctly, please investigate" "ERROR"
 else
