@@ -34,7 +34,6 @@ else
 	BUILDOS="${buildos}"
 fi
 
-
 apt=""
 if ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "PACKAGEMANAGER" | /usr/bin/awk -F':' '{print $NF}'`" = "apt" ] )
 then
@@ -47,26 +46,31 @@ fi
 export DEBIAN_FRONTEND=noninteractive
 install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y install " 
 
-if ( [ "${apt}" != "" ] )
-then
-	if ( [ "${BUILDOS}" = "ubuntu" ] )
+count="0"
+while ( [ ! -f /etc/fail2ban ] && [ "${count}" -lt "5" ] )
+do
+	if ( [ "${apt}" != "" ] )
 	then
-		if ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "FAIL2BAN" | /usr/bin/awk -F':' '{print $NF}'`" = "active" ] )
+		if ( [ "${BUILDOS}" = "ubuntu" ] )
 		then
-    		eval ${install_command} fail2ban
+			if ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "FAIL2BAN" | /usr/bin/awk -F':' '{print $NF}'`" = "active" ] )
+			then
+    			eval ${install_command} fail2ban
+			fi
+		fi
+
+		if ( [ "${BUILDOS}" = "debian" ] )
+		then    
+			if ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "FAIL2BAN" | /usr/bin/awk -F':' '{print $NF}'`" = "active" ] )
+			then
+    			eval ${install_command} fail2ban
+			fi
 		fi
 	fi
+	count="`/usr/bin/expr ${count} + 1`"
+done
 
-	if ( [ "${BUILDOS}" = "debian" ] )
-	then    
-		if ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "FAIL2BAN" | /usr/bin/awk -F':' '{print $NF}'`" = "active" ] )
-		then
-    		eval ${install_command} fail2ban
-		fi
-	fi
-fi
-
-if ( [ ! -d /etc/fail2ban ] )
+if ( [ ! -d /etc/fail2ban ] && [ "${count}" = "5" ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR Fail2Ban" "I believe that fail2ban hasn't installed correctly, please investigate" "ERROR"
 else
