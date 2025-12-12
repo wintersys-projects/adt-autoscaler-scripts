@@ -47,39 +47,43 @@ fi
 export DEBIAN_FRONTEND=noninteractive
 install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y install " 
 
-if ( [ "${apt}" != "" ] )
-then
-	if ( [ "${BUILDOS}" = "ubuntu" ] )
+count="0"
+while ( [ ! -f /usr/sbin/iptables ] && [ "${count}" -lt "5" ] )
+do
+	if ( [ "${apt}" != "" ] )
 	then
-		if ( [ -f /usr/sbin/ufw ] )                                                                            
-		then                                                                                                  
-			/usr/sbin/ufw disable                                                                          
-		fi      
+		if ( [ "${BUILDOS}" = "ubuntu" ] )
+		then
+			if ( [ -f /usr/sbin/ufw ] )                                                                            
+			then                                                                                                  
+				/usr/sbin/ufw disable                                                                          
+			fi      
 
-		eval ${install_command} iptables
-		/bin/echo iptables-persistent iptables-persistent/autosave_v4 boolean true | /usr/bin/sudo debconf-set-selections
-		/bin/echo iptables-persistent iptables-persistent/autosave_v4 boolean true | /usr/bin/sudo debconf-set-selections 
-		eval ${install_command}  netfilter-persistent     
-		eval ${install_command}  iptables-persistent     
+			eval ${install_command} iptables
+			/bin/echo iptables-persistent iptables-persistent/autosave_v4 boolean true | /usr/bin/sudo debconf-set-selections
+			/bin/echo iptables-persistent iptables-persistent/autosave_v4 boolean true | /usr/bin/sudo debconf-set-selections 
+			eval ${install_command}  netfilter-persistent     
+			eval ${install_command}  iptables-persistent     
+		fi
 
+		if ( [ "${BUILDOS}" = "debian" ] )
+		then
+			if ( [ -f /usr/sbin/ufw ] )                                                                             
+			then                                                                                                    
+				/usr/sbin/ufw disable                                                                           
+			fi        
+
+			eval ${install_command} iptables
+			/bin/echo iptables-persistent iptables-persistent/autosave_v4 boolean true | /usr/bin/sudo debconf-set-selections
+			/bin/echo iptables-persistent iptables-persistent/autosave_v4 boolean true | /usr/bin/sudo debconf-set-selections 
+			eval ${install_command}  netfilter-persistent     
+			eval ${install_command}  iptables-persistent     
+		fi
 	fi
+	count="`/usr/bin/expr ${count} + 1`"
+done
 
-	if ( [ "${BUILDOS}" = "debian" ] )
-	then
-		if ( [ -f /usr/sbin/ufw ] )                                                                             
-		then                                                                                                    
-			/usr/sbin/ufw disable                                                                           
-		fi        
-
-		eval ${install_command} iptables
-		/bin/echo iptables-persistent iptables-persistent/autosave_v4 boolean true | /usr/bin/sudo debconf-set-selections
-		/bin/echo iptables-persistent iptables-persistent/autosave_v4 boolean true | /usr/bin/sudo debconf-set-selections 
-		eval ${install_command}  netfilter-persistent     
-		eval ${install_command}  iptables-persistent     
-	fi
-fi
-
-if ( [ ! -f /usr/sbin/iptables ] )
+if ( [ ! -f /usr/sbin/iptables ] && [ "${count}" = "5" ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR IPTABLES" "I believe that iptables hasn't installed correctly, please investigate" "ERROR"
 else
