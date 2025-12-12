@@ -32,25 +32,28 @@ else
 	BUILDOS="${buildos}"
 fi
 
-if ( [ "${BUILDOS}" = "ubuntu" ] )
-then 
-	vultr_cli_version="`/usr/bin/curl -L https://api.github.com/repos/vultr/vultr-cli/releases/latest | /usr/bin/jq -r '.name'`"       
-	/usr/bin/wget -c https://github.com/vultr/vultr-cli/releases/download/${vultr_cli_version}/vultr-cli_${vultr_cli_version}_linux_amd64.tar.gz -O - | /usr/bin/tar -xz -C /usr/bin  
-	/bin/mv /usr/bin/vultr-cli /usr/bin/vultr                         
-	/bin/chown root:root /usr/bin/vultr                              
-fi
+count="0"
+while ( [ ! -f /usr/bin/vultr ] && [ "${count}" -lt "5" ] )
+do
+	if ( [ "${BUILDOS}" = "ubuntu" ] )
+	then 
+		vultr_cli_version="`/usr/bin/curl -L https://api.github.com/repos/vultr/vultr-cli/releases/latest | /usr/bin/jq -r '.name'`"       
+		/usr/bin/wget -c https://github.com/vultr/vultr-cli/releases/download/${vultr_cli_version}/vultr-cli_${vultr_cli_version}_linux_amd64.tar.gz -O - | /usr/bin/tar -xz -C /usr/bin  
+		/bin/mv /usr/bin/vultr-cli /usr/bin/vultr                         
+		/bin/chown root:root /usr/bin/vultr                              
+	fi
 
-if ( [ "${BUILDOS}" = "debian" ] )
-then
-	vultr_cli_version="`/usr/bin/curl -L https://api.github.com/repos/vultr/vultr-cli/releases/latest | /usr/bin/jq -r '.name'`"       
-	/usr/bin/wget -c https://github.com/vultr/vultr-cli/releases/download/${vultr_cli_version}/vultr-cli_${vultr_cli_version}_linux_amd64.tar.gz -O - | /usr/bin/tar -xz -C /usr/bin 
-	/bin/mv /usr/bin/vultr-cli /usr/bin/vultr        
-	/bin/chown root:root /usr/bin/vultr              
-fi
+	if ( [ "${BUILDOS}" = "debian" ] )
+	then
+		vultr_cli_version="`/usr/bin/curl -L https://api.github.com/repos/vultr/vultr-cli/releases/latest | /usr/bin/jq -r '.name'`"       
+		/usr/bin/wget -c https://github.com/vultr/vultr-cli/releases/download/${vultr_cli_version}/vultr-cli_${vultr_cli_version}_linux_amd64.tar.gz -O - | /usr/bin/tar -xz -C /usr/bin 
+		/bin/mv /usr/bin/vultr-cli /usr/bin/vultr        
+		/bin/chown root:root /usr/bin/vultr              
+	fi
+	count="`/usr/bin/expr ${count} + 1`"
+done
 
-
-
-if ( [ ! -f /usr/bin/vultr ] )
+if ( [ ! -f /usr/bin/vultr ] && [ "${count}" = "5" ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR VULTR" "I believe that vultr hasn't installed correctly, please investigate" "ERROR"
 else
