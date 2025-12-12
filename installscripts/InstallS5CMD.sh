@@ -33,47 +33,51 @@ else
 fi
 
 cwd="`/usr/bin/pwd`"
-
-if ( [ "${BUILDOS}" = "ubuntu" ] )
-then
-	if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd:binary'`" = "1" ] )
+count="0"
+while ( [ ! -f /usr/bin/s5cmd ] && [ "${count}" -lt "5" ] )
+do
+	if ( [ "${BUILDOS}" = "ubuntu" ] )
 	then
-		cd /opt
-		/usr/bin/wget "`/usr/bin/wget -q -O - https://api.github.com/repos/peak/s5cmd/releases/latest  | /usr/bin/jq -r '.assets[] | select (.name | contains ("amd64"))'.browser_download_url`"
-		/usr/bin/dpkg -i /opt/s5cmd_*_linux_amd64.deb
-		/bin/rm /opt/s5cmd_*_linux_amd64.deb
-		cd ${cwd}
+		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd:binary'`" = "1" ] )
+		then
+			cd /opt
+			/usr/bin/wget "`/usr/bin/wget -q -O - https://api.github.com/repos/peak/s5cmd/releases/latest  | /usr/bin/jq -r '.assets[] | select (.name | contains ("amd64"))'.browser_download_url`"
+			/usr/bin/dpkg -i /opt/s5cmd_*_linux_amd64.deb
+			/bin/rm /opt/s5cmd_*_linux_amd64.deb
+			cd ${cwd}
+		fi
+		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd:source'`" = "1" ] )
+		then	
+			${HOME}/installscripts/InstallGo.sh ${BUILDOS}
+			cd /opt
+			GOBIN=`/usr/bin/pwd` /usr/bin/go install github.com/peak/s5cmd/v2@latest                 
+			/bin/mv /opt/s5cmd /usr/bin/s5cmd  
+			cd ${cwd}
+		fi
 	fi
-	if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd:source'`" = "1" ] )
-	then	
-		cd /opt
-		${HOME}/installscripts/InstallGo.sh ${BUILDOS}
-		GOBIN=`/usr/bin/pwd` /usr/bin/go install github.com/peak/s5cmd/v2@latest                 
-		/bin/mv /opt/s5cmd /usr/bin/s5cmd  
-		cd ${cwd}
-	fi
-fi
-if ( [ "${BUILDOS}" = "debian" ] )
-then
-	if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd:binary'`" = "1" ] )
+	if ( [ "${BUILDOS}" = "debian" ] )
 	then
-		cd /opt
-		/usr/bin/wget "`/usr/bin/wget -q -O - https://api.github.com/repos/peak/s5cmd/releases/latest  | /usr/bin/jq -r '.assets[] | select (.name | contains ("amd64"))'.browser_download_url`"
-		/usr/bin/dpkg -i /opt/s5cmd_*_linux_amd64.deb
-		/bin/rm /opt/s5cmd_*_linux_amd64.deb
-		cd ${cwd}
+		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd:binary'`" = "1" ] )
+		then
+			cd /opt
+			/usr/bin/wget "`/usr/bin/wget -q -O - https://api.github.com/repos/peak/s5cmd/releases/latest  | /usr/bin/jq -r '.assets[] | select (.name | contains ("amd64"))'.browser_download_url`"
+			/usr/bin/dpkg -i /opt/s5cmd_*_linux_amd64.deb
+			/bin/rm /opt/s5cmd_*_linux_amd64.deb
+			cd ${cwd}
+		fi
+		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd:source'`" = "1" ] )
+		then	
+			${HOME}/installscripts/InstallGo.sh ${BUILDOS}
+			cd /opt
+			GOBIN=`/usr/bin/pwd` /usr/bin/go install github.com/peak/s5cmd/v2@latest                 
+			/bin/mv /opt/s5cmd /usr/bin/s5cmd  
+			cd ${cwd}
+		fi				
 	fi
-	if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd:source'`" = "1" ] )
-	then	
-		cd /opt
-		${HOME}/installscripts/InstallGo.sh ${BUILDOS}
-		GOBIN=`/usr/bin/pwd` /usr/bin/go install github.com/peak/s5cmd/v2@latest                 
-		/bin/mv /opt/s5cmd /usr/bin/s5cmd  
-		cd ${cwd}                                     											
-	fi				
-fi  
+	count="`/usr/bin/expr ${count} + 1`"
+done
 
-if ( [ ! -f /usr/bin/s5cmd ] )
+if ( [ ! -f /usr/bin/s5cmd ] && [ "${count}" = "5" ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR S5CMD" "I believe that s5cmd hasn't installed correctly, please investigate" "ERROR"
 else
