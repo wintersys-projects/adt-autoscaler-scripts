@@ -46,84 +46,96 @@ install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y inst
 
 cwd="`/usr/bin/pwd`"
 
-if ( [ "${apt}" != "" ] )
-then
-	if ( [ "${BUILDOS}" = "ubuntu" ] )
+count="0"
+while ( [ ! -f /usr/bin/rclone ] && [ "${count}" -lt "5" ] )
+do
+	if ( [ "${apt}" != "" ] )
 	then
-		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:repo'`" = "1" ] || [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone:repo'`" = "1" ] )
+		if ( [ "${BUILDOS}" = "ubuntu" ] )
 		then
-			eval ${install_command} rclone
-		fi
-		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:binary'`" = "1" ] || [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone:binary'`" = "1" ] )		
+			if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:repo'`" = "1" ] || [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone:repo'`" = "1" ] )
+			then
+				eval ${install_command} rclone
+			fi
+			if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:binary'`" = "1" ] || [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone:binary'`" = "1" ] )		
+			then
+				eval ${install_command} unzip 
+				cd /opt
+				/usr/bin/wget https://downloads.rclone.org/rclone-current-linux-amd64.zip
+    			/usr/bin/unzip /opt/rclone*.zip
+				/bin/cp rclone*amd64/rclone /usr/bin/rclone
+				cd ${cwd}
+			fi
+			if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:script'`" = "1" ] || [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone:script'`" = "1" ] )
+			then
+				/usr/bin/curl https://rclone.org/install.sh | /usr/bin/bash
+				cd ${cwd}
+			fi   
+			if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:source'`" = "1" ] || [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone:source'`" = "1" ] )
+			then
+				${HOME}/installscripts/InstallGo.sh ${BUILDOS}
+				cd /opt
+				${HOME}/providerscripts/git/GitClone.sh "github" "" "rclone" "rclone" ""
+				cd /opt/rclone
+				/usr/bin/go build
+				/bin/mv /opt/rclone/rclone /usr/bin/rclone
+				/bin/rm -r /opt/rclone
+				cd ${cwd}
+			fi
+			
+       		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone'`" = "1" ] )
+       		then
+				if ( [ ! -f /usr/bin/fusermount3 ] )
+				then
+                        ${HOME}/installscripts/InstallFuse3.sh ${BUILDOS}
+                fi
+        	fi
+		fi	
+
+		if ( [ "${BUILDOS}" = "debian" ] )
 		then
-			eval ${install_command} unzip 
-			cd /opt
-			/usr/bin/wget https://downloads.rclone.org/rclone-current-linux-amd64.zip
-    		/usr/bin/unzip /opt/rclone*.zip
-			/bin/cp rclone*amd64/rclone /usr/bin/rclone
-			cd ${cwd}
-		fi
-		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:script'`" = "1" ] || [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone:script'`" = "1" ] )
-		then
-			/usr/bin/curl https://rclone.org/install.sh | /usr/bin/bash
-			cd ${cwd}
-		fi   
-		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:source'`" = "1" ] || [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone:source'`" = "1" ] )
-		then
-			${HOME}/installscripts/InstallGo.sh ${BUILDOS}
-			cd /opt
-			${HOME}/providerscripts/git/GitClone.sh "github" "" "rclone" "rclone" ""
-			cd /opt/rclone
-			/usr/bin/go build
-			/bin/mv /opt/rclone/rclone /usr/bin/rclone
-			/bin/rm -r /opt/rclone
-			cd ${cwd}
-		fi
-		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone'`" = "1" ] )
-		then
-				${install_command} libfuse3-dev
+			if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:repo'`" = "1" ] || [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone:repo'`" = "1" ] )
+			then
+				eval ${install_command} rclone
+			fi
+			if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:binary'`" = "1" ] || [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone:binary'`" = "1" ] )		
+			then
+				eval ${install_command} unzip 
+				cd /opt
+				/usr/bin/wget https://downloads.rclone.org/rclone-current-linux-amd64.zip
+    			/usr/bin/unzip /opt/rclone*.zip
+				/bin/cp rclone*amd64/rclone /usr/bin/rclone
+				cd ${cwd}
+			fi
+			if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:script'`" = "1" ] || [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone:script'`" = "1" ] )
+			then
+				/usr/bin/curl https://rclone.org/install.sh | /usr/bin/bash
+				cd ${cwd}
+			fi   
+			if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:source'`" = "1" ] || [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone:source'`" = "1" ] )
+			then
+				${HOME}/installscripts/InstallGo.sh ${BUILDOS}
+				cd /opt
+				${HOME}/providerscripts/git/GitClone.sh "github" "" "rclone" "rclone" ""
+				cd /opt/rclone
+				/usr/bin/go build
+				/bin/mv /opt/rclone/rclone /usr/bin/rclone
+				/bin/rm -r /opt/rclone
+				cd ${cwd}
+			fi
+        	if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone'`" = "1" ] )
+        	then
+        		if ( [ ! -f /usr/bin/fusermount3 ] )
+        		then
+					${HOME}/installscripts/InstallFuse3.sh ${BUILDOS}
+            	fi
+        	fi
 		fi
 	fi
+	count="`/usr/bin/expr ${count} + 1`"
+done
 
-	if ( [ "${BUILDOS}" = "debian" ] )
-	then
-		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:repo'`" = "1" ] || [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone:repo'`" = "1" ] )
-		then
-			eval ${install_command} rclone
-		fi
-		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:binary'`" = "1" ] || [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone:binary'`" = "1" ] )		
-		then
-			eval ${install_command} unzip 
-			cd /opt
-			/usr/bin/wget https://downloads.rclone.org/rclone-current-linux-amd64.zip
-    		/usr/bin/unzip /opt/rclone*.zip
-			/bin/cp rclone*amd64/rclone /usr/bin/rclone
-			cd ${cwd}
-		fi
-		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:script'`" = "1" ] || [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone:script'`" = "1" ] )
-		then
-			/usr/bin/curl https://rclone.org/install.sh | /usr/bin/bash
-			cd ${cwd}
-		fi   
-		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone:source'`" = "1" ] || [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone:source'`" = "1" ] )
-		then
-			${HOME}/installscripts/InstallGo.sh ${BUILDOS}
-			cd /opt
-			${HOME}/providerscripts/git/GitClone.sh "github" "" "rclone" "rclone" ""
-			cd /opt/rclone
-			/usr/bin/go build
-			/bin/mv /opt/rclone/rclone /usr/bin/rclone
-			/bin/rm -r /opt/rclone
-			cd ${cwd}
-		fi
-		if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTOREMOUNTTOOL:rclone'`" = "1" ] )
-		then
-				${install_command} libfuse3-dev
-		fi
-	fi
-fi
-
-if ( [ ! -f /usr/bin/rclone ] )
+if ( [ ! -f /usr/bin/rclone ] && [ "${count}" = "5" ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR RCLONE" "I believe that rclone hasn't installed correctly, please investigate" "ERROR"
 else
