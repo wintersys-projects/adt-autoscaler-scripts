@@ -34,6 +34,7 @@ SSH_PUBLIC_KEY="`/bin/cat ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KE
 SSH_PRIVATE_KEY_TRIMMED="`/bin/cat ${HOME}/.ssh/id_${ALGORITHM}_AGILE_DEPLOYMENT_BUILD_KEY_${BUILD_IDENTIFIER} | /bin/grep -v '^----' | /usr/bin/tr -d '\n'`"
 webserver_configuration_settings="`/bin/cat ${HOME}/runtime/webserver_configuration_settings.dat | /usr/bin/gzip -f | /usr/bin/base64 | /usr/bin/tr -d '\n'`"
 build_styles_settings="`/bin/cat ${HOME}/runtime/buildstyles.dat  | /bin/grep -v "^#" | /usr/bin/gzip -f | /usr/bin/base64 | /usr/bin/tr -d '\n'`"
+firewall_port_settings="`/bin/cat ${HOME}/runtime/firewallports.dat | /bin/grep -v "^#" | /usr/bin/gzip -f | /usr/bin/base64 | /usr/bin/tr -d '\n'`"
 TIMEZONE_CONTINENT="`${HOME}/utilities/config/ExtractConfigValue.sh SERVERTIMEZONECONTINENT`"
 TIMEZONE_CITY="`${HOME}/utilities/config/ExtractConfigValue.sh  SERVERTIMEZONECITY`"
 BUILD_FROM_SNAPSHOT="`${HOME}/utilities/config/ExtractConfigValue.sh  BUILDFROMSNAPSHOT`"
@@ -67,6 +68,7 @@ git_provider_domain="`${HOME}/providerscripts/git/GitProviderDomain.sh ${INFRAST
 /bin/sed -i "s;XXXXSSH_PRIVATE_KEYXXXX;${SSH_PRIVATE_KEY_TRIMMED};g" ${HOME}/runtime/cloud-init/webserver.yaml 
 /bin/sed -i "s;XXXXWEBSERVER_CONFIGURATIONXXXX;${webserver_configuration_settings};g" ${HOME}/runtime/cloud-init/webserver.yaml 
 /bin/sed -i "s;XXXXBUILDSTYLES_SETTINGSXXXX;${build_styles_settings};g" ${HOME}/runtime/cloud-init/webserver.yaml 
+/bin/sed -i "s;XXXXFIREWALL_PORT_SETTINGSXXXX;${firewall_port_settings};g" ${HOME}/runtime/cloud-init/webserver.yaml
 /bin/sed -i "s/XXXXGIT_PROVIDER_DOMAINXXXX/${git_provider_domain}/g" ${HOME}/runtime/cloud-init/webserver.yaml 
 
 
