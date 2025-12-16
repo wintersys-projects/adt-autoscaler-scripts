@@ -47,6 +47,10 @@ write_files:
   path: /home/XXXXSERVER_USERXXXX/.ssh/webserver_configuration_settings.dat.gz
   permissions: '0644'
 - encoding: b64
+  content: XXXXFIREWALL_PORT_SETTINGSXXXX
+  owner: root:root
+  path: /home/XXXXSERVER_USERXXXX/.ssh/firewallports.dat.gz
+- encoding: b64
   content: XXXXBUILDSTYLES_SETTINGSXXXX
   owner: root:root
   path: /home/XXXXSERVER_USERXXXX/.ssh/buildstyles.dat.gz
