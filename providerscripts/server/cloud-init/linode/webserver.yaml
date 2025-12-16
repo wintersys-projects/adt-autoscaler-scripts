@@ -99,6 +99,8 @@ runcmd:
   - 'export HOME=/home/XXXXSERVER_USERXXXX && /bin/sh ${HOME}/utilities/software/InitialiseToolkitForDevelopment.sh'
   - '/usr/bin/gzip -d /home/XXXXSERVER_USERXXXX/.ssh/webserver_configuration_settings.dat.gz'
   - '/bin/cp /home/XXXXSERVER_USERXXXX/.ssh/webserver_configuration_settings.dat /home/XXXXSERVER_USERXXXX/runtime/webserver_configuration_settings.dat'
+  - '/usr/bin/gzip -d /home/XXXXSERVER_USERXXXX/.ssh/firewallports.dat.gz'
+  - '/bin/cp /home/XXXXSERVER_USERXXXX/.ssh/firewallports.dat /home/XXXXSERVER_USERXXXX/runtime/firewallports.dat'
   - '/usr/bin/gzip -d /home/XXXXSERVER_USERXXXX/.ssh/buildstyles.dat.gz'
   - '/bin/cp /home/XXXXSERVER_USERXXXX/.ssh/buildstyles.dat /home/XXXXSERVER_USERXXXX/runtime/buildstyles.dat'
   - '/usr/bin/find /home/XXXXSERVER_USERXXXX -type d -exec chmod 755 {} \;' 
