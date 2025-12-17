@@ -1,6 +1,6 @@
 #!/bin/sh
 ######################################################################################################
-# Description: This script will install go
+# Description: This script will install the go system
 # Author: Peter Winter
 # Date: 17/01/2017
 #######################################################################################################
@@ -18,7 +18,6 @@
 # along with The Agile Deployment Toolkit.  If not, see <http://www.gnu.org/licenses/>.
 #######################################################################################################
 #######################################################################################################
-#set -x
 
 if ( [ "${1}" != "" ] )
 then
@@ -51,24 +50,36 @@ do
 	then
 		if ( [ "${BUILDOS}" = "ubuntu" ] )
 		then
-			version="`/usr/bin/curl https://go.dev/dl/?mode=json | /usr/bin/jq -r '.[0].version' | /bin/sed 's/go//g'1`"          
-        	/usr/bin/wget -c https://dl.google.com/go/go${version}.linux-amd64.tar.gz -O - | /usr/bin/tar -xz -C /usr/local  
+			if ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "GO" | /usr/bin/awk -F':' '{print $NF}'`" = "repo" ] )
+			then
+				eval ${install_command} golang-go
+			elif ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "GO" | /usr/bin/awk -F':' '{print $NF}'`" = "binary" ] )
+			then
+				version="`/usr/bin/curl https://go.dev/dl/?mode=json | /usr/bin/jq -r '.[0].version' | /bin/sed 's/go//g'1`"           
+        		/usr/bin/wget -c https://dl.google.com/go/go${version}.linux-amd64.tar.gz -O - | /usr/bin/tar -xz -C /usr/local  
 
-			if ( [ ! -L /usr/bin/go ] )										
-			then													
-				/usr/bin/ln -s /usr/local/go/bin/go /usr/bin/go 						
-			fi	 												
+				if ( [ ! -L /usr/bin/go ] )										
+				then													
+					/usr/bin/ln -s /usr/local/go/bin/go /usr/bin/go 					
+				fi
+			fi
 		fi
 		if ( [ "${BUILDOS}" = "debian" ] )
 		then
-			version="`/usr/bin/curl https://go.dev/dl/?mode=json | /usr/bin/jq -r '.[0].version' | /bin/sed 's/go//g'1`"            
-        	/usr/bin/wget -c https://dl.google.com/go/go${version}.linux-amd64.tar.gz -O - | /usr/bin/tar -xz -C /usr/local  
+			if ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "GO" | /usr/bin/awk -F':' '{print $NF}'`" = "repo" ] )
+			then
+				eval ${install_command} golang-go
+			elif ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "GO" | /usr/bin/awk -F':' '{print $NF}'`" = "binary" ] )
+			then
+				version="`/usr/bin/curl https://go.dev/dl/?mode=json | /usr/bin/jq -r '.[0].version' | /bin/sed 's/go//g'1`"           
+        		/usr/bin/wget -c https://dl.google.com/go/go${version}.linux-amd64.tar.gz -O - | /usr/bin/tar -xz -C /usr/local  
 
-			if ( [ ! -L /usr/bin/go ] )										
-			then													
-				/usr/bin/ln -s /usr/local/go/bin/go /usr/bin/go 						
-			fi	 												
-		fi		
+				if ( [ ! -L /usr/bin/go ] )										
+				then													
+					/usr/bin/ln -s /usr/local/go/bin/go /usr/bin/go 						
+				fi
+			fi
+		fi
 	fi
 	count="`/usr/bin/expr ${count} + 1`"
 done
@@ -77,6 +88,6 @@ if ( [ ! -f /usr/bin/go ] && [ "${count}" = "5" ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR GO" "I believe that go hasn't installed correctly, please investigate" "ERROR"
 else
-	/bin/touch ${HOME}/runtime/installedsoftware/InstallGo.sh				
+	/bin/touch ${HOME}/runtime/installedsoftware/InstallGo.sh			
 fi
 
