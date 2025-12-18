@@ -58,10 +58,21 @@ then
         slasher=""
 fi
 
-if ( [ ! -f ${file_to_put} ] )
+#if ( [ ! -f ${file_to_put} ] )
+#then
+#        file_to_put="/tmp/${file_to_put}"
+#        /bin/touch ${file_to_put}
+#fi
+
+if ( [ "`/bin/echo ${file_to_put} | /bin/grep "^/"`" = "" ] && [ ! -f ./${file_to_put} ]  )
 then
         file_to_put="/tmp/${file_to_put}"
         /bin/touch ${file_to_put}
+else 
+        if ( [ ! -f ${file_to_put} ] )
+        then
+                exit
+        fi
 fi
 
 
