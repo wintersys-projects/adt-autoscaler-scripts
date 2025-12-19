@@ -31,6 +31,7 @@ fi
 HOME="`/bin/cat /home/homedir.dat`"
 
 #These scripts are set to run every minute
+/bin/echo "*/1 * * * * export HOME="${HOME}" && ${HOME}/utilities/security/AuditSSHConnections.sh" >> /var/spool/cron/crontabs/root
 /bin/echo "*/1 * * * * export HOME="${HOME}" && /bin/sleep 30 && ${HOME}/utilities/processing/UpdateIPs.sh" >> /var/spool/cron/crontabs/root
 /bin/echo "*/1 * * * * export HOME="${HOME}" && ${HOME}/cron/SetupFirewallFromCron.sh" >> /var/spool/cron/crontabs/root
 /bin/echo "*/1 * * * * export HOME="${HOME}" && ${HOME}/utilities/housekeeping/RemoveExpiredLocks.sh" >> /var/spool/cron/crontabs/root
