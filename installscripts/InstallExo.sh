@@ -49,10 +49,10 @@ while ( [ ! -f /usr/bin/exo ] && [ "${count}" -lt "5" ] )
 do
 	if ( [ "${BUILDOS}" = "ubuntu" ] )
 	then
-	    if ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${HOME}/runtime/buildstyles.dat | /bin/grep CLOUDCLITOOL:linode-cli:repo`" != "" ] )
+	    if ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${HOME}/runtime/buildstyles.dat | /bin/grep CLOUDCLITOOL:exo:repo`" != "" ] )
 		then
 			/usr/bin/curl -fsSL https://raw.githubusercontent.com/exoscale/cli/master/install-latest.sh | /bin/sh	
-		elif ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${HOME}/runtime/buildstyles.dat | /bin/grep CLOUDCLITOOL:linode-cli:source`" != "" ] )
+		elif ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${HOME}/runtime/buildstyles.dat | /bin/grep CLOUDCLITOOL:exo:source`" != "" ] )
 		then
 			${install_command} build-essential
 			if ( [ ! -d /opt/exoscale ] )
@@ -70,10 +70,10 @@ do
 
 	if ( [ "${BUILDOS}" = "debian" ] )
 	then
-	    if ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${HOME}/runtime/buildstyles.dat | /bin/grep CLOUDCLITOOL:linode-cli:repo`" != "" ] )
+	    if ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${HOME}/runtime/buildstyles.dat | /bin/grep CLOUDCLITOOL:exo:repo`" != "" ] )
 		then
 			/usr/bin/curl -fsSL https://raw.githubusercontent.com/exoscale/cli/master/install-latest.sh | /bin/sh	
-		elif ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${HOME}/runtime/buildstyles.dat | /bin/grep CLOUDCLITOOL:linode-cli:source`" != "" ] )
+		elif ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${HOME}/runtime/buildstyles.dat | /bin/grep CLOUDCLITOOL:exo:source`" != "" ] )
 		then
 			${install_command} build-essential
 			if ( [ ! -d /opt/exoscale ] )
