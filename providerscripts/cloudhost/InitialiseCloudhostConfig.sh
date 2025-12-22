@@ -199,11 +199,12 @@ then
         /bin/chown root:root /root/.config/linode-cli ${HOME}/.config/linode-cli
         /bin/chmod 400 /root/.config/linode-cli ${HOME}/.config/linode-cli
 
-        /bin/cp ${HOME}/.config/.dns-linode-cli /root/.config/dns-linode-cli
+        /bin/cp ${HOME}/.config/linode-cli /root/.config/dns-linode-cli
+		/bin/cp ${HOME}/.config/linode-cli ${HOME}/.config/dns-linode-cli
         /bin/chown root:root /root/.config/dns-linode-cli
         /bin/chmod 400 /root/.config/dns-linode-cli 
 
-        /bin/sed -i "s/^token.*/token = ${DNS_SECURITY_KEY}/" ${HOME}/.config/.dns-linode-cli
+        /bin/sed -i "s/^token.*/token = ${DNS_SECURITY_KEY}/" ${HOME}/.config/dns-linode-cli
         /bin/sed -i "s/^token.*/token = ${DNS_SECURITY_KEY}/" /root/.config/dns-linode-cli
 
 	if ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${HOME}/runtime/buildstyles.dat | /bin/grep CLOUDCLITOOL:linode-cli:snap`" != "" ] )
