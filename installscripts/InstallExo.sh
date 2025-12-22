@@ -55,6 +55,7 @@ do
 		elif ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${HOME}/runtime/buildstyles.dat | /bin/grep CLOUDCLITOOL:exo:source`" != "" ] )
 		then
 			${install_command} build-essential
+			${HOME}/installscripts/InstallGo.sh ${BUILDOS}
 			if ( [ ! -d /opt/exoscale ] )
 			then
 				/bin/mkdir /opt/exoscale
@@ -76,6 +77,7 @@ do
 		elif ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${HOME}/runtime/buildstyles.dat | /bin/grep CLOUDCLITOOL:exo:source`" != "" ] )
 		then
 			${install_command} build-essential
+			${HOME}/installscripts/InstallGo.sh ${BUILDOS}
 			if ( [ ! -d /opt/exoscale ] )
 			then
 				/bin/mkdir /opt/exoscale
