@@ -207,11 +207,18 @@ then
         /bin/sed -i "s/^token.*/token = ${DNS_SECURITY_KEY}/" ${HOME}/.config/.dns-linode-cli
         /bin/sed -i "s/^token.*/token = ${DNS_SECURITY_KEY}/" /root/.config/dns-linode-cli
 
-        if ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${BUILD_HOME}/builddescriptors/buildstyles.dat | /bin/grep CLOUDCLITOOL:linode-cli:snap`" != "" ] )
+
+	if ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${BUILD_HOME}/builddescriptors/buildstyles.dat | /bin/grep CLOUDCLITOOL:linode-cli:snap`" != "" ] )
 	then
 		/snap/bin/linode-cli 2>&1 >/dev/null &
-		/bin/cp ${HOME}/.config/linode-cli /root/snap/linode-cli/current/.config/linode-cli
-		/bin/cp ${HOME}/.config/dns-linode-cli /root/snap/linode-cli/current/.config/dns-linode-cli
+		count="0"
+		while ( ( [ ! -f /root/snap/linode-cli/current/.config/linode-cli ] || [ ! -f /root/snap/linode-cli/current/.config/dns-linode-cli ] ) && [ "${count}" -lt "5" ] )
+		do
+			/bin/cp ${HOME}/.config/linode-cli /root/snap/linode-cli/current/.config/linode-cli
+			/bin/cp ${HOME}/.config/dns-linode-cli /root/snap/linode-cli/current/.config/dns-linode-cli
+			count="`/usr/bin/expr ${count} + 1`"
+			/bin/sleep 5
+		done
 	fi
 fi
 
