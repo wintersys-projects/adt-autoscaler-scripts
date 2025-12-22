@@ -46,6 +46,14 @@ do
 	then
 		/usr/bin/curl -fsSL https://raw.githubusercontent.com/exoscale/cli/master/install-latest.sh | /bin/sh 	
 	fi
+
+
+	        elif ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${BUILD_HOME}/builddescriptors/buildstyles.dat | /bin/grep CLOUDCLITOOL:exo:snap`" != "" ] )
+        then
+                eval ${install_command} snapd
+		${BUILD_HOME}/helperscripts/RunServiceCommand.sh ssh restart
+		snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"
+		${snap} install exoscale-cli
 	count="`/usr/bin/expr ${count} + 1`"
 done
 
