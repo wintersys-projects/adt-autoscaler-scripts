@@ -68,7 +68,8 @@ do
                 else
                         /usr/bin/pipx install linode-cli 
                         /usr/bin/pipx ensurepath
-                        /usr/bin/ln -s /root/.local/bin/linode-cli /usr/local/bin/linode-cli
+                       # /usr/bin/ln -s /root/.local/bin/linode-cli /usr/local/bin/linode-cli
+						/bin/ln -s ${HOME}/.local/share/pipx/venvs/linode-cli/bin/linode-cli /usr/local/bin/linode-cli
                 fi
         fi												
 	fi
@@ -91,7 +92,8 @@ do
                 else
                         /usr/bin/pipx install linode-cli 
                         /usr/bin/pipx ensurepath
-                        /usr/bin/ln -s /root/.local/bin/linode-cli /usr/local/bin/linode-cli
+                       # /usr/bin/ln -s /root/.local/bin/linode-cli /usr/local/bin/linode-cli
+					   /bin/ln -s ${HOME}/.local/share/pipx/venvs/linode-cli/bin/linode-cli /usr/local/bin/linode-cli
                 fi
         fi
 		count="`/usr/bin/expr ${count} + 1`"
