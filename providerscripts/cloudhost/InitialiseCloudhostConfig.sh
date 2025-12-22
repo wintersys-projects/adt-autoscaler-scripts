@@ -199,8 +199,7 @@ then
         /bin/chown root:root /root/.config/linode-cli ${HOME}/.config/linode-cli
         /bin/chmod 400 /root/.config/linode-cli ${HOME}/.config/linode-cli
 
-        /bin/cp ${HOME}/.config/linode-cli ${HOME}/.config/.dns-linode-cli
-        /bin/cp /root/.config/linode-cli /root/.config/dns-linode-cli
+        /bin/cp ${HOME}/.config/.dns-linode-cli /root/.config/dns-linode-cli
         /bin/chown root:root /root/.config/dns-linode-cli
         /bin/chmod 400 /root/.config/dns-linode-cli 
 
