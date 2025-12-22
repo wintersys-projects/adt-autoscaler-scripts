@@ -55,12 +55,6 @@ do
 			/usr/bin/make build
 			/bin/ln -s /opt/exoscale/cli/bin/exo /usr/bin/exo
 			cd ${HOME}
-		elif ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${HOME}/runtime/buildstyles.dat | /bin/grep CLOUDCLITOOL:linode-cli:snap`" != "" ] )
-		then
-			eval ${install_command} snapd
-			${BUILD_HOME}/helperscripts/RunServiceCommand.sh ssh restart
-			snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"
-			${snap} install exoscale-cli
 		fi
 	fi
 
@@ -82,12 +76,6 @@ do
 			/usr/bin/make build
 			/bin/ln -s /opt/exoscale/cli/bin/exo /usr/bin/exo
 			cd ${HOME}
-		elif ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${HOME}/runtime/buildstyles.dat | /bin/grep CLOUDCLITOOL:linode-cli:snap`" != "" ] )
-		then
-			eval ${install_command} snapd
-			${BUILD_HOME}/helperscripts/RunServiceCommand.sh ssh restart
-			snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"
-			${snap} install exoscale-cli
 		fi
 	fi
 	count="`/usr/bin/expr ${count} + 1`"
