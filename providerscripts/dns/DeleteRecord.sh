@@ -67,8 +67,14 @@ domain_url="`${home}/utilities/config/ExtractConfigValue.sh 'WEBSITEURL' | /usr/
 
 if ( [ "${dns}" = "linode" ] )
 then
-	export LINODE_CLI_CONFIG=/root/.config/dns-linode-cli
-
+	linode_config_file="/root/.config/dns-linode-cli"
+        
+    if ( [ -f /root/snap/linode-cli/current/.config/linode-cli ] )
+    then
+    	linode_config_file="/root/snap/linode-cli/current/.config/linode-cli"
+    fi
+                        
+    export LINODE_CLI_CONFIG=${linode_config_file}
 	domain_id="`/usr/local/bin/linode-cli domains list --no-defaults --json | /usr/bin/jq -r '.[] | select (.domain | contains("'${domain_url}'")).id'`"
 	/usr/local/bin/linode-cli domains records-delete ${domain_id} ${record_id} --no-defaults
 
