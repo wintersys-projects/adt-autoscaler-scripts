@@ -52,29 +52,46 @@ while ( [ ! -f /usr/local/bin/linode-cli ] && [ "${count}" -lt "5" ] )
 do
 	if ( [ "${BUILDOS}" = "ubuntu" ] )
 	then
-		eval ${install_command} pipx		
-		if ( [ -f /usr/local/bin/linode-cli ] )									
-		then													
-			/usr/bin/pipx upgrade linode-cli 								
-		else													
-			/usr/bin/pipx install linode-cli 								
-			/bin/rm /usr/local/bin/linode-cli								
-			/usr/bin/ln -s ${HOME}/.local/bin/linode-cli /usr/local/bin/linode-cli				
-		fi													
+       if ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${HOME}/runtime/buildstyles.dat | /bin/grep CLOUDCLITOOL:linode-cli:snap`" != "" ] )
+        then
+                eval ${install_command} snapd
+                snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"
+                ${snap} install linode-cli
+                /usr/bin/ln -s /snap/bin/linode-cli /usr/local/bin/linode-cli
+        elif ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${HOME}/runtime/buildstyles.dat | /bin/grep CLOUDCLITOOL:linode-cli:pip`" != "" ] )
+        then
+                eval ${install_command} pipx
+                if ( [ -f /usr/local/bin/linode-cli ] )
+                then
+                        /usr/bin/pipx upgrade linode-cli 
+                else
+                        /usr/bin/pipx install linode-cli 
+                        /usr/bin/pipx ensurepath
+                        /usr/bin/ln -s /root/.local/bin/linode-cli /usr/local/bin/linode-cli
+                fi
+        fi												
 	fi
 
 	if ( [ "${BUILDOS}" = "debian" ] )
 	then
-		eval ${install_command} pipx		
-		if ( [ -f /usr/local/bin/linode-cli ] )									
-		then													
-			/usr/bin/pipx upgrade linode-cli 								
-		else													
-			/usr/bin/pipx install linode-cli 								
-			/bin/rm /usr/local/bin/linode-cli								
-			/usr/bin/ln -s ${HOME}/.local/bin/linode-cli /usr/local/bin/linode-cli				
-		fi													
-	fi
+		if ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${HOME}/runtime/buildstyles.dat | /bin/grep CLOUDCLITOOL:linode-cli:snap`" != "" ] )
+        then
+                eval ${install_command} snapd
+                snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"
+                ${snap} install linode-cli
+                /usr/bin/ln -s /snap/bin/linode-cli /usr/local/bin/linode-cli
+        elif ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${HOME}/runtime/buildstyles.dat | /bin/grep CLOUDCLITOOL:linode-cli:pip`" != "" ] )
+        then
+                eval ${install_command} pipx
+                if ( [ -f /usr/local/bin/linode-cli ] )
+                then
+                        /usr/bin/pipx upgrade linode-cli 
+                else
+                        /usr/bin/pipx install linode-cli 
+                        /usr/bin/pipx ensurepath
+                        /usr/bin/ln -s /root/.local/bin/linode-cli /usr/local/bin/linode-cli
+                fi
+        fi
 	count="`/usr/bin/expr ${count} + 1`"
 done
 
