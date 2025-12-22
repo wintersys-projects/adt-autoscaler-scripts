@@ -92,7 +92,8 @@ do
                         /usr/bin/ln -s /root/.local/bin/linode-cli /usr/local/bin/linode-cli
                 fi
         fi
-	count="`/usr/bin/expr ${count} + 1`"
+		count="`/usr/bin/expr ${count} + 1`"
+	fi
 done
 
 if ( [ ! -f /usr/local/bin/linode-cli ] && [ "${count}" = "5" ] )
