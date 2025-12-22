@@ -44,7 +44,7 @@ then
 		/bin/echo "Linux Ubuntu ${BUILDOS_VERSION} LTS 64-bit"
 	elif ( [ "${BUILDOS}" = "debian" ] )
 	then
-		os_name="`${BUILD_HOME}/utilities/software/GetOSName.sh | /bin/sed -e "s/\b\(.\)/\u\1/g"`"
+		os_name="`${HOME}/utilities/software/GetOSName.sh | /bin/sed -e "s/\b\(.\)/\u\1/g"`"
 		#At the current time (2025) 14 and 15 are here for futureproofing, not for use
    		if ( [ "${BUILDOS_VERSION}" = "12" ] )
    		then
