@@ -148,7 +148,7 @@ fi
 
 if ( [ "${CLOUDHOST}" = "linode" ] )
 then
-        CLOUDHOST_ACCOUNT_ID="`${HOME}/utilities/config/ExtractConfigValue.sh 'CLOUDHOSTACCOUNTID'`"
+	CLOUDHOST_ACCOUNT_ID="`${HOME}/utilities/config/ExtractConfigValue.sh 'CLOUDHOSTACCOUNTID'`"
         TOKEN="`${HOME}/utilities/config/ExtractConfigValue.sh 'TOKEN'`"
         REGION="`${HOME}/utilities/config/ExtractConfigValue.sh 'REGION'`"
 
@@ -207,8 +207,7 @@ then
         /bin/sed -i "s/^token.*/token = ${DNS_SECURITY_KEY}/" ${HOME}/.config/.dns-linode-cli
         /bin/sed -i "s/^token.*/token = ${DNS_SECURITY_KEY}/" /root/.config/dns-linode-cli
 
-
-	if ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${BUILD_HOME}/builddescriptors/buildstyles.dat | /bin/grep CLOUDCLITOOL:linode-cli:snap`" != "" ] )
+	if ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${HOME}/runtime/buildstyles.dat | /bin/grep CLOUDCLITOOL:linode-cli:snap`" != "" ] )
 	then
 		/snap/bin/linode-cli 2>&1 >/dev/null &
 		count="0"
