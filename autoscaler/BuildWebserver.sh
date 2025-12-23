@@ -227,7 +227,7 @@ headfile="`${HOME}/autoscaler/SelectHeadFile.sh`"
 
 while ( [ "${count}" -lt "171" ] && [ "${failedonlinecheck}" != "0" ] )
 do
-	/bin/echo "${0} `/bin/date`: Peforming online checks using curl (attempt ${count}) for newly built webserver with ip address ${ip}" 
+	/bin/echo "${0} `/bin/date`: Peforming online checks using curl (attempt ${count}) for newly built webserver with ip address ${ip} and private ip address ${private_ip}" 
 
 	if ( [ "${failedonlinecheck}" = "1" ] )
 	then
