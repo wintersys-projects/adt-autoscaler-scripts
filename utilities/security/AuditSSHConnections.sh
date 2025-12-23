@@ -37,6 +37,6 @@ do
         if ( [ "`/bin/grep ${ssh_client_ip} ${HOME}/runtime/ssh-audit/audit_trail`" = "" ] )
         then
                 /bin/echo "SSH connection first initiated at `/usr/bin/date` from IP address ${ssh_client_ip}" > ${HOME}/runtime/ssh-audit/audit_trail
-                ${HOME}/providerscripts/email/SendEmail.sh "SSH CONNECTION FROM A NEW IP ADDRESS" "There has been a new connection from an unknown IP ${ssh_client_ip} to machine `/usr/bin/hostname`" "INFO"
+                ${HOME}/providerscripts/email/SendEmail.sh "SSH CONNECTION FROM A NEW IP ADDRESS" "There has been a new connection from an unknown IP ${ssh_client_ip} to machine `/usr/bin/hostname`" "ERROR"
         fi
 done
