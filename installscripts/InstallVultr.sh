@@ -37,18 +37,37 @@ while ( [ ! -f /usr/bin/vultr ] && [ "${count}" -lt "5" ] )
 do
 	if ( [ "${BUILDOS}" = "ubuntu" ] )
 	then 
-		vultr_cli_version="`/usr/bin/curl -L https://api.github.com/repos/vultr/vultr-cli/releases/latest | /usr/bin/jq -r '.name'`"       
-		/usr/bin/wget -c https://github.com/vultr/vultr-cli/releases/download/${vultr_cli_version}/vultr-cli_${vultr_cli_version}_linux_amd64.tar.gz -O - | /usr/bin/tar -xz -C /usr/bin  
-		/bin/mv /usr/bin/vultr-cli /usr/bin/vultr                         
-		/bin/chown root:root /usr/bin/vultr                              
+
+	    if ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${BUILD_HOME}/builddescriptors/buildstyles.dat | /bin/grep CLOUDCLITOOL:vultr:binary`" != "" ] )
+        then
+            vultr_cli_version="`/usr/bin/curl -L https://api.github.com/repos/vultr/vultr-cli/releases/latest | /usr/bin/jq -r '.name'`"
+            /usr/bin/wget -c https://github.com/vultr/vultr-cli/releases/download/${vultr_cli_version}/vultr-cli_${vultr_cli_version}_linux_amd64.tar.gz -O- | /usr/bin/tar -xz -C /usr/bin
+            /bin/mv /usr/bin/vultr-cli /usr/bin/vultr
+            /bin/chown root:root /usr/bin/vultr
+        elif ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${BUILD_HOME}/builddescriptors/buildstyles.dat | /bin/grep CLOUDCLITOOL:vultr:source`" != "" ] )
+        then
+            ${BUILD_HOME}/installscripts/InstallGo.sh ${buildos}
+            /usr/bin/go install github.com/vultr/vultr-cli/v3@latest
+            vultr_bin="`/usr/bin/find / -name "vultr-cli" -print | /bin/grep "bin/vultr-cli"`"
+            /bin/ln -s ${vultr_bin} /usr/bin/vultr
+        fi                            
 	fi
 
 	if ( [ "${BUILDOS}" = "debian" ] )
 	then
-		vultr_cli_version="`/usr/bin/curl -L https://api.github.com/repos/vultr/vultr-cli/releases/latest | /usr/bin/jq -r '.name'`"       
-		/usr/bin/wget -c https://github.com/vultr/vultr-cli/releases/download/${vultr_cli_version}/vultr-cli_${vultr_cli_version}_linux_amd64.tar.gz -O - | /usr/bin/tar -xz -C /usr/bin 
-		/bin/mv /usr/bin/vultr-cli /usr/bin/vultr        
-		/bin/chown root:root /usr/bin/vultr              
+	    if ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${BUILD_HOME}/builddescriptors/buildstyles.dat | /bin/grep CLOUDCLITOOL:vultr:binary`" != "" ] )
+        then
+            vultr_cli_version="`/usr/bin/curl -L https://api.github.com/repos/vultr/vultr-cli/releases/latest | /usr/bin/jq -r '.name'`"
+            /usr/bin/wget -c https://github.com/vultr/vultr-cli/releases/download/${vultr_cli_version}/vultr-cli_${vultr_cli_version}_linux_amd64.tar.gz -O- | /usr/bin/tar -xz -C /usr/bin
+            /bin/mv /usr/bin/vultr-cli /usr/bin/vultr
+            /bin/chown root:root /usr/bin/vultr
+        elif ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${BUILD_HOME}/builddescriptors/buildstyles.dat | /bin/grep CLOUDCLITOOL:vultr:source`" != "" ] )
+        then
+            ${BUILD_HOME}/installscripts/InstallGo.sh ${buildos}
+            /usr/bin/go install github.com/vultr/vultr-cli/v3@latest
+            vultr_bin="`/usr/bin/find / -name "vultr-cli" -print | /bin/grep "bin/vultr-cli"`"
+            /bin/ln -s ${vultr_bin} /usr/bin/vultr
+        fi            
 	fi
 	count="`/usr/bin/expr ${count} + 1`"
 done
