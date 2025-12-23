@@ -103,6 +103,8 @@ runcmd:
   - '/bin/cp /home/XXXXSERVER_USERXXXX/.ssh/firewallports.dat /home/XXXXSERVER_USERXXXX/runtime/firewallports.dat'
   - '/usr/bin/gzip -d /home/XXXXSERVER_USERXXXX/.ssh/buildstyles.dat.gz'
   - '/bin/cp /home/XXXXSERVER_USERXXXX/.ssh/buildstyles.dat /home/XXXXSERVER_USERXXXX/runtime/buildstyles.dat'
+  - '/usr/bin/gzip -df /home/XXXXSERVER_USERXXXX/.ssh/firewallports.dat.gz'
+  - '/bin/cp /home/XXXXSERVER_USERXXXX/.ssh/firewallports.dat /home/XXXXSERVER_USERXXXX/runtime/firewallports.dat'
   - '/usr/bin/find /home/XXXXSERVER_USERXXXX -type d -exec chmod 755 {} \;' 
   - '/usr/bin/find /home/XXXXSERVER_USERXXXX -type f -exec chmod 750 {} \;'
   - '/bin/chmod 600 /home/XXXXSERVER_USERXXXX/.ssh/id_XXXXALGORITHMXXXX_AGILE_DEPLOYMENT_BUILD_KEY_XXXXBUILD_IDENTIFIERXXXX'
