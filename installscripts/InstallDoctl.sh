@@ -48,24 +48,36 @@ while ( [ ! -f /usr/local/bin/doctl ] && [ "${count}" -lt "5" ] )
 do
 	if ( [ "${BUILDOS}" = "ubuntu" ] )
 	then
-		eval ${install_command} snapd	
-		snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"		
-		${snap} install doctl											
-		/usr/bin/ln -s /snap/bin/doctl /usr/local/bin/doctl							
-		/bin/mkdir -p /root/.config/doctl 									
-		/bin/cp ${HOME}/.config/doctl/config.yaml /root/.config/doctl						
-		/bin/chmod 400 ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml			
+	    if ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${HOME}/runtime/buildstyles.dat | /bin/grep CLOUDCLITOOL:doctl:snap`" != "" ] )
+        then
+			eval ${install_command} snapd	
+			snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"		
+			${snap} install doctl											
+			/usr/bin/ln -s /snap/bin/doctl /usr/local/bin/doctl							
+			/bin/mkdir -p /root/.config/doctl 									
+			/bin/cp ${HOME}/.config/doctl/config.yaml /root/.config/doctl						
+			/bin/chmod 400 ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml			
+		elif ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${HOME}/runtime/buildstyles.dat | /bin/grep CLOUDCLITOOL:doctl:binary`" != "" ] )
+        then
+			/usr/bin/curl -sL `/usr/bin/curl -s https://api.github.com/repos/digitalocean/doctl/releases/latest | /bin/grep "http.*linux-amd64.tar.gz" | /usr/bin/awk '{print $2}' | /usr/bin/sed 's|[\"\,]*||g'` | /bin/tar xzvf - -C /usr/local/bin
+		fi
 	fi
 
 	if ( [ "${BUILDOS}" = "debian" ] )
 	then
-		eval ${install_command} snapd	
-		snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"		
-		${snap} install doctl											
-		/usr/bin/ln -s /snap/bin/doctl /usr/local/bin/doctl							
-		/bin/mkdir -p /root/.config/doctl 									
-		/bin/cp ${HOME}/.config/doctl/config.yaml /root/.config/doctl						
-		/bin/chmod 400 ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml			
+	    if ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${HOME}/runtime/buildstyles.dat | /bin/grep CLOUDCLITOOL:doctl:snap`" != "" ] )
+        then
+			eval ${install_command} snapd	
+			snap="`/usr/bin/whereis snap | /usr/bin/awk -F':' '{print $NF}' | /usr/bin/awk '{print $1}'`"		
+			${snap} install doctl											
+			/usr/bin/ln -s /snap/bin/doctl /usr/local/bin/doctl							
+			/bin/mkdir -p /root/.config/doctl 									
+			/bin/cp ${HOME}/.config/doctl/config.yaml /root/.config/doctl						
+			/bin/chmod 400 ${HOME}/.config/doctl/config.yaml /root/.config/doctl/config.yaml			
+		elif ( [ "`/bin/grep "^CLOUDCLITOOL:*" ${HOME}/runtime/buildstyles.dat | /bin/grep CLOUDCLITOOL:doctl:binary`" != "" ] )
+        then
+			/usr/bin/curl -sL `/usr/bin/curl -s https://api.github.com/repos/digitalocean/doctl/releases/latest | /bin/grep "http.*linux-amd64.tar.gz" | /usr/bin/awk '{print $2}' | /usr/bin/sed 's|[\"\,]*||g'` | /bin/tar xzvf - -C /usr/local/bin
+		fi		
 	fi
 	count="`/usr/bin/expr ${count} + 1`"
 done
