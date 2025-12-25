@@ -70,7 +70,7 @@ do
 	count="`/usr/bin/expr ${count} + 1`"
 done
 
-if ( [ ! -d /etc/fail2ban ] && [ "${count}" = "5" ] )
+if ( [ ! -x /etc/fail2ban ] && [ "${count}" = "5" ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR Fail2Ban" "I believe that fail2ban hasn't installed correctly, please investigate" "ERROR"
 else
