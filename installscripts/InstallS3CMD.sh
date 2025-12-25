@@ -94,7 +94,7 @@ then
 	/bin/cp ${HOME}/.s3cfg /root
 fi
 
-if ( [ ! -f /usr/bin/s3cmd ] && [ "${count}" = "5" ] )
+if ( [ ! -x /usr/bin/s3cmd ] && [ "${count}" = "5" ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR S3CMD" "I believe that s3cmd hasn't installed correctly, please investigate" "ERROR"
 else
