@@ -83,7 +83,7 @@ do
 	count="`/usr/bin/expr ${count} + 1`"
 done
 
-if ( [ ! -f /usr/sbin/iptables ] && [ "${count}" = "5" ] )
+if ( [ ! -x /usr/sbin/iptables ] && [ "${count}" = "5" ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR IPTABLES" "I believe that iptables hasn't installed correctly, please investigate" "ERROR"
 else
