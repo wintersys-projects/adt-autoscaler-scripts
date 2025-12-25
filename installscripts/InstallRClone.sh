@@ -120,7 +120,7 @@ do
 	count="`/usr/bin/expr ${count} + 1`"
 done
 
-if ( [ ! -f /usr/bin/rclone ] && [ "${count}" = "5" ] )
+if ( [ ! -x /usr/bin/rclone ] && [ "${count}" = "5" ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR RCLONE" "I believe that rclone hasn't installed correctly, please investigate" "ERROR"
 else
