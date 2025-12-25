@@ -69,7 +69,7 @@ then
 	/usr/bin/ln -s /usr/sbin/ufw /usr/bin/ufw
 fi
 
-if ( [ ! -f /usr/bin/ufw ] && [ "${count}" = "5" ] )
+if ( [ ! -x /usr/bin/ufw ] && [ "${count}" = "5" ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR UFW" "I believe that ufw hasn't installed correctly, please investigate" "ERROR"
 else
