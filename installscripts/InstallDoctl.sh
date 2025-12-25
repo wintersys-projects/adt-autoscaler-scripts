@@ -82,7 +82,7 @@ do
 	count="`/usr/bin/expr ${count} + 1`"
 done
 
-if ( [ ! -f /usr/local/bin/doctl ] && [ "${count}" = "5" ] )
+if ( [ ! -x /usr/local/bin/doctl ] && [ "${count}" = "5" ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR DOCTL" "I believe that doctl hasn't installed correctly, please investigate" "ERROR"
 else
