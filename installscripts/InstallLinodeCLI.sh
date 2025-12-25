@@ -100,7 +100,7 @@ do
 	fi
 done
 
-if ( [ ! -f /usr/local/bin/linode-cli ] && [ "${count}" = "5" ] )
+if ( [ ! -x /usr/local/bin/linode-cli ] && [ "${count}" = "5" ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR LINODE-CLI" "I believe that linode cli hasn't installed correctly, please investigate" "ERROR"
 else
