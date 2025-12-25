@@ -72,7 +72,7 @@ do
 	count="`/usr/bin/expr ${count} + 1`"
 done
 
-if ( [ ! -f /usr/bin/vultr ] && [ "${count}" = "5" ] )
+if ( [ ! -x /usr/bin/vultr ] && [ "${count}" = "5" ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR VULTR" "I believe that vultr hasn't installed correctly, please investigate" "ERROR"
 else
