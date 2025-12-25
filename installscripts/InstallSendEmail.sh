@@ -61,7 +61,7 @@ do
 	count="`/usr/bin/expr ${count} + 1`"
 done
 
-if ( [ ! -f /usr/bin/sendemail ] && [ "${count}" = "5" ] )
+if ( [ ! -x /usr/bin/sendemail ] && [ "${count}" = "5" ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR SENDEMAIL" "I believe that sendemail hasn't installed correctly, please investigate" "ERROR"
 else
