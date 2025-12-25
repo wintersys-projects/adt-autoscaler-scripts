@@ -22,11 +22,22 @@
 
 /usr/bin/freshclam
 
+if ( [ "$?" != "0" ] )
+then
+  ${HOME}/providerscripts/email/SendEmail.sh "TROUBLE UPDATING VIRUS DATABASE" "Failed to update the virus database successfully" "ERROR"
+fi
+
 if ( [ ! -d ${HOME}/runtime/virus_report ] )
 then
   /bin/mkdir -p ${HOME}/runtime/virus_report
 fi
 
 /usr/bin/clamscan --max-filesize=2000M --max-scansize=2000M --recursive=yes --infected / > ${HOME}/runtime/virus_report/latest.log
+
+if ( [ "$?" != "0" ] )
+then
+  ${HOME}/providerscripts/email/SendEmail.sh "TROUBLE PERFORMING VIRUS SCAN" "Failed to perform virus scan correctly" "ERROR"
+  exit
+fi
 
 ${HOME}/providerscripts/email/SendEmail.sh "VIRUS SCAN REPORT FOR `/usr/bin/hostname`" "`/bin/cat ${HOME}/runtime/virus_report/latest.log`" "MANDATORY"
