@@ -34,10 +34,9 @@ fi
 
 /usr/bin/clamscan --max-filesize=2000M --max-scansize=2000M --recursive=yes --infected / > ${HOME}/runtime/virus_report/latest.log 2>/dev/null
 
-if ( [ "$?" != "0" ] )
+if ( [ ! -f ${HOME}/runtime/virus_report/latest.log ] || [ "`/usr/bin/find ${HOME}/runtime/virus_report/latest.log -cmin -5`" = "" ] )
 then
-  ${HOME}/providerscripts/email/SendEmail.sh "TROUBLE PERFORMING VIRUS SCAN" "Failed to perform virus scan correctly" "ERROR"
-  exit
+        ${HOME}/providerscripts/email/SendEmail.sh "TROUBLE PERFORMING PRODUCING VIRUS SCAN REPORT" "Failed to perform virus scan correctly" "ERROR"
+else
+        ${HOME}/providerscripts/email/SendEmail.sh "VIRUS SCAN REPORT FOR `/usr/bin/hostname`" "`/bin/cat ${HOME}/runtime/virus_report/latest.log`" "MANDATORY"
 fi
-
-${HOME}/providerscripts/email/SendEmail.sh "VIRUS SCAN REPORT FOR `/usr/bin/hostname`" "`/bin/cat ${HOME}/runtime/virus_report/latest.log`" "MANDATORY"
