@@ -67,6 +67,7 @@ done
 if ( ( [ ! -x /usr/bin/freshclam ] || [ ! -x /usr/bin/clamscan ] ) && [ "${count}" = "5" ] )
 then
         ${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR ClamAV" "I believe that ClamAV hasn't installed correctly, please investigate" "ERROR"
+        exit
 else
         /bin/touch ${HOME}/runtime/installedsoftware/InstallClamAV.sh
 fi
