@@ -38,5 +38,9 @@ if ( [ ! -f ${HOME}/runtime/virus_report/latest.log ] || [ "`/usr/bin/find ${HOM
 then
         ${HOME}/providerscripts/email/SendEmail.sh "TROUBLE PERFORMING PRODUCING VIRUS SCAN REPORT" "Failed to perform virus scan correctly" "ERROR"
 else
-        ${HOME}/providerscripts/email/SendEmail.sh "VIRUS SCAN REPORT FOR `/usr/bin/hostname`" "`/bin/cat ${HOME}/runtime/virus_report/latest.log`" "MANDATORY"
+  message="`/bin/cat ${HOME}/runtime/virus_report/latest.log  | /bin/grep "Infected files"`"
+  machine="`/usr/bin/hostname`"
+  message="\n\n`/bin/cat ${HOME}/runtime/virus_report/latest.log on machine ${machine}`"
+
+  ${HOME}/providerscripts/email/SendEmail.sh "VIRUS SCAN REPORT FOR ${machine}" "${message}" "MANDATORY"
 fi
