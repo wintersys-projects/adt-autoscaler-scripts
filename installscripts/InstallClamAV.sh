@@ -46,7 +46,7 @@ export DEBIAN_FRONTEND=noninteractive
 install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y install "
 
 count="0"
-while ( ( [ ! -x /usr/bin/freshclam ] || [ ! -x /usr/bin/clamscan ] ) && [ "${count}" = "5" ] )
+while ( ( [ ! -x /usr/bin/freshclam ] || [ ! -x /usr/bin/clamscan ] ) && [ "${count}" -lt "5" ] )
 do
         if ( [ "${apt}" != "" ] )
         then
@@ -73,4 +73,6 @@ else
 fi
 
 ${HOME}/utilities/processing/RunServiceCommand.sh clamav-freshclam stop
+${HOME}/utilities/processing/RunServiceCommand.sh clamav-daemon restart
+
 /usr/bin/freshclam
