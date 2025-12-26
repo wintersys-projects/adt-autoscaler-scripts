@@ -23,6 +23,11 @@
 
 HOME="`/bin/cat /home/homedir.dat`"
 
+if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "INSTALLED_SUCCESSFULLY"`" = "0" ] )
+then
+        exit
+fi
+
 ssh_client_ips="`/usr/bin/pinky | /usr/bin/awk '{print $NF}' | /usr/bin/tail -n +2`"
 
 if ( [ ! -d ${HOME}/runtime/ssh-audit ] )
