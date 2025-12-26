@@ -79,6 +79,16 @@ fi
 
 /bin/echo "30 3 * * *  export HOME="${HOME}" && ${HOME}/utilities/housekeeping/RemoveExpiredLogs.sh" >> /var/spool/cron/crontabs/root
 
+if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'VIRUSSCANNER:'`" = "1" ]  )
+then
+	periodicity="`${HOME}/utilities/config/ExtractBuildStyleValues.sh 'VIRUSSCANNER' | /usr/bin/awk -F':' '{print $NF}'`"
+
+	if ( [ "`/bin/echo hourly daily weekly monthly | /bin/grep ${periodicity}`" != "" ] )
+	then
+		/bin/echo "@${periodicity} export HOME="${HOME}" && ${HOME}/utilties/security/VirusScan.sh" >> /var/spool/cron/crontabs/root
+	fi  
+fi
+
 #Install our new crontab
 /usr/bin/crontab /var/spool/cron/crontabs/root
 
