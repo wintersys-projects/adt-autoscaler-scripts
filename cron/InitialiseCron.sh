@@ -83,7 +83,7 @@ if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'VIRUSSCANNER:'`" = "1" ]  
 then
 	periodicity="`${HOME}/utilities/config/ExtractBuildStyleValues.sh 'VIRUSSCANNER' | /usr/bin/awk -F':' '{print $NF}'`"
 
-	if ( [ "`/bin/echo hourly daily weekly monthly | /bin/grep ${periodicity}`" != "" ] )
+	if ( [ "`/bin/echo daily weekly monthly | /bin/grep ${periodicity}`" != "" ] )
 	then
 		/bin/echo "@${periodicity} export HOME="${HOME}" && /usr/bin/nice -n 15 ${HOME}/utilities/security/VirusScan.sh" >> /var/spool/cron/crontabs/root
 	fi  
