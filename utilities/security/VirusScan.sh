@@ -44,7 +44,7 @@ then
 else
   message="`/bin/cat ${HOME}/runtime/virus_report/latest.log  | /bin/grep "Infected files"`"
   machine="`/usr/bin/hostname`"
-  message="\n\n`/bin/cat ${HOME}/runtime/virus_report/latest.log on machine ${machine}`"
-
+  message="\n\n`/bin/cat ${HOME}/runtime/virus_report/latest.log`\n on machine ${machine}`"
+        
   ${HOME}/providerscripts/email/SendEmail.sh "VIRUS SCAN REPORT FOR ${machine}" "${message}" "MANDATORY"
 fi
