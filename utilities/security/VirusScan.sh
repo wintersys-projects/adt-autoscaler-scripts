@@ -2,7 +2,8 @@
 ######################################################################################
 # Author : Peter Winter
 # Date   : 11/08/2021
-# Description: This script will scan your filesystem for viruses 
+# Description: This script will scan your filesystem for viruses this can help protect
+# windows users in some circumstances
 #######################################################################################
 # License Agreement:
 # This file is part of The Agile Deployment Toolkit.
