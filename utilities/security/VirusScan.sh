@@ -32,7 +32,10 @@ then
   /bin/mkdir -p ${HOME}/runtime/virus_report
 fi
 
-/usr/bin/clamscan --max-filesize=2000M --max-scansize=2000M --recursive=yes --infected / > ${HOME}/runtime/virus_report/latest.log 2>/dev/null
+if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'VIRUSSCANNER:clamav'`" = "1" ] )
+then
+  /usr/bin/clamscan --max-filesize=2000M --max-scansize=2000M --recursive=yes --infected /var /home /tmp > ${HOME}/runtime/virus_report/latest.log 2>/dev/null
+fi
 
 if ( [ ! -f ${HOME}/runtime/virus_report/latest.log ] || [ "`/usr/bin/find ${HOME}/runtime/virus_report/latest.log -cmin -5`" = "" ] )
 then
