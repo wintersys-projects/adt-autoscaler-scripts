@@ -85,7 +85,7 @@ then
 
 	if ( [ "`/bin/echo daily weekly monthly | /bin/grep ${periodicity}`" != "" ] )
 	then
-		/bin/echo "@${periodicity} export HOME="${HOME}" && /usr/bin/nice -n 15 ${HOME}/utilities/security/VirusScan.sh" >> /var/spool/cron/crontabs/root
+		/bin/echo "@${periodicity} export HOME="${HOME}" && /bin/sleep `/usr/bin/shuf -i1-1000 -n1` && /usr/bin/nice -n 15 ${HOME}/utilities/security/VirusScan.sh" >> /var/spool/cron/crontabs/root
 	fi  
 fi
 
