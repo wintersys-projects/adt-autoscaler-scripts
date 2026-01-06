@@ -58,21 +58,24 @@ then
         slasher=""
 fi
 
-#if ( [ ! -f ${file_to_put} ] )
-#then
-#        file_to_put="/tmp/${file_to_put}"
-#        /bin/touch ${file_to_put}
-#fi
-
-if ( [ "`/bin/echo ${file_to_put} | /bin/grep "^/"`" = "" ] && [ ! -f ./${file_to_put} ]  )
+if ( [ ! -f ${file_to_put} ] )
 then
-        file_to_put="/tmp/${file_to_put}"
-        /bin/touch ${file_to_put}
-else 
-        if ( [ ! -f ${file_to_put} ] )
+        path_to_file="`/bin/echo ${file_to_put} | sed 's:/[^/]*$::' | /bin/sed 's:^/::'`"
+        file="`/bin/echo "${file_to_put}" | /bin/grep "/" | /usr/bin/awk -F'/' '{print $NF}'`"
+
+        if ( [ "`/bin/echo ${file_to_put} | /bin/grep "/"`" = "" ] )
         then
-                exit
+                file_to_put="/tmp/${file_to_put}"
+        else
+                file_to_put="/tmp/${path_to_file}/${file}"
+                dir="`/bin/echo ${file_to_put} | /bin/sed 's:/[^/]*$::'`"
+                if ( [ -d ${dir} ] )
+                then
+                        /bin/mv ${dir} ${dir}.$$
+                fi
+                /bin/mkdir -p "${dir}"
         fi
+        /bin/touch ${file_to_put}
 fi
 
 
