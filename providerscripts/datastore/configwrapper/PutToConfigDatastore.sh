@@ -49,29 +49,32 @@ then
         datastore_cmd="${datastore_tool} --config=/root/.s3cfg-1 --force --host=https://${host_base} put "
         bucket_prefix="s3://"
         slasher="/"
+        destination_file=""
 elif ( [ "${datastore_tool}" = "/usr/bin/s5cmd" ] )
 then
         host_base="`/bin/grep ^host_base /root/.s5cfg-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
         datastore_cmd="${datastore_tool} --credentials-file /root/.s5cfg-1 --endpoint-url https://${host_base} cp "
         bucket_prefix="s3://"
-        slasher="/"
+        slasher=""
+        destination_file="/`/bin/echo ${file_to_put} | /usr/bin/awk -F'/' '{print $NF}'`"
 elif ( [ "${datastore_tool}" = "/usr/bin/rclone" ] )
 then
         host_base="`/bin/grep ^endpoint /root/.config/rclone/rclone.conf-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
         datastore_cmd="${datastore_tool} --config /root/.config/rclone/rclone.conf-1 --s3-endpoint ${host_base} copy "
         bucket_prefix="s3:"
         slasher=""
+        destination_file=""
 fi
 
 if ( [ ! -f ${file_to_put} ] )
 then
-        path_to_file="`/bin/echo ${file_to_put} | sed 's:/[^/]*$::' | /bin/sed 's,^/,,'`"
+        path_to_file="`/bin/echo ${file_to_put} | sed 's:/[^/]*$::' | /bin/sed 's:^/::'`"
         file="`/bin/echo "${file_to_put}" | /bin/grep "/" | /usr/bin/awk -F'/' '{print $NF}'`"
 
         if ( [ "`/bin/echo ${file_to_put} | /bin/grep "/"`" = "" ] )
         then
                 file_to_put="/tmp/${file_to_put}"
-    else
+        else
                 file_to_put="/tmp/${path_to_file}/${file}"
                 dir="`/bin/echo ${file_to_put} | /bin/sed 's:/[^/]*$::'`"
                 if ( [ -d ${dir} ] )
@@ -85,9 +88,9 @@ fi
 
 if ( [ "${place_to_put}" != "" ] )
 then
-        command="${datastore_cmd} ${file_to_put} ${bucket_prefix}${config_bucket}/${place_to_put}${slasher}"
+        command="${datastore_cmd} ${file_to_put} ${bucket_prefix}${config_bucket}/${place_to_put}${slasher}${destination_file}"
 else
-        command="${datastore_cmd} ${file_to_put} ${bucket_prefix}${config_bucket}"
+        command="${datastore_cmd} ${file_to_put} ${bucket_prefix}${config_bucket}${destination_file}"
 fi
 
 count="0"
