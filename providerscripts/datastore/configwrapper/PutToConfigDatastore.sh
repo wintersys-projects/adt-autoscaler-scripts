@@ -52,7 +52,12 @@ then
         host_base="`/bin/grep ^host_base /root/.s3cfg-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
         datastore_cmd="${datastore_tool} --force --recursive --multipart-chunk-size-mb=5 --config=/root/.s3cfg-1  --host=https://${host_base} put "
         bucket_prefix="s3://"
-        slasher="/"
+        if ( [ "${place_to_put}" = "" ] )
+        then
+                slasher=""
+        else
+                slasher="/"
+        fi
 elif ( [ "${datastore_tool}" = "/usr/bin/s5cmd" ] )
 then
         host_base="`/bin/grep ^host_base /root/.s5cfg-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
