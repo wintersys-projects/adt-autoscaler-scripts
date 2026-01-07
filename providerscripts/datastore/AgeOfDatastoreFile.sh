@@ -42,7 +42,7 @@ elif ( [ "${datastore_tool}" = "/usr/bin/s5cmd" ] )
 then
         host_base="`/bin/grep ^host_base /root/.s5cfg-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`"
         datastore_cmd="${datastore_tool} --credentials-file  /root/.s5cfg-1 --endpoint-url https://${host_base} head s3://${inspected_file}"
-        time_file_written="`${datastore_cmd} | /usr/bin/jq -r '.last_modified'`"
+        time_file_written="`${datastore_cmd} | /usr/bin/jq -r '.metadata.creation' | /usr/bin/awk -F'=' '{print $NF}'`"
 elif ( [ "${datastore_tool}" = "/usr/bin/rclone" ] )
 then
         host_base="`/bin/grep ^endpoint /root/.config/rclone/rclone.conf-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`"
