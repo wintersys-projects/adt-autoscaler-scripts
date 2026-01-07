@@ -61,8 +61,8 @@ then
 elif ( [ "${datastore_tool}" = "/usr/bin/s5cmd" ] )
 then
         host_base="`/bin/grep ^host_base /root/.s5cfg-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
-        datastore_cmd="${datastore_tool} --credentials-file /root/.s5cfg-1 --endpoint-url https://${host_base} cp --metadata 'CreationDate=`/usr/bin/date`'"
-        bucket_prefix="s3://"
+        now="`/usr/bin/date +'%Y-%m-%dT%H:%M:%S'`"
+        datastore_cmd="${datastore_tool} --credentials-file /root/.s5cfg-1 --endpoint-url https://${host_base} cp --metadata 'CreationDate=${now}'"        bucket_prefix="s3://"
         if ( [ "${place_to_put}" = "" ] )
         then
                 slasher=""
