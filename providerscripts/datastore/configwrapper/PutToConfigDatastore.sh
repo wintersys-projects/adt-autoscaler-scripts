@@ -65,7 +65,7 @@ then
         datastore_cmd1="${datastore_tool} --config /root/.config/rclone/rclone.conf-1 --s3-endpoint ${host_base} --timestamp ${now} touch "
         bucket_prefix="s3:"
         slasher=""
-        destination_file=""
+        destination_file="/"
 fi
 
 if ( [ ! -f ${file_to_put} ] )
