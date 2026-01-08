@@ -50,7 +50,7 @@ fi
 if ( [ "${datastore_tool}" = "/usr/bin/s3cmd" ] )
 then
         host_base="`/bin/grep ^host_base /root/.s3cfg-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
-        datastore_cmd="${datastore_tool} --config=/root/.s3cfg-1 --force --recursive --host=https://${host_base} sync s3://${config_bucket}/"
+        datastore_cmd="${datastore_tool} --config=/root/.s3cfg-1 --force --recursive --host=https://${host_base} sync s3://${config_bucket}"
         place_to_sync="`/bin/echo ${place_to_sync} | /bin/sed 's/\*.*//g'`"
 elif ( [ "${datastore_tool}" = "/usr/bin/s5cmd" ] )
 then
