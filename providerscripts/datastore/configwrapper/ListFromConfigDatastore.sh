@@ -64,4 +64,4 @@ then
         file_to_list=""
 fi
 
-${datastore_cmd}${file_to_list}  | /usr/bin/awk '{print $NF}' | /usr/bin/awk -F'/' '{print $NF}' | /bin/sed '/^$/d'
+${datastore_cmd}${file_to_list} 2>/dev/null | /usr/bin/awk '{print $NF}' | /usr/bin/awk -F'/' '{print $NF}' | /bin/sed '/^$/d'
