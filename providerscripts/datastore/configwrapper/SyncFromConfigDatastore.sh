@@ -20,7 +20,7 @@
 ######################################################################################
 #set -x
 
-datastore_to_get="${1}"
+place_to_sync="${1}"
 destination="${2}"
 
 export HOME=`/bin/cat /home/homedir.dat`
@@ -51,7 +51,7 @@ if ( [ "${datastore_tool}" = "/usr/bin/s3cmd" ] )
 then
         host_base="`/bin/grep ^host_base /root/.s3cfg-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
         datastore_cmd="${datastore_tool} --config=/root/.s3cfg-1 --force --recursive --host=https://${host_base} sync s3://${config_bucket}/"
-        datastore_to_get="`/bin/echo ${datastore_to_get} | /bin/sed 's/\*.*//g'`"
+        place_to_sync="`/bin/echo ${place_to_sync} | /bin/sed 's/\*.*//g'`"
 elif ( [ "${datastore_tool}" = "/usr/bin/s5cmd" ] )
 then
         host_base="`/bin/grep ^host_base /root/.s5cfg-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
@@ -59,9 +59,9 @@ then
 elif ( [ "${datastore_tool}" = "/usr/bin/rclone" ] )
 then
         host_base="`/bin/grep ^endpoint /root/.config/rclone/rclone.conf-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`"
-        include_token="`/bin/echo ${datastore_to_get} | /usr/bin/awk -F'/' '{print $NF}'`"
+        include_token="`/bin/echo ${place_to_sync} | /usr/bin/awk -F'/' '{print $NF}'`"
         include='--include "'${include_token}'"'
-        datastore_to_get="`/bin/echo ${datastore_to_get} | /bin/sed -e 's:/[^/]*$::' -e 's:/$::'`"
+        place_to_sync="`/bin/echo ${place_to_sync} | /bin/sed -e 's:/[^/]*$::' -e 's:/$::'`"
         datastore_cmd="${datastore_tool} --config /root/.config/rclone/rclone.conf-1 --s3-endpoint ${host_base} ${include} sync s3:${config_bucket}/"
 fi
 
@@ -76,7 +76,7 @@ then
 fi
 
 count="0"
-while ( [ "`${datastore_cmd}${datastore_to_get} ${destination} 2>&1 >/dev/null | /bin/grep "ERROR"`" != "" ] && [ "${count}" -lt "5" ] )
+while ( [ "`${datastore_cmd}${place_to_sync} ${destination} 2>&1 >/dev/null | /bin/grep "ERROR"`" != "" ] && [ "${count}" -lt "5" ] )
 do
         /bin/echo "An error has occured `/usr/bin/expr ${count} + 1` times in script ${0}"
         /bin/sleep 5
