@@ -25,7 +25,7 @@ file_to_put="$1"
 place_to_put="$2"
 delete="$3"
 
-if ( [ ! -f /var/lib/adt-config/${place_to_put}/`/bin/echo ${file_to_put} | /usr/bin/awk -F'/' '{print $NF}'` ] && [ ! -f /var/lib/adt-config/${file_to_put} ] )
+if ( [ ! -f /var/lib/adt-config/${place_to_put}/`/bin/echo ${file_to_put} | /usr/bin/awk -F'/' '{print $NF}'` ] )
 then
         if ( [ ! -f ${file_to_put} ] )
         then
