@@ -35,7 +35,7 @@ then
 fi
 
 #Scaling can be switched off if you create a file SWITCH_OFF_SCALING in the config datastore
-if ( [ "`${HOME}/providerscripts/datastore/configwrapper/CheckConfigDatastore.sh "SWITCH_OFF_SCALING"`" = "1" ] )
+if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh SWITCH_OFF_SCALING`" != "" ] )
 then
 	exit
 fi
