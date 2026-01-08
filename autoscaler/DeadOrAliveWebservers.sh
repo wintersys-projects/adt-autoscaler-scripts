@@ -84,7 +84,7 @@ endit ()
 	then  
 		autoscalerip="`${HOME}/utilities/processing/GetPublicIP.sh`"
 
-		if (  [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beingbuiltips/*" 2>/dev/null | /bin/grep ${down_ip}`" = "" ] || [ "`/usr/bin/find ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${ip} -mmin +30`" != "" ] )
+		if (  [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beingbuiltips/*" | /bin/grep ${down_ip}`" = "" ] || [ "`/usr/bin/find ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${ip} -mmin +30`" != "" ] )
 		then
 			/bin/echo "Ending server with ip address ${down_ip}"
 
@@ -114,7 +114,7 @@ endit ()
 				/bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${ip}
 			fi
 
-			if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beenonline/${down_ip}" 2>/dev/null`" != "" ] )
+			if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beenonline/${down_ip}"`" != "" ] )
 			then
 				${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beenonline/${down_ip}"  
 			fi
@@ -252,7 +252,7 @@ online_ips="${all_ips}"
 
 for ip in ${online_ips}
 do
-	if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh beingbuiltips/ recursive 2>/dev/nul | /bin/grep ${ip}`" != "" ] )
+	if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh beingbuiltips/ recursive | /bin/grep ${ip}`" != "" ] )
 	then
 		online_ips="`/bin/echo ${online_ips} | /bin/sed "s/${ip}//g"`"
 	fi
@@ -422,9 +422,9 @@ then
 		then
 			/bin/echo "${0} `/bin/date`: Ending webserver with ip:${ip} because it is considered a stalled build" 
 			endit ${ip} "Webserver (${ip}) is being shutdown because it has been considered as a stalled build"
-		elif ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beenonline/${ip}" 2>/dev/null`" != "" ] )
+		elif ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beenonline/${ip}"`" != "" ] )
 		then
-			if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beingbuiltips/${ip}" 2>/dev/null`" = "" ] )
+			if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beingbuiltips/${ip}"`" = "" ] )
 			then
 				/bin/echo "${ip}" >> ${HOME}/runtime/potentialenders/listofipstoend.dat
 				/bin/echo "${0} `/bin/date`: Added IP ${ip} to list of ips to potentially get ended. This is its `/bin/grep ${ip} ${HOME}/runtime/potentialenders/listofipstoend.dat | /usr/bin/wc -l` chance gone out of 2 chances granted"
