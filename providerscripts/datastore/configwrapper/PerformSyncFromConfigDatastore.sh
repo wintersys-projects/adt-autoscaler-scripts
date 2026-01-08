@@ -6,3 +6,8 @@ then
 fi
 
 /bin/mv /var/lib/adt-config.$$ /var/lib/adt-config
+
+if ( [ -f /var/lib/adt-config.old ] )
+then
+  /bin/rm -r /var/lib/adt-config.old
+fi
