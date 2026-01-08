@@ -22,6 +22,14 @@
 datastore_file_to_get="${1}"
 destination="${2}"
 
+if ( [ -f /var/lib/adt-config/${datastore_file_to_get} ] )
+then
+        /bin/cp /var/lib/adt-config/${datastore_file_to_get} ${destination}
+        exit
+else
+        exit
+fi
+
 export HOME=`/bin/cat /home/homedir.dat`
 
 WEBSITE_URL="`${HOME}/utilities/config/ExtractConfigValue.sh 'WEBSITEURLORIGINAL'`"
