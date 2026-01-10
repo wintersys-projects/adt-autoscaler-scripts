@@ -19,11 +19,16 @@
 # along with The Agile Deployment Toolkit.  If not, see <http://www.gnu.org/licenses/>.
 #########################################################################################
 #########################################################################################
-set -x
+#set -x
 
 file_to_put="$1"
 place_to_put="$2"
 delete="$3"
+
+if ( [ "${place_to_put}" = "root" ] )
+then
+        place_to_put=""
+fi
 
 if ( [ ! -d ${HOME}/runtime/datastore_workarea ] )
 then
@@ -33,11 +38,16 @@ fi
 if ( [ ! -f ${file_to_put} ] )
 then
         #if there is no file on the file system we can assume that we are being used as a marker like an IP address, so create out own marker file
-        /bin/touch ${HOME}/runtime/datastore_workarea/${file_to_put}
-        file_to_put=${HOME}/runtime/datastore_workarea/${file_to_put}
+        if ( [ "${place_to_put}" != "" ] && [ "`/bin/echo ${file_to_put} | /bin/grep '/'`" = "" ] )
+        then
+                /bin/mkdir -p ${HOME}/runtime/datastore_workarea/${place_to_put}
+                /bin/touch ${HOME}/runtime/datastore_workarea/${place_to_put}/${file_to_put}
+                file_to_put=${HOME}/runtime/datastore_workarea/${place_to_put}/${file_to_put}
+        fi
 fi
 
 existing_file="/var/lib/adt-config/${place_to_put}/`/bin/echo ${file_to_put} | /usr/bin/awk -F'/' '{print $NF}'`" 
+
 if ( [ -f "${existing_file}" ] )
 then
         if ( [ "`/usr/bin/diff ${existing_file} ${file_to_put}`" = "" ] )
@@ -89,7 +99,8 @@ elif ( [ "${datastore_tool}" = "/usr/bin/s5cmd" ] )
 then
         host_base="`/bin/grep ^host_base /root/.s5cfg-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
         now="`/usr/bin/date +'%Y-%m-%dT%H:%M:%S'`"
-        datastore_cmd="${datastore_tool} --credentials-file /root/.s5cfg-1 --endpoint-url https://${host_base} cp --metadata 'CreationDate=${now}'"        bucket_prefix="s3://"
+        datastore_cmd="${datastore_tool} --credentials-file /root/.s5cfg-1 --endpoint-url https://${host_base} cp --metadata 'CreationDate=${now}'"        
+        bucket_prefix="s3://"
         if ( [ "${place_to_put}" = "" ] )
         then
                 slasher=""
