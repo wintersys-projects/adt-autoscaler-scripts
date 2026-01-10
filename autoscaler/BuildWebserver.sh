@@ -139,8 +139,8 @@ then
 	/bin/echo "${0} `/bin/date`: The webserver didn't come online, no ip address assigned or available, this could be an API availability issue" 
 	/usr/bin/kill -TERM $$
 else
-	${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} webserverpublicips "yes"
-	${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${private_ip} webserverips "yes"
+	${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} webserverpublicips "no"
+	${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${private_ip} webserverips "no"
 
 	#We still need to worry that the build out of the machine might potentially stall for some unknown reason
 	if ( [ ! -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip} ] )
@@ -161,7 +161,7 @@ else
 		/bin/mkdir -p ${HOME}/runtime/beingbuiltips/${buildno}
 	fi
 	/bin/touch ${HOME}/runtime/beingbuiltips/${buildno}/${private_ip}
-	${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${HOME}/runtime/beingbuiltips/${buildno}/${private_ip} beingbuiltips "yes"
+	${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${HOME}/runtime/beingbuiltips/${buildno}/${private_ip} beingbuiltips "no"
 
 	/bin/echo "${0} `/bin/date`: The webserver has been assigned public ip address ${ip} and private ip address ${private_ip}" 
 	/bin/echo "${0} `/bin/date`: The webserver is now provisioned and I am about to start building it out and installing software"
