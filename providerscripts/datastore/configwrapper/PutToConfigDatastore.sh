@@ -25,27 +25,25 @@ file_to_put="$1"
 place_to_put="$2"
 delete="$3"
 
-if ( [ ! -f /var/lib/adt-config/${place_to_put}/`/bin/echo ${file_to_put} | /usr/bin/awk -F'/' '{print $NF}'` ] )
+if ( [ ! -d ${HOME}/runtime/datastore_workarea ] )
 then
-        if ( [ ! -f ${file_to_put} ] )
-        then
-                if ( [ "${place_to_put}" != "" ] )
-                then
-                        if ( [ ! -d /var/lib/adt-config/${place_to_put} ] )
-                        then
-                                /bin/mkdir -p /var/lib/adt-config/${place_to_put}
-                        fi
-                        /bin/touch /var/lib/adt-config/${place_to_put}/${file_to_put}
-                else
-                        /bin/touch /var/lib/adt-config/${file_to_put}
-                fi
-        else
-                /bin/cp ${file_to_put} /var/lib/adt-config/${place_to_put}/${file_to_put}
-        fi
-else
-        exit
+        /bin/mkdir -p ${HOME}/runtime/datastore_workarea
 fi
 
+if ( [ ! -f ${file_to_put} ] )
+then
+        #if there is no file on the file system we can assume that we are being used as a marker like an IP address, so create out own marker file
+        /bin/touch ${HOME}/runtime/datastore_workarea/${file_to_put}
+        file_to_put=${HOME}/runtime/datastore_workarea/${file_to_put}
+fi
+
+if ( [ -f /var/lib/adt-config/${place_to_put}/`/bin/echo ${file_to_put} | /usr/bin/awk -F'/' '{print $NF}'` ] )
+then
+        if ( [ "`/usr/bin/diff /var/lib/adt-config/${place_to_put}/`/bin/echo ${file_to_put} | /usr/bin/awk -F'/' '{print $NF}'` ${file_to_put}`" = "" ] )
+        then
+                exit        
+        fi
+fi
 
 HOME="`/bin/cat /home/homedir.dat`"
 
