@@ -68,4 +68,4 @@ then
 fi
 
 /bin/touch ${HOME}/runtime/scaling/${new_scale_values}
-${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${HOME}/runtime/scaling/${new_scale_values} "" "no"
+${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${HOME}/runtime/scaling/${new_scale_values} "root" "no"
