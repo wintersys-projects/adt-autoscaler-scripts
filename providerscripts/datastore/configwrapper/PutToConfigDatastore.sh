@@ -19,7 +19,7 @@
 # along with The Agile Deployment Toolkit.  If not, see <http://www.gnu.org/licenses/>.
 #########################################################################################
 #########################################################################################
-#set -x
+set -x
 
 file_to_put="$1"
 place_to_put="$2"
@@ -37,9 +37,10 @@ then
         file_to_put=${HOME}/runtime/datastore_workarea/${file_to_put}
 fi
 
-if ( [ -f /var/lib/adt-config/${place_to_put}/`/bin/echo ${file_to_put} | /usr/bin/awk -F'/' '{print $NF}'` ] )
+existing_file="/var/lib/adt-config/${place_to_put}/`/bin/echo ${file_to_put} | /usr/bin/awk -F'/' '{print $NF}'`" 
+if ( [ -f "${existing_file}" ] )
 then
-        if ( [ "`/usr/bin/diff /var/lib/adt-config/${place_to_put}/`/bin/echo ${file_to_put} | /usr/bin/awk -F'/' '{print $NF}'` ${file_to_put}`" = "" ] )
+        if ( [ "`/usr/bin/diff ${existing_file} ${file_to_put}`" = "" ] )
         then
                 exit        
         fi
@@ -97,18 +98,6 @@ then
         datastore_cmd1="${datastore_tool} --config /root/.config/rclone/rclone.conf-1 --s3-endpoint ${host_base} --timestamp ${now} touch "
         bucket_prefix="s3:"
         slasher="/"
-fi
-
-if ( [ ! -d ${HOME}/runtime/datastore_workarea ] )
-then
-        /bin/mkdir -p ${HOME}/runtime/datastore_workarea
-fi
-
-if ( [ ! -f ${file_to_put} ] )
-then
-        #if there is no file on the file system we can assume that we are being used as a marker like an IP address, so create out own marker file
-        /bin/touch ${HOME}/runtime/datastore_workarea/${file_to_put}
-        file_to_put=${HOME}/runtime/datastore_workarea/${file_to_put}
 fi
 
 count="0"
