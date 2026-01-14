@@ -35,15 +35,18 @@ fi
 
 if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s3cmd'`" = "1" ] )
 then
+	${HOME}/installscripts/InstallINotifyTools.sh ${BUILDOS}
 	${HOME}/installscripts/InstallS3CMD.sh ${BUILDOS}
 fi
 
 if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:s5cmd'`" = "1" ] )
 then
+	${HOME}/installscripts/InstallINotifyTools.sh ${BUILDOS}
 	${HOME}/installscripts/InstallS5CMD.sh ${BUILDOS}
 fi
 
 if ( [ "`${HOME}/utilities/config/CheckBuildStyle.sh 'DATASTORETOOL:rclone'`" = "1" ] )
 then
+	${HOME}/installscripts/InstallINotifyTools.sh ${BUILDOS}
 	${HOME}/installscripts/InstallRClone.sh ${BUILDOS}
 fi
