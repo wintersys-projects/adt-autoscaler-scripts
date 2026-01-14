@@ -38,6 +38,7 @@ then
         syntax on
         filetype indent on
         set smartindent
+		set nobackup
         set fo-=or
         autocmd BufRead,BufWritePre *.sh normal gg=G " > /root/.vimrc-adt
 
