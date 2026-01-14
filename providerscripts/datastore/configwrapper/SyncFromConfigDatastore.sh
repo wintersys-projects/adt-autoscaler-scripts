@@ -22,6 +22,19 @@
 
 place_to_sync="${1}"
 destination="${2}"
+dry_run="${3}"
+
+if ( [ "${place_to_sync}" = "root" ] )
+then
+        place_to_sync=""
+fi
+
+if ( [ "${dry_run}" = "yes" ] )
+then
+        dry_run="--dry-run"
+else 
+        dry_run=""
+fi
 
 export HOME=`/bin/cat /home/homedir.dat`
 
@@ -47,42 +60,26 @@ then
         datastore_tool="/usr/bin/rclone"
 fi
 
+if ( [ ! -d ${HOME}/runtime/datastore_workarea ] )
+then
+        /bin/mkdir -p ${HOME}/runtime/datastore_workarea
+fi
+
 if ( [ "${datastore_tool}" = "/usr/bin/s3cmd" ] )
 then
         host_base="`/bin/grep ^host_base /root/.s3cfg-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
-        datastore_cmd="${datastore_tool} --config=/root/.s3cfg-1 --force --recursive --host=https://${host_base} sync s3://${config_bucket}"
-        place_to_sync="`/bin/echo ${place_to_sync} | /bin/sed 's/\*.*//g'`"
+        datastore_cmd="${datastore_tool} --config=/root/.s3cfg-1 --host=https://${host_base} ${dry_run} --exclude-from  ${HOME}/runtime/datastore_workarea/config_datastore_sync_exclude.dat --delete-removed sync s3://${config_bucket}/"
+        /bin/echo "*webrootsync*" > ${HOME}/runtime/datastore_workarea/config_datastore_sync_exclude.dat
 elif ( [ "${datastore_tool}" = "/usr/bin/s5cmd" ] )
 then
         host_base="`/bin/grep ^host_base /root/.s5cfg-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
-        datastore_cmd="${datastore_tool} --credentials-file /root/.s5cfg-1 --endpoint-url https://${host_base} sync s3://${config_bucket}/"
-        if ( [ "${place_to_sync}" = "" ] )
-        then
-                place_to_sync="*"
-        fi
+        datastore_cmd="${datastore_tool} --credentials-file /root/.s5cfg-1 --dry-run --endpoint-url https://${host_base} --exclude '*webrootsync*' sync s3://${config_bucket}/"
+
 elif ( [ "${datastore_tool}" = "/usr/bin/rclone" ] )
 then
         host_base="`/bin/grep ^endpoint /root/.config/rclone/rclone.conf-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`"
-        include_token="`/bin/echo ${place_to_sync} | /usr/bin/awk -F'/' '{print $NF}'`"
-        include='--include "'${include_token}'"'
-        place_to_sync="`/bin/echo ${place_to_sync} | /bin/sed -e 's:/[^/]*$::' -e 's:/$::'`"
-        datastore_cmd="${datastore_tool} --config /root/.config/rclone/rclone.conf-1 --s3-endpoint ${host_base} ${include} sync s3:${config_bucket}/"
+        datastore_cmd="${datastore_tool} --config /root/.config/rclone/rclone.conf-1 --dry-run --s3-endpoint ${host_base} --filter-from ${HOME}/runtime/datastore_workarea/config_datastore_sync_exclude.dat sync s3:${config_bucket}/"
+        /bin/echo "- /webrootsync/**" > ${HOME}/runtime/datastore_workarea/config_datastore_sync_exclude.dat
 fi
 
-if ( [ "${destination}" = "" ] )
-then
-        destination="."
-fi
-
-if ( [ ! -d ${destination} ] )
-then
-        /bin/mkdir -p ${destination}
-fi
-
-count="0"
-while ( [ "`${datastore_cmd}${place_to_sync} ${destination} 2>&1 >/dev/null | /bin/grep "ERROR"`" != "" ] && [ "${count}" -lt "5" ] )
-do
-        /bin/echo "An error has occured `/usr/bin/expr ${count} + 1` times in script ${0}"
-        /bin/sleep 5
-        count="`/usr/bin/expr ${count} + 1`"
-done
+${datastore_cmd} ${destination}/
