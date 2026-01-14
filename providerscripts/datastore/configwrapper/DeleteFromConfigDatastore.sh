@@ -21,37 +21,37 @@
 #set -x
 
 file_to_delete="$1"
-local="${2}"
+local="${2}"   #are these two needed?
 recursive="$3"
 
 
-if ( [ "${local}" = "yes" ] )
-then
-        bail="exit"
-else
-        bail=":"
-fi
+#if ( [ "${local}" = "yes" ] )
+#then
+#        bail="exit"
+#else
+#        bail=":"
+#fi
 
-if ( [ "`/bin/echo ${file_to_delete} | /bin/grep 'webrootsync'`" = "" ] )
-then
-        if ( [ "${recursive}" = "yes" ] )
-        then
-                if ( [ -d /var/lib/adt-config/${file_to_delete} ] )
-                then
-                        /bin/rm -r /var/lib/adt-config/${file_to_delete} 2>/dev/null
-                fi
-        else
-                if ( [ -f /var/lib/adt-config/${file_to_delete} ] )        
-                then
-                        /bin/rm /var/lib/adt-config/${file_to_delete} 2>/dev/null
-                fi
-        fi
+#if ( [ "`/bin/echo ${file_to_delete} | /bin/grep 'webrootsync'`" = "" ] )
+#then
+#        if ( [ "${recursive}" = "yes" ] )
+#        then
+#                if ( [ -d /var/lib/adt-config/${file_to_delete} ] )
+#                then
+#                        /bin/rm -r /var/lib/adt-config/${file_to_delete} 2>/dev/null
+#                fi
+#        else
+#                if ( [ -f /var/lib/adt-config/${file_to_delete} ] )        
+#                then
+#                        /bin/rm /var/lib/adt-config/${file_to_delete} 2>/dev/null
+#                fi
+#        fi
 
-        if ( [ "$?" = "0" ] && [ "`/bin/echo ${file_to_delete} | /bin/grep 'webrootsync'`" = "" ] )
-        then
-                ${bail}
-        fi
-fi
+ #       if ( [ "$?" = "0" ] && [ "`/bin/echo ${file_to_delete} | /bin/grep 'webrootsync'`" = "" ] )
+ #       then
+ #               ${bail}
+ #       fi
+#fi
 
 
 export HOME=`/bin/cat /home/homedir.dat`
