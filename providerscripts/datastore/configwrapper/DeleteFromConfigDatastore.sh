@@ -21,19 +21,38 @@
 #set -x
 
 file_to_delete="$1"
-recursive="$2"
+local="${2}"
+recursive="$3"
 
-if ( [ "${recursive}" = "yes" ] )
+
+if ( [ "${local}" = "yes" ] )
 then
-        /bin/rm -r /var/lib/adt-config/${file_to_delete} 2>/dev/null
+        bail="exit"
 else
-        /bin/rm /var/lib/adt-config/${file_to_delete} 2>/dev/null
+        bail=":"
 fi
 
-if ( [ "$?" != "0" ] )
+if ( [ "`/bin/echo ${file_to_delete} | /bin/grep 'webrootsync'`" = "" ] )
 then
-        exit
+        if ( [ "${recursive}" = "yes" ] )
+        then
+                if ( [ -d /var/lib/adt-config/${file_to_delete} ] )
+                then
+                        /bin/rm -r /var/lib/adt-config/${file_to_delete} 2>/dev/null
+                fi
+        else
+                if ( [ -f /var/lib/adt-config/${file_to_delete} ] )        
+                then
+                        /bin/rm /var/lib/adt-config/${file_to_delete} 2>/dev/null
+                fi
+        fi
+
+        if ( [ "$?" = "0" ] && [ "`/bin/echo ${file_to_delete} | /bin/grep 'webrootsync'`" = "" ] )
+        then
+                ${bail}
+        fi
 fi
+
 
 export HOME=`/bin/cat /home/homedir.dat`
 WEBSITE_URL="`${HOME}/utilities/config/ExtractConfigValue.sh 'WEBSITEURL'`"
@@ -71,7 +90,7 @@ then
 elif ( [ "${datastore_tool}" = "/usr/bin/s5cmd" ] )
 then
         host_base="`/bin/grep ^host_base /root/.s5cfg-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`"
-        datastore_cmd="/usr/bin/s5cmd --credentials-file /root/.s5cfg-1 --endpoint-url https://${host_base}  rm s3://${config_bucket}/"
+        datastore_cmd="/usr/bin/s5cmd --credentials-file /root/.s5cfg-1 --endpoint-url https://${host_base} rm s3://${config_bucket}/"
         file_to_delete="${file_to_delete}${recursive1}"
 elif ( [ "${datastore_tool}" = "/usr/bin/rclone" ] )
 then
