@@ -34,21 +34,22 @@ monitor_for_datastore_changes() {
                 /bin/mkdir /var/lib/adt-config1
         fi
 
+        /bin/echo "=============STARTING NEW AUDIT TRAIL" > ${HOME}/runtime/datastore_workarea/config/audit/audit_trail.log
+        /usr/bin/date >> ${HOME}/runtime/datastore_workarea/config/audit/audit_trail.log
+        /bin/echo "============STARTING NEW AUDIT TRAIL" >> ${HOME}/runtime/datastore_workarea/config/audit/audit_trail.log
+
         while ( [ 1 ] )
         do
                 /bin/sleep 5
-                /bin/echo "=============" > ${HOME}/runtime/datastore_workarea/config/audit/audit_trail.log
-                /usr/bin/date > ${HOME}/runtime/datastore_workarea/config/audit/audit_trail.log
-                /bin/echo "============" >> ${HOME}/runtime/datastore_workarea/config/audit/audit_trail.log
                 
                 if ( [ -f ${HOME}/runtime/datastore_workarea/config/newdeletes.log ] )
                 then
-                        /usr/bin/find ${HOME}/runtime/datastore_workarea/config/newdeletes.log -not -newermt '15 seconds ago' -delete
+                        /usr/bin/find ${HOME}/runtime/datastore_workarea/config/newdeletes.log -newermt '15 seconds ago' -delete
                 fi
                 
                 if ( [ -f ${HOME}/runtime/datastore_workarea/config/newcreates.log ] )
                 then
-                        /usr/bin/find ${HOME}/runtime/datastore_workarea/config/newcreates.log -not -newermt '15 seconds ago' -delete
+                        /usr/bin/find ${HOME}/runtime/datastore_workarea/config/newcreates.log -newermt '15 seconds ago' -delete
                 fi
                 
                 /bin/touch ${HOME}/runtime/datastore_workarea/config/newdeletes.log
@@ -110,6 +111,14 @@ monitor_for_datastore_changes() {
 
                         done < "${HOME}/runtime/datastore_workarea/config/updates.log"
 
+                        if ( [ -d /var/lib/adt-config ] )
+                        then
+                                /usr/bin/find /var/lib/adt-config -type d -empty -delete
+                        fi
+                        if ( [ -d /var/lib/adt-config1 ] )
+                        then
+                                /usr/bin/find /var/lib/adt-config1 -type d -empty -delete
+                        fi
                 fi
         done
 }
@@ -138,7 +147,7 @@ file_removed() {
 
         file_to_delete="`/bin/echo ${live_dir}${deleted_file} | /bin/sed -e 's:/var/lib/adt-config/::' -e 's://:/:'`"
         ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "${file_to_delete}" "no" "no"
-        /bin/echo "Asynchronous DELETE completed for file ${live_dir}${deleted_file} on this server's local filesystem and removal from the datastore at ${file_to_delete}"
+        /bin/echo "Asynchronous DELETE completed for file ${live_dir}${deleted_file} on this server's local filesystem and removal from the datastore at ${file_to_delete}" >> ${HOME}/runtime/datastore_workarea/config/audit/audit_trail.log
 }
 
 file_modified() {
@@ -166,7 +175,7 @@ file_modified() {
                         fi
                 fi
         fi
-        /bin/echo "Asynchronous MODIFICATION completed for file ${live_dir}${modified_file} on this server's local filesystem and added to datastore at ${place_to_put}"
+        /bin/echo "Asynchronous MODIFICATION completed for file ${live_dir}${modified_file} on this server's local filesystem and added to datastore at ${place_to_put}" >> ${HOME}/runtime/datastore_workarea/config/audit/audit_trail.log
 }
 
 file_created() {
@@ -180,7 +189,7 @@ file_created() {
                 if ( [ ! -d ${live_dir}${created_file} ] )
                 then
                         /bin/echo "${live_dir}${created_file}" > ${HOME}/runtime/datastore_workarea/config/newcreates.log
-                        /bin/sed -i "\:${live_dir}${created_file}:d" ${HOME}/runtime/datastore_workarea/config/newdeletes.log
+                     #   /bin/sed -i "\:${live_dir}${created_file}:d" ${HOME}/runtime/datastore_workarea/config/newdeletes.log
                         check_dir="`/bin/echo ${live_dir} | /bin/sed 's/adt-config/adt-config1/g'`"
 
                         if ( [ ! -f ${check_dir}/${created_file} ] ||  [ "`/usr/bin/diff ${live_dir}/${created_file} ${check_dir}/${created_file}`" != "" ] )
@@ -195,7 +204,7 @@ file_created() {
                         fi
                 fi
         fi
-        /bin/echo "Asynchronous CREATION completed for file ${live_dir}${created_file} on this server's local filesystem and added to datastore at ${place_to_put}"
+        /bin/echo "Asynchronous CREATION completed for file ${live_dir}${created_file} on this server's local filesystem and added to datastore at ${place_to_put}" >> ${HOME}/runtime/datastore_workarea/config/audit/audit_trail.log
 }
 
 /usr/bin/inotifywait -q -m -r -e modify,delete,create /var/lib/adt-config | while read DIRECTORY EVENT FILE 
