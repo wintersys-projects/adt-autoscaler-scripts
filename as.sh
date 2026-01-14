@@ -127,17 +127,20 @@ then
 	/bin/chown root:root /usr/sbin/sync
 fi
 
+cd ${HOME}
 
-/bin/echo "${0} Setting up firewall"
-${HOME}/security/SetupFirewall.sh
+/bin/echo "${0} Installing Datastore tools"
+${HOME}/providerscripts/datastore/InitialiseDatastoreConfig.sh
+/bin/echo "${0} Activating datastore configuration protocol"
+${HOME}/providerscripts/datastore/config/ActivateConfigDatastore.sh
 
 /bin/echo "${0} Initialising cloudhost config"
 ${HOME}/providerscripts/cloudhost/InitialiseCloudhostConfig.sh
 
-cd ${HOME}
+/bin/echo "${0} Setting up firewall"
+${HOME}/security/SetupFirewall.sh
 
-/bin/echo "${0} Initialising datastore config"
-${HOME}/providerscripts/datastore/InitialiseDatastoreConfig.sh
+cd ${HOME}
 
 /bin/echo "${0} Initialising cron"
 ${HOME}/cron/InitialiseCron.sh
