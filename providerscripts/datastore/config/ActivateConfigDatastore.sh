@@ -1,11 +1,6 @@
 #!/bin/sh
 #set -x
 
-#if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh INSTALLED_SUCCESSFULLY`" = "" ] )
-#then
-#        exit
-#fi
-
 if ( [ ! -d /var/lib/adt-config ] )
 then
         /bin/mkdir /var/lib/adt-config
@@ -38,10 +33,6 @@ monitor_for_datastore_changes() {
         then
                 /bin/mkdir /var/lib/adt-config1
         fi
-
-        /bin/echo "=============STARTING NEW AUDIT TRAIL" >> ${HOME}/runtime/datastore_workarea/config/audit/audit_trail.log
-        /usr/bin/date >> ${HOME}/runtime/datastore_workarea/config/audit/audit_trail.log
-        /bin/echo "============STARTING NEW AUDIT TRAIL" >> ${HOME}/runtime/datastore_workarea/config/audit/audit_trail.log
 
         while ( [ 1 ] )
         do
