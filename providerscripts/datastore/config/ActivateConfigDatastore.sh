@@ -209,7 +209,7 @@ file_created() {
         then
                 if ( [ ! -d ${live_dir}${created_file} ] )
                 then
-                        /bin/echo "${live_dir}${created_file}" >> ${HOME}/runtime/datastore_workarea/config/newcreates-${new_creates_log}.log
+                        /bin/echo "${live_dir}${created_file}" >> ${HOME}/runtime/datastore_workarea/config/newcreates-${new_creates_index}.log
                         check_dir="`/bin/echo ${live_dir} | /bin/sed 's/adt-config/adt-config1/g'`"
 
                         if ( [ ! -f ${check_dir}/${created_file} ] ||  [ "`/usr/bin/diff ${live_dir}/${created_file} ${check_dir}/${created_file}`" != "" ] )
