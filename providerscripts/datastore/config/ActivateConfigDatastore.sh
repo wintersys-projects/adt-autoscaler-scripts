@@ -41,14 +41,14 @@ file_modified() {
         live_dir="${1}"
         modified_file="${2}"
 
-        /usr/bin/rsync -a ${live_dir}${modified_file} `/bin/echo ${live_dir}${modified_file} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`
+        /usr/bin/rsync -a --mkpath ${live_dir}${modified_file} `/bin/echo ${live_dir}${modified_file} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`
 }
 
 file_created() {
         live_dir="${1}"
         created_file="${2}"
 
-        /usr/bin/rsync -a ${live_dir}${created_file} `/bin/echo ${live_dir}${created_file} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`
+        /usr/bin/rsync -a --mkpath ${live_dir}${created_file} `/bin/echo ${live_dir}${created_file} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`
 }
 
 /usr/bin/inotifywait -q -m -r -e modify,delete,create /var/lib/adt-config | while read DIRECTORY EVENT FILE 
