@@ -66,7 +66,7 @@ monitor_for_datastore_changes() {
                                         place_to_put="`/bin/echo ${line} | /usr/bin/awk -F"'" '{print $4}'| /bin/sed 's/adt-config/adt-config1/'`"
                                         if ( [ ! -d /var/lib/adt-config1/${file_to_obtain} ] )
                                         then
-                                                if ( [ "`/bin/grep ${file_to_obtain} ${HOME}/runtime/datastore_workarea/config/newdeletes-${new_deletes_index}.log`" = "" ] )
+                                                if ( [ "`/bin/grep ${file_to_obtain} ${HOME}/runtime/datastore_workarea/config/newdeletes-*.log`" = "" ] )
                                                 then
                                                         if ( [ "`/bin/echo ${file_to_obtain} | /bin/grep '/'`" != "" ] )
                                                         then
@@ -97,7 +97,7 @@ monitor_for_datastore_changes() {
                                                 then
                                                         place_to_put="root"
                                                 fi
-                                                if ( [ "`/bin/grep ${file_to_delete} ${HOME}/runtime/datastore_workarea/config/newcreates-${new_creates_index}.log`" = "" ] )
+                                                if ( [ "`/bin/grep ${file_to_delete} ${HOME}/runtime/datastore_workarea/config/newcreates-*.log`" = "" ] )
                                                 then
                                                         /bin/echo "Deleting file ${file_to_delete} from local file system which will cascade to remote machines" >> ${HOME}/runtime/datastore_workarea/config/audit/audit_trail.log
                                                         /bin/rm ${file_to_delete}
