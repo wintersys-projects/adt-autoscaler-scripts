@@ -152,25 +152,25 @@ file_removed() {
 file_modified() {
         live_dir="${1}"
         modified_file="${2}"
+
         place_to_put="`/bin/echo ${live_dir} | /bin/sed 's:/var/lib/adt-config/::' | /bin/sed 's:/$::g'`"
-        check_dir="`/bin/echo ${live_dir} | /bin/sed 's/adt-config/adt-config1/g'`"
 
         if ( [ "`/bin/echo ${modified_file} | /bin/grep '^\.'`" = "" ] )
         then
-                if ( [ ! -f ${check_dir}/${modified_file} ] ||  [ "`/usr/bin/diff ${live_dir}/${modified_file} ${check_dir}/${modified_file}`" != "" ] )
+                if ( [ ! -d ${live_dir}${modified_file} ] )
                 then
-                        if ( [ "`/bin/echo ${modified_file} | /bin/grep '/'`" != "" ] )
-                        then
-                                place_to_put="`/bin/echo ${modified_file} | /bin/sed 's:/[^/]*$::'`/"
-                        else
-                                place_to_put="root"
-                        fi
+                        /bin/echo "${live_dir}${modified_file}" > ${HOME}/runtime/datastore_workarea/config/newcreates.log
+                        check_dir="`/bin/echo ${live_dir} | /bin/sed 's/adt-config/adt-config1/g'`"
 
-                        ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh  ${live_dir}${modified_file} ${place_to_put}
-                else
-                        if ( [ -f ${check_dir}/${modified_file} ] )
+                        if ( [ ! -f ${check_dir}/${modified_file} ] ||  [ "`/usr/bin/diff ${live_dir}/${modified_file} ${check_dir}/${modified_file}`" != "" ] )
                         then
-                                /bin/rm ${check_dir}/${modified_file}
+                                ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh  ${live_dir}${modified_file} ${place_to_put}
+                                /bin/echo "needed" >> monitor_log
+                        else
+                                if ( [ -f ${check_dir}/${modified_file} ] )
+                                then
+                                        /bin/rm ${check_dir}/${modified_file}
+                                fi
                         fi
                 fi
         fi
