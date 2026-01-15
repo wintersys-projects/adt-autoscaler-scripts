@@ -91,6 +91,11 @@ monitor_for_datastore_changes() {
                                         file_to_delete="`/bin/echo ${line} | /usr/bin/awk -F"'" '{print $2}'`"
                                         if ( [ ! -d ${file_to_delete} ] )
                                         then
+                                                place_to_put="`/bin/echo ${file_to_delete} | /bin/sed 's:/var/lib/adt-config/::' | /bin/sed 's:/[^/]*$::'`/"
+                                                if ( [ "`/bin/echo ${place_to_put} | /bin/grep '/'`" = "" ] )
+                                                then
+                                                        place_to_put="root"
+                                                fi
                                                 if ( [ "`/bin/grep ${file_to_delete} ${HOME}/runtime/datastore_workarea/config/newcreates.log`" = "" ] )
                                                 then
                                                         /bin/echo "Deleting file ${file_to_delete} from local file system which will cascade to remote machines" >> ${HOME}/runtime/datastore_workarea/config/audit/audit_trail.log
@@ -98,12 +103,6 @@ monitor_for_datastore_changes() {
                                                 else 
                                                         /bin/echo "Delete of brand new file (${file_to_delete}) triggered by its absence in the datastore. Protecting it from deletion and adding it to the datastore  " >> ${HOME}/runtime/datastore_workarea/config/audit/audit_trail.log
                                                         /bin/sed -i "\:${file_to_delete}:d" ${HOME}/runtime/datastore_workarea/config/updates.log
-                                                        if ( [ "`/bin/echo ${place_to_put} | /bin/grep '/'`" != "" ] )
-                                                        then
-                                                                place_to_put="`/bin/echo ${file_to_delete} | /bin/sed 's:/var/lib/adt-config/::' | /bin/sed 's:/[^/]*$::'`/"
-                                                        else
-                                                                place_to_put="root"
-                                                        fi
                                                         ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${file_to_delete} ${place_to_put}
                                                 fi
                                         fi
