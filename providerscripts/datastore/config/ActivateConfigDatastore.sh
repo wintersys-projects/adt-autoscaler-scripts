@@ -28,10 +28,10 @@ monitor_for_datastore_changes() {
                 then
                         /usr/bin/find /var/lib/adt-config -type d -empty -delete
                 fi
-                if ( [ -d /var/lib/adt-config1 ] )
-                then
-                        /usr/bin/find /var/lib/adt-config1 -type d -empty -delete
-                fi
+             #   if ( [ -d /var/lib/adt-config1 ] )
+             #   then
+             #           /usr/bin/find /var/lib/adt-config1 -type d -empty -delete
+             #   fi
 
 
 
