@@ -38,22 +38,38 @@ monitor_for_datastore_changes() {
         /usr/bin/date >> ${HOME}/runtime/datastore_workarea/config/audit/audit_trail.log
         /bin/echo "============STARTING NEW AUDIT TRAIL" >> ${HOME}/runtime/datastore_workarea/config/audit/audit_trail.log
 
+        new_creates_indexes="1 2 3 4 5"
+        new_deletes_indexes="1 2 3 4 5"
+
+
         while ( [ 1 ] )
         do
                 /bin/sleep 5
-                
-                if ( [ -f ${HOME}/runtime/datastore_workarea/config/newdeletes.log ] )
+
+
+                if ( [ "${new_creates_index}" = "5" ] )
                 then
-                        /usr/bin/find ${HOME}/runtime/datastore_workarea/config/newdeletes.log -newermt '15 seconds ago' -delete
+                        new_creates_index="1"
+                        new_deletes_index="1"
+                else
+                        new_creates_index="`/usr/bin/expr ${new_creates_index} + 1`"
+                        new_deletes_index="`/usr/bin/expr ${new_deletes_index} + 1`"
                 fi
+
+                /bin/echo "${new_creates_index}" > ${HOME}/runtime/datastore_workarea/config/new_creates_index.dat
                 
-                if ( [ -f ${HOME}/runtime/datastore_workarea/config/newcreates.log ] )
-                then
-                        /usr/bin/find ${HOME}/runtime/datastore_workarea/config/newcreates.log -newermt '15 seconds ago' -delete
-                fi
+             #   if ( [ -f ${HOME}/runtime/datastore_workarea/config/newdeletes.log ] )
+             #   then
+             #           /usr/bin/find ${HOME}/runtime/datastore_workarea/config/newdeletes.log -newermt '15 seconds ago' -delete
+             #   fi
+             #   
+             #   if ( [ -f ${HOME}/runtime/datastore_workarea/config/newcreates.log ] )
+             #   then
+             #           /usr/bin/find ${HOME}/runtime/datastore_workarea/config/newcreates.log -newermt '15 seconds ago' -delete
+             #   fi
                 
-                /bin/touch ${HOME}/runtime/datastore_workarea/config/newdeletes.log
-                /bin/touch ${HOME}/runtime/datastore_workarea/config/newcreates.log
+            #    /bin/touch ${HOME}/runtime/datastore_workarea/config/newdeletes-${new_creates_index}.log
+            #    /bin/touch ${HOME}/runtime/datastore_workarea/config/newcreates-${new_creates_index}.log
                 ${HOME}/providerscripts/datastore/config/tooling/SyncFromConfigDatastore.sh "root" "/var/lib/adt-config" "yes" > ${HOME}/runtime/datastore_workarea/config/updates.log
                 if ( [ -f ${HOME}/runtime/datastore_workarea/config/updates.log ] )
                 then
@@ -65,7 +81,7 @@ monitor_for_datastore_changes() {
                                         place_to_put="`/bin/echo ${line} | /usr/bin/awk -F"'" '{print $4}'| /bin/sed 's/adt-config/adt-config1/'`"
                                         if ( [ ! -d /var/lib/adt-config1/${file_to_obtain} ] )
                                         then
-                                                if ( [ "`/bin/grep ${file_to_obtain} ${HOME}/runtime/datastore_workarea/config/newdeletes.log`" = "" ] )
+                                                if ( [ "`/bin/grep ${file_to_obtain} ${HOME}/runtime/datastore_workarea/config/newdeletes-${new_deletes_index}.log`" = "" ] )
                                                 then
                                                         if ( [ "`/bin/echo ${file_to_obtain} | /bin/grep '/'`" != "" ] )
                                                         then
@@ -96,7 +112,7 @@ monitor_for_datastore_changes() {
                                                 then
                                                         place_to_put="root"
                                                 fi
-                                                if ( [ "`/bin/grep ${file_to_delete} ${HOME}/runtime/datastore_workarea/config/newcreates.log`" = "" ] )
+                                                if ( [ "`/bin/grep ${file_to_delete} ${HOME}/runtime/datastore_workarea/config/newcreates-${new_creates_index}.log`" = "" ] )
                                                 then
                                                         /bin/echo "Deleting file ${file_to_delete} from local file system which will cascade to remote machines" >> ${HOME}/runtime/datastore_workarea/config/audit/audit_trail.log
                                                         /bin/rm ${file_to_delete}
@@ -129,8 +145,11 @@ file_removed() {
         live_dir="${1}"
         deleted_file="${2}"
 
-        /bin/echo "${live_dir}${deleted_file}" >> ${HOME}/runtime/datastore_workarea/config/newdeletes.log
-        /bin/sed -i "\:${live_dir}${deleted_file}:d" ${HOME}/runtime/datastore_workarea/config/newcreates.log
+        new_deletes_index="`/bin/cat ${HOME}/runtime/datastore_workarea/config/new_deletes_index.dat`"
+        new_creates_index="`/bin/cat ${HOME}/runtime/datastore_workarea/config/new_creates_index.dat`"
+
+        /bin/echo "${live_dir}${deleted_file}" >> ${HOME}/runtime/datastore_workarea/config/newdeletes-${new_deletes_index}.log
+        /bin/sed -i "\:${live_dir}${deleted_file}:d" ${HOME}/runtime/datastore_workarea/config/newcreates-${new_creates_index}.log
 
         check_dir="`/bin/echo ${live_dir} | /bin/sed 's/adt-config/adt-config1/g'`"
 
@@ -154,12 +173,13 @@ file_modified() {
         modified_file="${2}"
 
         place_to_put="`/bin/echo ${live_dir} | /bin/sed 's:/var/lib/adt-config/::' | /bin/sed 's:/$::g'`"
+        new_creates_index="`/bin/cat ${HOME}/runtime/datastore_workarea/config/new_creates_index.dat`"
 
         if ( [ "`/bin/echo ${modified_file} | /bin/grep '^\.'`" = "" ] )
         then
                 if ( [ ! -d ${live_dir}${modified_file} ] )
                 then
-                        /bin/echo "${live_dir}${modified_file}" > ${HOME}/runtime/datastore_workarea/config/newcreates.log
+                        /bin/echo "${live_dir}${modified_file}" >> ${HOME}/runtime/datastore_workarea/config/newcreates-${new_creates_index}.log
                         check_dir="`/bin/echo ${live_dir} | /bin/sed 's/adt-config/adt-config1/g'`"
 
                         if ( [ ! -f ${check_dir}/${modified_file} ] ||  [ "`/usr/bin/diff ${live_dir}/${modified_file} ${check_dir}/${modified_file}`" != "" ] )
@@ -182,12 +202,14 @@ file_created() {
         created_file="${2}"
 
         place_to_put="`/bin/echo ${live_dir} | /bin/sed 's:/var/lib/adt-config/::' | /bin/sed 's:/$::g'`"
+        new_creates_index="`/bin/cat ${HOME}/runtime/datastore_workarea/config/new_creates_index.dat`"
+
 
         if ( [ "`/bin/echo ${created_file} | /bin/grep '^\.'`" = "" ] )
         then
                 if ( [ ! -d ${live_dir}${created_file} ] )
                 then
-                        /bin/echo "${live_dir}${created_file}" > ${HOME}/runtime/datastore_workarea/config/newcreates.log
+                        /bin/echo "${live_dir}${created_file}" >> ${HOME}/runtime/datastore_workarea/config/newcreates-${new_creates_log}.log
                         check_dir="`/bin/echo ${live_dir} | /bin/sed 's/adt-config/adt-config1/g'`"
 
                         if ( [ ! -f ${check_dir}/${created_file} ] ||  [ "`/usr/bin/diff ${live_dir}/${created_file} ${check_dir}/${created_file}`" != "" ] )
