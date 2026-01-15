@@ -42,7 +42,7 @@ file_modified() {
         if ( [ -f ${live_dir}${modified_file} ] )
         then
                 original_file="${live_dir}${modified_file}" 
-                destination_file="`/bin/echo ${live_dir}${modified_file} | /bin/sed 's:/adt-config2/:/adt-config-workarea/:'`"
+                destination_file="`/bin/echo ${live_dir}${modified_file} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`"
                 /usr/bin/rsync -a --mkpath ${original_file} ${destination_file}
         fi
 }
@@ -54,7 +54,7 @@ file_created() {
         if ( [ -f ${live_dir}${created_file} ] )
         then
                 original_file="${live_dir}${created_file}" 
-                destination_file="`/bin/echo ${live_dir}${created_file} | /bin/sed 's:/adt-config2/:/adt-config-workarea/:'`"
+                destination_file="`/bin/echo ${live_dir}${created_file} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`"
                 /usr/bin/rsync -a --mkpath ${original_file} ${destination_file}
         fi
 }
@@ -68,7 +68,7 @@ do
                         if ( [ ! -f ${DIRECTORY}${FILE} ] )
                         then
                                 destination_file="${DIRECTORY}${FILE}" 
-                                original_file="`/bin/echo ${lDIRECTORY}${FILE} | /bin/sed 's:/adt-config2/:/adt-config-workarea/:'`"
+                                original_file="`/bin/echo ${lDIRECTORY}${FILE} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`"
                                 /usr/bin/rsync -a ${destination_file} ${original_file} 
                         fi
                                 
@@ -79,7 +79,7 @@ do
                         if ( [ ! -f ${DIRECTORY}${FILE} ] )
                         then
                                 destination_file="${DIRECTORY}${FILE}" 
-                                original_file="`/bin/echo ${lDIRECTORY}${FILE} | /bin/sed 's:/adt-config2/:/adt-config-workarea/:'`"
+                                original_file="`/bin/echo ${lDIRECTORY}${FILE} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`"
                                 /usr/bin/rsync -a ${destination_file} ${original_file} 
                         fi
                         ;;
