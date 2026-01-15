@@ -151,7 +151,8 @@ file_removed() {
                 redirection=">>"
         fi
 
-        /bin/echo "${live_dir}${deleted_file}" ${redirection} ${HOME}/runtime/datastore_workarea/config/newdeletes-${new_deletes_index}.log
+        record_deletes_command="/bin/echo ${live_dir}${deleted_file} ${redirection} ${HOME}/runtime/datastore_workarea/config/newdeletes-${new_deletes_index}.log"
+        eval "${record_deletes_command}"
         /bin/sed -i "\:${live_dir}${deleted_file}:d" ${HOME}/runtime/datastore_workarea/config/newcreates-${new_creates_index}.log
 
         check_dir="`/bin/echo ${live_dir} | /bin/sed 's/adt-config/adt-config1/g'`"
@@ -189,7 +190,8 @@ file_modified() {
         then
                 if ( [ ! -d ${live_dir}${modified_file} ] )
                 then
-                        /bin/echo "${live_dir}${modified_file}" ${redirection} ${HOME}/runtime/datastore_workarea/config/newcreates-${new_creates_index}.log
+                        record_modified_command="/bin/echo ${live_dir}${modified_file} ${redirection} ${HOME}/runtime/datastore_workarea/config/newcreates-${new_creates_index}.log"
+                        eval "${record_modified_command}"
                         check_dir="`/bin/echo ${live_dir} | /bin/sed 's/adt-config/adt-config1/g'`"
 
                         if ( [ ! -f ${check_dir}/${modified_file} ] ||  [ "`/usr/bin/diff ${live_dir}/${modified_file} ${check_dir}/${modified_file}`" != "" ] )
@@ -226,7 +228,8 @@ file_created() {
         then
                 if ( [ ! -d ${live_dir}${created_file} ] )
                 then
-                        /bin/echo "${live_dir}${created_file}" ${redirection} ${HOME}/runtime/datastore_workarea/config/newcreates-${new_creates_index}.log
+                        record_create_command="/bin/echo ${live_dir}${created_file} ${redirection} ${HOME}/runtime/datastore_workarea/config/newcreates-${new_creates_index}.log"
+                        eval "${record_create_command}"
                         check_dir="`/bin/echo ${live_dir} | /bin/sed 's/adt-config/adt-config1/g'`"
 
                         if ( [ ! -f ${check_dir}/${created_file} ] ||  [ "`/usr/bin/diff ${live_dir}/${created_file} ${check_dir}/${created_file}`" != "" ] )
