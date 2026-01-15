@@ -57,17 +57,30 @@ file_created() {
 
 /usr/bin/inotifywait -q -m -r -e modify,delete,create /var/lib/adt-config | while read DIRECTORY EVENT FILE 
 do
-        case $EVENT in
+        case ${EVENT} in
                 MODIFY*)
-                        file_modified "$DIRECTORY" "$FILE"
+                        file_modified "${DIRECTORY}" "${FILE}"
                         ${HOME}/providerscripts/datastore/config/tooling/SyncToConfigDatastoreWithoutDelete.sh "/var/lib/adt-config-workarea" "root"
+                        if ( [ ! -f ${DIRECTORY}${FILE} ] )
+                        then
+                        :
+                                #rsync the created file in work area back again
+                               # /usr/bin/rsync -a --mkpath ${live_dir}${created_file} `/bin/echo ${live_dir}${created_file} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`
+                        fi
+                                
                         ;;
                 CREATE*)
-                        file_created "$DIRECTORY" "$FILE"
+                        file_created "${DIRECTORY}" "${FILE}"
                         ${HOME}/providerscripts/datastore/config/tooling/SyncToConfigDatastoreWithoutDelete.sh "/var/lib/adt-config-workarea" "root"
+                        if ( [ ! -f ${DIRECTORY}${FILE} ] )
+                        then
+                        :
+                                #rsync the created file in work area back again
+                               # /usr/bin/rsync -a --mkpath ${live_dir}${created_file} `/bin/echo ${live_dir}${created_file} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`
+                        fi
                         ;;
                 DELETE*)
-                        file_removed "$DIRECTORY" "$FILE"
+                        file_removed "${DIRECTORY}" "${FILE}"
                         ;;
         esac
 done
