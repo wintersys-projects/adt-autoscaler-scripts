@@ -53,19 +53,8 @@ monitor_for_datastore_changes() {
                 fi
 
                 /bin/echo "${new_creates_index}" > ${HOME}/runtime/datastore_workarea/config/new_creates_index.dat
-                
-             #   if ( [ -f ${HOME}/runtime/datastore_workarea/config/newdeletes.log ] )
-             #   then
-             #           /usr/bin/find ${HOME}/runtime/datastore_workarea/config/newdeletes.log -newermt '15 seconds ago' -delete
-             #   fi
-             #   
-             #   if ( [ -f ${HOME}/runtime/datastore_workarea/config/newcreates.log ] )
-             #   then
-             #           /usr/bin/find ${HOME}/runtime/datastore_workarea/config/newcreates.log -newermt '15 seconds ago' -delete
-             #   fi
-                
-            #    /bin/touch ${HOME}/runtime/datastore_workarea/config/newdeletes-${new_creates_index}.log
-            #    /bin/touch ${HOME}/runtime/datastore_workarea/config/newcreates-${new_creates_index}.log
+                /bin/echo "${new_deletes_index}" > ${HOME}/runtime/datastore_workarea/config/new_deletes_index.dat
+
                 ${HOME}/providerscripts/datastore/config/tooling/SyncFromConfigDatastore.sh "root" "/var/lib/adt-config" "yes" > ${HOME}/runtime/datastore_workarea/config/updates.log
                 if ( [ -f ${HOME}/runtime/datastore_workarea/config/updates.log ] )
                 then
