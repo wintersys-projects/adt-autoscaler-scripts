@@ -38,10 +38,6 @@ monitor_for_datastore_changes() {
         /usr/bin/date >> ${HOME}/runtime/datastore_workarea/config/audit/audit_trail.log
         /bin/echo "============STARTING NEW AUDIT TRAIL" >> ${HOME}/runtime/datastore_workarea/config/audit/audit_trail.log
 
-        new_creates_indexes="1 2 3 4 5"
-        new_deletes_indexes="1 2 3 4 5"
-
-
         while ( [ 1 ] )
         do
                 /bin/sleep 5
