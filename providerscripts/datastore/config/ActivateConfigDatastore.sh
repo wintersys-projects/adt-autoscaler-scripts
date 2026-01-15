@@ -41,7 +41,9 @@ file_modified() {
 
         if ( [ -f ${live_dir}${modified_file} ] )
         then
-                /usr/bin/rsync -a --mkpath ${live_dir}${modified_file} `/bin/echo ${live_dir}${modified_file} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`
+                original_file="${live_dir}${modified_file}" 
+                destination_file="`/bin/echo ${live_dir}${modified_file} | /bin/sed 's:/adt-config2/:/adt-config-workarea/:'`"
+                /usr/bin/rsync -a --mkpath ${original_file} ${destination_file}
         fi
 }
 
@@ -51,7 +53,9 @@ file_created() {
 
         if ( [ -f ${live_dir}${created_file} ] )
         then
-                /usr/bin/rsync -a --mkpath ${live_dir}${created_file} `/bin/echo ${live_dir}${created_file} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`
+                original_file="${live_dir}${created_file}" 
+                destination_file="`/bin/echo ${live_dir}${created_file} | /bin/sed 's:/adt-config2/:/adt-config-workarea/:'`"
+                /usr/bin/rsync -a --mkpath ${original_file} ${destination_file}
         fi
 }
 
@@ -63,9 +67,9 @@ do
                         ${HOME}/providerscripts/datastore/config/tooling/SyncToConfigDatastoreWithoutDelete.sh "/var/lib/adt-config-workarea" "root"
                         if ( [ ! -f ${DIRECTORY}${FILE} ] )
                         then
-                        :
-                                #rsync the created file in work area back again
-                               # /usr/bin/rsync -a --mkpath ${live_dir}${created_file} `/bin/echo ${live_dir}${created_file} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`
+                                destination_file="${DIRECTORY}${FILE}" 
+                                original_file="`/bin/echo ${lDIRECTORY}${FILE} | /bin/sed 's:/adt-config2/:/adt-config-workarea/:'`"
+                                /usr/bin/rsync -a ${destination_file} ${original_file} 
                         fi
                                 
                         ;;
@@ -74,9 +78,9 @@ do
                         ${HOME}/providerscripts/datastore/config/tooling/SyncToConfigDatastoreWithoutDelete.sh "/var/lib/adt-config-workarea" "root"
                         if ( [ ! -f ${DIRECTORY}${FILE} ] )
                         then
-                        :
-                                #rsync the created file in work area back again
-                               # /usr/bin/rsync -a --mkpath ${live_dir}${created_file} `/bin/echo ${live_dir}${created_file} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`
+                                destination_file="${DIRECTORY}${FILE}" 
+                                original_file="`/bin/echo ${lDIRECTORY}${FILE} | /bin/sed 's:/adt-config2/:/adt-config-workarea/:'`"
+                                /usr/bin/rsync -a ${destination_file} ${original_file} 
                         fi
                         ;;
                 DELETE*)
