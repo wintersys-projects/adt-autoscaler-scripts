@@ -141,10 +141,17 @@ file_removed() {
         live_dir="${1}"
         deleted_file="${2}"
 
-        new_deletes_index="`/bin/cat ${HOME}/runtime/datastore_workarea/config/new_deletes_index.dat`"
         new_creates_index="`/bin/cat ${HOME}/runtime/datastore_workarea/config/new_creates_index.dat`"
+        new_deletes_index="`/bin/cat ${HOME}/runtime/datastore_workarea/config/new_deletes_index.dat`"
 
-        /bin/echo "${live_dir}${deleted_file}" >> ${HOME}/runtime/datastore_workarea/config/newdeletes-${new_deletes_index}.log
+        if ( [ "${new_deletes_index}" = "1" ] )
+        then
+                redirection=">"
+        else
+                redirection=">>"
+        fi
+
+        /bin/echo "${live_dir}${deleted_file}" ${redirection} ${HOME}/runtime/datastore_workarea/config/newdeletes-${new_deletes_index}.log
         /bin/sed -i "\:${live_dir}${deleted_file}:d" ${HOME}/runtime/datastore_workarea/config/newcreates-${new_creates_index}.log
 
         check_dir="`/bin/echo ${live_dir} | /bin/sed 's/adt-config/adt-config1/g'`"
@@ -171,15 +178,23 @@ file_modified() {
         place_to_put="`/bin/echo ${live_dir} | /bin/sed 's:/var/lib/adt-config/::' | /bin/sed 's:/$::g'`"
         new_creates_index="`/bin/cat ${HOME}/runtime/datastore_workarea/config/new_creates_index.dat`"
 
+        if ( [ "${new_creates_index}" = "1" ] )
+        then
+                redirection=">"
+        else
+                redirection=">>"
+        fi
+
         if ( [ "`/bin/echo ${modified_file} | /bin/grep '^\.'`" = "" ] )
         then
                 if ( [ ! -d ${live_dir}${modified_file} ] )
                 then
-                        /bin/echo "${live_dir}${modified_file}" >> ${HOME}/runtime/datastore_workarea/config/newcreates-${new_creates_index}.log
+                        /bin/echo "${live_dir}${modified_file}" ${redirection} ${HOME}/runtime/datastore_workarea/config/newcreates-${new_creates_index}.log
                         check_dir="`/bin/echo ${live_dir} | /bin/sed 's/adt-config/adt-config1/g'`"
 
                         if ( [ ! -f ${check_dir}/${modified_file} ] ||  [ "`/usr/bin/diff ${live_dir}/${modified_file} ${check_dir}/${modified_file}`" != "" ] )
                         then
+                                /bin/echo "Modified file ${live_dir}${modified_file} is being put to config datastore" >> ${HOME}/runtime/datastore_workarea/config/audit/audit_trail.log
                                 ${HOME}/providerscripts/datastore/config/tooling/PutToConfigDatastore.sh  ${live_dir}${modified_file} ${place_to_put}
                                 /bin/echo "needed" >> monitor_log
                         else
@@ -200,21 +215,25 @@ file_created() {
         place_to_put="`/bin/echo ${live_dir} | /bin/sed 's:/var/lib/adt-config/::' | /bin/sed 's:/$::g'`"
         new_creates_index="`/bin/cat ${HOME}/runtime/datastore_workarea/config/new_creates_index.dat`"
 
+        if ( [ "${new_creates_index}" = "1" ] )
+        then
+                redirection=">"
+        else
+                redirection=">>"
+        fi
+
         if ( [ "`/bin/echo ${created_file} | /bin/grep '^\.'`" = "" ] )
         then
                 if ( [ ! -d ${live_dir}${created_file} ] )
                 then
-                        /bin/echo "${live_dir}${created_file}" >> ${HOME}/runtime/datastore_workarea/config/newcreates-${new_creates_index}.log
+                        /bin/echo "${live_dir}${created_file}" ${redirection} ${HOME}/runtime/datastore_workarea/config/newcreates-${new_creates_index}.log
                         check_dir="`/bin/echo ${live_dir} | /bin/sed 's/adt-config/adt-config1/g'`"
 
                         if ( [ ! -f ${check_dir}/${created_file} ] ||  [ "`/usr/bin/diff ${live_dir}/${created_file} ${check_dir}/${created_file}`" != "" ] )
                         then
                                 /bin/echo "Newly created file ${live_dir}${created_file} is being put to config datastore" >> ${HOME}/runtime/datastore_workarea/config/audit/audit_trail.log
-                                ${HOME}/providerscripts/datastore/config/tooling/PutToConfigDatastore.sh  ${live_dir}${created_file} ${place_to_put} "no"
-                        elif ( [ -d ${check_dir}/${created_file} ] )
-                        then
-                                /bin/echo "Newly created directory ${live_dir}${created_file} is being recursively put to config datastore" >> ${HOME}/runtime/datastore_workarea/config/audit/audit_trail.log
-                                ${HOME}/providerscripts/datastore/config/tooling/PutToConfigDatastore.sh  ${live_dir}${created_file} ${place_to_put} "yes"
+                                ${HOME}/providerscripts/datastore/config/tooling/PutToConfigDatastore.sh  ${live_dir}${created_file} ${place_to_put}
+                                /bin/echo "needed" >> monitor_log
                         else
                                 if ( [ -f ${check_dir}/${created_file} ] )
                                 then
