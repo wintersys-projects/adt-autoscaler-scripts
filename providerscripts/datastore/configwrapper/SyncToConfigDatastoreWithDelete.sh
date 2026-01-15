@@ -62,7 +62,7 @@ then
         bucket_prefix="s3://"
         host_base="`/bin/grep ^host_base /root/.s3cfg-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
        # datastore_cmd="${datastore_tool} --config=/root/.s3cfg-1 --force --recursive --host=https://${host_base} sync --exclude-from  ${HOME}/runtime/datastore_workarea/config_datastore_sync_exclude.dat --delete-removed "
-        datastore_cmd="${datastore_tool} --config=/root/.s3cfg-1 --host=https://${host_base} sync --exclude-from  ${HOME}/runtime/datastore_workarea/config_datastore_sync_exclude.dat "
+        datastore_cmd="${datastore_tool} --config=/root/.s3cfg-1 --host=https://${host_base} sync --exclude-from  ${HOME}/runtime/datastore_workarea/config_datastore_sync_exclude.dat --delete-removed "
         place_to_sync="`/bin/echo ${place_to_sync} | /bin/sed 's/\*.*//g'`"
         /bin/echo "*webrootsync*" > ${HOME}/runtime/datastore_workarea/config_datastore_sync_exclude.dat
         slasher="/"
