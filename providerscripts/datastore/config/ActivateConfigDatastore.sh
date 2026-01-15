@@ -7,7 +7,6 @@ fi
 monitor_for_datastore_changes() {
 while ( [ 1 ] )
 do
-        /bin/sleep 5
         /bin/touch /tmp/additions.lock
         ${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh /tmp/additions.lock "root"
         /bin/sleep 5
