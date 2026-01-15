@@ -1,5 +1,5 @@
 #!/bin/sh
-set -x
+#set -x
 
 exec 1>/tmp/out
 exec 2>/tmp/err
@@ -9,9 +9,9 @@ then
         /bin/mkdir /var/lib/adt-config
 fi
 
-if ( [ ! -d /var/lib/adt-config1 ] )
+if ( [ ! -d /var/lib/adt-config-workarea ] )
 then
-        /bin/mkdir /var/lib/adt-config1
+        /bin/mkdir /var/lib/adt-config-workarea
 fi
 
 
@@ -23,18 +23,6 @@ monitor_for_datastore_changes() {
                 /bin/sleep 5
 
                 ${HOME}/providerscripts/datastore/config/tooling/SyncFromConfigDatastoreWithDelete.sh "root" "/var/lib/adt-config"
-
-                if ( [ -d /var/lib/adt-config ] )
-                then
-                        /usr/bin/find /var/lib/adt-config -type d -empty -delete
-                fi
-             #   if ( [ -d /var/lib/adt-config1 ] )
-             #   then
-             #           /usr/bin/find /var/lib/adt-config1 -type d -empty -delete
-             #   fi
-
-
-
         done
 }
 
@@ -53,14 +41,14 @@ file_modified() {
         live_dir="${1}"
         modified_file="${2}"
 
-        /usr/bin/rsync  ${live_dir}${modified_file} `/bin/echo ${live_dir}${modified_file} | /bin/sed 's:/adt-config/:/adt-config1/:'`
+        /usr/bin/rsync  ${live_dir}${modified_file} `/bin/echo ${live_dir}${modified_file} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`
 }
 
 file_created() {
         live_dir="${1}"
         created_file="${2}"
 
-        /usr/bin/rsync  ${live_dir}${created_file} `/bin/echo ${live_dir}${created_file} | /bin/sed 's:/adt-config/:/adt-config1/:'`
+        /usr/bin/rsync  ${live_dir}${created_file} `/bin/echo ${live_dir}${created_file} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`
 }
 
 /usr/bin/inotifywait -q -m -r -e modify,delete,create /var/lib/adt-config | while read DIRECTORY EVENT FILE 
@@ -68,11 +56,11 @@ do
         case $EVENT in
                 MODIFY*)
                         file_modified "$DIRECTORY" "$FILE"
-                        ${HOME}/providerscripts/datastore/config/tooling/SyncToConfigDatastoreWithoutDelete.sh "/var/lib/adt-config1" "root"
+                        ${HOME}/providerscripts/datastore/config/tooling/SyncToConfigDatastoreWithoutDelete.sh "/var/lib/adt-config-workarea" "root"
                         ;;
                 CREATE*)
                         file_created "$DIRECTORY" "$FILE"
-                        ${HOME}/providerscripts/datastore/config/tooling/SyncToConfigDatastoreWithoutDelete.sh "/var/lib/adt-config1" "root"
+                        ${HOME}/providerscripts/datastore/config/tooling/SyncToConfigDatastoreWithoutDelete.sh "/var/lib/adt-config-workarea" "root"
                         ;;
                 DELETE*)
                         file_removed "$DIRECTORY" "$FILE"
