@@ -14,6 +14,10 @@ monitor_for_datastore_changes() {
         do
                 /bin/sleep 30
                 ${HOME}/providerscripts/datastore/config/tooling/SyncFromConfigDatastoreWithDelete.sh "root" "/var/lib/adt-config"
+				if ( [ -d /var/lib/adt-config ] )
+                then
+                	/usr/bin/find /var/lib/adt-config -type d -empty -delete
+                fi
         done
 }
 
