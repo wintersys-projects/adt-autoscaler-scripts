@@ -25,27 +25,27 @@ do
 	then
 		case ${EVENT} in
 			MODIFY*)
-				if ( [ "`/bin/echo ${FILE} | /bin/grep '/'`" != "" ] )
+				if ( [ "`/bin/echo ${DIRECTORY}${FILE} | /bin/sed 's:/: :g' | /usr/bin/wc -w`" -gt "4" ] )
 				then
-					place_to_put="`/bin/echo ${FILE} | /bin/sed 's:/[^/]*$::'`"
+					place_to_put="`/bin/echo ${DIRECTORY}${FILE} | /bin/sed 's:/[^/]*$::' | /bin/sed 's:/var/lib/adt-config/::g'`"
 				else
 					place_to_put="root"
 				fi
 				${HOME}/providerscripts/datastore/config/tooling/PutToConfigDatastore.sh ${DIRECTORY}${FILE} ${place_to_put}
 				;;
 			CREATE*)
-				if ( [ "`/bin/echo ${FILE} | /bin/grep '/'`" != "" ] )
+				if ( [ "`/bin/echo ${DIRECTORY}${FILE} | /bin/sed 's:/: :g' | /usr/bin/wc -w`" -gt "4" ] )
 				then
-					place_to_put="`/bin/echo ${FILE} | /bin/sed 's:/[^/]*$::'`"
+					place_to_put="`/bin/echo ${DIRECTORY}${FILE} | /bin/sed 's:/[^/]*$::' | /bin/sed 's:/var/lib/adt-config/::g'`"
 				else
 					place_to_put="root"
 				fi
 				${HOME}/providerscripts/datastore/config/tooling/PutToConfigDatastore.sh ${DIRECTORY}${FILE} ${place_to_put}
                 ;;
 			DELETE*)
-				if ( [ ! -f ${DIRECTORY}${FILE} ] )
+				if ( [ ! -f ${FILE} ] )
 				then
-					file_to_delete="`/bin/echo ${DIRECTORY}${FILE} | /bin/sed -e 's:/var/lib/adt-config/::' -e 's://:/:'`"
+					file_to_delete="`/bin/echo ${FILE} | /bin/sed -e 's:/var/lib/adt-config/::' -e 's://:/:'`"
 					${HOME}/providerscripts/datastore/config/tooling/DeleteFromConfigDatastore.sh "${file_to_delete}" "no" "no"
 				fi
 				;;
