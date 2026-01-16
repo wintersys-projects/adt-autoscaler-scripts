@@ -140,6 +140,9 @@ do
                         file_removed "${DIRECTORY}" "${FILE}"
                         ;;
         esac
-        /bin/rm ${HOME}/runtime/DATASTORE_FILE_EVENT_ACTIVE
+        if ( [ -f ${HOME}/runtime/DATASTORE_FILE_EVENT_ACTIVE ] )
+        then
+                /bin/rm ${HOME}/runtime/DATASTORE_FILE_EVENT_ACTIVE
+        fi
 
 done
