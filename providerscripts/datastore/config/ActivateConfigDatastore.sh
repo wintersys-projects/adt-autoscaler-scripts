@@ -17,7 +17,7 @@ fi
 monitor_for_datastore_changes() {
         while ( [ 1 ] )
         do
-                /bin/sleep 5
+                /bin/sleep 30
                 ${HOME}/providerscripts/datastore/config/tooling/SyncFromConfigDatastoreWithDelete.sh "root" "/var/lib/adt-config"
         done
 }
@@ -27,11 +27,6 @@ monitor_for_datastore_changes &
 file_removed() {
         live_dir="${1}"
         deleted_file="${2}"
-
-        while ( [ -f ${HOME}/runtime/DATASTORE_SYNC_ACTIVE ] )
-        do
-                /bin/sleep 1
-        done
 
         if ( [ ! -f ${live_dir}${deleted_file} ] )
         then
@@ -92,47 +87,33 @@ file_created() {
 
 /usr/bin/inotifywait -q -m -r -e modify,delete,create /var/lib/adt-config | while read DIRECTORY EVENT FILE 
 do
-        /bin/chmod 444 ${DIRECTORY}${FILE}
+        /usr/bin/chattr +i ${DIRECTORY}${FILE}
         case ${EVENT} in
                 MODIFY*)
                         file_modified "${DIRECTORY}" "${FILE}"
                         ${HOME}/providerscripts/datastore/config/tooling/SyncToConfigDatastoreWithoutDelete.sh "/var/lib/adt-config-workarea" "root"
-                        if ( [ ! -f ${DIRECTORY}${FILE} ] )
+                        destination_file="${DIRECTORY}${FILE}" 
+                        original_file="`/bin/echo ${DIRECTORY}${FILE} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`"
+                        if ( [ ! -f ${original_file} ] && [ ! -d ${original_file} ] )
                         then
-                                destination_file="${DIRECTORY}${FILE}" 
-                                original_file="`/bin/echo ${DIRECTORY}${FILE} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`"
-                                if ( [ ! -f ${original_file} ] && [ ! -d ${original_file} ] )
-                                then
-                                        /bin/mv ${destination_file} ${original_file} 
-                                fi
-                        fi
-                                
+                                /bin/mv ${destination_file} ${original_file} 
+                        fi             
                         ;;
                 CREATE*)
                         file_created "${DIRECTORY}" "${FILE}"
                         ${HOME}/providerscripts/datastore/config/tooling/SyncToConfigDatastoreWithoutDelete.sh "/var/lib/adt-config-workarea" "root"
-                        if ( [ ! -f ${DIRECTORY}${FILE} ] )
+                        destination_file="${DIRECTORY}${FILE}" 
+                        original_file="`/bin/echo ${lDIRECTORY}${FILE} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`"
+                        /bin/cp ${destination_file} ${original_file} 
+                        if ( [ ! -f ${original_file} ] && [ ! -d ${original_file} ] )
                         then
-                                destination_file="${DIRECTORY}${FILE}" 
-                                original_file="`/bin/echo ${lDIRECTORY}${FILE} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`"
-                                /bin/cp ${destination_file} ${original_file} 
-                                if ( [ ! -f ${original_file} ] && [ ! -d ${original_file} ] )
-                                then
-                                        /bin/mv ${destination_file} ${original_file} 
-                                fi
+                                /bin/mv ${destination_file} ${original_file} 
                         fi
                         ;;
                 DELETE*)
                         file_removed "${DIRECTORY}" "${FILE}"
                         ;;
         esac
-        if ( [ ! -f ${original_file} ] )
-        then
-                /bin/chmod 644 ${original_file}
-        fi
-        if ( [ ! -f ${original_file} ] )
-        then
-                /bin/chmod 750 ${original_file}
-        fi
+        /usr/bin/chattr -i ${DIRECTORY}${FILE}
 
 done
