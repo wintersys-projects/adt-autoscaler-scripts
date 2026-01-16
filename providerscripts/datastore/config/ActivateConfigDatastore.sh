@@ -25,18 +25,18 @@ do
 	then
 		case ${EVENT} in
 			MODIFY*)
-				if ( [ "`/bin/echo ${DIRECTORY}${FILE} | /bin/grep '/'`" != "" ] )
+				if ( [ "`/bin/echo ${FILE} | /bin/grep '/'`" != "" ] )
 				then
-					place_to_put="`/bin/echo ${DIRECTORY}${FILE} | /bin/sed 's:/[^/]*$::'`"
+					place_to_put="`/bin/echo ${FILE} | /bin/sed 's:/[^/]*$::'`"
 				else
 					place_to_put="root"
 				fi
 				${HOME}/providerscripts/datastore/config/tooling/PutToConfigDatastore.sh ${DIRECTORY}${FILE} ${place_to_put}
 				;;
 			CREATE*)
-				if ( [ "`/bin/echo ${DIRECTORY}${FILE} | /bin/grep '/'`" != "" ] )
+				if ( [ "`/bin/echo ${FILE} | /bin/grep '/'`" != "" ] )
 				then
-					place_to_put="`/bin/echo ${DIRECTORY}${FILE} | /bin/sed 's:/[^/]*$::'`"
+					place_to_put="`/bin/echo ${FILE} | /bin/sed 's:/[^/]*$::'`"
 				else
 					place_to_put="root"
 				fi
