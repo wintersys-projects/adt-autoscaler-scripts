@@ -18,13 +18,7 @@ monitor_for_datastore_changes() {
         while ( [ 1 ] )
         do
                 /bin/sleep 5
-                while ( [ -f ${HOME}/runtime/DATASTORE_FILE_EVENT_ACTIVE ] )
-                do
-                        /bin/sleep 1
-                done
-                /bin/touch ${HOME}/runtime/DATASTORE_SYNC_EVENT_ACTIVE
                 ${HOME}/providerscripts/datastore/config/tooling/SyncFromConfigDatastoreWithDelete.sh "root" "/var/lib/adt-config"
-                /bin/rm ${HOME}/runtime/DATASTORE_SYNC_EVENT_ACTIVE
         done
 }
 
@@ -98,26 +92,7 @@ file_created() {
 
 /usr/bin/inotifywait -q -m -r -e modify,delete,create /var/lib/adt-config | while read DIRECTORY EVENT FILE 
 do
-        if ( [ -f ${HOME}/runtime/DATASTORE_SYNC_EVENT_ACTIVE ] )
-        then
-                if ( [ -f ${DIRECTORY}${FILE} ] || [ -d ${DIRECTORY}${FILE} ] )
-                then
-                        /bin/chmod 444 ${DIRECTORY}${FILE}
-                fi
-                while ( [ -f ${HOME}/runtime/DATASTORE_SYNC_EVENT_ACTIVE ] )
-                do
-                        /bin/sleep 1
-                done
-                if ( [ -f ${DIRECTORY}${FILE} ] )
-                then
-                        /bin/chmod 644 ${DIRECTORY}${FILE}
-                fi
-                if ( [ -d ${DIRECTORY}${FILE} ] )
-                then
-                        /bin/chmod 750 ${DIRECTORY}${FILE}
-                fi
-        fi
-        /bin/touch ${HOME}/runtime/DATASTORE_FILE_EVENT_ACTIVE
+        /bin/chmod 444 ${DIRECTORY}${FILE}
         case ${EVENT} in
                 MODIFY*)
                         file_modified "${DIRECTORY}" "${FILE}"
@@ -125,8 +100,11 @@ do
                         if ( [ ! -f ${DIRECTORY}${FILE} ] )
                         then
                                 destination_file="${DIRECTORY}${FILE}" 
-                                original_file="`/bin/echo ${lDIRECTORY}${FILE} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`"
-                                /bin/cp ${destination_file} ${original_file} 
+                                original_file="`/bin/echo ${DIRECTORY}${FILE} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`"
+                                if ( [ ! -f ${original_file} ] && [ ! -d ${original_file} ] )
+                                then
+                                        /bin/mv ${destination_file} ${original_file} 
+                                fi
                         fi
                                 
                         ;;
@@ -138,15 +116,23 @@ do
                                 destination_file="${DIRECTORY}${FILE}" 
                                 original_file="`/bin/echo ${lDIRECTORY}${FILE} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`"
                                 /bin/cp ${destination_file} ${original_file} 
+                                if ( [ ! -f ${original_file} ] && [ ! -d ${original_file} ] )
+                                then
+                                        /bin/mv ${destination_file} ${original_file} 
+                                fi
                         fi
                         ;;
                 DELETE*)
                         file_removed "${DIRECTORY}" "${FILE}"
                         ;;
         esac
-        if ( [ -f ${HOME}/runtime/DATASTORE_FILE_EVENT_ACTIVE ] )
+        if ( [ ! -f ${original_file} ] )
         then
-                /bin/rm ${HOME}/runtime/DATASTORE_FILE_EVENT_ACTIVE
+                /bin/chmod 644 ${original_file}
+        fi
+        if ( [ ! -f ${original_file} ] )
+        then
+                /bin/chmod 750 ${original_file}
         fi
 
 done
