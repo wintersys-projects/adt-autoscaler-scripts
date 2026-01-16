@@ -52,19 +52,24 @@ file_modified() {
                 /bin/sleep 1
         done
 
-        if ( [ -f ${live_dir}${modified_file} ] && [ "`/bin/echo ${modified_file} | /usr/bin/grep "^\."`" = "" ] )
+        original_file="${live_dir}${modified_file}" 
+        destination_file="`/bin/echo ${original_file} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`"
+        if ( [ "`/bin/echo ${modified_file} | /bin/grep '/'`" != "" ] )
         then
-                original_file="${live_dir}${modified_file}" 
-                destination_file="`/bin/echo ${live_dir}${modified_file} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`"
-                if ( [ "`/bin/echo ${modified_file} | /bin/grep '/'`" != "" ] )
-                then
-                        place_to_put="`/bin/echo ${destination_file} | /bin/sed 's:/[^/]*$::'`"
-                fi
-                if ( [ ! -d ${place_to_put} ] )
-                then
-                        /bin/mkdir -p ${place_to_put}
-                fi
+                place_to_put="`/bin/echo ${modified_file} | /bin/sed 's:/[^/]*$::'`"
+        fi
+        
+        if ( [ ! -d ${place_to_put} ] )
+        then
+                /bin/mkdir -p ${place_to_put}
+        fi
+
+        if ( [ -f ${original_file} ] && [ "`/bin/echo ${modified_file} | /usr/bin/grep "^\."`" = "" ] )
+        then
                 /bin/cp ${original_file} ${destination_file}
+        elif ( [ -d ${original_file} ] )
+        then
+                /bin/cp -r ${original_file} ${destination_file}
         fi
 }
 
@@ -77,19 +82,24 @@ file_created() {
                 /bin/sleep 1
         done
 
-        if ( [ -f ${live_dir}${created_file} ] && [ "`/bin/echo ${created_file} | /usr/bin/grep "^\."`" = "" ] )
+        original_file="${live_dir}${created_file}" 
+        destination_file="`/bin/echo ${original_file} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`"
+        if ( [ "`/bin/echo ${created_file} | /bin/grep '/'`" != "" ] )
         then
-                original_file="${live_dir}${created_file}" 
-                destination_file="`/bin/echo ${live_dir}${created_file} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`"
-                if ( [ "`/bin/echo ${created_file} | /bin/grep '/'`" != "" ] )
-                then
-                        place_to_put="`/bin/echo ${created_file} | /bin/sed 's:/[^/]*$::'`"
-                fi
-                if ( [ ! -d ${place_to_put} ] )
-                then
-                        /bin/mkdir -p ${place_to_put}
-                fi
+                place_to_put="`/bin/echo ${created_file} | /bin/sed 's:/[^/]*$::'`"
+        fi
+        
+        if ( [ ! -d ${place_to_put} ] )
+        then
+                /bin/mkdir -p ${place_to_put}
+        fi
+
+        if ( [ -f ${original_file} ] && [ "`/bin/echo ${created_file} | /usr/bin/grep "^\."`" = "" ] )
+        then
                 /bin/cp ${original_file} ${destination_file}
+        elif ( [ -d ${original_file} ] )
+        then
+                /bin/cp -r ${original_file} ${destination_file}
         fi
 }
 
