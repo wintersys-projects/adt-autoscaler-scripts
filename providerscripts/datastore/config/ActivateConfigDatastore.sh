@@ -39,7 +39,7 @@ file_modified() {
         live_dir="${1}"
         modified_file="${2}"
 
-        if ( [ -f ${live_dir}${modified_file} ] )
+        if ( [ -f ${live_dir}${modified_file} ] && [ "`/bin/echo ${modified_file} | /usr/bin/grep "^."`" = "" ] )
         then
                 original_file="${live_dir}${modified_file}" 
                 destination_file="`/bin/echo ${live_dir}${modified_file} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`"
@@ -51,7 +51,7 @@ file_created() {
         live_dir="${1}"
         created_file="${2}"
 
-        if ( [ -f ${live_dir}${created_file} ] )
+        if ( [ -f ${live_dir}${created_file} ] && [ "`/bin/echo ${created_file} | /usr/bin/grep "^."`" = "" ] )
         then
                 original_file="${live_dir}${created_file}" 
                 destination_file="`/bin/echo ${live_dir}${created_file} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`"
