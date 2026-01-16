@@ -21,7 +21,7 @@ monitor_for_datastore_changes &
 
 /usr/bin/inotifywait -q -m -r -e modify,delete,create /var/lib/adt-config | while read DIRECTORY EVENT FILE 
 do
-	if ( [ -f ${DIRECTORY}${FILE} ] )
+	if ( [ -f ${DIRECTORY}${FILE} ] && [ "`/bin/echo ${FILE} | /bin/grep "^\."`" = "" ] )
 	then
 		case ${EVENT} in
 			MODIFY*)
