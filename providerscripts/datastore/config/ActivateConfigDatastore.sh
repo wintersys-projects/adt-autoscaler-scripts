@@ -114,6 +114,14 @@ do
                         file_removed "${DIRECTORY}" "${FILE}"
                         ;;
         esac
-        /usr/bin/chattr -i ${DIRECTORY}${FILE}
-
+        if ( [ -d ${DIRECTORY}${FILE} ] )
+        then
+                count="0"
+                while ( [ "`/usr/bin/find /var/lib/adt-config/${DIRECTORY}${FILE} -type d -empty`" != "" ] && [ "${count}" -lt "30" ] )
+                do
+                        count="`/usr/bin/expr ${count} + 1`"
+                        /bin/sleep 10
+                done                
+                /usr/bin/chattr -i ${DIRECTORY}${FILE}
+        fi
 done
