@@ -18,10 +18,11 @@ monitor_for_datastore_changes() {
         while ( [ 1 ] )
         do
                 /bin/sleep 5
-                /bin/touch ${HOME}/runtime/DATASTORE_SYNC_ACTIVE
-                /bin/sleep 1
+                while ( [ -f ${HOME}/runtime/DATASTORE_EVENT_ACTIVE ] )
+                do
+                        /bin/sleep 1
+                done
                 ${HOME}/providerscripts/datastore/config/tooling/SyncFromConfigDatastoreWithDelete.sh "root" "/var/lib/adt-config"
-                /bin/rm ${HOME}/runtime/DATASTORE_SYNC_ACTIVE
         done
 }
 
@@ -46,11 +47,6 @@ file_removed() {
 file_modified() {
         live_dir="${1}"
         modified_file="${2}"
-
-        while ( [ -f ${HOME}/runtime/DATASTORE_SYNC_ACTIVE ] )
-        do
-                /bin/sleep 1
-        done
 
         original_file="${live_dir}${modified_file}" 
         destination_file="`/bin/echo ${original_file} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`"
@@ -77,11 +73,6 @@ file_created() {
         live_dir="${1}"
         created_file="${2}"
 
-        while ( [ -f ${HOME}/runtime/DATASTORE_SYNC_ACTIVE ] )
-        do
-                /bin/sleep 1
-        done
-
         original_file="${live_dir}${created_file}" 
         destination_file="`/bin/echo ${original_file} | /bin/sed 's:/adt-config/:/adt-config-workarea/:'`"
         if ( [ "`/bin/echo ${created_file} | /bin/grep '/'`" != "" ] )
@@ -105,6 +96,7 @@ file_created() {
 
 /usr/bin/inotifywait -q -m -r -e modify,delete,create /var/lib/adt-config | while read DIRECTORY EVENT FILE 
 do
+        /bin/touch ${HOME}/runtime/DATASTORE_EVENT_ACTIVE
         case ${EVENT} in
                 MODIFY*)
                         file_modified "${DIRECTORY}" "${FILE}"
@@ -131,4 +123,6 @@ do
                         file_removed "${DIRECTORY}" "${FILE}"
                         ;;
         esac
+        /bin/rm ${HOME}/runtime/DATASTORE_EVENT_ACTIVE
+
 done
