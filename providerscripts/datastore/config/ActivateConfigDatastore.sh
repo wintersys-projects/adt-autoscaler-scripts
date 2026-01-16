@@ -22,8 +22,9 @@ monitor_for_datastore_changes() {
                 do
                         /bin/sleep 1
                 done
-                
+                /bin/touch ${HOME}/runtime/DATASTORE_SYNC_EVENT_ACTIVE
                 ${HOME}/providerscripts/datastore/config/tooling/SyncFromConfigDatastoreWithDelete.sh "root" "/var/lib/adt-config"
+                /bin/rm ${HOME}/runtime/DATASTORE_SYNC_EVENT_ACTIVE
         done
 }
 
@@ -97,6 +98,21 @@ file_created() {
 
 /usr/bin/inotifywait -q -m -r -e modify,delete,create /var/lib/adt-config | while read DIRECTORY EVENT FILE 
 do
+        if ( [ -f ${HOME}/runtime/DATASTORE_SYNC_EVENT_ACTIVE ] )
+        then
+                if ( [ -f ${DIRECTORY}${FILE} ] )
+                then
+                        /bin/chmod 444 ${DIRECTORY}${FILE}
+                fi
+                while ( [ -f ${HOME}/runtime/DATASTORE_SYNC_EVENT_ACTIVE ] )
+                do
+                        /bin/sleep 1
+                done
+                if ( [ -f ${DIRECTORY}${FILE} ] )
+                then
+                        /bin/chmod 644 ${DIRECTORY}${FILE}
+                fi
+        fi
         /bin/touch ${HOME}/runtime/DATASTORE_FILE_EVENT_ACTIVE
         case ${EVENT} in
                 MODIFY*)
