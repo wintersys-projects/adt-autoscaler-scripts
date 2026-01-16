@@ -100,7 +100,7 @@ file_created() {
 do
         if ( [ -f ${HOME}/runtime/DATASTORE_SYNC_EVENT_ACTIVE ] )
         then
-                if ( [ -f ${DIRECTORY}${FILE} ] )
+                if ( [ -f ${DIRECTORY}${FILE} ] || [ -d ${DIRECTORY}${FILE} ] )
                 then
                         /bin/chmod 444 ${DIRECTORY}${FILE}
                 fi
@@ -111,6 +111,10 @@ do
                 if ( [ -f ${DIRECTORY}${FILE} ] )
                 then
                         /bin/chmod 644 ${DIRECTORY}${FILE}
+                fi
+                if ( [ -d ${DIRECTORY}${FILE} ] )
+                then
+                        /bin/chmod 750 ${DIRECTORY}${FILE}
                 fi
         fi
         /bin/touch ${HOME}/runtime/DATASTORE_FILE_EVENT_ACTIVE
