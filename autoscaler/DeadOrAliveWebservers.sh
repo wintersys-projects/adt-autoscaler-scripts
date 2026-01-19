@@ -84,7 +84,7 @@ endit ()
 	then  
 		autoscalerip="`${HOME}/utilities/processing/GetPublicIP.sh`"
 
-		if (  [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beingbuiltips/*" | /bin/grep ${down_ip}`" = "" ] || [ "`/usr/bin/find ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${ip} -mmin +30`" != "" ] )
+		if (  [ "`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh "beingbuiltips/*" | /bin/grep ${down_ip}`" = "" ] || [ "`/usr/bin/find ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${ip} -mmin +30`" != "" ] )
 		then
 			/bin/echo "Ending server with ip address ${down_ip}"
 
@@ -114,9 +114,9 @@ endit ()
 				/bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${ip}
 			fi
 
-			if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beenonline/${down_ip}"`" != "" ] )
+			if ( [ "`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh "beenonline/${down_ip}"`" != "" ] )
 			then
-				${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beenonline/${down_ip}"  
+				${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "beenonline/${down_ip}"  
 			fi
 			if ( [ "`${HOME}/utilities/config/ExtractConfigValue.sh 'DATABASEINSTALLATIONTYPE'`" = "DBaaS" ] && [ "`${HOME}/utilities/config/CheckConfigValue.sh BUILDMACHINEVPC:0`" = "1" ] )
 			then
@@ -201,15 +201,15 @@ fi
 
 live_public_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-" "${CLOUDHOST}"`"
 live_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "ws-" "${CLOUDHOST}"`"
-public_ips="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "webserverpublicips/"`"
-ips="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "webserverips/"`"
+public_ips="`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh "webserverpublicips/"`"
+ips="`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh "webserverips/"`"
 
 
 for ip in ${public_ips}
 do
         if ( [ "`/bin/echo ${live_public_ips} | /bin/grep ${ip}`" = "" ] )
         then
-                ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverpublicips/${ip}"
+                ${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "webserverpublicips/${ip}"
         fi
 done
 
@@ -217,17 +217,17 @@ for ip in ${ips}
 do
         if ( [ "`/bin/echo ${live_ips} | /bin/grep ${ip}`" = "" ] )
         then
-                ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverips/${ip}"
+                ${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "webserverips/${ip}"
         fi
 done
 
 
-if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh STATIC_SCALE:*`" = "" ] )
+if ( [ "`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh STATIC_SCALE:*`" = "" ] )
 then
 	/bin/echo "${0} `/bin/date`: Failed to get valid number of webservers to scale to the value I got was: ${NO_WEBSERVERS}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 	${HOME}/providerscripts/email/SendEmail.sh "COULDN'T GET SCALING VALUE" "I failed to get a valid scaling value the value I got was {${NO_WEBSERVERS}). I am making no alteration to the scaling setting." "ERROR"
 else
-	webserver_values="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh STATIC_SCALE:* | /bin/sed -e 's/STATIC_SCALE//g' -e 's/:/ /g' -e 's/^ //g'`"
+	webserver_values="`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh STATIC_SCALE:* | /bin/sed -e 's/STATIC_SCALE//g' -e 's/:/ /g' -e 's/^ //g'`"
 	NO_WEBSERVERS="`/bin/echo ${webserver_values} | /usr/bin/awk "{print \\$$autoscaler_no}"`" 
 fi
 
@@ -252,7 +252,7 @@ online_ips="${all_ips}"
 
 for ip in ${online_ips}
 do
-	if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh beingbuiltips/ recursive | /bin/grep ${ip}`" != "" ] )
+	if ( [ "`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh beingbuiltips/ recursive | /bin/grep ${ip}`" != "" ] )
 	then
 		online_ips="`/bin/echo ${online_ips} | /bin/sed "s/${ip}//g"`"
 	fi
@@ -422,9 +422,9 @@ then
 		then
 			/bin/echo "${0} `/bin/date`: Ending webserver with ip:${ip} because it is considered a stalled build" 
 			endit ${ip} "Webserver (${ip}) is being shutdown because it has been considered as a stalled build"
-		elif ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beenonline/${ip}"`" != "" ] )
+		elif ( [ "`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh "beenonline/${ip}"`" != "" ] )
 		then
-			if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beingbuiltips/${ip}"`" = "" ] )
+			if ( [ "`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh "beingbuiltips/${ip}"`" = "" ] )
 			then
 				/bin/echo "${ip}" >> ${HOME}/runtime/potentialenders/listofipstoend.dat
 				/bin/echo "${0} `/bin/date`: Added IP ${ip} to list of ips to potentially get ended. This is its `/bin/grep ${ip} ${HOME}/runtime/potentialenders/listofipstoend.dat | /usr/bin/wc -l` chance gone out of 2 chances granted"
@@ -442,7 +442,7 @@ fi
 
 for ip in ${online_ips}
 do
-	if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh "beingbuiltips/*"  2>/dev/null | /bin/grep ${ip}`" = "" ] )
+	if ( [ "`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh "beingbuiltips/*"  2>/dev/null | /bin/grep ${ip}`" = "" ] )
 	then
 		if ( [ "`${HOME}/autoscaler/DoubleCheckConfig.sh ${ip}`" = "ok" ] )
 		then
