@@ -30,7 +30,7 @@ DNS_SECURITY_KEY="`${HOME}/utilities/config/ExtractConfigValues.sh 'DNSSECURITYK
 DNS_USERNAME="`${HOME}/utilities/config/ExtractConfigValue.sh 'DNSUSERNAME'`"
 CLOUDHOST="`${HOME}/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
 
-if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh INSTALLED_SUCCESSFULLY`" = "" ] )
+if ( [ "`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh INSTALLED_SUCCESSFULLY`" = "" ] )
 then
 	exit
 fi
@@ -60,7 +60,7 @@ then
 					/bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip}
 				fi
 				#Store our new ip address in the config datastore
-				${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${private_ip} beenonline "no"
+				${HOME}/providerscripts/datastore/config/toolkit/PutToConfigDatastore.sh ${private_ip} beenonline "no"
 			fi
 		fi
 	fi
