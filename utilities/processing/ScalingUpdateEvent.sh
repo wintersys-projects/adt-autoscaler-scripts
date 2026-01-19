@@ -22,8 +22,8 @@
 
 HOME="`/bin/cat /home/homedir.dat`"
 
-scale_values="`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh STATIC_SCALE`"
-age="`${HOME}/providerscripts/datastore/configwrapper/AgeOfConfigFile.sh ${scale_values}`"
+scale_values="`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh STATIC_SCALE`"
+age="`${HOME}/providerscripts/datastore/config/toolkit/AgeOfConfigFile.sh ${scale_values}`"
 
 if ( [ "${age}" -le "600" ] )
 then
@@ -60,7 +60,7 @@ do
 	fi
 done
 
-${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh STATIC_SCALE: "yes"
+${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh STATIC_SCALE: "yes"
 
 if ( [ -f ${HOME}/runtime/scaling/STATIC_SCALE:* ] )
 then
@@ -68,4 +68,4 @@ then
 fi
 
 /bin/touch ${HOME}/runtime/scaling/${new_scale_values}
-${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${HOME}/runtime/scaling/${new_scale_values} "root" "no"
+${HOME}/providerscripts/datastore/config/toolkit/PutToConfigDatastore.sh ${HOME}/runtime/scaling/${new_scale_values} "root" "no"
