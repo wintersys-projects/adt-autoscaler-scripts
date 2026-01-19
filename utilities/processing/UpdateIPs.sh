@@ -32,10 +32,10 @@ then
         exit
 fi
 
-${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${ip} autoscalerips "no"
-${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${publicip} autoscalerpublicips "no"
+${HOME}/providerscripts/datastore/config/toolkit/PutToConfigDatastore.sh ${ip} autoscalerips "no"
+${HOME}/providerscripts/datastore/config/toolkit/PutToConfigDatastore.sh ${publicip} autoscalerpublicips "no"
 
 
-${HOME}/providerscripts/datastore/configwrapper/PutToConfigDatastore.sh ${build_machine_ip} buildmachineip "no"
+${HOME}/providerscripts/datastore/config/toolkit/PutToConfigDatastore.sh ${build_machine_ip} buildmachineip "no"
 
 
