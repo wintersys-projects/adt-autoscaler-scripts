@@ -50,10 +50,10 @@ then
 		server_id="`/usr/local/bin/doctl -o json compute droplet list | /usr/bin/jq -r '.[] | select (.name == "'${server_to_delete}'" ).id'`"
 		/usr/local/bin/doctl -force compute droplet delete ${server_id} 
 
-		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverips/${private_server_ip}"
-		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverpublicips/${server_ip}" 
-		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beenonline/${server_ip}" 
-		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beingbuiltips/${private_server_ip}"
+		${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "webserverips/${private_server_ip}"
+		${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "webserverpublicips/${server_ip}" 
+		${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "beenonline/${server_ip}" 
+		${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "beingbuiltips/${private_server_ip}"
 
 		if ( [ -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_server_ip} ] )
 		then
@@ -70,10 +70,10 @@ then
 		server_name="`${HOME}/providerscripts/server/GetServerName.sh ${server_ip} ${cloudhost}`"
 		/bin/echo "Y" | /usr/bin/exo compute instance delete ${server_name} --zone ${zone} 
 
-		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverips/${private_server_ip}"
-		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverpublicips/${server_ip}"
-		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beenonline/${server_ip}" 
-		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beingbuiltips/${private_server_ip}"
+		${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "webserverips/${private_server_ip}"
+		${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "webserverpublicips/${server_ip}"
+		${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "beenonline/${server_ip}" 
+		${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "beingbuiltips/${private_server_ip}"
 
 		if ( [ -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_server_ip} ] )
 		then
@@ -92,10 +92,10 @@ then
 		/usr/local/bin/linode-cli linodes shutdown ${server_id}
 		/usr/local/bin/linode-cli linodes delete ${server_id}
 
-		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverips/${private_server_ip}"
-		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverpublicips/${server_ip}"
-		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beenonline/${server_ip}" 
-		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beingbuiltips/${private_server_ip}"
+		${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "webserverips/${private_server_ip}"
+		${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "webserverpublicips/${server_ip}"
+		${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "beenonline/${server_ip}" 
+		${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "beingbuiltips/${private_server_ip}"
 
 		if ( [ -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_server_ip} ] )
 		then
@@ -121,10 +121,10 @@ then
 
 		/usr/bin/vultr instance delete ${server_id}
 
-		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverips/${private_server_ip}"
-		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverpublicips/${server_ip}"
-		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beenonline/${server_ip}" 
-		${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "beingbuiltips/${private_server_ip}"
+		${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "webserverips/${private_server_ip}"
+		${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "webserverpublicips/${server_ip}"
+		${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "beenonline/${server_ip}" 
+		${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "beingbuiltips/${private_server_ip}"
 
 		if ( [ -f ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_server_ip} ] )
 		then
