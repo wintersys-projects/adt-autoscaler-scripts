@@ -35,7 +35,7 @@ then
 fi
 
 #Scaling can be switched off if you create a file SWITCH_OFF_SCALING in the config datastore
-if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh SWITCH_OFF_SCALING`" != "" ] )
+if ( [ "`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh SWITCH_OFF_SCALING`" != "" ] )
 then
 	exit
 fi
@@ -95,7 +95,7 @@ initial_no_webservers="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "
 /bin/echo "${0} `/bin/date`: I found the existing number of actioned webservers to be ${initial_no_webservers}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 
 #Work out how many webservers we need according to our scaling metrics
-if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh STATIC_SCALE:*`" = "" ] )
+if ( [ "`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh STATIC_SCALE:*`" = "" ] )
 then
 	/bin/echo "${0} `/bin/date`: Failed to get valid number of webservers to scale to the value I got was: ${NO_WEBSERVERS}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 	${HOME}/providerscripts/email/SendEmail.sh "COULDN'T GET SCALING VALUE" "I failed to get a valid scaling value the value I got was {${NO_WEBSERVERS}). I am making no alteration to the scaling setting." "ERROR"
