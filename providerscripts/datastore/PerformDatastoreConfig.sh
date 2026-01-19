@@ -3,8 +3,8 @@
 # Author: Peter Winter
 # Date :  9/4/2016
 # Description: This script will configure the datastore tools on your webserver
-# it will configure itself based on the template in the subdirectory "configfiles".
-# If this tool later changes the format of its configuration the template in configfiles
+# it will configure itself based on the template in the subdirectory "init-files".
+# If this tool later changes the format of its configuration the template in init-files
 # will have to be updated to reflect any breaking format changes
 #######################################################################################
 # License Agreement:
@@ -64,7 +64,7 @@ then
                 /bin/rm ${HOME}/.s3cfg-${count}-${count}
         fi
 
-        /bin/cp ${HOME}/providerscripts/datastore/configfiles/s3-cfg.tmpl ${HOME}/.s3cfg-${count}
+        /bin/cp ${HOME}/providerscripts/datastore/init-files/s3-cfg.tmpl ${HOME}/.s3cfg-${count}
 
         if ( [ "${S3_ACCESS_KEY}" != "" ] )
         then
@@ -169,7 +169,7 @@ then
                 /bin/rm ${HOME}/.rclone.cfg-${count}
         fi
 
-        /bin/cp ${HOME}/providerscripts/datastore/configfiles/rclone-cfg.tmpl ${HOME}/.rclone.cfg-${count}
+        /bin/cp ${HOME}/providerscripts/datastore/init-files/rclone-cfg.tmpl ${HOME}/.rclone.cfg-${count}
 
         if ( [ "${S3_ACCESS_KEY}" != "" ] )  
         then
