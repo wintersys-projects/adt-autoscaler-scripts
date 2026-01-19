@@ -277,7 +277,7 @@ fi
 
 # This machine is no longer in a "being built" situation so cleanup
 /bin/echo "${0} `/bin/date`: Deleting the 'beingbuilt' ip address ${private_ip} from the config datastore" 
-${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh  beingbuiltips/${private_ip}
+${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh  beingbuiltips/${private_ip}
 if ( [ -f ${HOME}/runtime/beingbuiltips/${buildno}/${private_ip} ] )
 then
 	/bin/rm ${HOME}/runtime/beingbuiltips/${buildno}/${private_ip}
