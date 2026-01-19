@@ -33,6 +33,6 @@ count="1"
 
 while ( [ "${count}" -le "${no_tokens}" ] )
 do
-        ${HOME}/providerscripts/datastore/PerformPutToDatastore.sh ${file_to_put} ${datastore_to_put_in} ${delete} ${count}
+        ${HOME}/providerscripts/datastore/dedicated/PerformPutToDatastore.sh ${file_to_put} ${datastore_to_put_in} ${delete} ${count}
         count="`/usr/bin/expr ${count} + 1`"
 done
