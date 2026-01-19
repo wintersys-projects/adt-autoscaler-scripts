@@ -93,13 +93,13 @@ endit ()
 			then
 				/bin/echo "${0} `/bin/date`: Webserver with ip address: ${down_ip} is having it's ip address removed from the DNS system" 
 				${HOME}/autoscaler/RemoveIPFromDNS.sh ${public_ip_address}
-	            ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverpublicips/${public_ip_address}"
-			 	${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverips/${down_ip}"
+	            ${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "webserverpublicips/${public_ip_address}"
+			 	${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "webserverips/${down_ip}"
 			else
 				/bin/echo "${0} `/bin/date`: Webserver with ip address: ${down_ip} is having it's ip address removed from the Reverse Proxy" 
 				${HOME}/utilities/housekeeping/PurgeWebserverIPFromProxy.sh ${down_ip}
-	            ${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverpublicips/${public_ip_address}"
-			 	${HOME}/providerscripts/datastore/configwrapper/DeleteFromConfigDatastore.sh "webserverips/${down_ip}"
+	            ${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "webserverpublicips/${public_ip_address}"
+			 	${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "webserverips/${down_ip}"
 			fi
 
 			${HOME}/providerscripts/email/SendEmail.sh "A WEBSERVER IS BEING SHUTDOWN ${down_ip}" "${reason}" "INFO"
