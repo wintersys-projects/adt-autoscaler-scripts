@@ -25,7 +25,7 @@
 #set -x
 
 #If the toolkit isn't fully installed yet, we don't want to do anything
-if ( [ "`${HOME}/providerscripts/datastore/configwrapper/ListFromConfigDatastore.sh INSTALLED_SUCCESSFULLY`" = "" ] )
+if ( [ "`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh INSTALLED_SUCCESSFULLY`" = "" ] )
 then
 	exit
 fi
