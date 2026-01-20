@@ -13,7 +13,7 @@ monitor_for_datastore_changes() {
         while ( [ 1 ] )
         do
                 /bin/sleep 30
-                ${HOME}/providerscripts/datastore/config/tooling/SyncFromConfigDatastoreWithDelete.sh "root" "/var/lib/adt-config"
+                ${HOME}/providerscripts/datastore/config/toolkit/SyncFromConfigDatastoreWithDelete.sh "root" "/var/lib/adt-config"
 				if ( [ -d /var/lib/adt-config ] )
                 then
                 	/usr/bin/find /var/lib/adt-config -type d -empty -delete
@@ -25,7 +25,7 @@ monitor_for_datastore_changes &
 
 /usr/bin/inotifywait -q -m -r -e modify,delete,create /var/lib/adt-config | while read DIRECTORY EVENT FILE 
 do
-	if ( [ -f ${DIRECTORY}${FILE} ] && [ "`/bin/echo ${FILE} | /bin/grep "^\."`" = "" ] || [ "${EVENT}" = "DELETE" ] )
+	if ( [ -f ${DIRECTORY}${FILE} ] && [ "`/bin/echo ${FILE} | /bin/grep "^\."`" = "" ] || [ "${EVENT}" = "DELETE" ]  )
 	then
 		case ${EVENT} in
 			MODIFY*)
@@ -35,7 +35,7 @@ do
 				else
 					place_to_put="root"
 				fi
-				${HOME}/providerscripts/datastore/config/tooling/PutToConfigDatastore.sh ${DIRECTORY}${FILE} ${place_to_put}
+				${HOME}/providerscripts/datastore/config/toolkit/PutToConfigDatastore.sh ${DIRECTORY}${FILE} ${place_to_put}
 				;;
 			CREATE*)
 				if ( [ "`/bin/echo ${DIRECTORY}${FILE} | /bin/sed 's:/: :g' | /usr/bin/wc -w`" -gt "4" ] )
@@ -44,11 +44,11 @@ do
 				else
 					place_to_put="root"
 				fi
-				${HOME}/providerscripts/datastore/config/tooling/PutToConfigDatastore.sh ${DIRECTORY}${FILE} ${place_to_put}
+				${HOME}/providerscripts/datastore/config/toolkit/PutToConfigDatastore.sh ${DIRECTORY}${FILE} ${place_to_put}
                 ;;
 			DELETE*)
                 file_to_delete="`/bin/echo ${DIRECTORY}${FILE} | /bin/sed -e 's:/var/lib/adt-config/::' -e 's://:/:'`"
-                ${HOME}/providerscripts/datastore/config/tooling/DeleteFromConfigDatastore.sh "${file_to_delete}" "no" "no"
+                ${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "${file_to_delete}" "no" "no"
 				;;
 		esac
 	fi
