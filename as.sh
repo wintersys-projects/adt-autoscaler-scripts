@@ -130,7 +130,7 @@ fi
 cd ${HOME}
 
 /bin/echo "${0} Installing Datastore tools"
-${HOME}/providerscripts/datastore/InitialiseDatastoreConfig.sh
+${HOME}/providerscripts/datastore/InitialiseDatastoreSettings.sh
 /bin/echo "${0} Activating datastore configuration protocol"
 ${HOME}/providerscripts/datastore/config/ActivateConfigDatastore.sh &
 
