@@ -32,7 +32,7 @@ then
 fi
 
 #If the toolkit isn't fully installed, we don't want to do anything, so exit
-if ( [ "`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh INSTALLED_SUCCESSFULLY`" = "" ] )
+if ( [ "`${HOME}/providerscripts/datastore/config/wrapper/ListFromDatastore.sh "config" "INSTALLED_SUCCESSFULLY"`" = "" ] )
 then
 	exit
 fi
