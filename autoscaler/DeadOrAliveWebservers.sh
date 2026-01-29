@@ -84,7 +84,7 @@ endit ()
 	then  
 		autoscalerip="`${HOME}/utilities/processing/GetPublicIP.sh`"
 
-		if (  [ "`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh "beingbuiltips/*" | /bin/grep ${down_ip}`" = "" ] || [ "`/usr/bin/find ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${ip} -mmin +30`" != "" ] )
+		if (  [ "`${HOME}/providerscripts/datastore/config/wrapper/ListFromDatastore.sh "config" "beingbuiltips/*" | /bin/grep ${down_ip}`" = "" ] || [ "`/usr/bin/find ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${ip} -mmin +30`" != "" ] )
 		then
 			/bin/echo "Ending server with ip address ${down_ip}"
 
@@ -115,8 +115,7 @@ endit ()
 				/bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${ip}
 			fi
 
-
-			if ( [ "`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh "beenonline/${down_ip}"`" != "" ] )
+			if ( [ "`${HOME}/providerscripts/datastore/config/wrapper/ListFromDatastore.sh "config" "beenonline/${down_ip}"`" != "" ] )
 			then
 				${HOME}/providerscripts/datastore/config/wrapper/DeleteFromDatastore.sh "config"  "beenonline/${down_ip}"			
 			fi
@@ -203,8 +202,10 @@ fi
 
 live_public_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "ws-" "${CLOUDHOST}"`"
 live_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "ws-" "${CLOUDHOST}"`"
-public_ips="`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh "webserverpublicips/"`"
-ips="`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh "webserverips/"`"
+public_ips="`${HOME}/providerscripts/datastore/config/wrapper/ListFromDatastore.sh "config" "webserverpublicips/"`"
+ips="`${HOME}/providerscripts/datastore/config/wrapper/ListFromDatastore.sh "config" "webserverips/"`"
+
+
 
 
 for ip in ${public_ips}
@@ -224,7 +225,7 @@ do
 done
 
 
-if ( [ "`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh STATIC_SCALE:*`" = "" ] )
+if ( [ "`${HOME}/providerscripts/datastore/config/wrapper/ListFromDatastore.sh "config" "STATIC_SCALE:*"`" = "" ] )
 then
 	/bin/echo "${0} `/bin/date`: Failed to get valid number of webservers to scale to the value I got was: ${NO_WEBSERVERS}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 	${HOME}/providerscripts/email/SendEmail.sh "COULDN'T GET SCALING VALUE" "I failed to get a valid scaling value the value I got was {${NO_WEBSERVERS}). I am making no alteration to the scaling setting." "ERROR"
@@ -254,7 +255,7 @@ online_ips="${all_ips}"
 
 for ip in ${online_ips}
 do
-	if ( [ "`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh beingbuiltips/ recursive | /bin/grep ${ip}`" != "" ] )
+	if ( [ "`${HOME}/providerscripts/datastore/config/wrapper/ListFromDatastore.sh "config" "beingbuiltips/" "recursive" | /bin/grep ${ip}`" != "" ] )
 	then
 		online_ips="`/bin/echo ${online_ips} | /bin/sed "s/${ip}//g"`"
 	fi
@@ -426,7 +427,8 @@ then
 			endit ${ip} "Webserver (${ip}) is being shutdown because it has been considered as a stalled build"
 		elif ( [ "`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh "beenonline/${ip}"`" != "" ] )
 		then
-			if ( [ "`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh "beingbuiltips/${ip}"`" = "" ] )
+		
+			if ( [ "`${HOME}/providerscripts/datastore/config/wrapper/ListFromDatastore.sh "config" "beingbuiltips/${ip}"`" = "" ] )
 			then
 				/bin/echo "${ip}" >> ${HOME}/runtime/potentialenders/listofipstoend.dat
 				/bin/echo "${0} `/bin/date`: Added IP ${ip} to list of ips to potentially get ended. This is its `/bin/grep ${ip} ${HOME}/runtime/potentialenders/listofipstoend.dat | /usr/bin/wc -l` chance gone out of 2 chances granted"
@@ -444,7 +446,7 @@ fi
 
 for ip in ${online_ips}
 do
-	if ( [ "`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh "beingbuiltips/*"  2>/dev/null | /bin/grep ${ip}`" = "" ] )
+	if ( [ "`${HOME}/providerscripts/datastore/config/wrapper/ListFromDatastore.sh "config" "beingbuiltips/*"  2>/dev/null | /bin/grep ${ip}`" = "" ] )
 	then
 		if ( [ "`${HOME}/autoscaler/DoubleCheckConfig.sh ${ip}`" = "ok" ] )
 		then
