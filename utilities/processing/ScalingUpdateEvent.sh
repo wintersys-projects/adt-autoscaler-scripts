@@ -60,7 +60,7 @@ do
 	fi
 done
 
-${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh STATIC_SCALE: "yes"
+${HOME}/providerscripts/datastore/config/wrapper/DeleteFromDatastore.sh "config"  "STATIC_SCALE:"
 
 if ( [ -f ${HOME}/runtime/scaling/STATIC_SCALE:* ] )
 then
