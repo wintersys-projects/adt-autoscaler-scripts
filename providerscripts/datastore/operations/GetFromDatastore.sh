@@ -62,8 +62,8 @@ fi
 if ( [ "${datastore_tool}" = "/usr/bin/s3cmd" ] )
 then
         host_base="`/bin/grep ^host_base /root/.s3cfg-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`"
-        datastore_cmd="${datastore_tool} --config=/root/.s3cfg-1 --force --recursive --host=https://${host_base} ls s3://"
-        datastore_cmd1="${datastore_tool} --config=/root/.s3cfg-1 --force --recursive --host=https://${host_base} get s3://"
+        datastore_cmd="${datastore_tool} --config=/root/.s3cfg-1 --host=https://${host_base} ls s3://"
+        datastore_cmd1="${datastore_tool} --config=/root/.s3cfg-1 --host=https://${host_base} get s3://"
 elif ( [ "${datastore_tool}" = "/usr/bin/s5cmd" ] )
 then
         host_base="`/bin/grep ^host_base /root/.s5cfg-1 | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`"
