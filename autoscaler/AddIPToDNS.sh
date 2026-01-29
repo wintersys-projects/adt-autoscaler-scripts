@@ -60,7 +60,8 @@ then
 					/bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${private_ip}
 				fi
 				#Store our new ip address in the config datastore
-				${HOME}/providerscripts/datastore/config/toolkit/PutToConfigDatastore.sh ${private_ip} beenonline "no"
+				${HOME}/providerscripts/datastore/config/wrapper/PutToDatastore.sh "config" "${private_ip}" "beenonline" "no"
+
 			fi
 		fi
 	fi
