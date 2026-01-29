@@ -23,7 +23,7 @@
 
 HOME="`/bin/cat /home/homedir.dat`"
 
-if ( [ "`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh INSTALLED_SUCCESSFULLY`" = "" ] )
+if ( [ "`${HOME}/providerscripts/datastore/config/wrapper/ListFromDatastore.sh "config" "INSTALLED_SUCCESSFULLY"`" = "" ] )
 then
         exit
 fi
