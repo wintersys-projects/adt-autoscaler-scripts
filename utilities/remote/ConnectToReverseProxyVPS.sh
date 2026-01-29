@@ -31,8 +31,7 @@ SERVER_USER="`${HOME}/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
 SSH_PORT="`${HOME}/utilities/config/ExtractConfigValue.sh 'SSHPORT'`"
 ALGORITHM="`${HOME}/utilities/config/ExtractConfigValue.sh 'ALGORITHM'`"
 BUILD_IDENTIFIER="`${HOME}/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
-
-ips="`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh reverseproxyips/*`"
+ips="`${HOME}/providerscripts/datastore/config/wrapper/ListFromDatastore.sh "config" "reverseproxyips/*"`"
 
 if ( [ "${ips}" != "" ] )
 then
