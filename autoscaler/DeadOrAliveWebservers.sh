@@ -211,7 +211,7 @@ for ip in ${public_ips}
 do
         if ( [ "`/bin/echo ${live_public_ips} | /bin/grep ${ip}`" = "" ] )
         then
-                ${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "webserverpublicips/${ip}"
+				${HOME}/providerscripts/datastore/config/wrapper/DeleteFromDatastore.sh "config"  "webserverpublicips/${ip}"
         fi
 done
 
@@ -219,7 +219,7 @@ for ip in ${ips}
 do
         if ( [ "`/bin/echo ${live_ips} | /bin/grep ${ip}`" = "" ] )
         then
-                ${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "webserverips/${ip}"
+				${HOME}/providerscripts/datastore/config/wrapper/DeleteFromDatastore.sh "config"  "webserverips/${ip}"
         fi
 done
 
