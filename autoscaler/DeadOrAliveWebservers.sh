@@ -115,9 +115,10 @@ endit ()
 				/bin/rm ${HOME}/runtime/POTENTIAL_STALLED_BUILD:${ip}
 			fi
 
+
 			if ( [ "`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh "beenonline/${down_ip}"`" != "" ] )
 			then
-				${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "beenonline/${down_ip}"  
+				${HOME}/providerscripts/datastore/config/wrapper/DeleteFromDatastore.sh "config"  "beenonline/${down_ip}"			
 			fi
 			if ( [ "`${HOME}/utilities/config/ExtractConfigValue.sh 'DATABASEINSTALLATIONTYPE'`" = "DBaaS" ] && [ "`${HOME}/utilities/config/CheckConfigValue.sh BUILDMACHINEVPC:0`" = "1" ] )
 			then
