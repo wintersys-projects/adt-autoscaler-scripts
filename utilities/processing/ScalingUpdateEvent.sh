@@ -23,7 +23,7 @@
 HOME="`/bin/cat /home/homedir.dat`"
 
 scale_values="`${HOME}/providerscripts/datastore/config/wrapper/ListFromDatastore.sh "config" "STATIC_SCALE"`"
-age="`${HOME}/providerscripts/datastore/config/toolkit/AgeOfConfigFile.sh ${scale_values}`"
+age="`${HOME}/providerscripts/datastore/config/wrapper/AgeOfDatastoreFile.sh "config"`"
 
 if ( [ "${age}" -le "600" ] )
 then
