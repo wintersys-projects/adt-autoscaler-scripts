@@ -149,10 +149,10 @@ then
         then
                 ${HOME}/providerscripts/datastore/operations/DeleteFromDatastore.sh "${bucket_type}" "*" "distributed" "`/bin/echo ${target_directory} | /bin/sed 's:/:-:g'`"
         fi
-        ${HOME}/providerscripts/datastore/filesystems-sync/heavyweight/ProcessIncomingHistoricalWebrootUpdates.sh "${target_directory}" "${bucket_type}"
+        ${HOME}/providerscripts/datastore/filesystems-sync/heavyweight/ProcessIncomingHistoricalFilesystemUpdates.sh "${target_directory}" "${bucket_type}"
 else
-        ${HOME}/providerscripts/datastore/filesystems-sync/heavyweight/ProcessOutgoingWebrootUpdates.sh "${target_directory}" "${bucket_type}"
-        ${HOME}/providerscripts/datastore/filesystems-sync/heavyweight/ProcessIncomingWebrootUpdates.sh "${target_directory}" "${bucket_type}"
+        ${HOME}/providerscripts/datastore/filesystems-sync/heavyweight/ProcessOutgoingFilesysystemUpdates.sh "${target_directory}" "${bucket_type}"
+        ${HOME}/providerscripts/datastore/filesystems-sync/heavyweight/ProcessIncomingFilesystemUpdates.sh "${target_directory}" "${bucket_type}"
 fi
 
 
