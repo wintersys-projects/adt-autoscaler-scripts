@@ -43,4 +43,5 @@ do
 	/usr/bin/ssh -q -p ${SSH_PORT} -i ${BUILD_KEY} ${OPTIONS} ${SERVER_USER}@${ip_address} "${SUDO} /home/${SERVER_USER}/providerscripts/webserver/configuration/reverseproxy/RemoveOldIPFromReverseProxyIPList.sh ${webserver_ip}"
 done
 
-${HOME}/providerscripts/datastore/config/toolkit/DeleteFromConfigDatastore.sh "webserverips/${webserver_ip}"
+${HOME}/providerscripts/datastore/config/wrapper/DeleteFromDatastore.sh "config"  "webserverips/${webserver_ip}"
+
