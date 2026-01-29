@@ -230,7 +230,7 @@ then
 	/bin/echo "${0} `/bin/date`: Failed to get valid number of webservers to scale to the value I got was: ${NO_WEBSERVERS}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 	${HOME}/providerscripts/email/SendEmail.sh "COULDN'T GET SCALING VALUE" "I failed to get a valid scaling value the value I got was {${NO_WEBSERVERS}). I am making no alteration to the scaling setting." "ERROR"
 else
-	webserver_values="`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh STATIC_SCALE:* | /bin/sed -e 's/STATIC_SCALE//g' -e 's/:/ /g' -e 's/^ //g'`"
+	webserver_values="`${HOME}/providerscripts/datastore/config/wrapper/ListFromDatastore.sh "config" "STATIC_SCALE:*" | /bin/sed -e 's/STATIC_SCALE//g' -e 's/:/ /g' -e 's/^ //g'`"
 	NO_WEBSERVERS="`/bin/echo ${webserver_values} | /usr/bin/awk "{print \\$$autoscaler_no}"`" 
 fi
 
