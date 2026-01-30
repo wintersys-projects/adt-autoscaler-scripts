@@ -169,7 +169,7 @@ do
 
                                         if ( [ ! -f ${file_for_processing}.delete_me ] && [ "`/bin/echo ${file_for_processing} | /bin/grep '\.delete_me'`" = "" ] )
                                         then
-                                                if ( [ ! -d ${active_directory}/${place_to_put} ] )
+                                                if ( [ "${place_to_put}" != "root" ] && [ ! -d ${active_directory}/${place_to_put} ] )
                                                 then
                                                         /bin/mkdir -p ${active_directory}/${place_to_put}
                                                 fi
