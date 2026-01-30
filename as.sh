@@ -131,8 +131,15 @@ cd ${HOME}
 
 /bin/echo "${0} Installing Datastore tools"
 ${HOME}/providerscripts/datastore/InitialiseDatastoreSettings.sh
+
 /bin/echo "${0} Activating datastore configuration protocol"
-${HOME}/providerscripts/datastore/config/ActivateConfigDatastore.sh &
+if ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "DATASTORECONFIGSTYLE" | /usr/bin/awk -F':' '{print $NF}'`" = "lightweight" ] )
+then
+	${HOME}/providerscripts/datastore/filesystems-sync/lightweight/FileSystemSyncController.sh "/var/lib/adt-config" "config" &
+elif ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "DATASTORECONFIGSTYLE" | /usr/bin/awk -F':' '{print $NF}'`" = "heavyweight" ] )
+then
+	${HOME}/providerscripts/datastore/config/ActivateConfigDatastoreHeavyweight.sh &
+fi
 
 /bin/echo "${0} Initialising cloudhost config"
 ${HOME}/providerscripts/cloudhost/InitialiseCloudhostConfig.sh
