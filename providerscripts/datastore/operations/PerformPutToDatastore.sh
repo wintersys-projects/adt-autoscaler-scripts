@@ -63,7 +63,8 @@ then
         datastore_cmd="${datastore_tool} --credentials-file /root/.s5cfg-${count} --endpoint-url https://${host_base} cp --metadata 'CreationDate=${now}'"
         bucket_prefix="s3://"
         slasher="/"
-        placed_file=""
+        place_to_put="`/bin/echo ${place_to_put} | /bin/sed 's;\/$;;g'`"
+        placed_file="`/bin/echo ${file_to_put} | /usr/bin/awk -F'/' '{print $NF}'`"
 elif ( [ "${datastore_tool}" = "/usr/bin/rclone" ] )
 then
         host_base="`/bin/grep ^endpoint /root/.config/rclone/rclone.conf-${count} | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
