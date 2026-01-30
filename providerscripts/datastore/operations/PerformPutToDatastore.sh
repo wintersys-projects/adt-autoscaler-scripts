@@ -28,6 +28,11 @@ count="$4"
 
 HOME="`/bin/cat /home/homedir.dat`"
 
+if ( [ "${place_to_put}" = "root" ] )
+then
+        place_to_put=""
+fi
+
 datastore_tool=""
 datastore_cmd=""
 datastore_cmd1=""
