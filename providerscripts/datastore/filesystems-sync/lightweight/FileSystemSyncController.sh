@@ -163,26 +163,27 @@ do
                                 /bin/echo "${file_for_processing} ${place_to_put}" >> ${HOME}/runtime/datastore_workarea/${bucket_type}/additions_to_perform.log
                                 ;;
                         DELETE*)
-                                file_for_processing="${DIRECTORY}${FILE}"
-                                if ( [ ! -d ${file_for_processing} ]  && [ ! -f ${file_for_processing}.cleaningup ] )
+                                file_for_deleting="${DIRECTORY}${FILE}"
+                                if ( [ ! -d ${file_for_deleting} ]  && [ ! -f ${file_for_deleting}.cleaningup ] )
                                 then
-                                        if ( [ "`/bin/echo ${file_for_processing} | /bin/fgrep -o '/' | /usr/bin/wc -l`" -gt "4" ] )
+                                        if ( [ "`/bin/echo ${file_for_deleting} | /bin/fgrep -o '/' | /usr/bin/wc -l`" -gt "4" ] )
                                         then
-                                                place_to_put="`/bin/echo ${file_for_processing} | /bin/sed 's:/[^/]*$::' | /bin/sed "s:${active_directory}/::g"`"
+                                                place_to_put="`/bin/echo ${file_for_deleting} | /bin/sed 's:/[^/]*$::' | /bin/sed "s:${active_directory}/::g"`"
                                         else
                                                 place_to_put="root"
                                         fi
 
-                                        if ( [ ! -f ${file_for_processing}.delete_me ] && [ "`/bin/echo ${file_for_processing} | /bin/grep '\.delete_me'`" = "" ] )
+                                        if ( [ ! -f ${file_for_deleting}.delete_me ] && [ "`/bin/echo ${file_for_deleting} | /bin/grep '\.delete_me'`" = "" ] )
                                         then
                                                 if ( [ "${place_to_put}" != "root" ] && [ ! -d ${active_directory}/${place_to_put} ] )
                                                 then
                                                         /bin/mkdir -p ${active_directory}/${place_to_put}
                                                 fi
-                                                #/bin/touch ${file_for_processing}.delete_me
-                                                #/bin/echo "${file_for_processing}.delete_me ${place_to_put}" >> ${HOME}/runtime/datastore_workarea/${bucket_type}/additions_to_perform.log
-                                                /bin/touch ${active_directory}/${place_to_put}.delete_me
-                                                /bin/echo "${active_directory}/${place_to_put}.delete_me ${place_to_put}" >> ${HOME}/runtime/datastore_workarea/${bucket_type}/additions_to_perform.log
+
+                                                /bin/touch ${file_for_deleting}.delete_me
+                                                /bin/echo "${file_for_deleting}.delete_me ${place_to_put}" >> ${HOME}/runtime/datastore_workarea/${bucket_type}/additions_to_perform.log
+                                             #   /bin/touch ${active_directory}/${place_to_put}.delete_me
+                                             #   /bin/echo "${active_directory}/${place_to_put}.delete_me ${place_to_put}" >> ${HOME}/runtime/datastore_workarea/${bucket_type}/additions_to_perform.log
                                         fi
                                 fi
                                 ;;
