@@ -73,6 +73,7 @@ then
         datastore_cmd1="${datastore_tool} --config /root/.config/rclone/rclone.conf-${count} --s3-endpoint ${host_base} --timestamp ${now} touch "
         bucket_prefix="s3:"
         slasher="/"
+        place_to_put="`/bin/echo ${place_to_put} | /bin/sed 's;\/$;;g'`"
         placed_file="`/bin/echo ${file_to_put} | /usr/bin/awk -F'/' '{print $NF}'`"
 fi
 
