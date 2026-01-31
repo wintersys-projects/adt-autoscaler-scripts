@@ -133,6 +133,7 @@ update_to_and_from_datastore &
 do          
         if ( [ "`/bin/echo ${FILE} | /bin/grep  -E '[0-9]{9,}$'`" != "" ] )
         then
+                /bin/sleep 5
                 /bin/rm ${DIRECTORY}${FILE}
         fi
         
