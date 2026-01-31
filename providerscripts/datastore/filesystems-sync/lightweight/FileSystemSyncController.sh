@@ -179,8 +179,10 @@ do
                                                 then
                                                         /bin/mkdir -p ${active_directory}/${place_to_put}
                                                 fi
-                                                /bin/touch ${file_for_processing}.delete_me
-                                                /bin/echo "${file_for_processing}.delete_me ${place_to_put}" >> ${HOME}/runtime/datastore_workarea/${bucket_type}/additions_to_perform.log
+                                                #/bin/touch ${file_for_processing}.delete_me
+                                                #/bin/echo "${file_for_processing}.delete_me ${place_to_put}" >> ${HOME}/runtime/datastore_workarea/${bucket_type}/additions_to_perform.log
+                                                /bin/touch ${active_directory}/${place_to_put}.delete_me
+                                                /bin/echo "${active_directory}/${place_to_put}.delete_me ${place_to_put}" >> ${HOME}/runtime/datastore_workarea/${bucket_type}/additions_to_perform.log
                                         fi
                                 fi
                                 ;;
