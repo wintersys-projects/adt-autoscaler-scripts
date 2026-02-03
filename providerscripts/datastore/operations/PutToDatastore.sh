@@ -55,6 +55,9 @@ then
 elif ( [ "${bucket_type}" = "auth" ] )
 then
         active_bucket="authip-adt-allowed-${additional_specifier}"
+elif ( [ "${bucket_type}" = "scaling" ] )
+then
+        active_bucket="`/bin/echo ${WEBSITE_URL} | /bin/sed 's/\./-/g'`-${additional_specifier}"
 elif ( [ "${bucket_type}" = "dbaas" ] )
 then
         active_bucket="`/bin/echo ${WEBSITE_URL} | /bin/sed 's/\./-/g'`"
