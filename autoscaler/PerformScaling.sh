@@ -96,12 +96,12 @@ initial_no_webservers="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "
 
 
 #Work out how many webservers we need according to our scaling metrics
-if ( [ "`${HOME}/providerscripts/datastore/config/wrapper/ListFromDatastore.sh "config" "STATIC_SCALE:*"`" = "" ] )
+if ( [ "`${HOME}/providerscripts/datastore/operations/ListFromDatastore.sh "scaling" "autoscaler-${autoscaler_no}/"  "scaling-${CLOUDHOST}-${REGION}"`" = "" ] )
 then
 	/bin/echo "${0} `/bin/date`: Failed to get valid number of webservers to scale to the value I got was: ${NO_WEBSERVERS}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 	${HOME}/providerscripts/email/SendEmail.sh "COULDN'T GET SCALING VALUE" "I failed to get a valid scaling value the value I got was {${NO_WEBSERVERS}). I am making no alteration to the scaling setting." "ERROR"
 else
-	webserver_values="`${HOME}/providerscripts/datastore/config/wrapper/ListFromDatastore.sh "config" "STATIC_SCALE:*" | /usr/bin/awk -F':' '{print $NF}' | /bin/sed 's/^ //g'`"
+    webserver_values="`${HOME}/providerscripts/datastore/operations/ListFromDatastore.sh "scaling" "autoscaler-${autoscaler_no}/"  "scaling-${CLOUDHOST}-${REGION}" | /bin/sed -e 's/STATIC_SCALE//g' -e 's/:/ /g' -e 's/^ //g'`"
 	#webserver_values="`${HOME}/providerscripts/datastore/config/toolkit/ListFromConfigDatastore.sh STATIC_SCALE:* | /bin/sed -e 's/STATIC_SCALE//g' -e 's/:/ /g' -e 's/^ //g'`"
 	#autoscaler_index="`/usr/bin/expr ${autoscaler_no} + 1`"	
 	NO_WEBSERVERS="`/bin/echo ${webserver_values} | /usr/bin/awk "{print \\$$autoscaler_no}"`" 
