@@ -21,52 +21,20 @@
 #set -x
 
 HOME="`/bin/cat /home/homedir.dat`"
-
-scale_values="`${HOME}/providerscripts/datastore/config/wrapper/ListFromDatastore.sh "config" "STATIC_SCALE"`"
-age="`${HOME}/providerscripts/datastore/config/wrapper/AgeOfDatastoreFile.sh "config"`"
-
-if ( [ "${age}" -le "600" ] )
-then
-	exit
-fi
-
 CLOUDHOST="`${HOME}/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
 BUILD_IDENTIFIER="`${HOME}/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
 REGION="`${HOME}/utilities/config/ExtractConfigValue.sh 'REGION'`"
 
 new_scale_value="${1}"
 
-if ( [ ! -f ${HOME}/runtime/scaling ] )
+if ( [ ! -d ${HOME}/runtime/scaling ] )
 then
-	/bin/mkdir ${HOME}/runtime/scaling
+        /bin/mkdir ${HOME}/runtime/scaling
 fi
 
-number_of_autoscalers="`${HOME}/providerscripts/server/NumberOfServers.sh "as-${REGION}-${BUILD_IDENTIFIER}" "${CLOUDHOST}"`"
-number_of_webservers="${new_scale_value}"
+/bin/touch ${HOME}/runtime/scaling/STATIC_SCALE:${new_scale_value}
+no_autoscaler="`/usr/bin/hostname | /bin/sed -e 's:NO-::' -e 's:-as.*::'`"
+${HOME}/providerscripts/datastore/operations/DeleteFromDatastore.sh "scaling" "*autoscaler-${no_autoscaler}*" "local" "scaling-${CLOUDHOST}-${REGION}"
+${HOME}/providerscripts/datastore/operations/PutToDatastore.sh "scaling" "${HOME}/runtime/scaling/STATIC_SCALE:${new_scale_value}" "autoscaler-${no_autoscaler}" "local" "no" "scaling-${CLOUDHOST}-${REGION}"
 
-base_number_of_webservers="`/usr/bin/expr ${number_of_webservers} / ${number_of_autoscalers}`"
-total_base_number_of_webservers="`/usr/bin/expr ${base_number_of_webservers} \* ${number_of_autoscalers}`"
-additional_number_of_webservers="`/usr/bin/expr ${number_of_webservers} - ${total_base_number_of_webservers}`"
-
-new_scale_values="STATIC_SCALE"
-for autoscaler_no in `printf "%d\n" $(seq 1 ${number_of_autoscalers})`
-do
-	if ( [ "${additional_number_of_webservers}" -gt "0" ] )
-	then
-		new_scale_values="${new_scale_values}:`/usr/bin/expr ${base_number_of_webservers} + 1`"
-		additional_number_of_webservers="`/usr/bin/expr ${additional_number_of_webservers} - 1`"
-	else
-		new_scale_values="${new_scale_values}:${base_number_of_webservers}"
-	fi
-done
-
-${HOME}/providerscripts/datastore/config/wrapper/DeleteFromDatastore.sh "config"  "STATIC_SCALE:"
-
-if ( [ -f ${HOME}/runtime/scaling/STATIC_SCALE:* ] )
-then
-	/bin/rm ${HOME}/runtime/scaling/STATIC_SCALE:*
-fi
-
-/bin/touch ${HOME}/runtime/scaling/${new_scale_values}
-${HOME}/providerscripts/datastore/config/wrapper/PutToDatastore.sh "config" "${HOME}/runtime/scaling/${new_scale_values}" "root" "no"
 
