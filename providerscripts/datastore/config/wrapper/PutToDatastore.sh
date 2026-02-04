@@ -37,14 +37,20 @@ then
         ${HOME}/providerscripts/datastore/operations/PutToDatastore.sh "${bucket_type}" "${file_to_put}" "${place_to_put}" "local" "${delete}" "${additional_specifier}"
 elif ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "DATASTORECONFIGSTYLE" | /usr/bin/awk -F':' '{print $NF}'`" = "lightweight" ] ||  [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "DATASTORECONFIGSTYLE" | /usr/bin/awk -F':' '{print $NF}'`" = "heavyweight" ] )
 then
+        if ( [ ! -d /var/lib/adt-config/${place_to_put} ] )
+        then
+                /bin/mkdir -p /var/lib/adt-config/${place_to_put}
+        fi
+        
         if ( [ -f ${file_to_put} ] )
         then
-                if ( [ ! -d /var/lib/adt-config/${place_to_put} ] )
-                then
-                        /bin/mkdir -p /var/lib/adt-config/${place_to_put}
-                fi
-
                 /bin/cp ${file_to_put} /var/lib/adt-config/${place_to_put}
-
+        else
+                if ( [ "${place_to_put}" != "" ] )
+                then
+                        /bin/touch /var/lib/adt-config/${place_to_put}/${file_to_put}
+                else
+                        /bin/touch /var/lib/adt-config/${file_to_put}
+                fi
         fi
 fi
