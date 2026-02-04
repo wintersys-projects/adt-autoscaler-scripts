@@ -48,9 +48,9 @@ then
         else
                 if ( [ "${place_to_put}" != "" ] )
                 then
-                        /bin/touch /var/lib/adt-config/${place_to_put}/${file_to_put}
+                        /bin/echo "" > /var/lib/adt-config/${place_to_put}/${file_to_put}
                 else
-                        /bin/touch /var/lib/adt-config/${file_to_put}
+                        /bin/echo "" > /var/lib/adt-config/${file_to_put}
                 fi
         fi
 fi
