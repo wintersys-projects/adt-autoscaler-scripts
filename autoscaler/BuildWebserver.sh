@@ -163,7 +163,7 @@ else
 		/bin/mkdir -p ${HOME}/runtime/beingbuiltips/${buildno}
 	fi
 	/bin/touch ${HOME}/runtime/beingbuiltips/${buildno}/${private_ip}
-	${HOME}/providerscripts/datastore/config/wrapper/PutToDatastore.sh "config" "${HOME}/runtime/beingbuiltips/${buildno}/${private_ip}" "beingbuiltips" "no"
+	${HOME}/providerscripts/datastore/operations/PutToDatastore.sh "config" "${HOME}/runtime/beingbuiltips/${buildno}/${private_ip}" "beingbuiltips" "no"
 
 	/bin/echo "${0} `/bin/date`: The webserver has been assigned public ip address ${ip} and private ip address ${private_ip}" 
 	/bin/echo "${0} `/bin/date`: The webserver is now provisioned and I am about to start building it out and installing software"
