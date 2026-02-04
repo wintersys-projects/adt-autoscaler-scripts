@@ -30,10 +30,7 @@ then
         ${HOME}/providerscripts/datastore/operations/ListFromDatastore.sh "${bucket_type}" "${file_to_list}" "${additional_specifier}"
 elif ( [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "DATASTORECONFIGSTYLE" | /usr/bin/awk -F':' '{print $NF}'`" = "lightweight" ] || [ "`${HOME}/utilities/config/ExtractBuildStyleValues.sh "DATASTORECONFIGSTYLE" | /usr/bin/awk -F':' '{print $NF}'`" = "heavyweight" ] )
 then
-        if ( [ "`/bin/echo ${file_to_list} | /bin/grep 'STATIC_SCALE'`" != "" ] )
-        then
-                /bin/echo "`/bin/ls -Art /var/lib/adt-config/STATIC_SCALE* | /bin/grep -v 'delete_me' | /usr/bin/tail -n 1 | /bin/sed 's:/var/lib/adt-config/::g'`"
-        elif ( [ -f /var/lib/adt-config/${file_to_list} ] )
+        if ( [ -f /var/lib/adt-config/${file_to_list} ] || [ -d /var/lib/adt-config/${file_to_list} ] )
         then
                 /bin/ls /var/lib/adt-config/${file_to_list} | /usr/bin/awk -F'/' '{print $NF}'
         fi
