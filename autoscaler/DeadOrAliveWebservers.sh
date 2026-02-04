@@ -217,8 +217,7 @@ for ip in ${ips}
 do
         if ( [ "`/bin/echo ${live_ips} | /bin/grep ${ip}`" = "" ] )
         then
-        :
-              #  ${HOME}/providerscripts/datastore/config/wrapper/DeleteFromDatastore.sh "config"  "webserverips/${ip}"
+                ${HOME}/providerscripts/datastore/config/wrapper/DeleteFromDatastore.sh "config"  "webserverips/${ip}"
         fi
 done
 
