@@ -54,6 +54,7 @@ then
         then
                 file_to_include="`/bin/echo ${file_to_delete} | /usr/bin/awk -F'/' '{print $NF}'`"
                 include="--include '"*${file_to_include}*"'"
+                include="`/bin/echo ${include} | /bin/sed 's/\*\*/\*/g'`"
         fi
 
         datastore_cmd="${datastore_tool} --config /root/.config/rclone/rclone.conf-${count} --s3-endpoint ${host_base} ${include} delete s3:"
