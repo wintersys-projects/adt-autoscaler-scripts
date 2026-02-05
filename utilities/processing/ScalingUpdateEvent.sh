@@ -27,7 +27,7 @@ REGION="`${HOME}/utilities/config/ExtractConfigValue.sh 'REGION'`"
 
 new_scale_value="${1}"
 
-if ( [ "${new_scaling_value}" = "" ] )
+if ( [ "${new_scale_value}" = "" ] )
 then
         exit
 fi
