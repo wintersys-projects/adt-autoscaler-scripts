@@ -39,5 +39,5 @@ fi
 
 /bin/touch ${HOME}/runtime/scaling/STATIC_SCALE:${new_scale_value}
 no_autoscaler="`/usr/bin/hostname | /bin/sed -e 's:NO-::' -e 's:-as.*::'`"
-${HOME}/providerscripts/datastore/operations/DeleteFromDatastore.sh "scaling" "*autoscaler-${no_autoscaler}*/STATIC_SCALLE*" "local" "scaling-${CLOUDHOST}-${REGION}"
+${HOME}/providerscripts/datastore/operations/DeleteFromDatastore.sh "scaling" "*autoscaler-${no_autoscaler}*/STATIC_SCALE*" "local" "scaling-${CLOUDHOST}-${REGION}"
 ${HOME}/providerscripts/datastore/operations/PutToDatastore.sh "scaling" "${HOME}/runtime/scaling/STATIC_SCALE:${new_scale_value}" "autoscaler-${no_autoscaler}" "local" "no" "scaling-${CLOUDHOST}-${REGION}"
