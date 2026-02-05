@@ -27,6 +27,11 @@ REGION="`${HOME}/utilities/config/ExtractConfigValue.sh 'REGION'`"
 
 new_scale_value="${1}"
 
+if ( [ "${new_scaling_value}" = "" ] )
+then
+        exit
+fi
+
 if ( [ ! -d ${HOME}/runtime/scaling ] )
 then
         /bin/mkdir ${HOME}/runtime/scaling
