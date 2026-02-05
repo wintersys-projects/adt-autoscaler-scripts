@@ -226,8 +226,7 @@ then
         /bin/echo "${0} `/bin/date`: Failed to get valid number of webservers to scale to the value I got was: ${NO_WEBSERVERS}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
         ${HOME}/providerscripts/email/SendEmail.sh "COULDN'T GET SCALING VALUE" "I failed to get a valid scaling value the value I got was {${NO_WEBSERVERS}). I am making no alteration to the scaling setting." "ERROR"
 else
-        webserver_values="`${HOME}/providerscripts/datastore/operations/ListFromDatastore.sh "scaling" "autoscaler-${autoscaler_no}/"  "scaling-${CLOUDHOST}-${REGION}" | /bin/sed -e 's/STATIC_SCALE//g' -e 's/:/ /g' -e 's/^ //g'`"
-        NO_WEBSERVERS="`/bin/echo ${webserver_values} | /usr/bin/awk "{print \\$$autoscaler_no}"`" 
+        NO_WEBSERVERS="`${HOME}/providerscripts/datastore/operations/ListFromDatastore.sh "scaling" "autoscaler-${autoscaler_no}/"  "scaling-${CLOUDHOST}-${REGION}" | /bin/sed -e 's/STATIC_SCALE//g' -e 's/:/ /g' -e 's/^ //g'`"
 fi
 
 noactivewebservers="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}-${autoscaler_no}" ${CLOUDHOST} | /usr/bin/tr '\n' ' ' | /usr/bin/wc -w`"
