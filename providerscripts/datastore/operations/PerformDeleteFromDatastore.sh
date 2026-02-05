@@ -38,9 +38,9 @@ fi
 
 if ( [ "${datastore_tool}" = "/usr/bin/s3cmd" ] )
 then
-        file_to_delete="`/bin/echo ${file_to_delete} | /bin/sed 's/\*$//g'`"
+        #       file_to_delete="`/bin/echo ${file_to_delete} | /bin/sed 's/\*$//g'`"
         host_base="`/bin/grep ^host_base /root/.s3cfg-${count} | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`" 
-        datastore_cmd="${datastore_tool} --recursive --force  --config=/root/.s3cfg-${count} --host=https://${host_base} del s3://"
+        datastore_cmd="${datastore_tool} --config=/root/.s3cfg-${count} --host=https://${host_base} del s3://"
 elif ( [ "${datastore_tool}" = "/usr/bin/s5cmd" ] )
 then
         host_base="`/bin/grep ^host_base /root/.s5cfg-${count} | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`"
