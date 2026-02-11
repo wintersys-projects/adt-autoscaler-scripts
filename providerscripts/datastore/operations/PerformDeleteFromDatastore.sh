@@ -50,7 +50,7 @@ then
         host_base="`/bin/grep ^endpoint /root/.config/rclone/rclone.conf-${count} | /bin/grep "^endpoint" | /usr/bin/awk -F'=' '{print  $NF}' | /bin/sed 's/ //g'`"
 
         include=""
-        if ( [ "${file_to_delete}" != "" ] )
+        if ( [ "${file_to_delete}" != "" ] && [ "`/bin/echo ${file_to_delete} | /bin/grep '*'`" != "" ] )
         then
                 file_to_include="`/bin/echo ${file_to_delete} | /usr/bin/awk -F'/' '{print $NF}'`"
                 include="--include '"*${file_to_include}*"'"
@@ -58,7 +58,6 @@ then
         fi
 
         datastore_cmd="${datastore_tool} --config /root/.config/rclone/rclone.conf-${count} --s3-endpoint ${host_base} ${include} delete s3:"
-      #  file_to_delete=""
 fi
 
 eval ${datastore_cmd}${file_to_delete}
