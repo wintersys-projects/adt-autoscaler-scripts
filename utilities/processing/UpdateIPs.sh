@@ -21,11 +21,8 @@
 #set -x
 
 ip="`${HOME}/utilities/processing/GetIP.sh`"
-publicip="`${HOME}/utilities/processing/GetPublicIP.sh`"
+public_ip="`${HOME}/utilities/processing/GetPublicIP.sh`"
 build_machine_ip="`${HOME}/utilities/config/ExtractConfigValue.sh 'BUILDMACHINEIP'`"
-
-
-#Sometimes (very rarely) the ip is not set for some reason so have to hope we are alright next time instead
 
 if ( [ "${ip}" = "" ] || [ "${public_ip}" = "" ] || [ "${build_machine_ip}" = "" ] )
 then
@@ -33,6 +30,5 @@ then
 fi
 
 ${HOME}/providerscripts/datastore/config/wrapper/PutToDatastore.sh "config" "${ip}" "autoscalerips" "no"
-${HOME}/providerscripts/datastore/config/wrapper/PutToDatastore.sh "config" "${publicip}" "autoscalerpublicips" "no"
-
+${HOME}/providerscripts/datastore/config/wrapper/PutToDatastore.sh "config" "${public_ip}" "autoscalerpublicips" "no"
 ${HOME}/providerscripts/datastore/config/wrapper/PutToDatastore.sh "config" "${build_machine_ip}" "buildmachineip" "no"
