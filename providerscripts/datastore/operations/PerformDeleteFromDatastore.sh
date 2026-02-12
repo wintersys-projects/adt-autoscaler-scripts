@@ -53,8 +53,8 @@ then
         if ( [ "${file_to_delete}" != "" ] && [ "`/bin/echo ${file_to_delete} | /bin/grep '*'`" != "" ] )
         then
                 file_to_include="`/bin/echo ${file_to_delete} | /usr/bin/awk -F'/' '{print $NF}'`"
-                include="--include '"*${file_to_include}*"'"
-                include="`/bin/echo ${include} | /bin/sed 's/\*\*/\*/g'`"
+                include="--filter '+ "${file_to_include}"'"
+                file_to_delete="`/bin/echo ${file_to_delete} | /usr/bin/cut -d'/' -f1`"
         fi
 
         datastore_cmd="${datastore_tool} --config /root/.config/rclone/rclone.conf-${count} --s3-endpoint ${host_base} ${include} delete s3:"
