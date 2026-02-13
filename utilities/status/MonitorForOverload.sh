@@ -50,7 +50,7 @@ then
 	then
 		${HOME}/providerscripts/datastore/config/wrapper/PutToDatastore.sh "config" "${ip}" "overloadedips" "no"
 	else
-		${HOME}/providerscripts/datastore/config/wrapper/DeleteFromDatastore.sh "config"  "overloadedips/*" 
+		${HOME}/providerscripts/datastore/config/wrapper/DeleteFromDatastore.sh "config"  "overloadedips" 
 	fi
 
 	if ( [ "${cpu_usage}" -lt "5" ] )
