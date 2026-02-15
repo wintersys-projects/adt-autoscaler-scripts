@@ -42,11 +42,6 @@ then
         /bin/mkdir -p ${HOME}/logs/deadoralive-${logdate} 
 fi
 
-OUT_FILE="dead-or-alive.out"
-exec 1>>${HOME}/logs/deadoralive-${logdate}/${OUT_FILE}
-ERR_FILE="dead-or-alive.err"
-exec 2>>${HOME}/logs/deadoralive-${logdate}/${ERR_FILE}
-
 /bin/echo "#######################`/usr/bin/date`##################################"
 
 CLOUDHOST="`${HOME}/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
@@ -80,7 +75,7 @@ endit ()
         public_ip_address="`${HOME}/providerscripts/server/GetServerPublicIPAddressByIP.sh ${down_ip} ${CLOUDHOST}`"
         webserver_name="`${HOME}/providerscripts/server/GetServerName.sh "${public_ip_address}" "${CLOUDHOST}"`"
         #We don't want to go lower than 2 webservers no matter what
-        if ( [  "`/bin/echo ${webserver_name} | /bin/grep "\-init\-"`" = "" ] && [ "`/bin/ls -l ${HOME}/runtime/INITIALLY_PROVISIONING* 2>/dev/null`" = "" ] && [ "`${HOME}/providerscripts/server/NumberOfServers.sh "ws-${REGION}-${BUILD_IDENTIFIER}" "${CLOUDHOST}"`" -gt "2" ] )
+        if ( [  "`/bin/echo ${webserver_name} | /bin/grep "\-init\-"`" = "" ] && [ "`/bin/ls -l ${HOME}/runtime/INITIALLY_PROVISIONING* 2>/dev/null`" = "" ] && [ "`${HOME}/providerscripts/server/NumberOfServers.sh "ws-${REGION}-${BUILD_IDENTIFIER}-${autoscaler_no}" "${CLOUDHOST}"`" -gt "0" ] )
         then  
                 autoscalerip="`${HOME}/utilities/processing/GetPublicIP.sh`"
 
@@ -178,7 +173,6 @@ probe_by_curl()
 }
 
 #Purge any detached IP addresses from the DNS system if we are not using reverse proxies
-
 if ( [ "${NO_REVERSE_PROXY}" = "0" ] )
 then
         dnsips="`${HOME}/autoscaler/GetDNSIPs.sh`"
@@ -234,7 +228,7 @@ originalnoactivewebservers="${noactivewebservers}"
 #Kill webservers in batches of up to 5 at a time
 count="1"
 candidate_termination_ips="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}-${autoscaler_no}"`"
-while ( [ "${noactivewebservers}" -gt "${NO_WEBSERVERS}" ] && [ "${count}" -le "${originalnoactivewebservers}" ] )
+while ( [ "${noactivewebservers}" -ge "${NO_WEBSERVERS}" ] && [ "${count}" -le "${originalnoactivewebservers}" ] )
 do
         candidate_ip="`/bin/echo ${candidate_termination_ips} | /usr/bin/cut -d " " -f ${count}`"
         endit "${candidate_ip}" "Because the machine was excess to requirements according to the scaling policy"
