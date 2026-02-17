@@ -42,6 +42,11 @@ then
         /bin/mkdir -p ${HOME}/logs/deadoralive-${logdate} 
 fi
 
+OUT_FILE="dead-or-alive.out"
+exec 1>>${HOME}/logs/deadoralive-${logdate}/${OUT_FILE}
+ERR_FILE="dead-or-alive.err"
+exec 2>>${HOME}/logs/deadoralive-${logdate}/${ERR_FILE}
+
 /bin/echo "#######################`/usr/bin/date`##################################"
 
 CLOUDHOST="`${HOME}/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
