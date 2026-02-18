@@ -79,7 +79,6 @@ MAX_WEBSERVERS="`${HOME}/utilities/config/ExtractConfigValue.sh 'MAXWEBSERVERS'`
 
 SUDO=" DEBIAN_FRONTEND=noninteractive /bin/echo ${SERVER_USER_PASSWORD} | /usr/bin/sudo -S -E "
 
-
 #Report up what we are doing
 autoscalerip="`${HOME}/utilities/processing/GetPublicIP.sh`"
 /bin/echo "${0} `/bin/date`: This autoscaler's IP address is ${autoscalerip}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
@@ -95,18 +94,11 @@ initial_no_webservers="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "
 /bin/echo "${0} `/bin/date`: I found the existing number of actioned webservers to be ${initial_no_webservers}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
 
 
-#Work out how many webservers we need according to our scaling metrics
-if ( [ "`${HOME}/providerscripts/datastore/operations/ListFromDatastore.sh "scaling" "autoscaler-${autoscaler_no}/"  "scaling-${CLOUDHOST}-${REGION}"`" = "" ] )
-then
-	/bin/echo "${0} `/bin/date`: Failed to get valid number of webservers to scale to the value I got was: ${NO_WEBSERVERS}" >> ${HOME}/logs/${logdir}/ScalingEventsLog.log
-	${HOME}/providerscripts/email/SendEmail.sh "COULDN'T GET SCALING VALUE" "I failed to get a valid scaling value the value I got was {${NO_WEBSERVERS}). I am making no alteration to the scaling setting." "ERROR"
-else
-    NO_WEBSERVERS="`${HOME}/providerscripts/datastore/operations/ListFromDatastore.sh "scaling" "autoscaler-${autoscaler_no}/"  "scaling-${CLOUDHOST}-${REGION}" | /bin/sed -e 's/STATIC_SCALE//g' -e 's/:/ /g' -e 's/^ //g'`"
+NO_WEBSERVERS="`${HOME}/providerscripts/datastore/operations/ListFromDatastore.sh "scaling" "autoscaler-${autoscaler_no}/"  "scaling-${CLOUDHOST}-${REGION}" | /bin/sed -e 's/STATIC_SCALE//g' -e 's/:/ /g' -e 's/^ //g'`"
 	
-	if ( [ "${NO_WEBSERVERS}" = "" ] )
-	then
-		exit
-	fi
+if ( [ "${NO_WEBSERVERS}" = "" ] )
+then
+	exit
 fi
 
 no_needed_here="`/usr/bin/expr ${NO_WEBSERVERS} - ${initial_no_webservers}`"
