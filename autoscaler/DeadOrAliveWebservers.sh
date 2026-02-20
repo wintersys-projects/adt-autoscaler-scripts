@@ -225,7 +225,7 @@ NO_WEBSERVERS="`${HOME}/providerscripts/datastore/operations/ListFromDatastore.s
 
 if ( [ "${NO_WEBSERVERS}" = "" ] )
 then
-        NO_WEBSERVERS="0"
+        exit
 fi
 
 noactivewebservers="`${HOME}/providerscripts/server/GetServerPrivateIPAddresses.sh "ws-${REGION}-${BUILD_IDENTIFIER}-${autoscaler_no}" ${CLOUDHOST} | /usr/bin/tr '\n' ' ' | /usr/bin/wc -w`"
