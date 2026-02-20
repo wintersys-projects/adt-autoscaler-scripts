@@ -45,7 +45,7 @@ export DEBIAN_FRONTEND=noninteractive
 install_command="${apt} -o DPkg::Lock::Timeout=-1 -o Dpkg::Use-Pty=0 -qq -y install "
 
 count="0"
-while ( [ ! -f /usr/bin/socat ] && [ "${count}" -lt "5" ] )
+while ( [ ! -x /usr/bin/inotifywait ] && [ "${count}" -lt "5" ] )
 do
 	if ( [ "${apt}" != "" ] )
 	then
@@ -62,7 +62,7 @@ do
 	count="`/usr/bin/expr ${count} + 1`"
 done
 
-if ( [ ! -x /usr/bin/socat ] && [ "${count}" = "5" ] )
+if ( [ ! -x /usr/bin/inotifywait ] && [ "${count}" = "5" ] )
 then
 	${HOME}/providerscripts/email/SendEmail.sh "INSTALLATION ERROR INOTIFYTOOLS" "I believe that socat hasn't installed correctly, please investigate" "ERROR"
 else
