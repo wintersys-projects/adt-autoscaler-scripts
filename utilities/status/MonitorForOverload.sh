@@ -51,40 +51,41 @@ fi
 
 ip="`${HOME}/utilities/processing/GetPublicIP.sh`"
 
-if ( [ ! -f ${HOME}/runtime/CPU_OVERLOAD_ACKNOWLEDGED ] )
+cpu_usage="`/usr/bin/sar -u 1 30 | /bin/grep "Average" | /usr/bin/awk '{print $NF}' | /usr/bin/awk -F'.' '{print $1}'`"
+
+if ( [ "${cpu_usage}" -lt "25" ] )
 then
-        cpu_usage="`/usr/bin/sar -u 1 30 | /bin/grep "Average" | /usr/bin/awk '{print $NF}' | /usr/bin/awk -F'.' '{print $1}'`"
+        ${HOME}/providerscripts/datastore/config/wrapper/PutToDatastore.sh "config" "${ip}" "overloadedips" "no"
+else
+        ${HOME}/providerscripts/datastore/config/wrapper/DeleteFromDatastore.sh "config"  "overloadedips/${ip}"
+fi
 
-        if ( [ "${cpu_usage}" -lt "25" ] )
+if ( [ "${cpu_usage}" -lt "5" ] )
+then 
+        if ( [ ! -f ${HOME}/runtime/CPU_OVERLOAD_ACKNOWLEDGED ] )
         then
-                ${HOME}/providerscripts/datastore/config/wrapper/PutToDatastore.sh "config" "${ip}" "overloadedips" "no"
-        else
-                ${HOME}/providerscripts/datastore/config/wrapper/DeleteFromDatastore.sh "config"  "overloadedips/${ip}"
-        fi
-
-        if ( [ "${cpu_usage}" -lt "5" ] )
-        then 
                 /bin/touch ${HOME}/runtime/CPU_OVERLOAD_ACKNOWLEDGED
                 ${HOME}/providerscripts/email/SendEmail.sh "POTENTIAL OVERLOAD CONDITION" "Potential overload on machine with ip ${ip} CPU is only ${cpu_usage}% free" "ERROR"
         fi
 fi
 
-if ( [ ! -f ${HOME}/runtime/LOW_MEMORY_ACKNOWLEDGED ] )
-then
-        free_memory="`/usr/bin/sar -r 1 10 | /bin/grep Average | /usr/bin/awk '{print $2}' | /usr/bin/awk -F'.' '{print $1}'`"
+free_memory="`/usr/bin/sar -r 1 10 | /bin/grep Average | /usr/bin/awk '{print $2}' | /usr/bin/awk -F'.' '{print $1}'`"
 
-        if ( [ "${free_memory}" -lt "10000" ] )
+if ( [ "${free_memory}" -lt "10000" ] )
+then
+        if ( [ ! -f ${HOME}/runtime/LOW_MEMORY_ACKNOWLEDGED ] )
         then
                 /bin/touch ${HOME}/runtime/LOW_MEMORY_ACKNOWLEDGED
                 ${HOME}/providerscripts/email/SendEmail.sh "POTENTIAL LOW MEMORY CONDITION" "Potential low memory on machine with ip ${ip} memory is only ${free_memory}% free" "ERROR"
         fi
 fi
 
-if ( [ ! -f ${HOME}/runtime/LOW_DISK_ACKNOWLEDGED ] )
-then
-        disk_usage="`/usr/bin/df -h --total | /bin/grep total | /usr/bin/awk '{print $5}' | /bin/sed 's/%//'`"
 
-        if ( [ "${disk_usage}" -gt "90" ] )
+disk_usage="`/usr/bin/df -h --total | /bin/grep total | /usr/bin/awk '{print $5}' | /bin/sed 's/%//'`"
+
+if ( [ "${disk_usage}" -gt "90" ] )
+then
+        if ( [ ! -f ${HOME}/runtime/LOW_DISK_ACKNOWLEDGED ] )
         then
                 /bin/touch ${HOME}/runtime/LOW_DISK_ACKNOWLEDGED
                 ${HOME}/providerscripts/email/SendEmail.sh "POTENTIAL LOW DISK SPACE CONDITION" "Potential low disk space on machine with ip ${ip} disk space is  ${disk_usage}% full" "ERROR"
