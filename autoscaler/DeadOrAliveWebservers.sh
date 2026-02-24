@@ -98,9 +98,11 @@ endit ()
 
                         else
                                 /bin/echo "${0} `/bin/date`: Webserver with ip address: ${down_ip} is having it's ip address removed from the Reverse Proxy" 
-                                ${HOME}/utilities/housekeeping/PurgeWebserverIPFromProxy.sh ${down_ip}
+                               # ${HOME}/utilities/housekeeping/PurgeWebserverIPFromProxy.sh ${down_ip}
                                 ${HOME}/providerscripts/datastore/config/wrapper/DeleteFromDatastore.sh "config"  "webserverpublicips/${public_ip_address}"
                                 ${HOME}/providerscripts/datastore/config/wrapper/DeleteFromDatastore.sh "config"  "webserverips/${down_ip}"
+                                #Give the reverse proxy some time to clean itself up
+                                /bin/sleep 60
                         fi
 
                         ${HOME}/providerscripts/email/SendEmail.sh "A WEBSERVER IS BEING SHUTDOWN ${down_ip}" "${reason}" "INFO"
