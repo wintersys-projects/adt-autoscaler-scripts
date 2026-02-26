@@ -45,7 +45,8 @@ probe_by_curl()
                 /bin/echo "${0} `/bin/date`: ReverseProxy ${ip} was found to be offline because it couldn't be contacted using curl" 
                 ${HOME}/autoscaler/RemoveIPFromDNS.sh ${ip}     
                 ${HOME}/providerscripts/email/SendEmail.sh "IP ADDRESS REMOVED FROM DNS" "IP address of remote proxy IP address (${ip}) removed from DNS system due to an error" "ERROR"
-        else
+        elif ( [ "${AUTHENTICATOR_TYPE}" = "basic-auth" ] || [ "${status}" = "up" ] )
+        then
                 ips="`${HOME}/autoscaler/GetDNSIPs.sh`"
                 if ( [ "`/bin/echo ${ips} | /bin/grep ${ip}`" = "" ] )
                 then
@@ -57,6 +58,7 @@ probe_by_curl()
 CLOUDHOST="`${HOME}/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
 BUILD_IDENTIFIER="`${HOME}/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
 REGION="`${HOME}/utilities/config/ExtractConfigValue.sh 'REGION'`"
+AUTHENTICATOR_TYPE="`${HOME}/utilities/config/ExtractConfigValue.sh 'AUTHENTICATORTYPE'`"
 
 dns_ips="`${HOME}/autoscaler/GetDNSIPs.sh`"
 public_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "rp-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
