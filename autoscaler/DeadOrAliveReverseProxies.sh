@@ -29,7 +29,7 @@ probe_by_curl()
         file="`${HOME}/autoscaler/SelectHeadFile.sh`"
         while ( [ "${probecount}" -le "3" ] && [ "${status}" = "down" ] )
         do
-                if ( [ "`/usr/bin/curl -s -m 20 --insecure -I "https://${ip}:443/${file}" 2>&1 | /bin/grep "HTTP" | /bin/grep -E "200|301|302|303"`" != "" ] ) 
+                if ( [ "`/usr/bin/curl -s -m 20 --insecure -I "https://${ip}:443/${file}" 2>&1 | /bin/grep "HTTP" | /bin/grep -E "200|301|302|303|authenticate: Basic realm"`" != "" ] ) 
                 then
                         status="up"
                 else
@@ -45,7 +45,7 @@ probe_by_curl()
                 /bin/echo "${0} `/bin/date`: ReverseProxy ${ip} was found to be offline because it couldn't be contacted using curl" 
                 ${HOME}/autoscaler/RemoveIPFromDNS.sh ${ip}     
                 ${HOME}/providerscripts/email/SendEmail.sh "IP ADDRESS REMOVED FROM DNS" "IP address of remote proxy IP address (${ip}) removed from DNS system due to an error" "ERROR"
-        elif ( [ "${AUTHENTICATOR_TYPE}" = "basic-auth" ] || [ "${status}" = "up" ] )
+        else
         then
                 ips="`${HOME}/autoscaler/GetDNSIPs.sh`"
                 if ( [ "`/bin/echo ${ips} | /bin/grep ${ip}`" = "" ] )
@@ -58,7 +58,6 @@ probe_by_curl()
 CLOUDHOST="`${HOME}/utilities/config/ExtractConfigValue.sh 'CLOUDHOST'`"
 BUILD_IDENTIFIER="`${HOME}/utilities/config/ExtractConfigValue.sh 'BUILDIDENTIFIER'`"
 REGION="`${HOME}/utilities/config/ExtractConfigValue.sh 'REGION'`"
-AUTHENTICATOR_TYPE="`${HOME}/utilities/config/ExtractConfigValue.sh 'AUTHENTICATORTYPE'`"
 
 dns_ips="`${HOME}/autoscaler/GetDNSIPs.sh`"
 public_ips="`${HOME}/providerscripts/server/GetServerIPAddresses.sh "rp-${REGION}-${BUILD_IDENTIFIER}" ${CLOUDHOST}`"
