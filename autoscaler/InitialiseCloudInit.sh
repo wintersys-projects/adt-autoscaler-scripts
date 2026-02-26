@@ -76,17 +76,26 @@ git_provider_domain="`${HOME}/providerscripts/git/GitProviderDomain.sh ${INFRAST
 WEBSERVER_CHOICE="`${HOME}/utilities/config/ExtractConfigValue.sh 'WEBSERVERCHOICE'`"
 if ( [ "${WEBSERVER_CHOICE}" = "NGINX" ] )
 then
-	/bin/sed -i "s/#XXXXNGINXXXXX//g" ${HOME}/runtime/cloud-init/webserver.yaml 
+	if ( [ "`/bin/grep ^NGINX:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
+	then
+		/bin/sed -i "s/#XXXXNGINXXXXX//g" ${HOME}/runtime/cloud-init/webserver.yaml 
+	fi
 fi
 
 if ( [ "${WEBSERVER_CHOICE}" = "APACHE" ] )
 then
-	/bin/sed -i "s/#XXXXAPACHEXXXX//g" ${HOME}/runtime/cloud-init/webserver.yaml 
+	if ( [ "`/bin/grep ^APACHE:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
+	then
+		/bin/sed -i "s/#XXXXAPACHEXXXX//g" ${HOME}/runtime/cloud-init/webserver.yaml 
+	fi
 fi
 
 if ( [ "${WEBSERVER_CHOICE}" = "LIGHTTPD" ] )
 then
-	/bin/sed -i "s/#XXXXLIGHTTPDXXXX//g" ${HOME}/runtime/cloud-init/webserver.yaml 
+	if ( [ "`/bin/grep ^LIGHTTPD:cloud-init ${HOME}/runtime/buildstyles.dat`" != "" ] )
+	then
+		/bin/sed -i "s/#XXXXLIGHTTPDXXXX//g" ${HOME}/runtime/cloud-init/webserver.yaml 
+	fi
 fi
 
 #Activate the relevant database client by removing the block on it
