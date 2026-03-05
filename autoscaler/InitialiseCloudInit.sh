@@ -70,7 +70,7 @@ git_provider_domain="`${HOME}/providerscripts/git/GitProviderDomain.sh ${INFRAST
 /bin/sed -i "s;XXXXBUILDSTYLES_SETTINGSXXXX;${build_styles_settings};g" ${HOME}/runtime/cloud-init/webserver.yaml 
 /bin/sed -i "s;XXXXFIREWALL_PORT_SETTINGSXXXX;${firewall_port_settings};g" ${HOME}/runtime/cloud-init/webserver.yaml
 /bin/sed -i "s/XXXXGIT_PROVIDER_DOMAINXXXX/${git_provider_domain}/g" ${HOME}/runtime/cloud-init/webserver.yaml 
-
+/bin/sed -i "s;XXXXAPPLICATION_SETTINGSXXXX;${application_settings};g" ${HOME}/runtime/cloud-init/webserver.yaml
 
 #Activate the correct webserver by removing the block on it
 WEBSERVER_CHOICE="`${HOME}/utilities/config/ExtractConfigValue.sh 'WEBSERVERCHOICE'`"
