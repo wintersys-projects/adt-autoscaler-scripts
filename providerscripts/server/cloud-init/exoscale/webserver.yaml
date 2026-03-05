@@ -55,6 +55,11 @@ write_files:
   owner: root:root
   path: /home/XXXXSERVER_USERXXXX/.ssh/buildstyles.dat.gz
   permissions: '0644'
+- encoding: b64
+  content: XXXXAPPLICATION_SETTINGSXXXX
+  owner: root:root
+  path: /home/XXXXSERVER_USERXXXX/.ssh/application.dat.gz
+  permissions: '0644'
 - content: /home/XXXXSERVER_USERXXXX
   owner: root:root
   path: /home/homedir.dat
