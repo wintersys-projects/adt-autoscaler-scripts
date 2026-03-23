@@ -356,7 +356,6 @@ do
         probe_by_curl &
 done
 
-####ADDED
 no_processed_ips="`/bin/cat ${HOME}/runtime/probed_ips/processed_ips.dat | /usr/bin/wc -l`"
 
 while ( [ "${no_processed_ips}" -lt "${no_online_ips}" ] )
@@ -375,8 +374,6 @@ do
                 online_ips="`/bin/echo ${online_ips} | /bin/sed "s/${ip}//g"`"
         fi
 done
-
-####ADDED
 
 for ip in ${online_ips}
 do
