@@ -162,8 +162,8 @@ ${HOME}/providerscripts/email/SendEmail.sh "A NEW AUTOSCALER HAS BEEN SUCCESSFUL
 /bin/touch ${HOME}/runtime/AUTHORISED_TO_SCALE
 
 /bin/echo "${0} Enforcing permissions"
-${HOME}/utilities/security/EnforcePermissions.sh &
+#${HOME}/utilities/security/EnforcePermissions.sh &
 
-#${HOME}/installscripts/UpdateAndUpgrade.sh ${BUILDOS} &
+${HOME}/installscripts/UpdateAndUpgrade.sh ${BUILDOS} &
 
 
