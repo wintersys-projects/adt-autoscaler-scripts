@@ -38,7 +38,6 @@ write_files:
   permissions: '0644'
   
 package_update: true
-package_upgrade: true
 
 runcmd:
   - '/bin/sed -i "/en_GB.UTF/s/\(^# \)\(.*$\)/\2/g" /etc/locale.gen'
@@ -59,5 +58,4 @@ runcmd:
   - '/home/XXXXSERVER_USERXXXX/utilities/processing/RunServiceCommand.sh "ssh" restart'
   - '/home/XXXXSERVER_USERXXXX/utilities/processing/RunServiceCommand.sh "cron" restart'
   - '/bin/sh /home/XXXXSERVER_USERXXXX/security/ResetFirewall.sh'
-  - '/home/XXXXSERVER_USERXXXX/installscripts/UpdateAndUpgrade.sh `/bin/cat /etc/issue | /usr/bin/tr "[:upper:]" "[:lower:]" | /bin/egrep -o "(ubuntu|debian)"` &'
 
