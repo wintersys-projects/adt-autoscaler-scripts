@@ -55,5 +55,6 @@ then
 	fi
 fi
 
-/bin/chmod -R 777 ${HOME}
+SERVER_USER="`${HOME}/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
+/bin/chown -R ${SERVER_USER}:root ${HOME}
 ${HOME}/utilities/security/EnforcePermissions.sh
