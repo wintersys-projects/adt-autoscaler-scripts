@@ -57,4 +57,5 @@ fi
 
 SERVER_USER="`/bin/ls -d /home/X*X | /usr/bin/awk -F'/' '{print $NF}'`"
 /bin/chown -R ${SERVER_USER}:root ${HOME}
+/bin/chmod 750 ${HOME}/utilities/security/EnforcePermissions.sh
 ${HOME}/utilities/security/EnforcePermissions.sh
