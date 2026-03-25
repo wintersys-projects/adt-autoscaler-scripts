@@ -55,6 +55,6 @@ then
 	fi
 fi
 
-SERVER_USER="`${HOME}/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
+SERVER_USER="`/bin/ls -d /home/X*X | /usr/bin/awk -F'/' '{print $NF}'`"
 /bin/chown -R ${SERVER_USER}:root ${HOME}
 ${HOME}/utilities/security/EnforcePermissions.sh
