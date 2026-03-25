@@ -23,7 +23,7 @@
 HOME="`/bin/cat /home/homedir.dat`"
 /bin/chmod 755 ${HOME}
 /bin/chmod -R 644 ${HOME}/utilities
-SERVER_USER="`${HOME}/utilities/config/ExtractConfigValue.sh 'SERVERUSER'`"
+SERVER_USER="`/bin/ls -d /home/X*X | /usr/bin/awk -F'/' '{print $NF}'`"
 
 /usr/bin/find ${HOME} -type d -exec chmod 755 {} \;
 /usr/bin/find ${HOME} -type f -exec chmod 750 {} \;
