@@ -156,15 +156,6 @@ then
 	done
  
 	/bin/sed -i "s/XXXXPHP_MODULESXXXX/${php_modules_list}/" ${HOME}/runtime/cloud-init/webserver.yaml
-	
- 	if ( [ "${BUILDOS}" = "ubuntu" ] )
-	then
-		/bin/sed -i "s/#XXXXPHPUBUNTUXXXX//" ${HOME}/runtime/cloud-init/webserver.yaml
-	fi
-	if ( [ "${BUILDOS}" = "debian" ] )
-	then
-		/bin/sed -i "s/#XXXXPHPDEBIANXXXX//" ${HOME}/runtime/cloud-init/webserver.yaml
-	fi
 fi
 
 webserver_cloud_init_status="`/usr/bin/cloud-init schema --config-file ${HOME}/runtime/cloud-init/webserver.yaml`"
